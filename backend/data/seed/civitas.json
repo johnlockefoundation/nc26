@@ -1,0 +1,3240 @@
+{
+  "cycle": "2026",
+  "source": "John Locke Foundation / Civitas Partisan Index 2026",
+  "senate": [
+    {
+      "district_number": 1,
+      "cpi": "R+6",
+      "rating": "Likely Republican",
+      "rating_lean": "Likely",
+      "rating_party": "R",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Melissa Zehner",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "Jerry Tillett",
+          "incumbent": false
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 2,
+      "cpi": "R+6",
+      "rating": "Likely Republican",
+      "rating_lean": "Likely",
+      "rating_party": "R",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Roy Surrett",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "Norman Sanderson",
+          "incumbent": true
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 3,
+      "cpi": "R+8",
+      "rating": "Likely Republican",
+      "rating_lean": "Likely",
+      "rating_party": "R",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Charles Dudley",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "Bob Brinson",
+          "incumbent": true
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 4,
+      "cpi": "R+3",
+      "rating": "Lean Republican",
+      "rating_lean": "Lean",
+      "rating_party": "R",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Jessica (Jess) Rivera",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "Buck Newton",
+          "incumbent": true
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 5,
+      "cpi": "D+7",
+      "rating": "Likely Democratic",
+      "rating_lean": "Likely",
+      "rating_party": "D",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Kandie D. Smith",
+          "incumbent": true
+        },
+        {
+          "party": "R",
+          "name": "Henry Hostetler",
+          "incumbent": false
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 6,
+      "cpi": "R+15",
+      "rating": "Safe Republican",
+      "rating_lean": "Safe",
+      "rating_party": "R",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Andi Morrow",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "Michael Anthony Lazzara",
+          "incumbent": true
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 7,
+      "cpi": "R+1",
+      "rating": "Toss-up",
+      "rating_lean": "Toss-up",
+      "rating_party": null,
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Jessica Bichler",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "Michael Lee",
+          "incumbent": true
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 8,
+      "cpi": "R+8",
+      "rating": "Likely Republican",
+      "rating_lean": "Likely",
+      "rating_party": "R",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Richard (Rick) Combes",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "Bill Rabon",
+          "incumbent": true
+        }
+      ],
+      "other": "Tim White (LIB)"
+    },
+    {
+      "district_number": 9,
+      "cpi": "R+12",
+      "rating": "Safe Republican",
+      "rating_lean": "Safe",
+      "rating_party": "R",
+      "candidates": [
+        null,
+        {
+          "party": "R",
+          "name": "Brent Jackson",
+          "incumbent": true
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 10,
+      "cpi": "R+9",
+      "rating": "Likely Republican",
+      "rating_lean": "Likely",
+      "rating_party": "R",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Pat LeGrand",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "Benton Sawrey",
+          "incumbent": true
+        }
+      ],
+      "other": "Kevin Terrett (LIB)"
+    },
+    {
+      "district_number": 11,
+      "cpi": "R+0",
+      "rating": "Toss-up",
+      "rating_lean": "Toss-up",
+      "rating_party": null,
+      "candidates": [
+        {
+          "party": "D",
+          "name": "James D. Gailliard",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "Lisa Stone Barnes",
+          "incumbent": true
+        }
+      ],
+      "other": "Gavin Bell  (LIB)"
+    },
+    {
+      "district_number": 12,
+      "cpi": "R+9",
+      "rating": "Likely Republican",
+      "rating_lean": "Likely",
+      "rating_party": "R",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Tanya White Anderson",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "Jim Burgin",
+          "incumbent": true
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 13,
+      "cpi": "D+4",
+      "rating": "Lean Democratic",
+      "rating_lean": "Lean",
+      "rating_party": "D",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Lisa Grafstein",
+          "incumbent": true
+        },
+        {
+          "party": "R",
+          "name": "Robert van Brederode",
+          "incumbent": false
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 14,
+      "cpi": "D+25",
+      "rating": "Safe Democratic",
+      "rating_lean": "Safe",
+      "rating_party": "D",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Dan Blue",
+          "incumbent": true
+        },
+        {
+          "party": "R",
+          "name": "Angela B. McCarty",
+          "incumbent": false
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 15,
+      "cpi": "D+19",
+      "rating": "Safe Democratic",
+      "rating_lean": "Safe",
+      "rating_party": "D",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Jay J. Chaudhuri",
+          "incumbent": true
+        },
+        {
+          "party": "R",
+          "name": "David Bankert",
+          "incumbent": false
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 16,
+      "cpi": "D+18",
+      "rating": "Safe Democratic",
+      "rating_lean": "Safe",
+      "rating_party": "D",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Gale Adcock",
+          "incumbent": true
+        },
+        {
+          "party": "R",
+          "name": "Philip Hensley",
+          "incumbent": false
+        }
+      ],
+      "other": "Jonathan D. Miller (LIB)"
+    },
+    {
+      "district_number": 17,
+      "cpi": "D+15",
+      "rating": "Safe Democratic",
+      "rating_lean": "Safe",
+      "rating_party": "D",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Mrs. Sydney Batch",
+          "incumbent": true
+        },
+        {
+          "party": "R",
+          "name": "Shirley Johnson",
+          "incumbent": false
+        }
+      ],
+      "other": "Patrick J. Bowersox (LIB)"
+    },
+    {
+      "district_number": 18,
+      "cpi": "D+0",
+      "rating": "Toss-up",
+      "rating_lean": "Toss-up",
+      "rating_party": null,
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Haseeb Fatmi",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "Chris Stock",
+          "incumbent": false
+        }
+      ],
+      "other": "Brad Hessel (LIB)"
+    },
+    {
+      "district_number": 19,
+      "cpi": "D+16",
+      "rating": "Safe Democratic",
+      "rating_lean": "Safe",
+      "rating_party": "D",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Val Applewhite",
+          "incumbent": true
+        },
+        {
+          "party": "R",
+          "name": "Venus de la Cruz",
+          "incumbent": false
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 20,
+      "cpi": "D+23",
+      "rating": "Safe Democratic",
+      "rating_lean": "Safe",
+      "rating_party": "D",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Natalie S. Murdock",
+          "incumbent": true
+        },
+        null
+      ],
+      "other": null
+    },
+    {
+      "district_number": 21,
+      "cpi": "R+10",
+      "rating": "Safe Republican",
+      "rating_lean": "Safe",
+      "rating_party": "R",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Paul Taylor",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "Tom McInnis",
+          "incumbent": true
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 22,
+      "cpi": "D+31",
+      "rating": "Safe Democratic",
+      "rating_lean": "Safe",
+      "rating_party": "D",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Sophia Chitlik",
+          "incumbent": true
+        },
+        {
+          "party": "R",
+          "name": "LaKeshia M. Alston",
+          "incumbent": false
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 23,
+      "cpi": "D+16",
+      "rating": "Safe Democratic",
+      "rating_lean": "Safe",
+      "rating_party": "D",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Jonah Garson",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "Laura Pichardo",
+          "incumbent": false
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 24,
+      "cpi": "R+4",
+      "rating": "Lean Republican",
+      "rating_lean": "Lean",
+      "rating_party": "R",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Catina Hamm",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "Danny Earl Britt, Jr.",
+          "incumbent": true
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 25,
+      "cpi": "R+9",
+      "rating": "Likely Republican",
+      "rating_lean": "Likely",
+      "rating_party": "R",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Southey Blanton",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "Amy Scott Galey",
+          "incumbent": true
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 26,
+      "cpi": "R+9",
+      "rating": "Likely Republican",
+      "rating_lean": "Likely",
+      "rating_party": "R",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Steve Luking",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "Sam Page",
+          "incumbent": false
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 27,
+      "cpi": "D+11",
+      "rating": "Safe Democratic",
+      "rating_lean": "Safe",
+      "rating_party": "D",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Michael K. Garrett",
+          "incumbent": true
+        },
+        null
+      ],
+      "other": null
+    },
+    {
+      "district_number": 28,
+      "cpi": "D+28",
+      "rating": "Safe Democratic",
+      "rating_lean": "Safe",
+      "rating_party": "D",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Gladys A. Robinson",
+          "incumbent": true
+        },
+        null
+      ],
+      "other": null
+    },
+    {
+      "district_number": 29,
+      "cpi": "R+17",
+      "rating": "Safe Republican",
+      "rating_lean": "Safe",
+      "rating_party": "R",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Judy Little",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "Dave Craven",
+          "incumbent": true
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 30,
+      "cpi": "R+22",
+      "rating": "Safe Republican",
+      "rating_lean": "Safe",
+      "rating_party": "R",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Pamela D. McAfee",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "Steve Jarvis",
+          "incumbent": true
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 31,
+      "cpi": "R+10",
+      "rating": "Safe Republican",
+      "rating_lean": "Safe",
+      "rating_party": "R",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Andy Bowline",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "Dana Caudill Jones",
+          "incumbent": true
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 32,
+      "cpi": "D+21",
+      "rating": "Safe Democratic",
+      "rating_lean": "Safe",
+      "rating_party": "D",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Paul Lowe, Jr.",
+          "incumbent": true
+        },
+        {
+          "party": "R",
+          "name": "Peter Antinozzi",
+          "incumbent": false
+        }
+      ],
+      "other": "Keenen Altic (GRE)"
+    },
+    {
+      "district_number": 33,
+      "cpi": "R+19",
+      "rating": "Safe Republican",
+      "rating_lean": "Safe",
+      "rating_party": "R",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Gary R. Weart",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "Carl Ford",
+          "incumbent": true
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 34,
+      "cpi": "R+2",
+      "rating": "Lean Republican",
+      "rating_lean": "Lean",
+      "rating_party": "R",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "April Cook",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "Kevin Crutchfield",
+          "incumbent": false
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 35,
+      "cpi": "R+12",
+      "rating": "Safe Republican",
+      "rating_lean": "Safe",
+      "rating_party": "R",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Christine E. Winward",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "Todd Johnson",
+          "incumbent": true
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 36,
+      "cpi": "R+27",
+      "rating": "Safe Republican",
+      "rating_lean": "Safe",
+      "rating_party": "R",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Trevor Cole Hardwick",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "Eddie Settle",
+          "incumbent": true
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 37,
+      "cpi": "R+12",
+      "rating": "Safe Republican",
+      "rating_lean": "Safe",
+      "rating_party": "R",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Raygan J. Angel",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "Vickie Sawyer",
+          "incumbent": true
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 38,
+      "cpi": "D+20",
+      "rating": "Safe Democratic",
+      "rating_lean": "Safe",
+      "rating_party": "D",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Mujtaba A. Mohammed",
+          "incumbent": true
+        },
+        null
+      ],
+      "other": null
+    },
+    {
+      "district_number": 39,
+      "cpi": "D+18",
+      "rating": "Safe Democratic",
+      "rating_lean": "Safe",
+      "rating_party": "D",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "DeAndrea Salvador",
+          "incumbent": true
+        },
+        null
+      ],
+      "other": null
+    },
+    {
+      "district_number": 40,
+      "cpi": "D+27",
+      "rating": "Safe Democratic",
+      "rating_lean": "Safe",
+      "rating_party": "D",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Joyce Waddell",
+          "incumbent": true
+        },
+        {
+          "party": "R",
+          "name": "Bobbie Shields",
+          "incumbent": false
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 41,
+      "cpi": "D+27",
+      "rating": "Safe Democratic",
+      "rating_lean": "Safe",
+      "rating_party": "D",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Caleb Theodros",
+          "incumbent": true
+        },
+        {
+          "party": "R",
+          "name": "Kevin Gray",
+          "incumbent": false
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 42,
+      "cpi": "D+2",
+      "rating": "Lean Democratic",
+      "rating_lean": "Lean",
+      "rating_party": "D",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Mrs. Woodson Bradley",
+          "incumbent": true
+        },
+        {
+          "party": "R",
+          "name": "Stacie McGinn",
+          "incumbent": false
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 43,
+      "cpi": "R+9",
+      "rating": "Likely Republican",
+      "rating_lean": "Likely",
+      "rating_party": "R",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Steve Rutherford",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "Brad Overcash",
+          "incumbent": true
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 44,
+      "cpi": "R+19",
+      "rating": "Safe Republican",
+      "rating_lean": "Safe",
+      "rating_party": "R",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Rod Powell",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "Ted Alexander",
+          "incumbent": true
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 45,
+      "cpi": "R+20",
+      "rating": "Safe Republican",
+      "rating_lean": "Safe",
+      "rating_party": "R",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Greg Cranford",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "Mark Hollo",
+          "incumbent": true
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 46,
+      "cpi": "R+14",
+      "rating": "Safe Republican",
+      "rating_lean": "Safe",
+      "rating_party": "R",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Kyle Whisnant",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "Warren Daniel",
+          "incumbent": true
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 47,
+      "cpi": "R+12",
+      "rating": "Safe Republican",
+      "rating_lean": "Safe",
+      "rating_party": "R",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Frank Patton Hughes III",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "Ralph Hise",
+          "incumbent": true
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 48,
+      "cpi": "R+12",
+      "rating": "Safe Republican",
+      "rating_lean": "Safe",
+      "rating_party": "R",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Doyle G. Brown, Jr.",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "Tim Moffitt",
+          "incumbent": true
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 49,
+      "cpi": "D+19",
+      "rating": "Safe Democratic",
+      "rating_lean": "Safe",
+      "rating_party": "D",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Julie Mayfield",
+          "incumbent": true
+        },
+        {
+          "party": "R",
+          "name": "CJ Domingo",
+          "incumbent": false
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 50,
+      "cpi": "R+13",
+      "rating": "Safe Republican",
+      "rating_lean": "Safe",
+      "rating_party": "R",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Tom Downing",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "Kevin Corbin",
+          "incumbent": true
+        }
+      ],
+      "other": null
+    }
+  ],
+  "house": [
+    {
+      "district_number": 1,
+      "cpi": "R+13",
+      "rating": "Safe Republican",
+      "rating_lean": "Safe",
+      "rating_party": "R",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Miriam Rollin",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "Edward C. Goodwinl",
+          "incumbent": true
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 2,
+      "cpi": "D+7",
+      "rating": "Likely Democratic",
+      "rating_lean": "Likely",
+      "rating_party": "D",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Ray Jeffers",
+          "incumbent": true
+        },
+        null
+      ],
+      "other": null
+    },
+    {
+      "district_number": 3,
+      "cpi": "R+8",
+      "rating": "Likely Republican",
+      "rating_lean": "Likely",
+      "rating_party": "R",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Diannia Bright",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "Steve Tyson",
+          "incumbent": true
+        }
+      ],
+      "other": "Angela Humphries (LIB)"
+    },
+    {
+      "district_number": 4,
+      "cpi": "R+10",
+      "rating": "Safe Republican",
+      "rating_lean": "Safe",
+      "rating_party": "R",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Vernon Moore",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "Jimmy Dixon",
+          "incumbent": true
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 5,
+      "cpi": "R+2",
+      "rating": "Lean Republican",
+      "rating_lean": "Lean",
+      "rating_party": "R",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Sam Davis III",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "Bill Ward",
+          "incumbent": true
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 6,
+      "cpi": "R+9",
+      "rating": "Likely Republican",
+      "rating_lean": "Likely",
+      "rating_party": "R",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Tony Spears",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "Joe Pike",
+          "incumbent": true
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 7,
+      "cpi": "R+4",
+      "rating": "Lean Republican",
+      "rating_lean": "Lean",
+      "rating_party": "R",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Mark Speed",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "Cory Thornton",
+          "incumbent": false
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 8,
+      "cpi": "D+16",
+      "rating": "Safe Democratic",
+      "rating_lean": "Safe",
+      "rating_party": "D",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Gloristine Brown",
+          "incumbent": true
+        },
+        {
+          "party": "R",
+          "name": "Cathy Thorne Bynum",
+          "incumbent": false
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 9,
+      "cpi": "R+3",
+      "rating": "Lean Republican",
+      "rating_lean": "Lean",
+      "rating_party": "R",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Claire Kempner",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "Timothy Reeder",
+          "incumbent": true
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 10,
+      "cpi": "R+7",
+      "rating": "Likely Republican",
+      "rating_lean": "Likely",
+      "rating_party": "R",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Zyaire Webb",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "John Bell",
+          "incumbent": true
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 11,
+      "cpi": "D+17",
+      "rating": "Safe Democratic",
+      "rating_lean": "Safe",
+      "rating_party": "D",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Allison A. Dahle",
+          "incumbent": true
+        },
+        null
+      ],
+      "other": "Matthew Kordon (LIB)"
+    },
+    {
+      "district_number": 12,
+      "cpi": "R+3",
+      "rating": "Lean Republican",
+      "rating_lean": "Lean",
+      "rating_party": "R",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Don Hardy",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "Chris Humphrey",
+          "incumbent": true
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 13,
+      "cpi": "R+18",
+      "rating": "Safe Republican",
+      "rating_lean": "Safe",
+      "rating_party": "R",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Jason Moore",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "Celeste Cairns",
+          "incumbent": true
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 14,
+      "cpi": "R+13",
+      "rating": "Safe Republican",
+      "rating_lean": "Safe",
+      "rating_party": "R",
+      "candidates": [
+        null,
+        {
+          "party": "R",
+          "name": "Wyatt Gable",
+          "incumbent": true
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 15,
+      "cpi": "R+14",
+      "rating": "Safe Republican",
+      "rating_lean": "Safe",
+      "rating_party": "R",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Christopher Schulte",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "Phillip Shepard",
+          "incumbent": true
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 16,
+      "cpi": "R+18",
+      "rating": "Safe Republican",
+      "rating_lean": "Safe",
+      "rating_party": "R",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Jim Harris",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "Carson Smith",
+          "incumbent": true
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 17,
+      "cpi": "R+10",
+      "rating": "Safe Republican",
+      "rating_lean": "Safe",
+      "rating_party": "R",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Dennis A. Breen",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "Frank Iler",
+          "incumbent": true
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 18,
+      "cpi": "D+12",
+      "rating": "Safe Democratic",
+      "rating_lean": "Safe",
+      "rating_party": "D",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Deb Butler",
+          "incumbent": true
+        },
+        {
+          "party": "R",
+          "name": "Latisha Grady",
+          "incumbent": false
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 19,
+      "cpi": "R+9",
+      "rating": "Likely Republican",
+      "rating_lean": "Likely",
+      "rating_party": "R",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Scott Nasiff",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "Charlie Miller",
+          "incumbent": true
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 20,
+      "cpi": "R+4",
+      "rating": "Lean Republican",
+      "rating_lean": "Lean",
+      "rating_party": "R",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Tim Merrick",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "Dane Scalise",
+          "incumbent": false
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 21,
+      "cpi": "D+14",
+      "rating": "Safe Democratic",
+      "rating_lean": "Safe",
+      "rating_party": "D",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Ya Liu",
+          "incumbent": true
+        },
+        {
+          "party": "R",
+          "name": "Bryson Johnson",
+          "incumbent": false
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 22,
+      "cpi": "R+11",
+      "rating": "Safe Republican",
+      "rating_lean": "Safe",
+      "rating_party": "R",
+      "candidates": [
+        null,
+        {
+          "party": "R",
+          "name": "Wellie Jackson",
+          "incumbent": false
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 23,
+      "cpi": "D+9",
+      "rating": "Likely Democratic",
+      "rating_lean": "Likely",
+      "rating_party": "D",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Patricia Smith",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "Brent Roberson",
+          "incumbent": false
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 24,
+      "cpi": "D+2",
+      "rating": "Lean Democratic",
+      "rating_lean": "Lean",
+      "rating_party": "D",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Dante Pittman",
+          "incumbent": true
+        },
+        {
+          "party": "R",
+          "name": "Blake Boykin",
+          "incumbent": false
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 25,
+      "cpi": "D+1",
+      "rating": "Toss-up",
+      "rating_lean": "Toss-up",
+      "rating_party": null,
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Lorenza M. Wilkins",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "Allen Chesser",
+          "incumbent": true
+        }
+      ],
+      "other": "Nick Taylor (LIB)"
+    },
+    {
+      "district_number": 26,
+      "cpi": "R+4",
+      "rating": "Lean Republican",
+      "rating_lean": "Lean",
+      "rating_party": "R",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "L'Bertrice Solomon",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "Donna McDowell White",
+          "incumbent": true
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 27,
+      "cpi": "D+11",
+      "rating": "Safe Democratic",
+      "rating_lean": "Safe",
+      "rating_party": "D",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Rodney D. Pierce",
+          "incumbent": true
+        },
+        {
+          "party": "R",
+          "name": "David Woodson",
+          "incumbent": false
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 28,
+      "cpi": "R+15",
+      "rating": "Safe Republican",
+      "rating_lean": "Safe",
+      "rating_party": "R",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "D. Matthew Bailey",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "Larry C. Strickland",
+          "incumbent": true
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 29,
+      "cpi": "D+35",
+      "rating": "Safe Democratic",
+      "rating_lean": "Safe",
+      "rating_party": "D",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Vernetta Alston",
+          "incumbent": true
+        },
+        null
+      ],
+      "other": null
+    },
+    {
+      "district_number": 30,
+      "cpi": "D+37",
+      "rating": "Safe Democratic",
+      "rating_lean": "Safe",
+      "rating_party": "D",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Marcia Morey",
+          "incumbent": true
+        },
+        null
+      ],
+      "other": "Ray Ubinger (LIB)"
+    },
+    {
+      "district_number": 31,
+      "cpi": "D+32",
+      "rating": "Safe Democratic",
+      "rating_lean": "Safe",
+      "rating_party": "D",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Zack Hawkins",
+          "incumbent": true
+        },
+        null
+      ],
+      "other": null
+    },
+    {
+      "district_number": 32,
+      "cpi": "D+2",
+      "rating": "Lean Democratic",
+      "rating_lean": "Lean",
+      "rating_party": "D",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Curtis McRae",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "Frank Sossamon",
+          "incumbent": false
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 33,
+      "cpi": "D+23",
+      "rating": "Safe Democratic",
+      "rating_lean": "Safe",
+      "rating_party": "D",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Monika Johnson-Hostler",
+          "incumbent": true
+        },
+        {
+          "party": "R",
+          "name": "Matthew Orr",
+          "incumbent": false
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 34,
+      "cpi": "D+15",
+      "rating": "Safe Democratic",
+      "rating_lean": "Safe",
+      "rating_party": "D",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Tim Longest",
+          "incumbent": true
+        },
+        null
+      ],
+      "other": "Ed George (LIB)"
+    },
+    {
+      "district_number": 35,
+      "cpi": "R+0",
+      "rating": "Toss-up",
+      "rating_lean": "Toss-up",
+      "rating_party": null,
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Evonne S. Hopkins",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "Mike Schietzelt",
+          "incumbent": true
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 36,
+      "cpi": "D+6",
+      "rating": "Likely Democratic",
+      "rating_lean": "Likely",
+      "rating_party": "D",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Julie von Haefen",
+          "incumbent": true
+        },
+        {
+          "party": "R",
+          "name": "Mary Insprucker",
+          "incumbent": false
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 37,
+      "cpi": "R+0",
+      "rating": "Toss-up",
+      "rating_lean": "Toss-up",
+      "rating_party": null,
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Winn Decker",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "Erin Pare",
+          "incumbent": true
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 38,
+      "cpi": "D+33",
+      "rating": "Safe Democratic",
+      "rating_lean": "Safe",
+      "rating_party": "D",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Abe Jones",
+          "incumbent": true
+        },
+        null
+      ],
+      "other": null
+    },
+    {
+      "district_number": 39,
+      "cpi": "D+15",
+      "rating": "Safe Democratic",
+      "rating_lean": "Safe",
+      "rating_party": "D",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "James A. Roberson",
+          "incumbent": true
+        },
+        {
+          "party": "R",
+          "name": "Jorge Cordova",
+          "incumbent": false
+        }
+      ],
+      "other": "Wayne Cockrell (LIB)"
+    },
+    {
+      "district_number": 40,
+      "cpi": "D+13",
+      "rating": "Safe Democratic",
+      "rating_lean": "Safe",
+      "rating_party": "D",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Phil Rubin",
+          "incumbent": true
+        },
+        null
+      ],
+      "other": "Lucas Everett Jones (LIB)"
+    },
+    {
+      "district_number": 41,
+      "cpi": "D+18",
+      "rating": "Safe Democratic",
+      "rating_lean": "Safe",
+      "rating_party": "D",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Maria Cervania",
+          "incumbent": true
+        },
+        {
+          "party": "R",
+          "name": "Bruce Forster",
+          "incumbent": false
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 42,
+      "cpi": "D+26",
+      "rating": "Safe Democratic",
+      "rating_lean": "Safe",
+      "rating_party": "D",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Mike Colvin",
+          "incumbent": true
+        },
+        null
+      ],
+      "other": null
+    },
+    {
+      "district_number": 43,
+      "cpi": "R+4",
+      "rating": "Lean Republican",
+      "rating_lean": "Lean",
+      "rating_party": "R",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Janene Ackles",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "Diane Wheatley",
+          "incumbent": true
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 44,
+      "cpi": "D+12",
+      "rating": "Safe Democratic",
+      "rating_lean": "Safe",
+      "rating_party": "D",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Charles Smith",
+          "incumbent": true
+        },
+        null
+      ],
+      "other": null
+    },
+    {
+      "district_number": 45,
+      "cpi": "D+10",
+      "rating": "Safe Democratic",
+      "rating_lean": "Safe",
+      "rating_party": "D",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Frances Jackson",
+          "incumbent": true
+        },
+        null
+      ],
+      "other": null
+    },
+    {
+      "district_number": 46,
+      "cpi": "R+14",
+      "rating": "Safe Republican",
+      "rating_lean": "Safe",
+      "rating_party": "R",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Brittany Newton",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "Brenden H. Jones",
+          "incumbent": true
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 47,
+      "cpi": "R+7",
+      "rating": "Likely Republican",
+      "rating_lean": "Likely",
+      "rating_party": "R",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Eshonda Hooper",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "John L. Lowery",
+          "incumbent": true
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 48,
+      "cpi": "D+3",
+      "rating": "Lean Democratic",
+      "rating_lean": "Lean",
+      "rating_party": "D",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Garland E. Pierce",
+          "incumbent": true
+        },
+        {
+          "party": "R",
+          "name": "Ralph Carter",
+          "incumbent": false
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 49,
+      "cpi": "D+20",
+      "rating": "Safe Democratic",
+      "rating_lean": "Safe",
+      "rating_party": "D",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Cynthia Ball",
+          "incumbent": true
+        },
+        {
+          "party": "R",
+          "name": "Daran Thomas",
+          "incumbent": false
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 50,
+      "cpi": "D+9",
+      "rating": "Likely Democratic",
+      "rating_lean": "Likely",
+      "rating_party": "D",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Renee A. Price",
+          "incumbent": true
+        },
+        null
+      ],
+      "other": null
+    },
+    {
+      "district_number": 51,
+      "cpi": "R+11",
+      "rating": "Safe Republican",
+      "rating_lean": "Safe",
+      "rating_party": "R",
+      "candidates": [
+        null,
+        {
+          "party": "R",
+          "name": "Charles M. Taylor",
+          "incumbent": false
+        }
+      ],
+      "other": "April Montgomery (UNA)"
+    },
+    {
+      "district_number": 52,
+      "cpi": "R+8",
+      "rating": "Likely Republican",
+      "rating_lean": "Likely",
+      "rating_party": "R",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Joe Parfitt",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "Ben Moss",
+          "incumbent": true
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 53,
+      "cpi": "R+11",
+      "rating": "Safe Republican",
+      "rating_lean": "Safe",
+      "rating_party": "R",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Kevin G. Thurman",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "Howard L. Penny, Jr.",
+          "incumbent": true
+        }
+      ],
+      "other": "Christopher Sessions (LIB)"
+    },
+    {
+      "district_number": 54,
+      "cpi": "D+5",
+      "rating": "Lean Democratic",
+      "rating_lean": "Lean",
+      "rating_party": "D",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Robert T. Reives II",
+          "incumbent": true
+        },
+        null
+      ],
+      "other": null
+    },
+    {
+      "district_number": 55,
+      "cpi": "R+11",
+      "rating": "Safe Republican",
+      "rating_lean": "Safe",
+      "rating_party": "R",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "John J. Kirkpatrick IV",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "Clancy Baucom",
+          "incumbent": false
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 56,
+      "cpi": "D+36",
+      "rating": "Safe Democratic",
+      "rating_lean": "Safe",
+      "rating_party": "D",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Allen Buansi",
+          "incumbent": true
+        },
+        null
+      ],
+      "other": "Matthew P. Clements (LIB)"
+    },
+    {
+      "district_number": 57,
+      "cpi": "D+19",
+      "rating": "Safe Democratic",
+      "rating_lean": "Safe",
+      "rating_party": "D",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Tracy Clark",
+          "incumbent": true
+        },
+        null
+      ],
+      "other": null
+    },
+    {
+      "district_number": 58,
+      "cpi": "D+28",
+      "rating": "Safe Democratic",
+      "rating_lean": "Safe",
+      "rating_party": "D",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Amos Quick",
+          "incumbent": true
+        },
+        null
+      ],
+      "other": null
+    },
+    {
+      "district_number": 59,
+      "cpi": "R+3",
+      "rating": "Lean Republican",
+      "rating_lean": "Lean",
+      "rating_party": "R",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Elma Hairston",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "Alan Branson",
+          "incumbent": true
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 60,
+      "cpi": "D+14",
+      "rating": "Safe Democratic",
+      "rating_lean": "Safe",
+      "rating_party": "D",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Amanda Cook",
+          "incumbent": true
+        },
+        {
+          "party": "R",
+          "name": "Joseph Perrotta",
+          "incumbent": false
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 61,
+      "cpi": "D+29",
+      "rating": "Safe Democratic",
+      "rating_lean": "Safe",
+      "rating_party": "D",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Mary Price (Pricey) Harrison",
+          "incumbent": true
+        },
+        null
+      ],
+      "other": null
+    },
+    {
+      "district_number": 62,
+      "cpi": "R+2",
+      "rating": "Lean Republican",
+      "rating_lean": "Lean",
+      "rating_party": "R",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Shelly Headen",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "John M. Blust",
+          "incumbent": true
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 63,
+      "cpi": "R+2",
+      "rating": "Lean Republican",
+      "rating_lean": "Lean",
+      "rating_party": "R",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Ian Baltutis",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "Ryan Moffitt",
+          "incumbent": false
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 64,
+      "cpi": "R+2",
+      "rating": "Lean Republican",
+      "rating_lean": "Lean",
+      "rating_party": "R",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "LeVon Barnes",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "Dennis Riddell",
+          "incumbent": true
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 65,
+      "cpi": "R+16",
+      "rating": "Safe Republican",
+      "rating_lean": "Safe",
+      "rating_party": "R",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Gavin McGaughey",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "Seth Woodall",
+          "incumbent": false
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 66,
+      "cpi": "D+15",
+      "rating": "Safe Democratic",
+      "rating_lean": "Safe",
+      "rating_party": "D",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Sarah Crawford",
+          "incumbent": true
+        },
+        null
+      ],
+      "other": null
+    },
+    {
+      "district_number": 67,
+      "cpi": "R+22",
+      "rating": "Safe Republican",
+      "rating_lean": "Safe",
+      "rating_party": "R",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Jocelyn Torres",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "Cody Huneycutt",
+          "incumbent": true
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 68,
+      "cpi": "R+10",
+      "rating": "Safe Republican",
+      "rating_lean": "Safe",
+      "rating_party": "R",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Derek Warriner",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "David Willis",
+          "incumbent": true
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 69,
+      "cpi": "R+12",
+      "rating": "Safe Republican",
+      "rating_lean": "Safe",
+      "rating_party": "R",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Heidi Sinsley",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "Dean Arp",
+          "incumbent": true
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 70,
+      "cpi": "R+24",
+      "rating": "Safe Republican",
+      "rating_lean": "Safe",
+      "rating_party": "R",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "William (Bill) McCaskill",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "Brian Biggs",
+          "incumbent": true
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 71,
+      "cpi": "D+21",
+      "rating": "Safe Democratic",
+      "rating_lean": "Safe",
+      "rating_party": "D",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Kanika Brown",
+          "incumbent": true
+        },
+        null
+      ],
+      "other": "Mathew Mena (GRE)"
+    },
+    {
+      "district_number": 72,
+      "cpi": "D+25",
+      "rating": "Safe Democratic",
+      "rating_lean": "Safe",
+      "rating_party": "D",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Amber M. Baker",
+          "incumbent": true
+        },
+        null
+      ],
+      "other": null
+    },
+    {
+      "district_number": 73,
+      "cpi": "R+1",
+      "rating": "Toss-up",
+      "rating_lean": "Toss-up",
+      "rating_party": null,
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Thomas J. Monks",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "Jonathan Almond",
+          "incumbent": true
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 74,
+      "cpi": "R+3",
+      "rating": "Lean Republican",
+      "rating_lean": "Lean",
+      "rating_party": "R",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Amy Taylor North",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "Jeff Zenger",
+          "incumbent": true
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 75,
+      "cpi": "R+4",
+      "rating": "Lean Republican",
+      "rating_lean": "Lean",
+      "rating_party": "R",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Jen Wiles",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "Donny C. Lambeth",
+          "incumbent": true
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 76,
+      "cpi": "R+11",
+      "rating": "Safe Republican",
+      "rating_lean": "Safe",
+      "rating_party": "R",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Scott Huffman",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "Greg Edds",
+          "incumbent": false
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 77,
+      "cpi": "R+25",
+      "rating": "Safe Republican",
+      "rating_lean": "Safe",
+      "rating_party": "R",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Sabrina Harris",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "Julia Howard",
+          "incumbent": true
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 78,
+      "cpi": "R+24",
+      "rating": "Safe Republican",
+      "rating_lean": "Safe",
+      "rating_party": "R",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Matt Holway",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "Neal Jackson",
+          "incumbent": true
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 79,
+      "cpi": "R+12",
+      "rating": "Safe Republican",
+      "rating_lean": "Safe",
+      "rating_party": "R",
+      "candidates": [
+        null,
+        {
+          "party": "R",
+          "name": "Darren Armstrong",
+          "incumbent": false
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 80,
+      "cpi": "R+23",
+      "rating": "Safe Republican",
+      "rating_lean": "Safe",
+      "rating_party": "R",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "JacQuez Johnson",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "Sam Wafford",
+          "incumbent": true
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 81,
+      "cpi": "R+20",
+      "rating": "Safe Republican",
+      "rating_lean": "Safe",
+      "rating_party": "R",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Dylan R. Tucker",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "Larry Potts",
+          "incumbent": true
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 82,
+      "cpi": "R+3",
+      "rating": "Lean Republican",
+      "rating_lean": "Lean",
+      "rating_party": "R",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Chris Bishopp",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "Brian Echevarria",
+          "incumbent": true
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 83,
+      "cpi": "R+14",
+      "rating": "Safe Republican",
+      "rating_lean": "Safe",
+      "rating_party": "R",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Johnnie Jones",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "Grant Campbell",
+          "incumbent": true
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 84,
+      "cpi": "R+16",
+      "rating": "Safe Republican",
+      "rating_lean": "Safe",
+      "rating_party": "R",
+      "candidates": [
+        null,
+        {
+          "party": "R",
+          "name": "Jeffrey C. McNeely",
+          "incumbent": true
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 85,
+      "cpi": "R+21",
+      "rating": "Safe Republican",
+      "rating_lean": "Safe",
+      "rating_party": "R",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Suzanne Gavenus",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "Dudley Greene",
+          "incumbent": true
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 86,
+      "cpi": "R+18",
+      "rating": "Safe Republican",
+      "rating_lean": "Safe",
+      "rating_party": "R",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Wesley E. Hendrix",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "Hugh Blackwell",
+          "incumbent": true
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 87,
+      "cpi": "R+23",
+      "rating": "Safe Republican",
+      "rating_lean": "Safe",
+      "rating_party": "R",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Iris Bender",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "Destin Hall",
+          "incumbent": true
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 88,
+      "cpi": "D+19",
+      "rating": "Safe Democratic",
+      "rating_lean": "Safe",
+      "rating_party": "D",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Mary Belk",
+          "incumbent": true
+        },
+        {
+          "party": "R",
+          "name": "Ray Craig",
+          "incumbent": false
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 89,
+      "cpi": "R+23",
+      "rating": "Safe Republican",
+      "rating_lean": "Safe",
+      "rating_party": "R",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Robert (Spider) Thompson",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "Mitchell Setzer",
+          "incumbent": true
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 90,
+      "cpi": "R+26",
+      "rating": "Safe Republican",
+      "rating_lean": "Safe",
+      "rating_party": "R",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Ken Badgett",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "Dan Kiger",
+          "incumbent": false
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 91,
+      "cpi": "R+15",
+      "rating": "Safe Republican",
+      "rating_lean": "Safe",
+      "rating_party": "R",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Lucille Puckett",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "Kyle Hall",
+          "incumbent": true
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 92,
+      "cpi": "D+21",
+      "rating": "Safe Democratic",
+      "rating_lean": "Safe",
+      "rating_party": "D",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Terry Brown",
+          "incumbent": true
+        },
+        null
+      ],
+      "other": null
+    },
+    {
+      "district_number": 93,
+      "cpi": "R+6",
+      "rating": "Likely Republican",
+      "rating_lean": "Likely",
+      "rating_party": "R",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Charlie Wallin",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "Ray Pickett",
+          "incumbent": true
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 94,
+      "cpi": "R+27",
+      "rating": "Safe Republican",
+      "rating_lean": "Safe",
+      "rating_party": "R",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Andy Warren",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "Blair Eddins",
+          "incumbent": true
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 95,
+      "cpi": "R+13",
+      "rating": "Safe Republican",
+      "rating_lean": "Safe",
+      "rating_party": "R",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Michael Robinson",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "Richard (Todd) Carver",
+          "incumbent": true
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 96,
+      "cpi": "R+12",
+      "rating": "Safe Republican",
+      "rating_lean": "Safe",
+      "rating_party": "R",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Park Inglefield",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "Jay Adams",
+          "incumbent": true
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 97,
+      "cpi": "R+21",
+      "rating": "Safe Republican",
+      "rating_lean": "Safe",
+      "rating_party": "R",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Greg McBryde",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "Heather Rhyne",
+          "incumbent": true
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 98,
+      "cpi": "D+1",
+      "rating": "Toss-up",
+      "rating_lean": "Toss-up",
+      "rating_party": null,
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Beth Helfrich",
+          "incumbent": true
+        },
+        {
+          "party": "R",
+          "name": "John Rhodes",
+          "incumbent": false
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 99,
+      "cpi": "D+35",
+      "rating": "Safe Democratic",
+      "rating_lean": "Safe",
+      "rating_party": "D",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Veleria M. Levy",
+          "incumbent": false
+        },
+        null
+      ],
+      "other": null
+    },
+    {
+      "district_number": 100,
+      "cpi": "D+14",
+      "rating": "Safe Democratic",
+      "rating_lean": "Safe",
+      "rating_party": "D",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Julia Greenfield",
+          "incumbent": true
+        },
+        null
+      ],
+      "other": null
+    },
+    {
+      "district_number": 101,
+      "cpi": "D+21",
+      "rating": "Safe Democratic",
+      "rating_lean": "Safe",
+      "rating_party": "D",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Carolyn G. Logan",
+          "incumbent": true
+        },
+        null
+      ],
+      "other": null
+    },
+    {
+      "district_number": 102,
+      "cpi": "D+25",
+      "rating": "Safe Democratic",
+      "rating_lean": "Safe",
+      "rating_party": "D",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Becky Carney",
+          "incumbent": true
+        },
+        null
+      ],
+      "other": null
+    },
+    {
+      "district_number": 103,
+      "cpi": "D+8",
+      "rating": "Likely Democratic",
+      "rating_lean": "Likely",
+      "rating_party": "D",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Laura Budd",
+          "incumbent": true
+        },
+        null
+      ],
+      "other": null
+    },
+    {
+      "district_number": 104,
+      "cpi": "D+8",
+      "rating": "Likely Democratic",
+      "rating_lean": "Likely",
+      "rating_party": "D",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Brandon Lofton",
+          "incumbent": true
+        },
+        {
+          "party": "R",
+          "name": "Trina Boyd",
+          "incumbent": false
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 105,
+      "cpi": "R+0",
+      "rating": "Toss-up",
+      "rating_lean": "Toss-up",
+      "rating_party": null,
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Ken McCool",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "Tricia Ann Cotham",
+          "incumbent": true
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 106,
+      "cpi": "D+27",
+      "rating": "Safe Democratic",
+      "rating_lean": "Safe",
+      "rating_party": "D",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Rodney Sadler",
+          "incumbent": false
+        },
+        null
+      ],
+      "other": null
+    },
+    {
+      "district_number": 107,
+      "cpi": "D+32",
+      "rating": "Safe Democratic",
+      "rating_lean": "Safe",
+      "rating_party": "D",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Aisha O. Dew",
+          "incumbent": true
+        },
+        null
+      ],
+      "other": null
+    },
+    {
+      "district_number": 108,
+      "cpi": "R+13",
+      "rating": "Safe Republican",
+      "rating_lean": "Safe",
+      "rating_party": "R",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Sydnie Hutchinson",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "John A. Torbett",
+          "incumbent": true
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 109,
+      "cpi": "R+6",
+      "rating": "Likely Republican",
+      "rating_lean": "Likely",
+      "rating_party": "R",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Mark D. Carver",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "Donnie Loftis",
+          "incumbent": true
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 110,
+      "cpi": "R+14",
+      "rating": "Safe Republican",
+      "rating_lean": "Safe",
+      "rating_party": "R",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Mary Silver",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "Caroline Eason",
+          "incumbent": false
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 111,
+      "cpi": "R+21",
+      "rating": "Safe Republican",
+      "rating_lean": "Safe",
+      "rating_party": "R",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Jerry Blake",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "Paul Scott",
+          "incumbent": true
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 112,
+      "cpi": "D+29",
+      "rating": "Safe Democratic",
+      "rating_lean": "Safe",
+      "rating_party": "D",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Jordan Lopez",
+          "incumbent": true
+        },
+        null
+      ],
+      "other": null
+    },
+    {
+      "district_number": 113,
+      "cpi": "R+15",
+      "rating": "Safe Republican",
+      "rating_lean": "Safe",
+      "rating_party": "R",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "John Morgan",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "Jake Johnson",
+          "incumbent": true
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 114,
+      "cpi": "D+10",
+      "rating": "Safe Democratic",
+      "rating_lean": "Safe",
+      "rating_party": "D",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Eric Ager",
+          "incumbent": true
+        },
+        null
+      ],
+      "other": null
+    },
+    {
+      "district_number": 115,
+      "cpi": "D+1",
+      "rating": "Toss-up",
+      "rating_lean": "Toss-up",
+      "rating_party": null,
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Lindsey Prather",
+          "incumbent": true
+        },
+        {
+          "party": "R",
+          "name": "Anthony J. Penland",
+          "incumbent": false
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 116,
+      "cpi": "D+32",
+      "rating": "Safe Democratic",
+      "rating_lean": "Safe",
+      "rating_party": "D",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Brian Turner",
+          "incumbent": true
+        },
+        null
+      ],
+      "other": null
+    },
+    {
+      "district_number": 117,
+      "cpi": "R+6",
+      "rating": "Likely Republican",
+      "rating_lean": "Likely",
+      "rating_party": "R",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Lynne Russo",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "Chelsea Walsh",
+          "incumbent": false
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 118,
+      "cpi": "R+9",
+      "rating": "Likely Republican",
+      "rating_lean": "Likely",
+      "rating_party": "R",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Danny E. Davis",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "James M. (Jimmy) Rogers",
+          "incumbent": false
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 119,
+      "cpi": "R+3",
+      "rating": "Lean Republican",
+      "rating_lean": "Lean",
+      "rating_party": "R",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Mark Burrows",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "Anna Ferguson",
+          "incumbent": false
+        }
+      ],
+      "other": null
+    },
+    {
+      "district_number": 120,
+      "cpi": "R+23",
+      "rating": "Safe Republican",
+      "rating_lean": "Safe",
+      "rating_party": "R",
+      "candidates": [
+        {
+          "party": "D",
+          "name": "Caleb Brown",
+          "incumbent": false
+        },
+        {
+          "party": "R",
+          "name": "Karl Gillespie",
+          "incumbent": true
+        }
+      ],
+      "other": null
+    }
+  ]
+}

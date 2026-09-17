@@ -1,0 +1,11 @@
+node_modules/
+dist/
+build/
+*.log
+.DS_Store
+backend/db/
+backend/data/raw/
+.venv/
+*.sqlite
+*.sqlite-wal
+*.sqlite-shm

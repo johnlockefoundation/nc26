@@ -1,0 +1,10 @@
+{
+  "cycle": "2026",
+  "source": "Federal candidates / FEC statements of candidacy via public reporting; 2026 general election",
+  "candidates": [
+    { "candidate_id": "nc01_davis_2026", "district_id": "NC-01", "name": "Don Davis", "party": "D", "incumbent": true, "website": "https://www.dondavisforcongress.com/" },
+    { "candidate_id": "nc01_buckhout_2026", "district_id": "NC-01", "name": "Laurie Buckhout", "party": "R", "incumbent": false, "website": "https://www.buckhoutforcongress.com/" },
+    { "candidate_id": "nc11_ager_2026", "district_id": "NC-11", "name": "Jamie Ager", "party": "D", "incumbent": false, "website": "" },
+    { "candidate_id": "nc11_balkcom_2026", "district_id": "NC-11", "name": "Jennifer Balkcom", "party": "R", "incumbent": false, "website": "" }
+  ]
+}

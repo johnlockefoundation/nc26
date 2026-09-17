@@ -1,0 +1,19 @@
+{
+  "name": "nc-race-signals",
+  "private": true,
+  "version": "0.1.0",
+  "description": "North Carolina competitive election dashboard: polls, markets, money, and news per competitive race.",
+  "workspaces": [
+    "backend",
+    "frontend"
+  ],
+  "scripts": {
+    "dev": "concurrently -n api,web -c blue,green \"npm run dev -w backend\" \"npm run dev -w frontend\"",
+    "seed": "npm run seed -w backend",
+    "ingest": "npm run ingest -w backend",
+    "build": "npm run build -w frontend"
+  },
+  "devDependencies": {
+    "concurrently": "^9.0.0"
+  }
+}
