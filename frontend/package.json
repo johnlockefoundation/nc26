@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "build:pages": "node ../backend/scripts/export-static.mjs && VITE_BASE=/nc28/ vite build --mode pages",
+    "build:pages": "node ../backend/scripts/export-static.mjs && VITE_BASE=/nc26/ vite build --mode pages",
     "preview": "vite preview"
   },
   "dependencies": {
