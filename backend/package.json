@@ -8,7 +8,8 @@
     "start": "node src/index.js",
     "dev": "node --watch src/index.js",
     "seed": "node src/ingest/index.js seed",
-    "ingest": "node src/ingest/index.js all"
+    "ingest": "node src/ingest/index.js all",
+    "static": "node scripts/export-static.mjs"
   },
   "dependencies": {
     "cors": "^2.8.5",

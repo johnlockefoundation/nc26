@@ -9,3 +9,4 @@ backend/data/raw/
 *.sqlite
 *.sqlite-wal
 *.sqlite-shm
+frontend/public/demo-data/
