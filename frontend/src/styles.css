@@ -145,24 +145,16 @@ a { color: var(--accent); }
 .panel-note { font-size: 12px; color: var(--muted); background: #f8fafc; border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; margin-bottom: 14px; }
 .badge { background: #eef2ff; color: #3730a3; border-radius: 999px; padding: 1px 7px; font-weight: 700; font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; margin-right: 4px; }
 
-/* Metrics */
-.metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-.metric { border: 1px solid var(--line); border-radius: 12px; padding: 12px 12px 10px; background: #fcfdff; }
+/* Metrics: full-width horizontal rows so values never wrap */
+.metrics { display: flex; flex-direction: column; gap: 8px; }
+.metric {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 16px;
+  border: 1px solid var(--line); border-radius: 12px; padding: 11px 14px; background: #fcfdff;
+}
 .metric-empty { background: #f8fafc; }
-.metric-title { font-size: 10.5px; letter-spacing: 0.14em; font-weight: 800; color: var(--muted); }
-.metric-value { font-size: 27px; font-weight: 800; letter-spacing: -0.02em; margin: 4px 0 6px; line-height: 1.05; }
+.metric-title { font-size: 10.5px; letter-spacing: 0.14em; font-weight: 800; color: var(--muted); flex: none; }
+.metric-value { font-size: 26px; font-weight: 800; letter-spacing: -0.02em; line-height: 1; white-space: nowrap; }
 .metric-na { font-size: 15px; color: #94a3b8; font-weight: 700; letter-spacing: 0.02em; }
-.metric-meta { font-size: 11px; color: var(--muted); display: flex; flex-direction: column; gap: 2px; }
-.metric-meta-line.dim { color: #a3b0c2; }
-.seed-tag { display: inline-block; background: #fff7ed; color: #9a3412; border: 1px solid #fed7aa; border-radius: 6px; padding: 0 5px; font-size: 10px; font-weight: 700; }
-.metric-toggle { margin-top: 8px; border: 0; background: transparent; color: var(--accent); font-size: 11.5px; font-weight: 700; cursor: pointer; padding: 0; }
-.metric-toggle:hover { text-decoration: underline; }
-
-.poll-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 11px; }
-.poll-table th { text-align: left; color: var(--muted); font-weight: 700; border-bottom: 1px solid var(--line); padding: 3px 4px; }
-.poll-table td { padding: 3px 4px; border-bottom: 1px solid #f1f5f9; }
-.d-cell { color: var(--d); font-weight: 700; }
-.r-cell { color: var(--r); font-weight: 700; }
 
 /* Sections */
 .panel-section { margin-top: 18px; }

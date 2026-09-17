@@ -1,6 +1,6 @@
 import MetricBlock from './MetricBlock.jsx';
 import NewsList from './NewsList.jsx';
-import { relativeTime, fullDate } from '../lib/format.js';
+import { fullDate } from '../lib/format.js';
 
 function CandidateLine({ candidates }) {
   if (!candidates || candidates.length === 0) return <div className="panel-candidates dim">Candidates not yet available.</div>;
@@ -39,33 +39,9 @@ export default function RacePanel({ race, loading, onClose }) {
       )}
 
       <div className="metrics">
-        <MetricBlock
-          title="POLLS"
-          emptyText="NO POLLING"
-          summary={polls}
-          metaLines={polls.available ? [`Updated ${relativeTime(polls.updated_at)}`] : []}
-        />
-
-        <MetricBlock
-          title="MARKETS"
-          emptyText="NO MARKET"
-          summary={markets}
-          metaLines={markets.available
-            ? [`Updated ${relativeTime(markets.updated_at)}`]
-            : []}
-        />
-
-        <MetricBlock
-          title="MONEY"
-          emptyText="NO MONEY"
-          summary={moneyS}
-          metaLines={moneyS.available
-            ? [
-                moneyS.reporting_period || '',
-                `Updated ${relativeTime(moneyS.updated_at)}`,
-              ].filter(Boolean)
-            : []}
-        />
+        <MetricBlock title="POLLS" emptyText="NO POLLING" summary={polls} />
+        <MetricBlock title="MARKETS" emptyText="NO MARKET" summary={markets} />
+        <MetricBlock title="MONEY" emptyText="NO MONEY" summary={moneyS} />
       </div>
 
       <section className="panel-section">
