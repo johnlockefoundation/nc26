@@ -1,9 +1,8 @@
-import { useEffect, useRef, useState, useMemo } from 'react';
-import { geoMercator, geoPath, geoCentroid } from 'd3-geo';
+import { useEffect, useRef } from 'react';
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
 import { advantageColor, primarySignal, advantageText } from '../lib/colors.js';
-
-const W = 900;
-const H = 500;
+import { BASEMAP_URL, BASEMAP_ATTR, MAP_MIN_ZOOM, MAP_MAX_ZOOM } from '../lib/map.js';
 
 function shortLabel(districtId) {
   return districtId.split('-')[1];
@@ -14,148 +13,158 @@ function colorFor(race) {
   return advantageColor(sig.value);
 }
 
-export default function NCMap({ features, outline, races, selectedId, onSelect, onHover }) {
-  const [tooltip, setTooltip] = useState(null);
-  const [view, setView] = useState({ k: 1, x: 0, y: 0 });
-  const drag = useRef(null);
-  const svgRef = useRef(null);
+function safeStyle() {
+  return { color: '#dbe2ea', weight: 0.6, fillColor: '#f1f5f9', fillOpacity: 0.55 };
+}
 
-  const projection = useMemo(() => {
-    if (!outline) return null;
-    return geoMercator().fitExtent([[12, 12], [W - 12, H - 12]], outline);
-  }, [outline]);
+function raceStyle(f, race) {
+  return {
+    color: '#475569',
+    weight: 0.8,
+    fillColor: colorFor(race),
+    fillOpacity: 0.85,
+  };
+}
 
-  const path = useMemo(() => (projection ? geoPath(projection) : null), [projection]);
+function tooltipHtml(race) {
+  const p = advantageText('POLLS', race?.polls);
+  const m = advantageText('MARKETS', race?.markets);
+  const money = advantageText('MONEY', race?.money);
+  return `<div class="tt-title">${race.district_id}</div>
+    <div class="tt-row"><span>Polls</span><b>${p}</b></div>
+    <div class="tt-row"><span>Markets</span><b>${m}</b></div>
+    <div class="tt-row"><span>Money</span><b>${money}</b></div>`;
+}
+
+function geometryFeature(f) {
+  return { type: 'Feature', properties: {}, geometry: f.geometry };
+}
+
+function pathCenter(f) {
+  const bounds = L.geoJSON(geometryFeature(f)).getBounds();
+  return bounds.isValid() ? bounds.getCenter() : null;
+}
+
+export default function NCMap({ features, outline, races, selectedId, onSelect }) {
+  const containerRef = useRef(null);
+  const mapRef = useRef(null);
+  const layerRef = useRef(null);
+  const labelsRef = useRef(null);
+  const layersById = useRef(new Map());
+  const featuresById = useRef(new Map());
+  const raceById = useRef(new Map());
+  const selectedRef = useRef(null);
+  const onSelectRef = useRef(onSelect);
+  onSelectRef.current = onSelect;
 
   useEffect(() => {
-    setView({ k: 1, x: 0, y: 0 });
-  }, [features]);
+    raceById.current = new Map((races || []).map((r) => [r.district_id, r]));
+    featuresById.current = new Map((features || []).map((f) => [f.district_id, f]));
+  }, [features, races]);
 
-  if (!projection) return <div className="map-loading">Loading North Carolina…</div>;
-
-  const raceById = new Map((races || []).map((r) => [r.district_id, r]));
-  const ordered = [...features].sort((a, b) => {
-    if (a.competitive !== b.competitive) return a.competitive ? 1 : -1;
-    if (a.district_id === selectedId) return 1;
-    if (b.district_id === selectedId) return -1;
-    return 0;
-  });
-
-  function onWheel(e) {
-    e.preventDefault();
-    const rect = svgRef.current.getBoundingClientRect();
-    const scaleX = W / rect.width;
-    const scaleY = H / rect.height;
-    const px = (e.clientX - rect.left) * scaleX;
-    const py = (e.clientY - rect.top) * scaleY;
-    const factor = e.deltaY < 0 ? 1.18 : 1 / 1.18;
-    setView((v) => {
-      const k = Math.max(1, Math.min(14, v.k * factor));
-      const x = px - ((px - v.x) * k) / v.k;
-      const y = py - ((py - v.y) * k) / v.k;
-      return { k, x, y };
+  // Initialize the Leaflet map once.
+  useEffect(() => {
+    if (mapRef.current) return;
+    const map = L.map(containerRef.current, {
+      minZoom: MAP_MIN_ZOOM,
+      maxZoom: MAP_MAX_ZOOM,
+      zoomControl: true,
+      attributionControl: true,
     });
+    map.setView([35.6, -79.5], 6);
+    L.tileLayer(BASEMAP_URL, {
+      attribution: BASEMAP_ATTR,
+      maxZoom: MAP_MAX_ZOOM,
+    }).addTo(map);
+    layerRef.current = L.layerGroup().addTo(map);
+    labelsRef.current = L.layerGroup().addTo(map);
+    mapRef.current = map;
+    return () => {
+      map.remove();
+      mapRef.current = null;
+    };
+  }, []);
+
+  // Rebuild district layers when the dataset changes (race type switch).
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
+    layerRef.current.clearLayers();
+    labelsRef.current.clearLayers();
+    layersById.current = new Map();
+    selectedRef.current = null;
+
+    for (const f of features || []) {
+      const race = raceById.current.get(f.district_id);
+      const isComp = f.competitive && race;
+
+      const geo = L.geoJSON(geometryFeature(f), {
+        style: isComp ? raceStyle(f, race) : safeStyle(),
+        interactive: isComp,
+        onEachFeature: (_, layer) => {
+          layer.options.title = f.district_id;
+          if (!isComp) return;
+          layer.bindTooltip(tooltipHtml(race), { sticky: true, offset: [0, -4] });
+          layer.on('click', () => onSelectRef.current(f.district_id));
+          layer.on('mouseover', () => {
+            if (f.district_id !== selectedRef.current) {
+              layer.setStyle({ ...raceStyle(f, race), weight: 1.8, color: '#0f172a' });
+            }
+          });
+          layer.on('mouseout', () => {
+            layer.setStyle(f.district_id === selectedRef.current ? selectedStyle() : raceStyle(f, race));
+          });
+        },
+      });
+      layerRef.current.addLayer(geo);
+      layersById.current.set(f.district_id, geo);
+
+      if (isComp) {
+        const label = L.marker(pathCenter(f), {
+          interactive: false,
+          icon: L.divIcon({ className: 'district-divlabel', html: shortLabel(f.district_id), iconSize: [30, 14], iconAnchor: [15, 7] }),
+        });
+        labelsRef.current.addLayer(label);
+      }
+    }
+
+    fitToState(map);
+  }, [features, races, outline]);
+
+  // Highlight the selected district without rebuilding everything.
+  useEffect(() => {
+    const prevLayer = selectedRef.current ? layersById.current.get(selectedRef.current) : null;
+    if (prevLayer) prevLayer.setStyle(raceStyle(featuresById.current.get(selectedRef.current), raceById.current.get(selectedRef.current)));
+    selectedRef.current = selectedId;
+    const layer = selectedId ? layersById.current.get(selectedId) : null;
+    if (layer) layer.setStyle(selectedStyle());
+  }, [selectedId, features, races]);
+
+  function selectedStyle() {
+    return { color: '#111827', weight: 2.6, fillColor: colorFor(raceById.current.get(selectedRef.current)), fillOpacity: 0.95 };
   }
 
-  function onMove(e) {
-    if (!tooltip) return;
-    const rect = svgRef.current.getBoundingClientRect();
-    setTooltip((t) => (t ? { ...t, x: e.clientX - rect.left, y: e.clientY - rect.top } : t));
-  }
-
-  function onDown(e) {
-    drag.current = { x: e.clientX, y: e.clientY, vx: view.x, vy: view.y, moved: false };
-    window.addEventListener('mousemove', onMoveDrag);
-    window.addEventListener('mouseup', onUp);
-  }
-
-  function onMoveDrag(e) {
-    if (!drag.current) return;
-    const rect = svgRef.current.getBoundingClientRect();
-    const scaleX = W / rect.width;
-    const scaleY = H / rect.height;
-    const dx = (e.clientX - drag.current.x) * scaleX;
-    const dy = (e.clientY - drag.current.y) * scaleY;
-    if (Math.abs(e.clientX - drag.current.x) + Math.abs(e.clientY - drag.current.y) > 3) drag.current.moved = true;
-    setView((v) => ({ ...v, x: drag.current.vx + dx, y: drag.current.vy + dy }));
-  }
-
-  function onUp() {
-    window.removeEventListener('mousemove', onMoveDrag);
-    window.removeEventListener('mouseup', onUp);
-    setTimeout(() => { drag.current = null; }, 0);
-  }
-
-  function handleEnter(f) {
-    if (!f.competitive) return;
-    const race = raceById.get(f.district_id);
-    setTooltip({ district_id: f.district_id, race });
-    onHover?.(f.district_id);
-  }
-
-  function handleLeave() {
-    setTooltip(null);
-    onHover?.(null);
-  }
-
-  function handleClick(f) {
-    if (!f.competitive) return;
-    if (drag.current?.moved) return;
-    onSelect(f.district_id);
+  function fitToState(map) {
+    if (outline && outline.type) {
+      const b = L.geoJSON(outline).getBounds();
+      if (b.isValid()) {
+        map.fitBounds(b, { padding: [12, 12] });
+        return;
+      }
+    }
+    map.setView([35.6, -79.5], 6);
   }
 
   return (
     <div className="map-wrap">
-      <svg
-        ref={svgRef}
-        viewBox={`0 0 ${W} ${H}`}
-        className="nc-map"
-        onWheel={onWheel}
-        onMouseDown={onDown}
-        onMouseMove={onMove}
-        onMouseLeave={handleLeave}
-      >
-        <g transform={`translate(${view.x},${view.y}) scale(${view.k})`}>
-          <path d={path(outline)} className="state-outline" />
-          {ordered.map((f) => {
-            const race = raceById.get(f.district_id);
-            const color = f.competitive && race ? colorFor(race) : '#e9edf2';
-            return (
-              <path
-                key={f.district_id}
-                d={path(f)}
-                className={`district ${f.competitive ? 'competitive' : 'safe'} ${selectedId === f.district_id ? 'selected' : ''}`}
-                style={{ fill: color }}
-                onMouseEnter={() => handleEnter(f)}
-                onClick={() => handleClick(f)}
-              />
-            );
-          })}
-          {ordered.filter((f) => f.competitive).map((f) => {
-            const c = projection(geoCentroid(f));
-            if (!c) return null;
-            return (
-              <text key={`l-${f.district_id}`} x={c[0]} y={c[1]} className="district-label">
-                {shortLabel(f.district_id)}
-              </text>
-            );
-          })}
-        </g>
-      </svg>
+      <div ref={containerRef} className="map-container" aria-label="North Carolina election map" />
+      <button className="map-reset" onClick={() => fitToState(mapRef.current)} title="Zoom to North Carolina">⤢</button>
       <div className="map-legend">
         <span className="legend-swatch" style={{ background: '#1d4ed8' }} /> D-leading
         <span className="legend-swatch" style={{ background: '#a78bfa' }} /> toss-up
         <span className="legend-swatch" style={{ background: '#b91c1c' }} /> R-leading
         <span className="legend-note">color = primary signal: polls → markets → money</span>
       </div>
-      {tooltip && (
-        <div className="map-tooltip" style={{ left: tooltip.x + 14, top: Math.max(tooltip.y - 10, 8) }}>
-          <div className="tt-title">{tooltip.district_id}</div>
-          <div className="tt-row">Polls: <b>{advantageText('POLLS', tooltip.race?.polls)}</b></div>
-          <div className="tt-row">Markets: <b>{advantageText('MARKETS', tooltip.race?.markets)}</b></div>
-          <div className="tt-row">Money: <b>{advantageText('MONEY', tooltip.race?.money)}</b></div>
-        </div>
-      )}
     </div>
   );
 }

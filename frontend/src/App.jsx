@@ -5,6 +5,7 @@ import RaceTicker from './components/RaceTicker.jsx';
 import NCMap from './components/NCMap.jsx';
 import RacePanel from './components/RacePanel.jsx';
 import { relativeTime } from './lib/format.js';
+import { primarySignal } from './lib/colors.js';
 
 const TYPE_BY_PREFIX = { NC: 'us_house', SD: 'state_senate', HD: 'state_house' };
 
@@ -33,6 +34,16 @@ export default function App() {
       .catch((e) => { if (alive) setError(String(e)); });
     return () => { alive = false; };
   }, [raceType]);
+
+  const races = useMemo(() => mapData?.races || [], [mapData]);
+
+  // Keep a valid selection for the current race type: on first load (or when the
+  // type changes) open the leading competitive race so the panel is never empty.
+  useEffect(() => {
+    if (!mapData || mapData.race_type !== raceType) return;
+    const stillValid = selectedId && races.some((r) => r.district_id === selectedId);
+    if (!stillValid) setSelectedId(races[0]?.district_id || null);
+  }, [mapData, raceType, races, selectedId]);
 
   useEffect(() => {
     if (!selectedId) { setDetail(null); return; }
@@ -76,17 +87,34 @@ export default function App() {
 
       <main className="layout">
         <section className="map-column">
-          <RaceTypeToggle value={raceType} onChange={setRaceType} counts={meta?.race_types?.reduce((acc, r) => ({ ...acc, [r.race_type]: r }), {})} />
+          <div className="map-toolbar">
+            <RaceTypeToggle value={raceType} onChange={setRaceType} counts={meta?.race_types?.reduce((acc, r) => ({ ...acc, [r.race_type]: r }), {})} />
+            <label className="race-picker">
+              <span className="race-picker-label dim">Jump to race</span>
+              <select
+                value={selectedId || ''}
+                onChange={(e) => setSelectedId(e.target.value || null)}
+                disabled={races.length === 0}
+              >
+                <option value="">{races.length ? 'Select a competitive race…' : 'Loading races…'}</option>
+                {races.map((r) => {
+                  const sig = primarySignal(r);
+                  const tag = sig.metric ? `${sig.metric.toLowerCase()} ${sig.advantage?.label || ''}` : 'no signal';
+                  return <option key={r.district_id} value={r.district_id}>{r.district_id} — {tag.trim()}</option>;
+                })}
+              </select>
+            </label>
+          </div>
           <NCMap
             features={mapData?.features || []}
-            races={mapData?.races || []}
+            races={races}
             outline={outline}
             selectedId={selectedId}
             onSelect={setSelectedId}
           />
           <div className="map-help dim">
-            Only competitive districts are shown. Hover for Polls / Markets / Money. Click to open the race.
-            Scroll to zoom, drag to pan.
+            Competitive districts are colored by their primary signal (polls → markets → money); grey districts are not rated competitive this cycle.
+            Hover for details, click to open a race, scroll to zoom, drag to pan.
           </div>
         </section>
 
