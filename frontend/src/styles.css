@@ -98,13 +98,14 @@ a { color: var(--accent); }
 
 .leaflet-container { font-family: inherit; background: #eef2f7; }
 .leaflet-tooltip {
-  background: #0b1220; color: #f8fafc; border: 0; border-radius: 10px; padding: 9px 12px;
-  font-size: 12.5px; box-shadow: 0 10px 30px rgba(2,6,23,0.35); min-width: 150px;
+  background: #0b1220; color: #fff; border: 0; border-radius: 999px; padding: 3px 11px;
+  font-size: 12.5px; font-weight: 800; letter-spacing: 0.02em;
+  box-shadow: 0 6px 18px rgba(2,6,23,0.3);
 }
 .leaflet-tooltip::before { display: none; }
-.leaflet-tooltip .tt-title { font-weight: 800; margin-bottom: 4px; letter-spacing: 0.03em; }
-.leaflet-tooltip .tt-row { display: flex; justify-content: space-between; gap: 12px; color: #cbd5e1; }
-.leaflet-tooltip .tt-row b { color: #fff; }
+.leaflet-tooltip.tip-d { background: #1d4ed8; }
+.leaflet-tooltip.tip-r { background: #b91c1c; }
+.leaflet-tooltip.tip-even { background: #7c3aed; }
 
 .district-divlabel {
   color: #0f172a; font-weight: 800; font-size: 10px; text-align: center; line-height: 14px;

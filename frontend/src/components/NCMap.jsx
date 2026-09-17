@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { advantageColor, primarySignal, advantageText } from '../lib/colors.js';
+import { advantageColor, primarySignal } from '../lib/colors.js';
 import { BASEMAP_URL, BASEMAP_ATTR, MAP_MIN_ZOOM, MAP_MAX_ZOOM } from '../lib/map.js';
 
 function shortLabel(districtId) {
@@ -26,14 +26,12 @@ function raceStyle(f, race) {
   };
 }
 
-function tooltipHtml(race) {
-  const p = advantageText('POLLS', race?.polls);
-  const m = advantageText('MARKETS', race?.markets);
-  const money = advantageText('MONEY', race?.money);
-  return `<div class="tt-title">${race.district_id}</div>
-    <div class="tt-row"><span>Polls</span><b>${p}</b></div>
-    <div class="tt-row"><span>Markets</span><b>${m}</b></div>
-    <div class="tt-row"><span>Money</span><b>${money}</b></div>`;
+function tooltipFor(race) {
+  const sig = primarySignal(race);
+  const label = sig.advantage?.label;
+  if (!label) return null;
+  const party = (sig.advantage.party || 'EVEN').toLowerCase();
+  return { html: label, className: `tip-adv tip-${party}` };
 }
 
 function geometryFeature(f) {
@@ -104,7 +102,8 @@ export default function NCMap({ features, outline, races, selectedId, onSelect }
         onEachFeature: (_, layer) => {
           layer.options.title = f.district_id;
           if (!isComp) return;
-          layer.bindTooltip(tooltipHtml(race), { sticky: true, offset: [0, -4] });
+          const tip = tooltipFor(race);
+          if (tip) layer.bindTooltip(tip.html, { sticky: true, offset: [0, -4], className: tip.className });
           layer.on('click', () => onSelectRef.current(f.district_id));
           layer.on('mouseover', () => {
             if (f.district_id !== selectedRef.current) {
