@@ -61,31 +61,44 @@ async function candidateTotals(office) {
   return out;
 }
 
+const SUFFIXES = new Set(['JR', 'SR', 'II', 'III', 'IV', 'V', 'JD', 'MD', 'DR', 'MR', 'MRS', 'REV', 'HON', 'SEN', 'REP']);
+
 function normName(s) {
   return String(s || '').replace(/[^a-z0-9', ]/gi, ' ').replace(/\s+/g, ' ').trim().toUpperCase();
 }
 
 function partsOf(name) {
   const n = normName(name);
-  const comma = n.indexOf(',');
-  if (comma !== -1) {
-    const last = n.slice(0, comma).trim();
-    const first = n.slice(comma + 1).trim().split(' ').filter(Boolean);
-    return { last, first: first[0] || '' };
+  const segments = n.split(',').map((s) => s.trim()).filter(Boolean);
+  if (segments.length > 1) {
+    // "LAST, FIRST MIDDLE" (suffixes may appear as their own comma segment,
+    // e.g. "SMITH, JR., RAYMOND EDWARD").
+    let last = segments[0];
+    let i = 1;
+    if (SUFFIXES.has(last)) { last = segments[1] || ''; i = 2; }
+    let first = '';
+    while (i < segments.length && !first) {
+      first = segments[i].split(' ').find((t) => t && !SUFFIXES.has(t)) || '';
+      i++;
+    }
+    return { last, first };
   }
-  const words = n.split(' ').filter(Boolean);
+  const words = n.split(' ').filter(Boolean).filter((w) => !SUFFIXES.has(w));
   return { last: words[words.length - 1] || '', first: words[0] || '' };
 }
 
 function match(candidates, localName) {
   const local = partsOf(localName);
+  const surname = candidates.filter((c) => partsOf(c.name || '').last === local.last);
+  if (surname.length === 0) return null;
+  const pool = surname.length === 1 ? surname : surname.filter((c) => (partsOf(c.name || '').first[0] || '') === (local.first[0] || ''));
+  const use = pool.length ? pool : (surname.length === 1 ? surname : []);
   let best = null, bestScore = -1;
-  for (const c of candidates) {
+  for (const c of use) {
     const fec = partsOf(c.name || '');
-    if (fec.last !== local.last) continue;
-    if ((fec.first[0] || '') !== (local.first[0] || '')) continue;
     let score = 1;
-    if (fec.first === local.first) score += 2;
+    if (fec.first === local.first) score += 3;
+    else if ((fec.first[0] || '') === (local.first[0] || '')) score += 1;
     if (c.incumbent_challenge === 'I' || c.incumbent_challenge === 'C') score += 0.5;
     if (c.receipts != null) score += 0.25;
     if (score > bestScore) { bestScore = score; best = c; }

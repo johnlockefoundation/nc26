@@ -56,12 +56,30 @@ export const GA_COMPETITIVE_RULE = {
   label: '2026 Civitas Partisan Index (toss-up or lean Republican)',
 };
 
-// US House is outside the GA-only CPI; the competitive set for the cycle is
-// stated explicitly from published national ratings.
-export const US_HOUSE_COMPETITIVE = [
-  { id: 'NC-01', source: 'inside_elections_2026', reason: 'Lean Republican. District redrawn GOP-friendlier for 2026; Davis (D) vs. Buckhout (R).' },
-  { id: 'NC-11', source: 'inside_elections_2026_dccc', reason: 'Open seat — Edwards (R) dropped out after House Ethics report. DCCC Red to Blue target; Lean Republican.' },
-];
+// US House is outside the GA-only CPI; every district is tracked for the
+// cycle regardless of margin, which keeps the map and panels complete even
+// where polling/markets are sparse (they report honestly as unavailable).
+const HOUSE_RATED = {
+  'NC-01': 'Lean R — district redrawn GOP-friendlier for 2026; Davis (D) vs. Buckhout (R).',
+  'NC-02': 'Safe D — Ross (D) incumbent.',
+  'NC-03': 'Safe R — Murphy (R) incumbent.',
+  'NC-04': 'Safe D — Foushee (D) incumbent.',
+  'NC-05': 'Safe R — Foxx (R) incumbent.',
+  'NC-06': 'Safe R — McDowell (R) incumbent.',
+  'NC-07': 'Safe R — Rouzer (R) incumbent.',
+  'NC-08': 'Safe R — Harris (R) incumbent.',
+  'NC-09': 'Safe R — Hudson (R) incumbent.',
+  'NC-10': 'Safe R — Harrigan (R) incumbent.',
+  'NC-11': 'Lean R — open seat; Edwards (R) withdrew, Balkcom (R) selected by convention. DCCC Red to Blue target.',
+  'NC-12': 'Safe D — Adams (D) incumbent.',
+  'NC-13': 'Safe R — Knott (R) incumbent.',
+  'NC-14': 'Safe R — Moore (R) incumbent.',
+};
+export const US_HOUSE_COMPETITIVE = Object.entries(HOUSE_RATED).map(([id, reason]) => ({
+  id,
+  source: 'jlf_nc26_tracker',
+  reason,
+}));
 
 // US Senate is a single statewide race; designated competitive for the cycle.
 export const US_SENATE = {
