@@ -79,7 +79,7 @@ export default function App() {
       <main className="layout">
         <section className="map-column">
           <div className="map-toolbar">
-            <RaceTypeToggle value={raceType} onChange={setRaceType} counts={meta?.race_types?.reduce((acc, r) => ({ ...acc, [r.race_type]: r }), {})} />
+            <RaceTypeToggle value={raceType} onChange={setRaceType} />
           </div>
           <NCMap
             features={mapData?.features || []}
