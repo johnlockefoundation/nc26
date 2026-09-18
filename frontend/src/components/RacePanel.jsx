@@ -20,10 +20,7 @@ function CandidateCards({ candidates }) {
             )}
             <span className={`candidate-party party-${String(c.party).toLowerCase()}`}>{c.party}</span>
           </div>
-          <div className="candidate-info">
-            <div className={`candidate-name cand-${String(c.party).toLowerCase()}`}>{c.name}</div>
-            <div className="candidate-meta dim">{c.incumbent ? 'Incumbent' : 'Challenger'}</div>
-          </div>
+          <div className={`candidate-name cand-${String(c.party).toLowerCase()}`}>{c.name}</div>
           {c.website && (
             <a className="candidate-site" href={c.website} target="_blank" rel="noreferrer">website ↗</a>
           )}
@@ -46,7 +43,6 @@ export default function RacePanel({ race, loading, onClose }) {
   return (
     <aside className="panel">
       <button className="panel-close" onClick={onClose} aria-label="Close">×</button>
-      <div className="panel-eyebrow">{race.race_type.replace('_', ' ')}</div>
       <h2 className="panel-title">{race.title}</h2>
       <CandidateCards candidates={race.candidates} />
 
