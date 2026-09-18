@@ -10,7 +10,6 @@ function renderGroup(items, copy) {
           rel="noreferrer"
           title={`${h.outlet} · ${h.published_at || ''}`}
         >
-          <span className="ticker-district">{h.district_id}</span>
           <span className="ticker-headline">{h.headline}</span>
           <span className="ticker-dot">·</span>
           <span className="ticker-outlet">{h.outlet}</span>
