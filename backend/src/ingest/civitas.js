@@ -1,6 +1,7 @@
-// Ingests the John Locke / Civitas 2026 CPI reference file:
+// Ingested from the John Locke / Civitas 2026 CPI reference file:
 //  - candidates for all General Assembly districts (from the official xlsx),
-//  - the per-cycle "competitive" designation for GA districts.
+//  - the per-cycle "competitive" designation for GA districts,
+//  - congressional CPI values for the 14 U.S. House districts.
 // CPI values are stored but kept out of the user-facing race signal.
 import { readFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';
@@ -18,6 +19,9 @@ export function ingestCivitas(cycle = CYCLE) {
     VALUES (?, ?, ?, ?, ?, ?, '')`);
   const updDistrict = db.prepare(
     `UPDATE districts SET competitive = ?, competitive_source = ?, competitive_reason = ?, cpi_value = ? WHERE district_id = ? AND election_cycle = ?`
+  );
+  const updCpi = db.prepare(
+    `UPDATE districts SET cpi_value = ? WHERE district_id = ? AND election_cycle = ?`
   );
 
   let candidates = 0;
@@ -51,6 +55,14 @@ export function ingestCivitas(cycle = CYCLE) {
 
   for (const rec of data.senate) record(rec, 'state_senate');
   for (const rec of data.house) record(rec, 'state_house');
-  console.log(`[civitas] ${candidates} candidates, ${competitive} GA districts marked competitive for ${cycle}`);
-  return { source: 'civitas', candidates, competitive };
+
+  let congressCpi = 0;
+  for (const rec of data.congress || []) {
+    const districtId = `NC-${String(rec.district_number).padStart(2, '0')}`;
+    updCpi.run(rec.cpi ?? null, districtId, cycle);
+    congressCpi++;
+  }
+
+  console.log(`[civitas] ${candidates} candidates, ${competitive} GA districts marked competitive, ${congressCpi} congressional CPI values for ${cycle}`);
+  return { source: 'civitas', candidates, competitive, congress_cpi: congressCpi };
 }

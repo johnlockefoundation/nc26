@@ -52,8 +52,8 @@ export default function RacePanel({ race, loading }) {
       </div>
 
       <section className="panel-section">
-        <h3>LATEST NEWS</h3>
-        <NewsList articles={race.all_news && race.all_news.length ? race.all_news : race.news} limit={3} />
+        <h3>NC NEWS</h3>
+        <NewsList articles={race.all_news && race.all_news.length ? race.all_news : race.news} limit={4} />
       </section>
 
       {(markets.source_url || moneyS.source_url) && (

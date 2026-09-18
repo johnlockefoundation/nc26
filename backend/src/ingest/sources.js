@@ -91,13 +91,13 @@ export function ingestNewsFromSource(cycle = CYCLE) {
   const data = loadDrop('news');
   if (!data) return null;
   const ins = db.prepare(`INSERT OR REPLACE INTO news
-    (article_id, district_id, election_cycle, headline, outlet, published_at, url, summary, relevance_score)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`);
+    (article_id, district_id, election_cycle, headline, outlet, published_at, url, summary, relevance_score, topic)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`);
   let n = 0;
   for (const a of data.news || []) {
     ins.run(a.article_id ?? `${a.district_id}_${cycle}_${slugify(a.headline)}`,
       a.district_id, cycle, a.headline, a.outlet, a.published_at, a.url || '', a.summary || '',
-      a.relevance_score ?? 0.5);
+      a.relevance_score ?? 0.5, a.topic || 'race');
     n++;
   }
   console.log(`[news] ingested ${n} articles`);

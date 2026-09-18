@@ -1,39 +1,34 @@
-function chipClass(label) {
-  if (!label) return '';
-  if (label.startsWith('D')) return 'chip-d';
-  if (label.startsWith('R')) return 'chip-r';
-  return 'chip-even';
-}
-
-function renderChips(items, onSelect, copy) {
+function renderGroup(items, copy) {
   return (
     <div key={copy} className="ticker-group" aria-hidden={copy === 1}>
-      {items.map((it) => (
-        <button
-          key={`${copy}-${it.district_id}-${it.metric}`}
-          className={`ticker-chip ${chipClass(it.advantage?.label)}`}
-          onClick={() => onSelect?.(it.district_id)}
-          title={`Updated ${it.updated_at || ''}`}
+      {items.map((h) => (
+        <a
+          key={`${copy}-${h.article_id}`}
+          className="ticker-chip"
+          href={h.url || '#'}
+          target="_blank"
+          rel="noreferrer"
+          title={`${h.outlet} · ${h.published_at || ''}`}
         >
-          <span className="ticker-district">{it.district_id}</span>
-          <span className="ticker-sep">—</span>
-          <span className="ticker-metric">{it.metric}</span>
-          <span className="ticker-adv">{it.advantage?.label}</span>
-        </button>
+          <span className="ticker-district">{h.district_id}</span>
+          <span className="ticker-headline">{h.headline}</span>
+          <span className="ticker-dot">·</span>
+          <span className="ticker-outlet">{h.outlet}</span>
+        </a>
       ))}
     </div>
   );
 }
 
-export default function RaceTicker({ items, onSelect }) {
+export default function RaceTicker({ items }) {
   if (!items || items.length === 0) return null;
   return (
-    <div className="ticker" role="marquee" aria-label="Recent changes across competitive races">
-      <span className="ticker-label">RECENT</span>
+    <div className="ticker" role="marquee" aria-label="Recent North Carolina election headlines">
+      <span className="ticker-label">NC NEWS</span>
       <div className="ticker-track">
         <div className="ticker-run">
-          {renderChips(items, onSelect, 0)}
-          {renderChips(items, onSelect, 1)}
+          {renderGroup(items, 0)}
+          {renderGroup(items, 1)}
         </div>
       </div>
     </div>

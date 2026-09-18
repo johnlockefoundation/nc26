@@ -29,8 +29,8 @@ export function ingestSeedMetrics(cycle = CYCLE) {
     (district_id, election_cycle, dem_amount, rep_amount, advantage, reporting_period, updated_at, source_url, source_method, is_seed)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 1)`);
   const insNews = db.prepare(`INSERT OR REPLACE INTO news
-    (article_id, district_id, election_cycle, headline, outlet, published_at, url, summary, relevance_score)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`);
+    (article_id, district_id, election_cycle, headline, outlet, published_at, url, summary, relevance_score, topic)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`);
 
   let polls = 0, averages = 0, markets = 0, fundraising = 0, news = 0;
 
@@ -66,7 +66,7 @@ export function ingestSeedMetrics(cycle = CYCLE) {
 
   for (const n of data.news) {
     insNews.run(n.article_id, n.district_id, cycle, n.headline, n.outlet, n.published_at,
-      n.url || '', n.summary || '', n.relevance_score ?? 0.5);
+      n.url || '', n.summary || '', n.relevance_score ?? 0.5, n.topic || 'race');
     news++;
   }
 

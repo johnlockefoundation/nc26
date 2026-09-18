@@ -19,6 +19,13 @@ function colorFor(race) {
   return advantageColor(sig.value);
 }
 
+function safeLean(cpi) {
+  if (!cpi) return null;
+  const m = /^([DR])\+(\d+)$/.exec(String(cpi).trim());
+  if (!m) return null;
+  return { party: m[1], value: +m[2] };
+}
+
 function safeStyle() {
   return { color: '#3d516e', weight: 0.7, fillColor: '#1c2942', fillOpacity: 0.55 };
 }
@@ -106,10 +113,17 @@ export default function NCMap({ features, outline, races, selectedId, onSelect }
 
       const geo = L.geoJSON(geometryFeature(f), {
         style: isComp ? raceStyle(f, race) : safeStyle(),
-        interactive: isComp,
+        interactive: true,
         onEachFeature: (_, layer) => {
           layer.options.title = f.district_id;
-          if (!isComp) return;
+          if (!isComp) {
+            const lean = safeLean(f.cpi);
+            layer.on('add', () => { if (layer._path) layer._path.style.cursor = 'default'; });
+            if (lean) {
+              layer.bindTooltip(`SAFE ${lean.party} +${lean.value}`, { sticky: true, offset: [0, -4], className: 'tip-adv tip-safe' });
+            }
+            return;
+          }
           const tip = tooltipFor(race);
           if (tip) layer.bindTooltip(tip.html, { sticky: true, offset: [0, -4], className: tip.className });
           layer.on('click', () => onSelectRef.current(f.district_id));

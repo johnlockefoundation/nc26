@@ -3236,5 +3236,133 @@
       ],
       "other": null
     }
+  ],
+  "congress": [
+    {
+      "district_number": 1,
+      "cpi": "R+8",
+      "rating": "Likely Republican",
+      "rating_lean": "Likely",
+      "rating_party": "R",
+      "other": "Civitas-style CPI, 2024 Council of State races",
+      "candidates": []
+    },
+    {
+      "district_number": 2,
+      "cpi": "D+10",
+      "rating": "Safe Democratic",
+      "rating_lean": "Safe",
+      "rating_party": "D",
+      "other": "Civitas-style CPI, 2024 Council of State races",
+      "candidates": []
+    },
+    {
+      "district_number": 3,
+      "cpi": "R+10",
+      "rating": "Safe Republican",
+      "rating_lean": "Safe",
+      "rating_party": "R",
+      "other": "Civitas-style CPI, 2024 Council of State races",
+      "candidates": []
+    },
+    {
+      "district_number": 4,
+      "cpi": "D+16",
+      "rating": "Safe Democratic",
+      "rating_lean": "Safe",
+      "rating_party": "D",
+      "other": "Civitas-style CPI, 2024 Council of State races",
+      "candidates": []
+    },
+    {
+      "district_number": 5,
+      "cpi": "R+12",
+      "rating": "Safe Republican",
+      "rating_lean": "Safe",
+      "rating_party": "R",
+      "other": "Civitas-style CPI, 2024 Council of State races",
+      "candidates": []
+    },
+    {
+      "district_number": 6,
+      "cpi": "R+7",
+      "rating": "Likely Republican",
+      "rating_lean": "Likely",
+      "rating_party": "R",
+      "other": "Civitas-style CPI, 2024 Council of State races",
+      "candidates": []
+    },
+    {
+      "district_number": 7,
+      "cpi": "R+13",
+      "rating": "Safe Republican",
+      "rating_lean": "Safe",
+      "rating_party": "R",
+      "other": "Civitas-style CPI, 2024 Council of State races",
+      "candidates": []
+    },
+    {
+      "district_number": 8,
+      "cpi": "R+10",
+      "rating": "Safe Republican",
+      "rating_lean": "Safe",
+      "rating_party": "R",
+      "other": "Civitas-style CPI, 2024 Council of State races",
+      "candidates": []
+    },
+    {
+      "district_number": 9,
+      "cpi": "R+11",
+      "rating": "Safe Republican",
+      "rating_lean": "Safe",
+      "rating_party": "R",
+      "other": "Civitas-style CPI, 2024 Council of State races",
+      "candidates": []
+    },
+    {
+      "district_number": 10,
+      "cpi": "R+14",
+      "rating": "Safe Republican",
+      "rating_lean": "Safe",
+      "rating_party": "R",
+      "other": "Civitas-style CPI, 2024 Council of State races",
+      "candidates": []
+    },
+    {
+      "district_number": 11,
+      "cpi": "R+15",
+      "rating": "Safe Republican",
+      "rating_lean": "Safe",
+      "rating_party": "R",
+      "other": "Civitas-style CPI, 2024 Council of State races",
+      "candidates": []
+    },
+    {
+      "district_number": 12,
+      "cpi": "D+12",
+      "rating": "Safe Democratic",
+      "rating_lean": "Safe",
+      "rating_party": "D",
+      "other": "Civitas-style CPI, 2024 Council of State races",
+      "candidates": []
+    },
+    {
+      "district_number": 13,
+      "cpi": "R+8",
+      "rating": "Likely Republican",
+      "rating_lean": "Likely",
+      "rating_party": "R",
+      "other": "Civitas-style CPI, 2024 Council of State races",
+      "candidates": []
+    },
+    {
+      "district_number": 14,
+      "cpi": "R+6",
+      "rating": "Likely Republican",
+      "rating_lean": "Likely",
+      "rating_party": "R",
+      "other": "Civitas-style CPI, 2024 Council of State races",
+      "candidates": []
+    }
   ]
 }

@@ -1,13 +1,10 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { getMap, getMeta, getRace, getTicker, getOutline } from './api.js';
 import RaceTypeToggle from './components/RaceTypeToggle.jsx';
 import RaceTicker from './components/RaceTicker.jsx';
 import NCMap from './components/NCMap.jsx';
 import MiniGauge from './components/MiniGauge.jsx';
 import RacePanel from './components/RacePanel.jsx';
-
-const TYPE_BY_PREFIX = { NC: 'us_house', SD: 'state_senate', HD: 'state_house' };
-const TYPE_BY_ID = { 'NC-SEN': 'us_senate' };
 
 export default function App() {
   const [raceType, setRaceType] = useState('us_house');
@@ -56,12 +53,6 @@ export default function App() {
     return () => { alive = false; };
   }, [selectedId]);
 
-  const selectRace = useCallback((districtId) => {
-    const type = TYPE_BY_ID[districtId] || TYPE_BY_PREFIX[districtId.split('-')[0]];
-    if (type && type !== raceType) setRaceType(type);
-    setSelectedId(districtId);
-  }, [raceType]);
-
   return (
     <div className="app">
       <header className="topbar">
@@ -79,7 +70,7 @@ export default function App() {
         </div>
       </header>
 
-      <RaceTicker items={ticker} onSelect={selectRace} />
+      <RaceTicker items={ticker} />
 
       {error && <div className="error-banner">Could not load data: {error}</div>}
 

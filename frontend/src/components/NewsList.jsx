@@ -3,7 +3,7 @@ import { relativeTime, fullDate } from '../lib/format.js';
 export default function NewsList({ articles, limit = 3 }) {
   const list = (articles || []).slice(0, limit);
   if (list.length === 0) {
-    return <div className="news-empty">No recent race-specific news found.</div>;
+    return <div className="news-empty">No recent North Carolina election news found.</div>;
   }
   return (
     <ul className="news-list">
@@ -13,6 +13,7 @@ export default function NewsList({ articles, limit = 3 }) {
             {a.headline}
           </a>
           <div className="news-meta">
+            {a.district_id && <><span className="news-tag">{a.district_id}</span><span className="dot">·</span></>}
             <span>{a.outlet}</span>
             <span className="dot">·</span>
             <span title={fullDate(a.published_at)}>{relativeTime(a.published_at)}</span>

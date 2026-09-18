@@ -69,10 +69,10 @@ function moneySummary(districtId, cycle) {
   };
 }
 
-function newsFor(districtId, cycle, limit = 3) {
-  return db.prepare(`SELECT article_id, headline, outlet, published_at, url, summary, relevance_score
-    FROM news WHERE district_id = ? AND election_cycle = ?
-    ORDER BY relevance_score DESC, published_at DESC LIMIT ?`).all(districtId, cycle, limit);
+function newsFeed(cycle, limit = 3) {
+  return db.prepare(`SELECT article_id, district_id, headline, outlet, published_at, url, summary, relevance_score, topic
+    FROM news WHERE election_cycle = ?
+    ORDER BY published_at DESC, relevance_score DESC LIMIT ?`).all(cycle, limit);
 }
 
 function districtRow(districtId, cycle) {
@@ -98,7 +98,7 @@ export function getRaceSummary(row, cycle, { includeNews = true } = {}) {
     polls,
     markets,
     money,
-    news: includeNews ? newsFor(row.district_id, cycle, 3) : [],
+    news: includeNews ? newsFeed(cycle, 3) : [],
     coverage: {
       polls: polls.available,
       markets: markets.available,
@@ -127,13 +127,13 @@ export function getRace(districtId, cycle = CYCLE) {
     FROM polls WHERE district_id = ? AND election_cycle = ?
     ORDER BY end_date DESC`).all(districtId, cycle);
   race.poll_detail = polls;
-  race.all_news = newsFor(districtId, cycle, 25);
+  race.all_news = newsFeed(cycle, 25);
   return race;
 }
 
 export function getMapFeatures({ cycle = CYCLE, raceType } = {}) {
   const race = listRaces({ cycle, raceType, competitiveOnly: true });
-  const features = db.prepare(`SELECT district_id, race_type, district_number, competitive, geometry
+  const features = db.prepare(`SELECT district_id, race_type, district_number, competitive, cpi_value, geometry
     FROM districts WHERE election_cycle = ? AND race_type = ? ORDER BY district_number`)
     .all(cycle, raceType);
   const byId = new Map(race.map((r) => [r.district_id, r]));
@@ -147,6 +147,7 @@ export function getMapFeatures({ cycle = CYCLE, raceType } = {}) {
         district_id: f.district_id,
         district_number: f.district_number,
         competitive: Boolean(f.competitive),
+        cpi: f.cpi_value || null,
         geometry: JSON.parse(f.geometry),
         metrics: r ? {
           polls: r.polls.advantage,
@@ -159,40 +160,10 @@ export function getMapFeatures({ cycle = CYCLE, raceType } = {}) {
   };
 }
 
-export function getTicker({ cycle = CYCLE, limit = 10 } = {}) {
-  const rows = db.prepare(`
-    SELECT district_id, 'POLLS' AS metric, margin AS value, updated_at FROM polling_averages
-      WHERE election_cycle = ? AND margin IS NOT NULL
-    UNION ALL
-    SELECT district_id, 'MARKETS' AS metric, advantage AS value, updated_at FROM markets
-      WHERE election_cycle = ? AND advantage IS NOT NULL
-    UNION ALL
-    SELECT district_id, 'MONEY' AS metric, advantage AS value, updated_at FROM fundraising
-      WHERE election_cycle = ? AND advantage IS NOT NULL
-    ORDER BY updated_at DESC`).all(cycle, cycle, cycle);
-  const competitive = new Set(
-    db.prepare(`SELECT district_id FROM districts WHERE election_cycle = ? AND competitive = 1`).all(cycle).map((r) => r.district_id)
-  );
-  const formatter = { POLLS: formatPollAdvantage, MARKETS: formatMarketAdvantage, MONEY: formatMoney };
-  const seen = new Set();
-  const items = [];
-  for (const r of rows) {
-    if (!competitive.has(r.district_id)) continue;
-    const key = `${r.district_id}:${r.metric}`;
-    if (seen.has(key)) continue;
-    seen.add(key);
-    const adv = formatter[r.metric](r.value);
-    if (!adv) continue;
-    items.push({
-      district_id: r.district_id,
-      metric: r.metric,
-      advantage: adv,
-      updated_at: r.updated_at,
-      line: `${r.district_id} — ${r.metric} ${adv.label}`,
-    });
-    if (items.length >= limit) break;
-  }
-  return items;
+export function getTicker({ cycle = CYCLE, limit = 12 } = {}) {
+  return db.prepare(`SELECT article_id, district_id, headline, outlet, url, published_at
+    FROM news WHERE election_cycle = ? AND topic = 'race'
+    ORDER BY published_at DESC LIMIT ?`).all(cycle, limit);
 }
 
 export function getSourceStatus() {

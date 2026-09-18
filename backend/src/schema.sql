@@ -113,7 +113,8 @@ CREATE TABLE IF NOT EXISTS news (
   published_at    TEXT NOT NULL,
   url             TEXT,
   summary         TEXT,
-  relevance_score REAL NOT NULL DEFAULT 0.5
+  relevance_score REAL NOT NULL DEFAULT 0.5,
+  topic           TEXT NOT NULL DEFAULT 'race'   -- race | news
 );
 
 -- ---------------------------------------------------------------------------
