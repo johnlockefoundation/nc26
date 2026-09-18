@@ -71,7 +71,7 @@ export default function App() {
         </div>
         <h1 className="brand-title" aria-label="Tarheel Tracker">
           <span className="brand-word">Tarheel&nbsp;Tracker</span>
-          <span className="brand-byline">from the John Locke Foundation</span>
+          <span className="brand-byline"><em>from</em> the John Locke Foundation</span>
         </h1>
         <div className="gauge-cluster gauge-right">
           <MiniGauge outlook={meta?.house_outlook} label="U.S. HOUSE" />
