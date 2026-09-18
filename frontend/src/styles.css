@@ -219,6 +219,8 @@ a { color: var(--accent); }
 }
 .metric-empty { background: #0a111f; }
 .metric-title { font-family: var(--font-display); font-size: 10.5px; letter-spacing: 0.14em; font-weight: 700; color: var(--muted); flex: none; }
+.metric-title-link { color: var(--muted); text-decoration: none; border-bottom: 1px dotted rgba(148, 163, 184, 0.5); }
+.metric-title-link:hover { color: var(--accent); border-bottom-color: var(--accent); }
 .metric-value { font-family: var(--font-display); font-size: 26px; font-weight: 700; letter-spacing: -0.02em; line-height: 1; white-space: nowrap; }
 .metric-value.val-d { color: var(--d); }
 .metric-value.val-r { color: var(--r); }

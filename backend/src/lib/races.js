@@ -23,6 +23,9 @@ function candidateList(districtId, cycle) {
 function pollSummary(districtId, cycle) {
   const avg = db.prepare(`SELECT dem_average, rep_average, margin, n_polls, updated_at
     FROM polling_averages WHERE district_id = ? AND election_cycle = ?`).get(districtId, cycle);
+  const latest = db.prepare(`SELECT source_url FROM polls
+    WHERE district_id = ? AND election_cycle = ?
+    ORDER BY end_date DESC LIMIT 1`).get(districtId, cycle);
   const hasPolls = avg && avg.dem_average != null && avg.rep_average != null;
   return {
     available: Boolean(hasPolls),
@@ -32,6 +35,7 @@ function pollSummary(districtId, cycle) {
     n_polls: avg ? avg.n_polls : 0,
     advantage: hasPolls ? formatPollAdvantage(avg.margin) : null,
     updated_at: avg ? avg.updated_at : null,
+    source_url: latest ? latest.source_url : null,
   };
 }
 
