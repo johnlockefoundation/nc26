@@ -8,3 +8,7 @@ export const BASEMAP_ATTR = '&copy; OpenStreetMap contributors &copy; CARTO';
 
 export const MAP_MIN_ZOOM = 5;
 export const MAP_MAX_ZOOM = 14;
+
+// Keep the view locked to North Carolina (plus a little margin) so users never
+// scroll or drag away from the state.
+export const MAP_BOUNDS = [[32.7, -87.0], [37.7, -74.0]];

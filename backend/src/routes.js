@@ -18,7 +18,7 @@ router.get('/meta', (req, res) => {
   const counts = db.prepare(`SELECT race_type, COUNT(*) AS total,
       SUM(CASE WHEN competitive = 1 THEN 1 ELSE 0 END) AS competitive
     FROM districts WHERE election_cycle = ? GROUP BY race_type`).all(CYCLE);
-  res.json({ cycle: CYCLE, race_types: counts, sources: getSourceStatus() });
+  res.json({ cycle: CYCLE, race_types: counts, house_outlook: HOUSE_OUTLOOK, sources: getSourceStatus() });
 });
 
 router.get('/sources', (req, res) => res.json(getSourceStatus()));

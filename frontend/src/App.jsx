@@ -3,8 +3,8 @@ import { getMap, getMeta, getRace, getTicker, getOutline } from './api.js';
 import RaceTypeToggle from './components/RaceTypeToggle.jsx';
 import RaceTicker from './components/RaceTicker.jsx';
 import NCMap from './components/NCMap.jsx';
+import HouseGauge from './components/HouseGauge.jsx';
 import RacePanel from './components/RacePanel.jsx';
-import { primarySignal } from './lib/colors.js';
 
 const TYPE_BY_PREFIX = { NC: 'us_house', SD: 'state_senate', HD: 'state_house' };
 const TYPE_BY_ID = { 'NC-SEN': 'us_senate' };
@@ -79,22 +79,8 @@ export default function App() {
         <section className="map-column">
           <div className="map-toolbar">
             <RaceTypeToggle value={raceType} onChange={setRaceType} counts={meta?.race_types?.reduce((acc, r) => ({ ...acc, [r.race_type]: r }), {})} />
-            <label className="race-picker">
-              <span className="race-picker-label dim">Jump to race</span>
-              <select
-                value={selectedId || ''}
-                onChange={(e) => setSelectedId(e.target.value || null)}
-                disabled={races.length === 0}
-              >
-                <option value="">{races.length ? 'Select a competitive race…' : 'Loading races…'}</option>
-                {races.map((r) => {
-                  const sig = primarySignal(r);
-                  const tag = sig.metric ? `${sig.metric.toLowerCase()} ${sig.advantage?.label || ''}` : 'no signal';
-                  return <option key={r.district_id} value={r.district_id}>{r.district_id} — {tag.trim()}</option>;
-                })}
-              </select>
-            </label>
           </div>
+          {raceType === 'us_house' && <HouseGauge outlook={meta?.house_outlook} />}
           <NCMap
             features={mapData?.features || []}
             races={races}
@@ -104,11 +90,11 @@ export default function App() {
           />
           <div className="map-help dim">
             Competitive districts are colored by their primary signal (polls → markets → money); grey districts are not rated competitive this cycle.
-            Hover for details, click to open a race, scroll to zoom, drag to pan.
+            Hover for the candidate matchup, click to open a race, drag to pan; use the +/− controls to zoom.
           </div>
         </section>
 
-        <RacePanel race={detail} loading={loadingDetail} onClose={() => setSelectedId(null)} />
+        <RacePanel race={detail} loading={loadingDetail} />
       </main>
     </div>
   );

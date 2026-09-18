@@ -30,7 +30,7 @@ function CandidateCards({ candidates }) {
   );
 }
 
-export default function RacePanel({ race, loading, onClose }) {
+export default function RacePanel({ race, loading }) {
   if (loading && !race) {
     return <aside className="panel"><div className="panel-loading">Loading race…</div></aside>;
   }
@@ -42,7 +42,6 @@ export default function RacePanel({ race, loading, onClose }) {
 
   return (
     <aside className="panel">
-      <button className="panel-close" onClick={onClose} aria-label="Close">×</button>
       <h2 className="panel-title">{race.title}</h2>
       <CandidateCards candidates={race.candidates} />
 

@@ -8,7 +8,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const BACKEND = resolve(__dirname, '..');
 
 const { db } = await import(pathToFileURL(join(BACKEND, 'src', 'db.js')));
-const { CYCLE } = await import(pathToFileURL(join(BACKEND, 'src', 'ingest', 'config.js')));
+const { CYCLE, HOUSE_OUTLOOK } = await import(pathToFileURL(join(BACKEND, 'src', 'ingest', 'config.js')));
 const races = await import(pathToFileURL(join(BACKEND, 'src', 'lib', 'races.js')));
 
 const OUT = process.env.STATIC_OUT || resolve(BACKEND, '..', 'frontend', 'public', 'demo-data');
@@ -25,7 +25,7 @@ function writeJson(rel, data) {
 
 console.log(`Exporting static demo data (cycle ${CYCLE}) → ${OUT}`);
 
-const meta = { cycle: CYCLE, race_types: null, sources: races.getSourceStatus() };
+const meta = { cycle: CYCLE, race_types: null, house_outlook: HOUSE_OUTLOOK, sources: races.getSourceStatus() };
 const counts = db.prepare(`SELECT race_type, COUNT(*) AS total,
     SUM(CASE WHEN competitive = 1 THEN 1 ELSE 0 END) AS competitive
   FROM districts WHERE election_cycle = ? GROUP BY race_type`).all(CYCLE);

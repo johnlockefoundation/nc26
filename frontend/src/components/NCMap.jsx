@@ -2,11 +2,16 @@ import { useEffect, useRef } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { advantageColor, primarySignal } from '../lib/colors.js';
-import { BASEMAP_URL, BASEMAP_ATTR, MAP_MIN_ZOOM, MAP_MAX_ZOOM } from '../lib/map.js';
+import { BASEMAP_URL, BASEMAP_ATTR, MAP_MIN_ZOOM, MAP_MAX_ZOOM, MAP_BOUNDS } from '../lib/map.js';
 
 function shortLabel(districtId) {
   if (districtId === 'NC-SEN') return 'NC';
   return districtId.split('-')[1];
+}
+
+function matchupText(candidates) {
+  if (!candidates || candidates.length === 0) return null;
+  return candidates.map((c) => c.name.split(/\s+/).pop()).join(' v ');
 }
 
 function colorFor(race) {
@@ -28,11 +33,10 @@ function raceStyle(f, race) {
 }
 
 function tooltipFor(race) {
-  const sig = primarySignal(race);
-  const label = sig.advantage?.label;
-  if (!label) return null;
-  const party = (sig.advantage.party || 'EVEN').toLowerCase();
-  return { html: label, className: `tip-adv tip-${party}` };
+  const matchup = matchupText(race.candidates);
+  const party = (race?.advantage?.party || primarySignal(race)?.advantage?.party || 'EVEN').toLowerCase();
+  const html = matchup ? `${race.district_id}: ${matchup}` : primarySignal(race)?.advantage?.label || race.district_id;
+  return { html, className: `tip-adv tip-${party}` };
 }
 
 function geometryFeature(f) {
@@ -67,6 +71,9 @@ export default function NCMap({ features, outline, races, selectedId, onSelect }
     const map = L.map(containerRef.current, {
       minZoom: MAP_MIN_ZOOM,
       maxZoom: MAP_MAX_ZOOM,
+      scrollWheelZoom: false,
+      maxBounds: MAP_BOUNDS,
+      maxBoundsViscosity: 1,
       zoomControl: true,
       attributionControl: true,
     });

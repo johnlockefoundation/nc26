@@ -4,6 +4,17 @@
 
 export const CYCLE = '2026';
 
+// National U.S. House outlook used for the race-signal "odometer" gauge.
+export const HOUSE_OUTLOOK = {
+  dem: 205,
+  rep: 212,
+  tossup: 18,
+  threshold: 218,
+  total: 435,
+  source: 'Cook Political Report',
+  updated_at: '2026-09-16T12:00:00Z',
+};
+
 // For General Assembly districts, JLF/Civitas designates competitive races as
 // toss-ups plus lean-Republican districts in a Republican midterm year (2026).
 export const GA_COMPETITIVE_RULE = {
