@@ -59,7 +59,7 @@ a { color: var(--accent); }
   mask-image: linear-gradient(90deg, transparent, #000 3%, #000 97%, transparent);
 }
 .ticker-run {
-  display: flex; width: max-content; animation: ticker-scroll 72s linear infinite;
+  display: flex; width: max-content; animation: ticker-scroll 120s linear infinite;
   will-change: transform;
 }
 .ticker:hover .ticker-run { animation-play-state: paused; }
