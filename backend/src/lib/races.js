@@ -20,12 +20,23 @@ function candidateList(districtId, cycle) {
     ORDER BY CASE party WHEN 'D' THEN 0 WHEN 'R' THEN 1 ELSE 2 END`).all(districtId, cycle);
 }
 
+function marginDelta(latestMargin, prevMargin) {
+  if (latestMargin == null || prevMargin == null) return null;
+  const d = latestMargin - prevMargin;
+  if (Math.abs(d) < 0.05) return { party: 'EVEN', points: 0 };
+  const party = d > 0 ? 'D' : 'R';
+  return { party, points: +Math.abs(d).toFixed(1) };
+}
+
 function pollSummary(districtId, cycle) {
   const avg = db.prepare(`SELECT dem_average, rep_average, margin, n_polls, updated_at
     FROM polling_averages WHERE district_id = ? AND election_cycle = ?`).get(districtId, cycle);
   const latest = db.prepare(`SELECT source_url FROM polls
     WHERE district_id = ? AND election_cycle = ?
     ORDER BY end_date DESC LIMIT 1`).get(districtId, cycle);
+  const recent = db.prepare(`SELECT margin FROM polls
+    WHERE district_id = ? AND election_cycle = ?
+    ORDER BY end_date DESC, poll_id DESC LIMIT 2`).all(districtId, cycle);
   const hasPolls = avg && avg.dem_average != null && avg.rep_average != null;
   return {
     available: Boolean(hasPolls),
@@ -34,6 +45,7 @@ function pollSummary(districtId, cycle) {
     margin: hasPolls ? avg.margin : null,
     n_polls: avg ? avg.n_polls : 0,
     advantage: hasPolls ? formatPollAdvantage(avg.margin) : null,
+    delta: recent.length >= 2 ? marginDelta(recent[0].margin, recent[1].margin) : null,
     updated_at: avg ? avg.updated_at : null,
     source_url: latest ? latest.source_url : null,
   };

@@ -45,7 +45,7 @@ export default function RacePanel({ race, loading }) {
       <CandidateCards candidates={race.candidates} />
 
       <div className="metrics">
-        <MetricBlock title="POLLS" emptyText="NO POLLING" summary={polls} />
+        <MetricBlock title="POLLS" emptyText="NO POLLING" summary={polls} delta={polls.delta} />
         <MetricBlock title="MARKETS" emptyText="NO MARKET" summary={markets} />
         <MetricBlock title="MONEY" emptyText="NO MONEY" summary={moneyS} />
       </div>
