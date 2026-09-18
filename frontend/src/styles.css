@@ -165,9 +165,12 @@ a { color: var(--accent); }
 .district-divlabel-safe {
   color: #7c8ba1; font-weight: 600; font-size: 9px;
 }
-.map-arrow { font-size: 15px; font-weight: 700; margin-left: 3px; animation: arrow-live 1.6s ease-in-out infinite; }
-.map-arrow.arrow-d { color: #60a5fa; }
-.map-arrow.arrow-r { color: #f87171; }
+.district-arrow-marker { background: transparent; border: none; }
+.map-arrow { display: inline-block; font-size: 30px; line-height: 1; font-weight: 700; text-shadow: 0 1px 3px rgba(15, 23, 42, 0.95); }
+.map-arrow.arrow-d { color: #60a5fa; animation: arrow-live-d 1.6s ease-in-out infinite; }
+.map-arrow.arrow-r { color: #f87171; animation: arrow-live-r 1.6s ease-in-out infinite; }
+@keyframes arrow-live-d { 0%, 100% { opacity: 1; transform: rotate(-45deg) scale(1); } 50% { opacity: 0.35; transform: rotate(-45deg) scale(0.94); } }
+@keyframes arrow-live-r { 0%, 100% { opacity: 1; transform: rotate(45deg) scale(1); } 50% { opacity: 0.35; transform: rotate(45deg) scale(0.94); } }
 
 .map-reset {
   position: absolute; top: 12px; right: 12px; z-index: 500; width: 34px; height: 34px;

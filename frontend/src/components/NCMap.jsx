@@ -142,19 +142,31 @@ export default function NCMap({ features, outline, races, selectedId, onSelect }
       if (pathCenter(f)) {
         const race = isComp ? raceById.current.get(f.district_id) : null;
         const delta = race?.polls?.delta;
-        const arrow = delta && delta.party && delta.party !== 'EVEN'
-          ? `<span class="map-arrow ${delta.party === 'D' ? 'arrow-d' : 'arrow-r'}">${delta.party === 'D' ? '←' : '→'}</span>`
-          : '';
+        const hasArrow = Boolean(delta && delta.party && delta.party !== 'EVEN');
         const label = L.marker(pathCenter(f), {
           interactive: false,
           icon: L.divIcon({
             className: isComp ? 'district-divlabel' : 'district-divlabel district-divlabel-safe',
-            html: `${shortLabel(f.district_id)}${arrow}`,
-            iconSize: [isComp && arrow ? 46 : 30, 16],
-            iconAnchor: [isComp && arrow ? 18 : 15, 8],
+            html: shortLabel(f.district_id),
+            iconSize: [30, 16],
+            iconAnchor: [15, isComp && hasArrow ? 18 : 8],
           }),
         });
         labelsRef.current.addLayer(label);
+        if (hasArrow) {
+          const dirCls = delta.party === 'D' ? 'arrow-d' : 'arrow-r';
+          const glyph = delta.party === 'D' ? '←' : '→';
+          const arrowMark = L.marker(pathCenter(f), {
+            interactive: false,
+            icon: L.divIcon({
+              className: 'district-arrow-marker',
+              html: `<span class="map-arrow ${dirCls}">${glyph}</span>`,
+              iconSize: [36, 36],
+              iconAnchor: [18, 18],
+            }),
+          });
+          labelsRef.current.addLayer(arrowMark);
+        }
       }
     }
 
