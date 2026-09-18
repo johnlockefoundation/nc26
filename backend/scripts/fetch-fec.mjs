@@ -2,9 +2,10 @@
 // write the normalized fundraising drop consumed by:
 //   node src/ingest/index.js fundraising
 //
-// API: OpenFEC (api.open.fec.gov). A free api.data.gov key may be provided via
-// the FEC_API_KEY env var or backend/data/sources/fec-key.txt. Without one the
-// public DEMO_KEY is shared by all users and heavily rate-limited.
+// API: OpenFEC (api.open.fec.gov). Uses the efficient /candidates/totals/
+// aggregate endpoint (2-3 calls total for all NC federal candidates), so the
+// public DEMO_KEY is sufficient. A free personal key may still be provided via
+// the FEC_API_KEY env var or backend/data/sources/fec-key.txt.
 import { readFileSync, existsSync, mkdirSync, writeFileSync } from 'node:fs';
 import { join, dirname, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
@@ -33,8 +34,7 @@ async function fec(path) {
     const res = await fetch(url);
     if (res.status === 429) {
       if (!apiKey()) {
-        console.log('  NOTE: using public DEMO_KEY (shared with all FEC API users, heavily rate-limited).');
-        console.log('  Get a free personal key at https://api.data.gov/signup/ and save it to backend/data/sources/fec-key.txt.');
+        console.log('  NOTE: public DEMO_KEY is shared and may be briefly rate-limited; retrying.');
       }
       const wait = 5000 * (attempt + 1);
       console.log(`  rate-limited, waiting ${wait}ms`);
@@ -47,30 +47,22 @@ async function fec(path) {
   throw new Error(`fec rate limit persisted for ${path}`);
 }
 
-async function listCandidates(office) {
+async function candidateTotals(office) {
   const out = [];
   let page = 1;
   for (;;) {
-    const j = await fec(`/candidates/?office=${office}&state=NC&cycle=${CYCLE}&per_page=100&page=${page}&sort=candidate_id`);
+    const j = await fec(`/candidates/totals/?office=${office}&state=NC&cycle=${CYCLE}&election_full=true&per_page=100&page=${page}`);
     out.push(...(j.results || []));
-    const pages = j.pagination.pages || 1;
+    const pages = j.pagination?.pages || 1;
     if (page >= pages) break;
     page++;
+    await sleep(250);
   }
   return out;
 }
 
-async function candidateTotals(candidateId) {
-  const j = await fec(`/candidate/${candidateId}/totals/?cycle=${CYCLE}&election_full=true`);
-  const r = (j.results || [])[0];
-  return {
-    receipts: r ? r.receipts ?? null : null,
-    coverage_end_date: r ? r.coverage_end_date ?? null : null,
-  };
-}
-
 function normName(s) {
-  return String(s || '').replace(/[^a-z0-9' ]/gi, ' ').replace(/\s+/g, ' ').trim().toUpperCase();
+  return String(s || '').replace(/[^a-z0-9', ]/gi, ' ').replace(/\s+/g, ' ').trim().toUpperCase();
 }
 
 function partsOf(name) {
@@ -85,52 +77,59 @@ function partsOf(name) {
   return { last: words[words.length - 1] || '', first: words[0] || '' };
 }
 
-function matchFec(localName, fecList) {
+function match(candidates, localName) {
   const local = partsOf(localName);
   let best = null, bestScore = -1;
-  for (const c of fecList) {
+  for (const c of candidates) {
     const fec = partsOf(c.name || '');
     if (fec.last !== local.last) continue;
     if ((fec.first[0] || '') !== (local.first[0] || '')) continue;
     let score = 1;
-    if (fec.first === local.first) score += 2;   // full first-name match
+    if (fec.first === local.first) score += 2;
     if (c.incumbent_challenge === 'I' || c.incumbent_challenge === 'C') score += 0.5;
+    if (c.receipts != null) score += 0.25;
     if (score > bestScore) { bestScore = score; best = c; }
   }
   return best;
 }
 
 const { db } = await import(pathToFileURL(join(BACKEND, 'src', 'db.js')));
-const D = await import(pathToFileURL(join(BACKEND, 'src', 'ingest', 'config.js')));
+const { CYCLE: C } = await import(pathToFileURL(join(BACKEND, 'src', 'ingest', 'config.js')));
 
 const locals = db.prepare(`SELECT district_id, name, party FROM candidates
   WHERE election_cycle = ? AND (district_id = 'NC-SEN' OR district_id GLOB 'NC-[0-9]*')
-  AND party IN ('D', 'R')`).all(CYCLE);
+  AND party IN ('D', 'R')`).all(C);
 
-const houseFec = await listCandidates('H');
-const senFec = await listCandidates('S');
-const fecByOffice = { H: houseFec, S: senFec };
+const houseTotals = await candidateTotals('H');
+const senTotals = await candidateTotals('S');
+console.log(`  FEC rows: ${houseTotals.length} house, ${senTotals.length} senate`);
 
-const districts = new Map(); // district_id -> { dem_amount, rep_amount, ... }
+const byId = [...houseTotals, ...senTotals];
 
+const districts = new Map();
+const used = new Set();
 for (const local of locals) {
   const office = local.district_id === 'NC-SEN' ? 'S' : 'H';
-  const localDist = Number(local.district_id.replace(/^NC-0?/, ''));
-  const pool = fecByOffice[office].filter((c) =>
-    office === 'S' || Number(c.district) === localDist);
-  const matched = matchFec(local.name, pool);
+  const district = office === 'S' ? null : Number(local.district_id.replace(/^NC-0?/, ''));
+  const pool = byId.filter((c) => {
+    const partial = (c.office || '').trim();
+    const cd = partial === 'S' ? null : Number(c.district);
+    const party = (c.party || '').toUpperCase();
+    return partial === office && cd === district &&
+      (party.startsWith('D') === (local.party === 'D')) && (party.startsWith('R') === (local.party === 'R'));
+  });
+  const matched = match(pool, local.name);
   if (!matched) {
     console.log(`  no FEC match for ${local.district_id} ${local.party} ${local.name}`);
     continue;
   }
-  const totals = await candidateTotals(matched.candidate_id);
-  const slot = districts.get(local.district_id) || { district_id: local.district_id, dem_amount: null, rep_amount: null };
-  slot[local.party === 'D' ? 'dem_amount' : 'rep_amount'] = totals.receipts != null ? Math.round(totals.receipts) : null;
-  slot.coverage_end_date = totals.coverage_end_date || null;
-  slot.source_url = `https://www.fec.gov/data/candidate/${matched.candidate_id}/`;
+  used.add(matched.candidate_id);
+  const slot = districts.get(local.district_id) || { district_id: local.district_id, dem_amount: null, rep_amount: null, source_urls: {} };
+  slot[local.party === 'D' ? 'dem_amount' : 'rep_amount'] = matched.receipts != null ? Math.round(matched.receipts) : null;
+  slot.source_urls[local.party] = `https://www.fec.gov/data/candidate/${matched.candidate_id}/`;
+  slot.coverage_end_date = matched.coverage_end_date || slot.coverage_end_date || null;
   districts.set(local.district_id, slot);
-  console.log(`  ${local.district_id} ${local.party} ${local.name} -> ${matched.candidate_id} (${matched.name}) receipts=${totals.receipts}`);
-  await sleep(350);
+  console.log(`  ${local.district_id} ${local.party} ${local.name} -> ${matched.candidate_id} receipts=${matched.receipts}`);
 }
 
 const fundraising = [];
@@ -142,7 +141,7 @@ for (const d of districts.values()) {
     rep_amount: d.rep_amount,
     reporting_period: d.coverage_end_date ? `Through ${d.coverage_end_date}` : '',
     updated_at,
-    source_url: d.source_url || '',
+    source_url: d.source_urls.D || d.source_urls.R || '',
     source_method: 'total_receipts',
   });
 }

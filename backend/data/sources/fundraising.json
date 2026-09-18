@@ -1,0 +1,33 @@
+{
+  "source": "FEC",
+  "updated_at": "2026-09-18T21:18:35.157Z",
+  "fundraising": [
+    {
+      "district_id": "NC-SEN",
+      "dem_amount": 34975789,
+      "rep_amount": 11272504,
+      "reporting_period": "Through 2026-06-30",
+      "updated_at": "2026-09-18T21:18:35.157Z",
+      "source_url": "https://www.fec.gov/data/candidate/S6NC00407/",
+      "source_method": "total_receipts"
+    },
+    {
+      "district_id": "NC-01",
+      "dem_amount": 4287386,
+      "rep_amount": 3793077,
+      "reporting_period": "Through 2026-06-30",
+      "updated_at": "2026-09-18T21:18:35.157Z",
+      "source_url": "https://www.fec.gov/data/candidate/H2NC02287/",
+      "source_method": "total_receipts"
+    },
+    {
+      "district_id": "NC-11",
+      "dem_amount": 3052354,
+      "rep_amount": 0,
+      "reporting_period": "Through 2026-06-30",
+      "updated_at": "2026-09-18T21:18:35.157Z",
+      "source_url": "https://www.fec.gov/data/candidate/H6NC11248/",
+      "source_method": "total_receipts"
+    }
+  ]
+}
