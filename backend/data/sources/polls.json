@@ -45,6 +45,50 @@
       "dem_share": 53,
       "rep_share": 42,
       "source_url": "https://www.newsweek.com/cooper-vs-whatleywhat-north-carolina-polls-show-under-2-months-to-midterm-12427356"
+    },
+    {
+      "district_id": "NC-01",
+      "pollster": "GBAO (D) for House Majority PAC",
+      "start_date": "2026-09-09",
+      "end_date": "2026-09-11",
+      "sample_size": 500,
+      "population": "LV",
+      "dem_share": 50,
+      "rep_share": 43,
+      "source_url": "https://www.witn.com/2026/09/15/poll-don-davis-leading-laurie-buckhout-by-7-points-first-district-race/"
+    },
+    {
+      "district_id": "NC-01",
+      "pollster": "co/efficient (R) for NRCC",
+      "start_date": "2026-04-25",
+      "end_date": "2026-04-29",
+      "sample_size": 842,
+      "population": "LV",
+      "dem_share": 41,
+      "rep_share": 41,
+      "source_url": "https://www.carolinajournal.com/exclusive-nrcc-polling-puts-buckhout-davis-in-dead-heat/"
+    },
+    {
+      "district_id": "NC-01",
+      "pollster": "GQR (D)",
+      "start_date": "2026-06-22",
+      "end_date": "2026-06-28",
+      "sample_size": 500,
+      "population": "LV",
+      "dem_share": 45,
+      "rep_share": 41,
+      "source_url": "https://dailyhaymaker.com/new-poll-don-davis-on-top-in-three-way-race-for-nc-01/"
+    },
+    {
+      "district_id": "NC-01",
+      "pollster": "GQR (D)",
+      "start_date": "2026-01-29",
+      "end_date": "2026-02-02",
+      "sample_size": 500,
+      "population": "LV",
+      "dem_share": 42,
+      "rep_share": 39,
+      "source_url": "https://votes.decisiondeskhq.com/races/2026-11-03/north-carolina-us-house-1-general-election/forecast"
     }
   ]
 }
