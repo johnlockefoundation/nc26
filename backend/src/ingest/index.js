@@ -16,6 +16,7 @@ import { ingestCivitas } from './civitas.js';
 import { ingestUsHouse } from './us-house.js';
 import { ingestUsSenate } from './us-senate.js';
 import { ingestSeedMetrics } from './metrics.js';
+import { ingestProfiles } from './profile.js';
 import {
   ingestPollsFromSource, ingestMarketsFromSource, ingestFundraisingFromSource, ingestNewsFromSource,
 } from './sources.js';
@@ -41,6 +42,7 @@ const JOB = {
   'us-house': () => ingestUsHouse(CYCLE),
   'us-senate': () => ingestUsSenate(CYCLE),
   metrics: () => ingestSeedMetrics(CYCLE),
+  profiles: () => ingestProfiles(CYCLE),
   polls: () => ingestPollsFromSource(CYCLE),
   markets: () => ingestMarketsFromSource(CYCLE),
   fundraising: () => ingestFundraisingFromSource(CYCLE),
@@ -48,7 +50,7 @@ const JOB = {
 };
 
 async function run(target) {
-  const jobs = target === 'all' ? ['districts', 'civitas', 'us-house', 'us-senate', 'metrics', 'polls', 'markets', 'fundraising', 'news'] : [target];
+  const jobs = target === 'all' ? ['districts', 'civitas', 'us-house', 'us-senate', 'metrics', 'profiles', 'polls', 'markets', 'fundraising', 'news'] : [target];
   for (const j of jobs) {
     const fn = JOB[j];
     if (!fn) { console.error(`unknown ingest target: ${j}`); process.exitCode = 1; continue; }

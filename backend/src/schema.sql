@@ -129,6 +129,26 @@ CREATE TABLE IF NOT EXISTS ingest_meta (
   notes        TEXT
 );
 
+-- ---------------------------------------------------------------------------
+-- District profile: census + political snapshot shown in the race panel.
+-- Only U.S. House districts carry a profile for now.
+-- ---------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS district_profiles (
+  district_id     TEXT NOT NULL,
+  election_cycle  TEXT NOT NULL,
+  median_age      REAL,
+  median_income   INTEGER,
+  bachelors_plus  REAL,
+  race_white      REAL,
+  race_black      REAL,
+  race_hispanic   REAL,
+  pres_margin     TEXT,                        -- e.g. R+16.5 / D+45.1
+  cpi             TEXT,                        -- Civitas-style CPI, e.g. R+8
+  source          TEXT,
+  updated_at      TEXT,
+  PRIMARY KEY (district_id, election_cycle)
+);
+
 CREATE INDEX IF NOT EXISTS idx_polls_district ON polls (district_id, election_cycle);
 CREATE INDEX IF NOT EXISTS idx_news_district ON news (district_id, election_cycle, published_at DESC);
 CREATE INDEX IF NOT EXISTS idx_candidates_district ON candidates (district_id, election_cycle);

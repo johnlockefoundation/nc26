@@ -118,6 +118,27 @@ export function listRaces({ cycle = CYCLE, raceType = null, competitiveOnly = tr
   return rows.map((r) => getRaceSummary(r, cycle));
 }
 
+function profileFor(districtId, cycle) {
+  const f = db.prepare(`SELECT median_age, median_income, bachelors_plus,
+      race_white, race_black, race_hispanic, pres_margin, cpi, source
+    FROM district_profiles WHERE district_id = ? AND election_cycle = ?`).get(districtId, cycle);
+  if (!f) return null;
+  return {
+    median_age: f.median_age,
+    median_income: f.median_income,
+    bachelors_plus: f.bachelors_plus,
+    race: {
+      white: f.race_white,
+      black: f.race_black,
+      hispanic: f.race_hispanic,
+      other: f.race_white == null ? null : +Math.max(0, 100 - f.race_white - f.race_black - f.race_hispanic).toFixed(1),
+    },
+    pres_margin: f.pres_margin,
+    cpi: f.cpi,
+    source: f.source,
+  };
+}
+
 export function getRace(districtId, cycle = CYCLE) {
   const row = districtRow(districtId, cycle);
   if (!row) return null;
@@ -128,6 +149,7 @@ export function getRace(districtId, cycle = CYCLE) {
     ORDER BY end_date DESC`).all(districtId, cycle);
   race.poll_detail = polls;
   race.all_news = newsFeed(cycle, 25);
+  race.profile = profileFor(districtId, cycle);
   return race;
 }
 

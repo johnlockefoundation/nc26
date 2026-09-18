@@ -227,15 +227,31 @@ a { color: var(--accent); }
 /* Sections */
 .panel-section { margin-top: 18px; }
 .panel-section h3 { font-family: var(--font-display); font-size: 11px; letter-spacing: 0.14em; color: var(--muted); margin: 0 0 8px; }
-.news-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
-.news-item { border-left: 3px solid rgba(96, 165, 250, 0.35); padding-left: 10px; }
-.news-headline { font-weight: 600; font-size: 14px; text-decoration: none; color: var(--ink); }
-.news-headline:hover { color: var(--accent); text-decoration: underline; }
-.news-meta { font-size: 11.5px; color: var(--muted); margin-top: 2px; }
-.news-meta .dot { margin: 0 5px; }
-.news-tag { font-family: var(--font-display); font-weight: 700; color: var(--accent); }
-.news-summary { font-size: 12.5px; color: #8ca0b7; margin-top: 4px; line-height: 1.45; }
-.news-empty { font-size: 13px; color: var(--muted); }
+
+/* District profile */
+.profile-stats { display: flex; gap: 18px; border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
+.profile-stat { display: flex; flex-direction: column; gap: 2px; }
+.profile-stat span { font-size: 10px; letter-spacing: 0.08em; color: var(--muted); }
+.profile-stat b { font-family: var(--font-display); font-size: 16px; color: var(--ink); }
+.profile-label { font-family: var(--font-display); font-size: 10px; letter-spacing: 0.14em; color: var(--muted); margin: 14px 0 8px; }
+.profile-bars { display: flex; flex-direction: column; gap: 6px; }
+.profile-bar-row { display: flex; align-items: center; gap: 10px; font-size: 12px; color: var(--ink); }
+.profile-bar-name { width: 90px; flex: none; color: var(--muted); text-align: right; }
+.profile-bar-track { flex: 1 1 auto; height: 8px; border-radius: 5px; background: rgba(148, 163, 184, 0.18); overflow: hidden; }
+.profile-bar-track i { display: block; height: 100%; border-radius: 5px; }
+.profile-bar-track .race-white { background: #94a3b8; }
+.profile-bar-track .race-black { background: #334155; }
+.profile-bar-track .race-hispanic { background: #f59e0b; }
+.profile-bar-track .race-other { background: #64748b; }
+.profile-bar-pct { width: 34px; flex: none; text-align: right; color: var(--muted); }
+
+.leanbar { margin-bottom: 6px; }
+.leanbar-track { position: relative; height: 10px; border-radius: 6px; background: linear-gradient(90deg, var(--d, #5b8cff), var(--center, #334155) 50%, var(--r, #f87171)); }
+.leanbar-marker { position: absolute; top: -3px; width: 3px; height: 16px; border-radius: 2px; background: #fff; box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.6); }
+.leanbar-mid { position: absolute; top: 0; left: 50%; width: 1px; height: 100%; background: rgba(15, 23, 42, 0.45); }
+.leanbar-labels { display: flex; justify-content: space-between; font-family: var(--font-display); font-size: 10px; letter-spacing: 0.1em; color: var(--muted); margin-top: 3px; }
+.profile-line { font-size: 12px; color: var(--ink); }
+.profile-source { font-size: 10.5px; margin-top: 10px; line-height: 1.4; }
 
 .sources ul { margin: 0; padding-left: 16px; font-size: 12px; color: var(--muted); }
 .sources li { margin-bottom: 4px; }

@@ -1,5 +1,5 @@
 import MetricBlock from './MetricBlock.jsx';
-import NewsList from './NewsList.jsx';
+import DistrictProfile from './DistrictProfile.jsx';
 
 function initials(name) {
   return name.split(/\s+/).filter(Boolean).slice(0, 2).map((w) => w[0].toUpperCase()).join('');
@@ -50,10 +50,7 @@ export default function RacePanel({ race, loading }) {
         <MetricBlock title="MONEY" emptyText="NO MONEY" summary={moneyS} />
       </div>
 
-      <section className="panel-section">
-        <h3>NC NEWS</h3>
-        <NewsList articles={race.all_news && race.all_news.length ? race.all_news : race.news} limit={4} />
-      </section>
+      <DistrictProfile profile={race.profile} />
     </aside>
   );
 }

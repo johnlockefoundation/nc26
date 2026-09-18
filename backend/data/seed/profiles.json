@@ -1,0 +1,133 @@
+{
+  "cycle": "2026",
+  "source": "U.S. Census ACS 2024 5-year · NCSBE 2024 presidential results · Civitas CPI",
+  "updated_at": "2026-09-18",
+  "profiles": [
+    {
+      "district_id": "NC-01",
+      "median_age": 41.9,
+      "median_income": 60407,
+      "bachelors_plus": 24.0,
+      "race": { "white": 57.1, "black": 31.6, "hispanic": 5.7 },
+      "pres_margin": "R+11.5",
+      "cpi": "R+8"
+    },
+    {
+      "district_id": "NC-02",
+      "median_age": 36.5,
+      "median_income": 90132,
+      "bachelors_plus": 57.2,
+      "race": { "white": 53.7, "black": 22.7, "hispanic": 12.9 },
+      "pres_margin": "D+33.7",
+      "cpi": "D+10"
+    },
+    {
+      "district_id": "NC-03",
+      "median_age": 36.5,
+      "median_income": 63447,
+      "bachelors_plus": 24.4,
+      "race": { "white": 53.2, "black": 27.9, "hispanic": 12.5 },
+      "pres_margin": "R+13.6",
+      "cpi": "R+10"
+    },
+    {
+      "district_id": "NC-04",
+      "median_age": 38.0,
+      "median_income": 95912,
+      "bachelors_plus": 57.0,
+      "race": { "white": 53.1, "black": 19.6, "hispanic": 11.5 },
+      "pres_margin": "D+45.1",
+      "cpi": "D+16"
+    },
+    {
+      "district_id": "NC-05",
+      "median_age": 41.8,
+      "median_income": 64351,
+      "bachelors_plus": 26.4,
+      "race": { "white": 68.0, "black": 17.7, "hispanic": 7.9 },
+      "pres_margin": "R+17.7",
+      "cpi": "R+12"
+    },
+    {
+      "district_id": "NC-06",
+      "median_age": 39.3,
+      "median_income": 73833,
+      "bachelors_plus": 29.7,
+      "race": { "white": 62.5, "black": 18.4, "hispanic": 10.8 },
+      "pres_margin": "R+17.1",
+      "cpi": "R+7"
+    },
+    {
+      "district_id": "NC-07",
+      "median_age": 42.1,
+      "median_income": 69322,
+      "bachelors_plus": 32.0,
+      "race": { "white": 64.2, "black": 19.1, "hispanic": 8.3 },
+      "pres_margin": "R+13.8",
+      "cpi": "R+13"
+    },
+    {
+      "district_id": "NC-08",
+      "median_age": 40.6,
+      "median_income": 77794,
+      "bachelors_plus": 34.3,
+      "race": { "white": 60.8, "black": 16.5, "hispanic": 9.4 },
+      "pres_margin": "R+19.3",
+      "cpi": "R+10"
+    },
+    {
+      "district_id": "NC-09",
+      "median_age": 37.7,
+      "median_income": 75931,
+      "bachelors_plus": 32.6,
+      "race": { "white": 58.7, "black": 20.8, "hispanic": 12.6 },
+      "pres_margin": "R+15.8",
+      "cpi": "R+11"
+    },
+    {
+      "district_id": "NC-10",
+      "median_age": 41.2,
+      "median_income": 65932,
+      "bachelors_plus": 32.3,
+      "race": { "white": 66.1, "black": 15.4, "hispanic": 11.4 },
+      "pres_margin": "R+17.7",
+      "cpi": "R+14"
+    },
+    {
+      "district_id": "NC-11",
+      "median_age": 45.4,
+      "median_income": 65288,
+      "bachelors_plus": 35.7,
+      "race": { "white": 82.3, "black": 3.3, "hispanic": 7.7 },
+      "pres_margin": "R+9.5",
+      "cpi": "R+15"
+    },
+    {
+      "district_id": "NC-12",
+      "median_age": 33.7,
+      "median_income": 75847,
+      "bachelors_plus": 49.2,
+      "race": { "white": 35.9, "black": 36.7, "hispanic": 17.6 },
+      "pres_margin": "D+45.9",
+      "cpi": "D+12"
+    },
+    {
+      "district_id": "NC-13",
+      "median_age": 39.2,
+      "median_income": 80210,
+      "bachelors_plus": 37.4,
+      "race": { "white": 63.2, "black": 17.8, "hispanic": 13.1 },
+      "pres_margin": "R+16.5",
+      "cpi": "R+8"
+    },
+    {
+      "district_id": "NC-14",
+      "median_age": 36.2,
+      "median_income": 73389,
+      "bachelors_plus": 35.6,
+      "race": { "white": 67.7, "black": 15.3, "hispanic": 8.6 },
+      "pres_margin": "R+15.0",
+      "cpi": "R+6"
+    }
+  ]
+}
