@@ -92,6 +92,25 @@ export function ingestFundraisingFromSource(cycle = CYCLE) {
   return { source: data.source || 'fundraising', count: n };
 }
 
+export function ingestKalshiFromSource(cycle = CYCLE) {
+  const data = loadDrop('markets-kalshi');
+  if (!data) return null;
+  db.prepare(`DELETE FROM markets WHERE election_cycle = ? AND provider = 'Kalshi'`).run(cycle);
+  const ins = db.prepare(`INSERT OR REPLACE INTO markets
+    (district_id, election_cycle, provider, dem_price, rep_price, advantage, updated_at, source_url, is_seed)
+    VALUES (?, ?, 'Kalshi', ?, ?, ?, ?, ?, 0)`);
+  let n = 0;
+  for (const m of data.markets || []) {
+    if (m.dem_price == null && m.rep_price == null) continue;
+    const adv = +((m.dem_price ?? 0) - (m.rep_price ?? 0)).toFixed(2);
+    ins.run(m.district_id, cycle, m.dem_price ?? null, m.rep_price ?? null, adv,
+      m.updated_at, m.source_url || '');
+    n++;
+  }
+  console.log(`[kalshi] ingested ${n} market rows`);
+  return { source: data.source || 'kalshi', count: n };
+}
+
 export function ingestNewsFromSource(cycle = CYCLE) {
   const data = loadDrop('news');
   if (!data) return null;

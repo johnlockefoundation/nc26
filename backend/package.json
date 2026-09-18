@@ -11,6 +11,7 @@
     "ingest": "node src/ingest/index.js all",
     "static": "node scripts/export-static.mjs",
     "fetch-markets": "node scripts/fetch-markets.mjs",
+    "fetch-kalshi": "node scripts/fetch-kalshi.mjs",
     "fetch-news": "node scripts/fetch-news.mjs",
     "fetch-fec": "node scripts/fetch-fec.mjs"
   },
