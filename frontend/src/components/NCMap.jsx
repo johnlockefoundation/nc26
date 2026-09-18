@@ -155,7 +155,7 @@ export default function NCMap({ features, outline, races, selectedId, onSelect }
         labelsRef.current.addLayer(label);
         if (hasArrow) {
           const dirCls = delta.party === 'D' ? 'arrow-d' : 'arrow-r';
-          const glyph = delta.party === 'D' ? '←' : '→';
+          const glyph = delta.party === 'D' ? '↖' : '↗';
           const arrowMark = L.marker(pathCenter(f), {
             interactive: false,
             icon: L.divIcon({

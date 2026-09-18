@@ -11,6 +11,7 @@ export const HOUSE_OUTLOOK = {
   tossup: 18,
   threshold: 218,
   total: 435,
+  today: { dem: 215, rep: 220 },
   source: 'Cook Political Report',
   updated_at: '2026-09-16T12:00:00Z',
 };
@@ -22,6 +23,7 @@ export const SENATE_OUTLOOK = {
   tossup: 0,
   threshold: 50,
   total: 100,
+  today: { dem: 47, rep: 53 },
   source: 'Decision Desk HQ',
   updated_at: '2026-09-16T12:00:00Z',
 };
@@ -33,6 +35,7 @@ export const NC_SENATE_OUTLOOK = {
   tossup: 0,
   threshold: 26,
   total: 50,
+  today: { dem: 20, rep: 30 },
   source: 'JLF Civitas',
   updated_at: '2026-09-16T12:00:00Z',
 };
@@ -44,6 +47,7 @@ export const NC_HOUSE_OUTLOOK = {
   tossup: 0,
   threshold: 61,
   total: 120,
+  today: { dem: 49, rep: 71 },
   source: 'JLF Civitas',
   updated_at: '2026-09-16T12:00:00Z',
 };
