@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { advantageColor, primarySignal } from '../lib/colors.js';
+import { signalColor, primarySignal } from '../lib/colors.js';
 import { BASEMAP_URL, BASEMAP_ATTR, MAP_MIN_ZOOM, MAP_MAX_ZOOM, MAP_BOUNDS } from '../lib/map.js';
 
 function shortLabel(districtId) {
@@ -15,8 +15,7 @@ function matchupText(candidates) {
 }
 
 function colorFor(race) {
-  const sig = primarySignal(race);
-  return advantageColor(sig.value);
+  return signalColor(primarySignal(race));
 }
 
 function safeLean(cpi) {

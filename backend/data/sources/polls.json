@@ -89,6 +89,28 @@
       "dem_share": 42,
       "rep_share": 39,
       "source_url": "https://votes.decisiondeskhq.com/races/2026-11-03/north-carolina-us-house-1-general-election/forecast"
+    },
+    {
+      "district_id": "NC-07",
+      "pollster": "Public Policy Polling",
+      "start_date": "2026-08-19",
+      "end_date": "2026-08-20",
+      "sample_size": 517,
+      "population": "LV",
+      "dem_share": 43,
+      "rep_share": 49,
+      "source_url": "https://data.ddhq.io/polls/2026/08/28/Public-Policy-Polling-North-Carolina--7"
+    },
+    {
+      "district_id": "NC-11",
+      "pollster": "Public Policy Polling",
+      "start_date": "2026-09-10",
+      "end_date": "2026-09-11",
+      "sample_size": 531,
+      "population": "LV",
+      "dem_share": 47,
+      "rep_share": 44,
+      "source_url": "https://www.ellisinsight.com/senate/carolinas-critical-campaigns/"
     }
   ]
 }

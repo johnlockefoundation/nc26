@@ -1,5 +1,7 @@
 // Map coloring is driven by current race signal (not static partisan ratings).
 // Default: polling margin. Falls back to markets, then money, then neutral.
+// Saturation is scaled per metric so each signal colors in proportion to its
+// own units: polls in points, markets in points, money in dollars.
 
 function hexToRgb(hex) {
   const h = hex.replace('#', '');
@@ -18,6 +20,17 @@ export function advantageColor(adv) {
   if (Math.abs(m) < 0.5) return '#a78bfa';
   const t = Math.abs(m) / 6;
   return m > 0 ? mix('#dbeafe', '#1d4ed8', t) : mix('#fee2e2', '#b91c1c', t);
+}
+
+// Color a race from its primary signal, scaled in each metric's own units so a
+// money-only district is not painted the same saturated hue as a blowout poll.
+const SCALES = { POLLS: 10, MARKETS: 35, MONEY: 1500000 };
+
+export function signalColor(sig) {
+  if (!sig || !sig.advantage || !(sig.advantage.value > 0)) return '#e2e8f0';
+  const t = Math.min(1, sig.advantage.value / (SCALES[sig.metric] || 10));
+  if (t <= 0.02) return '#a78bfa';
+  return sig.advantage.party === 'D' ? mix('#dbeafe', '#1d4ed8', t) : mix('#fee2e2', '#b91c1c', t);
 }
 
 // Primary signal for a race: polls -> markets -> money.
