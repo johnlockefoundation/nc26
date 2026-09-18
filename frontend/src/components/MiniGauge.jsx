@@ -36,7 +36,7 @@ export default function MiniGauge({ outlook, label }) {
   const currentMaj = todayRep > todayDem ? 'R' : todayDem > todayRep ? 'D' : 'EVEN';
   let projMaj = dem >= threshold ? 'D' : rep >= threshold ? 'R' : 'TOSS';
   const outcome = projMaj === 'TOSS'
-    ? 'CONTROL TOSS-UP'
+    ? 'TOSS-UP'
     : projMaj === currentMaj ? `${projMaj} HOLD` : `${projMaj} FLIP`;
   const outcomeCls = outcome.startsWith('D') ? 'outcome-d' : outcome.startsWith('R') ? 'outcome-r' : 'outcome-t';
   const gainCls = gainParty === 'D' ? 'lead-d' : gainParty === 'R' ? 'lead-r' : '';

@@ -12,3 +12,5 @@ backend/data/raw/
 frontend/public/demo-data/
 backend/data/sources/fec-key.txt
 .worktree/
+backend/data/sources/kalshi-key.txt
+backend/data/sources/kalshi-private.pem

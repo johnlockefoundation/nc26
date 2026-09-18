@@ -161,8 +161,8 @@ export default function NCMap({ features, outline, races, selectedId, onSelect }
             icon: L.divIcon({
               className: 'district-arrow-marker',
               html: `<span class="map-arrow ${dirCls}">${glyph}</span>`,
-              iconSize: [36, 36],
-              iconAnchor: [18, 18],
+              iconSize: [46, 46],
+              iconAnchor: [23, 23],
             }),
           });
           labelsRef.current.addLayer(arrowMark);
