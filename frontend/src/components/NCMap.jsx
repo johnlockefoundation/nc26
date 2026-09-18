@@ -14,12 +14,12 @@ function colorFor(race) {
 }
 
 function safeStyle() {
-  return { color: '#dbe2ea', weight: 0.6, fillColor: '#f1f5f9', fillOpacity: 0.55 };
+  return { color: '#16223a', weight: 0.6, fillColor: '#16223a', fillOpacity: 0.5 };
 }
 
 function raceStyle(f, race) {
   return {
-    color: '#475569',
+    color: '#0b1220',
     weight: 0.8,
     fillColor: colorFor(race),
     fillOpacity: 0.85,
@@ -107,7 +107,7 @@ export default function NCMap({ features, outline, races, selectedId, onSelect }
           layer.on('click', () => onSelectRef.current(f.district_id));
           layer.on('mouseover', () => {
             if (f.district_id !== selectedRef.current) {
-              layer.setStyle({ ...raceStyle(f, race), weight: 1.8, color: '#0f172a' });
+              layer.setStyle({ ...raceStyle(f, race), weight: 1.8, color: '#f1f5f9' });
             }
           });
           layer.on('mouseout', () => {
@@ -140,7 +140,7 @@ export default function NCMap({ features, outline, races, selectedId, onSelect }
   }, [selectedId, features, races]);
 
   function selectedStyle() {
-    return { color: '#111827', weight: 2.6, fillColor: colorFor(raceById.current.get(selectedRef.current)), fillOpacity: 0.95 };
+    return { color: '#f8fafc', weight: 2.6, fillColor: colorFor(raceById.current.get(selectedRef.current)), fillOpacity: 0.95 };
   }
 
   function fitToState(map) {

@@ -1,10 +1,9 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { getMap, getMeta, getRace, getTicker, getOutline, isStatic } from './api.js';
+import { getMap, getMeta, getRace, getTicker, getOutline } from './api.js';
 import RaceTypeToggle from './components/RaceTypeToggle.jsx';
 import RaceTicker from './components/RaceTicker.jsx';
 import NCMap from './components/NCMap.jsx';
 import RacePanel from './components/RacePanel.jsx';
-import { relativeTime } from './lib/format.js';
 import { primarySignal } from './lib/colors.js';
 
 const TYPE_BY_PREFIX = { NC: 'us_house', SD: 'state_senate', HD: 'state_house' };
@@ -62,23 +61,13 @@ export default function App() {
     setSelectedId(districtId);
   }, [raceType]);
 
-  const lastUpdated = useMemo(() => {
-    const ts = (ticker || []).map((t) => t.updated_at).filter(Boolean).sort();
-    return ts[ts.length - 1] || null;
-  }, [ticker]);
-
   return (
     <div className="app">
       <header className="topbar">
-        <div className="brand">
+        <h1 className="brand-title" aria-label="NC 26">
           <span className="brand-mark">NC</span>
-          <span className="brand-text">Race Signals <em>2026</em></span>
-        </div>
-        <p className="tagline">How voters, markets, and donors see North Carolina's competitive races.</p>
-        <div className="topbar-right">
-          {lastUpdated && <span className="updated dim">metric data updated {relativeTime(lastUpdated)}</span>}
-          {isStatic && <span className="demo-badge">static demo</span>}
-        </div>
+          <span className="brand-year">26</span>
+        </h1>
       </header>
 
       <RaceTicker items={ticker} onSelect={selectRace} />
