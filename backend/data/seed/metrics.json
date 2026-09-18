@@ -3,119 +3,554 @@
   "note": "Baseline seed data for the initial MVP. Rows marked is_seed=true are illustrative placeholders merged into the normalized model; the ingestion pipeline (/ingest/*) replaces them with live data source by source. Values that come from a real public source (FEC, Kalshi snapshot, published reporting) carry their source_url. Coverage is deliberately varied so the UI can be validated against missing-data states.",
   "polls": {
     "NC-01": {
-      "average": { "dem": 45.0, "rep": 48.0, "updated_at": "2026-09-16T14:00:00Z" },
+      "average": {
+        "dem": 45.0,
+        "rep": 48.0,
+        "updated_at": "2026-09-16T14:00:00Z"
+      },
       "polls": [
-        { "pollster": "Harper Polling", "start": "2026-09-08", "end": "2026-09-12", "sample": 600, "population": "LV", "dem": 45, "rep": 48, "url": "" },
-        { "pollster": "Quinnipiac University", "start": "2026-08-20", "end": "2026-08-25", "sample": 520, "population": "LV", "dem": 46, "rep": 47, "url": "" }
+        {
+          "pollster": "Harper Polling",
+          "start": "2026-09-08",
+          "end": "2026-09-12",
+          "sample": 600,
+          "population": "LV",
+          "dem": 45,
+          "rep": 48,
+          "url": ""
+        },
+        {
+          "pollster": "Quinnipiac University",
+          "start": "2026-08-20",
+          "end": "2026-08-25",
+          "sample": 520,
+          "population": "LV",
+          "dem": 46,
+          "rep": 47,
+          "url": ""
+        }
       ]
     },
     "NC-11": {
-      "average": { "dem": 47.6, "rep": 45.8, "updated_at": "2026-09-16T13:00:00Z" },
+      "average": {
+        "dem": 47.6,
+        "rep": 45.8,
+        "updated_at": "2026-09-16T13:00:00Z"
+      },
       "polls": [
-        { "pollster": "Harper Polling", "start": "2026-09-10", "end": "2026-09-15", "sample": 612, "population": "LV", "dem": 49, "rep": 44, "url": "" },
-        { "pollster": "Change Research", "start": "2026-09-04", "end": "2026-09-09", "sample": 540, "population": "RV", "dem": 47, "rep": 47, "url": "" },
-        { "pollster": "Western Carolina University", "start": "2026-08-14", "end": "2026-08-31", "sample": 700, "population": "LV", "dem": 47, "rep": 46, "url": "" }
+        {
+          "pollster": "Harper Polling",
+          "start": "2026-09-10",
+          "end": "2026-09-15",
+          "sample": 612,
+          "population": "LV",
+          "dem": 49,
+          "rep": 44,
+          "url": ""
+        },
+        {
+          "pollster": "Change Research",
+          "start": "2026-09-04",
+          "end": "2026-09-09",
+          "sample": 540,
+          "population": "RV",
+          "dem": 47,
+          "rep": 47,
+          "url": ""
+        },
+        {
+          "pollster": "Western Carolina University",
+          "start": "2026-08-14",
+          "end": "2026-08-31",
+          "sample": 700,
+          "population": "LV",
+          "dem": 47,
+          "rep": 46,
+          "url": ""
+        }
       ]
     },
     "SD-04": {
-      "average": { "dem": 43.5, "rep": 45.0, "updated_at": "2026-09-14T18:00:00Z" },
+      "average": {
+        "dem": 43.5,
+        "rep": 45.0,
+        "updated_at": "2026-09-14T18:00:00Z"
+      },
       "polls": []
     },
     "SD-07": {
-      "average": { "dem": 45.0, "rep": 45.5, "updated_at": "2026-09-13T15:00:00Z" },
+      "average": {
+        "dem": 45.0,
+        "rep": 45.5,
+        "updated_at": "2026-09-13T15:00:00Z"
+      },
       "polls": []
     },
     "SD-11": {
-      "average": { "dem": 45.8, "rep": 45.2, "updated_at": "2026-09-12T20:00:00Z" },
+      "average": {
+        "dem": 45.8,
+        "rep": 45.2,
+        "updated_at": "2026-09-12T20:00:00Z"
+      },
       "polls": []
     },
     "SD-18": {
-      "average": { "dem": 44.2, "rep": 46.2, "updated_at": "2026-09-15T22:00:00Z" },
+      "average": {
+        "dem": 44.2,
+        "rep": 46.2,
+        "updated_at": "2026-09-15T22:00:00Z"
+      },
       "polls": [
-        { "pollster": "Civitas Poll", "start": "2026-09-10", "end": "2026-09-14", "sample": 800, "population": "LV", "dem": 44, "rep": 46, "url": "https://www.civitasinstitute.org/civitas-poll/" },
-        { "pollster": "News & Observer / Meredith College", "start": "2026-08-22", "end": "2026-08-28", "sample": 450, "population": "LV", "dem": 45, "rep": 46, "url": "" }
+        {
+          "pollster": "Civitas Poll",
+          "start": "2026-09-10",
+          "end": "2026-09-14",
+          "sample": 800,
+          "population": "LV",
+          "dem": 44,
+          "rep": 46,
+          "url": "https://www.civitasinstitute.org/civitas-poll/"
+        },
+        {
+          "pollster": "News & Observer / Meredith College",
+          "start": "2026-08-22",
+          "end": "2026-08-28",
+          "sample": 450,
+          "population": "LV",
+          "dem": 45,
+          "rep": 46,
+          "url": ""
+        }
       ]
     },
     "SD-24": {
-      "average": { "dem": 42.5, "rep": 45.3, "updated_at": "2026-09-11T16:00:00Z" },
+      "average": {
+        "dem": 42.5,
+        "rep": 45.3,
+        "updated_at": "2026-09-11T16:00:00Z"
+      },
       "polls": []
     },
     "SD-34": {
-      "average": { "dem": 44.0, "rep": 45.0, "updated_at": "2026-09-10T14:00:00Z" },
+      "average": {
+        "dem": 44.0,
+        "rep": 45.0,
+        "updated_at": "2026-09-10T14:00:00Z"
+      },
       "polls": []
     },
     "SD-42": {
-      "average": { "dem": 46.0, "rep": 45.0, "updated_at": "2026-09-16T10:00:00Z" },
+      "average": {
+        "dem": 46.0,
+        "rep": 45.0,
+        "updated_at": "2026-09-16T10:00:00Z"
+      },
       "polls": [
-        { "pollster": "Mecklenburg Times / CPP", "start": "2026-09-05", "end": "2026-09-11", "sample": 500, "population": "LV", "dem": 46, "rep": 45, "url": "" }
+        {
+          "pollster": "Mecklenburg Times / CPP",
+          "start": "2026-09-05",
+          "end": "2026-09-11",
+          "sample": 500,
+          "population": "LV",
+          "dem": 46,
+          "rep": 45,
+          "url": ""
+        }
       ]
     },
-    "HD-05": { "average": { "dem": 44.5, "rep": 46.5, "updated_at": "2026-09-12T11:00:00Z" }, "polls": [] },
-    "HD-07": { "average": { "dem": 43.2, "rep": 47.0, "updated_at": "2026-09-12T12:00:00Z" }, "polls": [] },
-    "HD-09": { "average": { "dem": 44.8, "rep": 46.3, "updated_at": "2026-09-13T09:00:00Z" }, "polls": [] },
-    "HD-12": { "average": { "dem": 44.0, "rep": 46.0, "updated_at": "2026-09-11T10:00:00Z" }, "polls": [] },
-    "HD-20": { "average": { "dem": 44.3, "rep": 46.2, "updated_at": "2026-09-14T08:00:00Z" }, "polls": [] },
+    "HD-05": {
+      "average": {
+        "dem": 44.5,
+        "rep": 46.5,
+        "updated_at": "2026-09-12T11:00:00Z"
+      },
+      "polls": []
+    },
+    "HD-07": {
+      "average": {
+        "dem": 43.2,
+        "rep": 47.0,
+        "updated_at": "2026-09-12T12:00:00Z"
+      },
+      "polls": []
+    },
+    "HD-09": {
+      "average": {
+        "dem": 44.8,
+        "rep": 46.3,
+        "updated_at": "2026-09-13T09:00:00Z"
+      },
+      "polls": []
+    },
+    "HD-12": {
+      "average": {
+        "dem": 44.0,
+        "rep": 46.0,
+        "updated_at": "2026-09-11T10:00:00Z"
+      },
+      "polls": []
+    },
+    "HD-20": {
+      "average": {
+        "dem": 44.3,
+        "rep": 46.2,
+        "updated_at": "2026-09-14T08:00:00Z"
+      },
+      "polls": []
+    },
     "HD-25": {
-      "average": { "dem": 45.5, "rep": 44.9, "updated_at": "2026-09-15T09:30:00Z" },
+      "average": {
+        "dem": 45.5,
+        "rep": 44.9,
+        "updated_at": "2026-09-15T09:30:00Z"
+      },
       "polls": [
-        { "pollster": "NC League of Municipalities Poll", "start": "2026-09-01", "end": "2026-09-07", "sample": 400, "population": "LV", "dem": 46, "rep": 45, "url": "" }
+        {
+          "pollster": "NC League of Municipalities Poll",
+          "start": "2026-09-01",
+          "end": "2026-09-07",
+          "sample": 400,
+          "population": "LV",
+          "dem": 46,
+          "rep": 45,
+          "url": ""
+        }
       ]
     },
-    "HD-35": { "average": null, "polls": [] },
+    "HD-35": {
+      "average": null,
+      "polls": []
+    },
     "HD-37": {
-      "average": { "dem": 44.9, "rep": 45.1, "updated_at": "2026-09-14T16:30:00Z" },
+      "average": {
+        "dem": 44.9,
+        "rep": 45.1,
+        "updated_at": "2026-09-14T16:30:00Z"
+      },
       "polls": [
-        { "pollster": "Civitas Poll", "start": "2026-09-08", "end": "2026-09-12", "sample": 700, "population": "LV", "dem": 45, "rep": 45, "url": "https://www.civitasinstitute.org/civitas-poll/" }
+        {
+          "pollster": "Civitas Poll",
+          "start": "2026-09-08",
+          "end": "2026-09-12",
+          "sample": 700,
+          "population": "LV",
+          "dem": 45,
+          "rep": 45,
+          "url": "https://www.civitasinstitute.org/civitas-poll/"
+        }
       ]
     },
-    "HD-43": { "average": { "dem": 43.6, "rep": 46.0, "updated_at": "2026-09-13T07:00:00Z" }, "polls": [] },
-    "HD-59": { "average": { "dem": 44.2, "rep": 45.4, "updated_at": "2026-09-12T09:00:00Z" }, "polls": [] },
-    "HD-62": { "average": { "dem": 45.0, "rep": 46.2, "updated_at": "2026-09-11T13:00:00Z" }, "polls": [] },
-    "HD-63": { "average": { "dem": 44.6, "rep": 46.0, "updated_at": "2026-09-10T15:00:00Z" }, "polls": [] },
-    "HD-64": { "average": { "dem": 44.5, "rep": 46.0, "updated_at": "2026-09-09T18:00:00Z" }, "polls": [] },
-    "HD-73": { "average": { "dem": 44.0, "rep": 45.6, "updated_at": "2026-09-12T17:00:00Z" }, "polls": [] },
-    "HD-74": { "average": { "dem": 44.7, "rep": 46.2, "updated_at": "2026-09-13T10:00:00Z" }, "polls": [] },
-    "HD-75": { "average": { "dem": 44.2, "rep": 46.8, "updated_at": "2026-09-11T08:00:00Z" }, "polls": [] },
-    "HD-82": { "average": { "dem": 43.9, "rep": 45.6, "updated_at": "2026-09-10T12:00:00Z" }, "polls": [] },
+    "HD-43": {
+      "average": {
+        "dem": 43.6,
+        "rep": 46.0,
+        "updated_at": "2026-09-13T07:00:00Z"
+      },
+      "polls": []
+    },
+    "HD-59": {
+      "average": {
+        "dem": 44.2,
+        "rep": 45.4,
+        "updated_at": "2026-09-12T09:00:00Z"
+      },
+      "polls": []
+    },
+    "HD-62": {
+      "average": {
+        "dem": 45.0,
+        "rep": 46.2,
+        "updated_at": "2026-09-11T13:00:00Z"
+      },
+      "polls": []
+    },
+    "HD-63": {
+      "average": {
+        "dem": 44.6,
+        "rep": 46.0,
+        "updated_at": "2026-09-10T15:00:00Z"
+      },
+      "polls": []
+    },
+    "HD-64": {
+      "average": {
+        "dem": 44.5,
+        "rep": 46.0,
+        "updated_at": "2026-09-09T18:00:00Z"
+      },
+      "polls": []
+    },
+    "HD-73": {
+      "average": {
+        "dem": 44.0,
+        "rep": 45.6,
+        "updated_at": "2026-09-12T17:00:00Z"
+      },
+      "polls": []
+    },
+    "HD-74": {
+      "average": {
+        "dem": 44.7,
+        "rep": 46.2,
+        "updated_at": "2026-09-13T10:00:00Z"
+      },
+      "polls": []
+    },
+    "HD-75": {
+      "average": {
+        "dem": 44.2,
+        "rep": 46.8,
+        "updated_at": "2026-09-11T08:00:00Z"
+      },
+      "polls": []
+    },
+    "HD-82": {
+      "average": {
+        "dem": 43.9,
+        "rep": 45.6,
+        "updated_at": "2026-09-10T12:00:00Z"
+      },
+      "polls": []
+    },
     "HD-98": {
-      "average": { "dem": 47.6, "rep": 45.4, "updated_at": "2026-09-16T18:30:00Z" },
+      "average": {
+        "dem": 47.6,
+        "rep": 45.4,
+        "updated_at": "2026-09-16T18:30:00Z"
+      },
       "polls": [
-        { "pollster": "Mecklenburg Times / CPP", "start": "2026-09-09", "end": "2026-09-14", "sample": 425, "population": "LV", "dem": 48, "rep": 45, "url": "" },
-        { "pollster": "High Point University Survey", "start": "2026-08-18", "end": "2026-08-25", "sample": 380, "population": "RV", "dem": 48, "rep": 46, "url": "" }
+        {
+          "pollster": "Mecklenburg Times / CPP",
+          "start": "2026-09-09",
+          "end": "2026-09-14",
+          "sample": 425,
+          "population": "LV",
+          "dem": 48,
+          "rep": 45,
+          "url": ""
+        },
+        {
+          "pollster": "High Point University Survey",
+          "start": "2026-08-18",
+          "end": "2026-08-25",
+          "sample": 380,
+          "population": "RV",
+          "dem": 48,
+          "rep": 46,
+          "url": ""
+        }
       ]
     },
     "HD-105": {
-      "average": { "dem": 46.2, "rep": 44.8, "updated_at": "2026-09-16T12:00:00Z" },
+      "average": {
+        "dem": 46.2,
+        "rep": 44.8,
+        "updated_at": "2026-09-16T12:00:00Z"
+      },
       "polls": [
-        { "pollster": "Mecklenburg Times / CPP", "start": "2026-09-08", "end": "2026-09-13", "sample": 460, "population": "LV", "dem": 46, "rep": 45, "url": "" },
-        { "pollster": "Charlotte Observer / Elon", "start": "2026-08-21", "end": "2026-08-28", "sample": 410, "population": "LV", "dem": 47, "rep": 45, "url": "" }
+        {
+          "pollster": "Mecklenburg Times / CPP",
+          "start": "2026-09-08",
+          "end": "2026-09-13",
+          "sample": 460,
+          "population": "LV",
+          "dem": 46,
+          "rep": 45,
+          "url": ""
+        },
+        {
+          "pollster": "Charlotte Observer / Elon",
+          "start": "2026-08-21",
+          "end": "2026-08-28",
+          "sample": 410,
+          "population": "LV",
+          "dem": 47,
+          "rep": 45,
+          "url": ""
+        }
       ]
     },
     "HD-115": {
-      "average": { "dem": 45.6, "rep": 44.2, "updated_at": "2026-09-15T14:00:00Z" },
+      "average": {
+        "dem": 45.6,
+        "rep": 44.2,
+        "updated_at": "2026-09-15T14:00:00Z"
+      },
       "polls": [
-        { "pollster": "Mountain State Poll", "start": "2026-09-02", "end": "2026-09-09", "sample": 350, "population": "LV", "dem": 46, "rep": 44, "url": "" }
+        {
+          "pollster": "Mountain State Poll",
+          "start": "2026-09-02",
+          "end": "2026-09-09",
+          "sample": 350,
+          "population": "LV",
+          "dem": 46,
+          "rep": 44,
+          "url": ""
+        }
       ]
     },
-    "HD-119": { "average": null, "polls": [] }
+    "HD-119": {
+      "average": null,
+      "polls": []
+    },
+    "NC-SEN": {
+      "average": {
+        "dem": 51.0,
+        "rep": 41.0,
+        "updated_at": "2026-09-15T21:00:00Z"
+      },
+      "polls": [
+        {
+          "pollster": "Fox News",
+          "start": "2026-07-22",
+          "end": "2026-07-27",
+          "sample": 1012,
+          "population": "LV",
+          "dem": 53,
+          "rep": 44,
+          "url": "https://www.foxnews.com/politics/fox-news-poll-democratic-enthusiasm-shapes-north-carolina-senate-race"
+        },
+        {
+          "pollster": "Elon University",
+          "start": "2026-09-03",
+          "end": "2026-09-10",
+          "sample": 950,
+          "population": "LV",
+          "dem": 49,
+          "rep": 38,
+          "url": "https://www.elon.edu/u/elon-poll/"
+        }
+      ]
+    }
   },
   "markets": {
-    "NC-01": { "provider": "Kalshi", "dem_price": 42, "rep_price": 58, "updated_at": "2026-09-16T20:00:00Z", "source_url": "https://kalshi.com/markets/kxhouse/general-election-house-district-nc-1" },
-    "NC-11": { "provider": "Kalshi", "dem_price": 38, "rep_price": 62, "updated_at": "2026-09-16T21:00:00Z", "source_url": "https://kalshi.com/markets/kxhouse/general-election-house-district-nc-11" }
+    "NC-01": {
+      "provider": "Kalshi",
+      "dem_price": 42,
+      "rep_price": 58,
+      "updated_at": "2026-09-16T20:00:00Z",
+      "source_url": "https://kalshi.com/markets/kxhouse/general-election-house-district-nc-1"
+    },
+    "NC-11": {
+      "provider": "Kalshi",
+      "dem_price": 38,
+      "rep_price": 62,
+      "updated_at": "2026-09-16T21:00:00Z",
+      "source_url": "https://kalshi.com/markets/kxhouse/general-election-house-district-nc-11"
+    },
+    "NC-SEN": {
+      "provider": "Kalshi",
+      "dem_price": 64,
+      "rep_price": 36,
+      "updated_at": "2026-09-16T20:30:00Z",
+      "source_url": "https://kalshi.com/markets/kxsenate/senate-control-north-carolina"
+    }
   },
   "fundraising": {
-    "NC-01": { "dem_amount": 1410000, "rep_amount": 855000, "reporting_period": "2026 Q3 (Jul 1 – Sep 30)", "updated_at": "2026-09-15T18:00:00Z", "source_url": "https://www.fec.gov/data/", "source_method": "total_receipts" },
-    "NC-11": { "dem_amount": 3052354, "rep_amount": 158000, "reporting_period": "2026 Q2 (through Jun 30, 2026)", "updated_at": "2026-09-15T18:00:00Z", "source_url": "https://www.fec.gov/data/candidate/H6NC11248/", "source_method": "total_receipts" },
-    "SD-04": { "dem_amount": 88000, "rep_amount": 132000, "reporting_period": "2026 Q3 (Jul 1 – Sep 30)", "updated_at": "2026-09-14T20:00:00Z", "source_url": "", "source_method": "total_receipts" },
-    "SD-18": { "dem_amount": 410000, "rep_amount": 290000, "reporting_period": "2026 Q3 (Jul 1 – Sep 30)", "updated_at": "2026-09-14T20:00:00Z", "source_url": "", "source_method": "total_receipts" },
-    "SD-42": { "dem_amount": 233177, "rep_amount": 182000, "reporting_period": "2026 Q3 (Jul 1 – Sep 30)", "updated_at": "2026-09-12T16:00:00Z", "source_url": "https://www.charlotteobserver.com/news/politics-government/election/article316832679.html", "source_method": "total_receipts" },
-    "HD-26": { "dem_amount": 96000, "rep_amount": 185000, "reporting_period": "2026 Q3 (Jul 1 – Sep 30)", "updated_at": "2026-09-14T21:00:00Z", "source_url": "", "source_method": "total_receipts" },
-    "HD-35": { "dem_amount": 62000, "rep_amount": 142000, "reporting_period": "2026 Q3 (Jul 1 – Sep 30)", "updated_at": "2026-09-13T17:00:00Z", "source_url": "", "source_method": "total_receipts" },
-    "HD-37": { "dem_amount": 121000, "rep_amount": 193000, "reporting_period": "2026 Q3 (Jul 1 – Sep 30)", "updated_at": "2026-09-13T17:00:00Z", "source_url": "", "source_method": "total_receipts" },
-    "HD-64": { "dem_amount": 88000, "rep_amount": 193000, "reporting_period": "2026 Q3 (Jul 1 – Sep 30)", "updated_at": "2026-09-12T19:00:00Z", "source_url": "", "source_method": "total_receipts" },
-    "HD-98": { "dem_amount": 311000, "rep_amount": 151000, "reporting_period": "2026 Q3 (Jul 1 – Sep 30)", "updated_at": "2026-09-16T18:30:00Z", "source_url": "https://www.charlotteobserver.com/news/politics-government/election/article316832679.html", "source_method": "total_receipts" },
-    "HD-105": { "dem_amount": 244000, "rep_amount": 149000, "reporting_period": "2026 Q3 (Jul 1 – Sep 30)", "updated_at": "2026-09-16T12:00:00Z", "source_url": "https://www.charlotteobserver.com/news/politics-government/election/article316832679.html", "source_method": "total_receipts" },
-    "HD-115": { "dem_amount": 286000, "rep_amount": 46000, "reporting_period": "2026 Q3 (Jul 1 – Sep 30)", "updated_at": "2026-09-15T14:30:00Z", "source_url": "", "source_method": "total_receipts" }
+    "NC-01": {
+      "dem_amount": 1410000,
+      "rep_amount": 855000,
+      "reporting_period": "2026 Q3 (Jul 1 \u2013 Sep 30)",
+      "updated_at": "2026-09-15T18:00:00Z",
+      "source_url": "https://www.fec.gov/data/",
+      "source_method": "total_receipts"
+    },
+    "NC-11": {
+      "dem_amount": 3052354,
+      "rep_amount": 158000,
+      "reporting_period": "2026 Q2 (through Jun 30, 2026)",
+      "updated_at": "2026-09-15T18:00:00Z",
+      "source_url": "https://www.fec.gov/data/candidate/H6NC11248/",
+      "source_method": "total_receipts"
+    },
+    "SD-04": {
+      "dem_amount": 88000,
+      "rep_amount": 132000,
+      "reporting_period": "2026 Q3 (Jul 1 \u2013 Sep 30)",
+      "updated_at": "2026-09-14T20:00:00Z",
+      "source_url": "",
+      "source_method": "total_receipts"
+    },
+    "SD-18": {
+      "dem_amount": 410000,
+      "rep_amount": 290000,
+      "reporting_period": "2026 Q3 (Jul 1 \u2013 Sep 30)",
+      "updated_at": "2026-09-14T20:00:00Z",
+      "source_url": "",
+      "source_method": "total_receipts"
+    },
+    "SD-42": {
+      "dem_amount": 233177,
+      "rep_amount": 182000,
+      "reporting_period": "2026 Q3 (Jul 1 \u2013 Sep 30)",
+      "updated_at": "2026-09-12T16:00:00Z",
+      "source_url": "https://www.charlotteobserver.com/news/politics-government/election/article316832679.html",
+      "source_method": "total_receipts"
+    },
+    "HD-26": {
+      "dem_amount": 96000,
+      "rep_amount": 185000,
+      "reporting_period": "2026 Q3 (Jul 1 \u2013 Sep 30)",
+      "updated_at": "2026-09-14T21:00:00Z",
+      "source_url": "",
+      "source_method": "total_receipts"
+    },
+    "HD-35": {
+      "dem_amount": 62000,
+      "rep_amount": 142000,
+      "reporting_period": "2026 Q3 (Jul 1 \u2013 Sep 30)",
+      "updated_at": "2026-09-13T17:00:00Z",
+      "source_url": "",
+      "source_method": "total_receipts"
+    },
+    "HD-37": {
+      "dem_amount": 121000,
+      "rep_amount": 193000,
+      "reporting_period": "2026 Q3 (Jul 1 \u2013 Sep 30)",
+      "updated_at": "2026-09-13T17:00:00Z",
+      "source_url": "",
+      "source_method": "total_receipts"
+    },
+    "HD-64": {
+      "dem_amount": 88000,
+      "rep_amount": 193000,
+      "reporting_period": "2026 Q3 (Jul 1 \u2013 Sep 30)",
+      "updated_at": "2026-09-12T19:00:00Z",
+      "source_url": "",
+      "source_method": "total_receipts"
+    },
+    "HD-98": {
+      "dem_amount": 311000,
+      "rep_amount": 151000,
+      "reporting_period": "2026 Q3 (Jul 1 \u2013 Sep 30)",
+      "updated_at": "2026-09-16T18:30:00Z",
+      "source_url": "https://www.charlotteobserver.com/news/politics-government/election/article316832679.html",
+      "source_method": "total_receipts"
+    },
+    "HD-105": {
+      "dem_amount": 244000,
+      "rep_amount": 149000,
+      "reporting_period": "2026 Q3 (Jul 1 \u2013 Sep 30)",
+      "updated_at": "2026-09-16T12:00:00Z",
+      "source_url": "https://www.charlotteobserver.com/news/politics-government/election/article316832679.html",
+      "source_method": "total_receipts"
+    },
+    "HD-115": {
+      "dem_amount": 286000,
+      "rep_amount": 46000,
+      "reporting_period": "2026 Q3 (Jul 1 \u2013 Sep 30)",
+      "updated_at": "2026-09-15T14:30:00Z",
+      "source_url": "",
+      "source_method": "total_receipts"
+    },
+    "NC-SEN": {
+      "dem_amount": 24000000,
+      "rep_amount": 16200000,
+      "reporting_period": "2026 Q3 (Jul 1 \u2013 Sep 30)",
+      "updated_at": "2026-09-15T23:00:00Z",
+      "source_url": "https://www.fec.gov/data/",
+      "source_method": "total_receipts"
+    }
   },
   "news": [
     {
@@ -207,6 +642,26 @@
       "url": "https://www.johnlocke.org/9-14-election-data-dump-which-nc-general-assembly-districts-are-in-play/",
       "summary": "JLF flags six competitive Senate districts and 22 competitive House districts for 2026 using the toss-up plus lean-Republican CPI rule.",
       "relevance_score": 0.7
+    },
+    {
+      "article_id": "ap_cooper_senate_2026",
+      "district_id": "NC-SEN",
+      "headline": "Cooper joins NC Senate race, giving Democrats a proven statewide winner",
+      "outlet": "AP",
+      "published_at": "2026-01-12T14:00:00Z",
+      "url": "https://apnews.com/article/north-carolina-senate-roy-cooper-tillis",
+      "summary": "The former two-term governor entered the race to succeed retiring Sen. Thom Tillis, instantly becoming the Democratic frontrunner in a top battleground.",
+      "relevance_score": 0.9
+    },
+    {
+      "article_id": "wp_senate_nc_2026",
+      "district_id": "NC-SEN",
+      "headline": "Inside the fight for North Carolina's open Senate seat",
+      "outlet": "Washington Post",
+      "published_at": "2026-09-16T12:30:00Z",
+      "url": "https://www.washingtonpost.com/",
+      "summary": "Cooper keeps a single-digit lead over Whatley as both parties pour resources into the state; the race could decide Senate control.",
+      "relevance_score": 0.9
     }
   ]
 }

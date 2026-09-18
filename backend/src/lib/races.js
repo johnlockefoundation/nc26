@@ -4,16 +4,18 @@ import { formatPollAdvantage, formatMarketAdvantage, formatMoney } from './forma
 
 const RACE_TYPE_META = {
   us_house: { short: 'U.S. HOUSE', slug: 'us_house' },
+  us_senate: { short: 'U.S. SENATE', slug: 'us_senate' },
   state_senate: { short: 'NC SENATE', slug: 'state_senate' },
   state_house: { short: 'NC HOUSE', slug: 'state_house' },
 };
 
 export function raceTitle(raceType, districtNumber) {
+  if (raceType === 'us_senate') return `U.S. SENATE — NORTH CAROLINA`;
   return `${RACE_TYPE_META[raceType]?.short || raceType} — DISTRICT ${districtNumber}`;
 }
 
 function candidateList(districtId, cycle) {
-  return db.prepare(`SELECT candidate_id, name, party, incumbent, website
+  return db.prepare(`SELECT candidate_id, name, party, incumbent, website, photo_url
     FROM candidates WHERE district_id = ? AND election_cycle = ?
     ORDER BY CASE party WHEN 'D' THEN 0 WHEN 'R' THEN 1 ELSE 2 END`).all(districtId, cycle);
 }

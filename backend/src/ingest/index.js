@@ -3,6 +3,7 @@
 //   node src/ingest/index.js districts      -> rebuild district geometry rows
 //   node src/ingest/index.js civitas        -> GA candidates + competitiveness (CPI)
 //   node src/ingest/index.js us-house       -> federal candidates + competitiveness
+//   node src/ingest/index.js us-senate      -> NC Senate race + candidates
 //   node src/ingest/index.js metrics        -> baseline metrics (polls/markets/money/news)
 //   node src/ingest/index.js polls          -> live polls from ./data/sources/polls.json
 //   node src/ingest/index.js markets        -> live markets from ./data/sources/markets.json
@@ -13,6 +14,7 @@ import { CYCLE } from './config.js';
 import { ingestDistricts } from './districts.js';
 import { ingestCivitas } from './civitas.js';
 import { ingestUsHouse } from './us-house.js';
+import { ingestUsSenate } from './us-senate.js';
 import { ingestSeedMetrics } from './metrics.js';
 import {
   ingestPollsFromSource, ingestMarketsFromSource, ingestFundraisingFromSource, ingestNewsFromSource,
@@ -37,6 +39,7 @@ const JOB = {
   districts: () => ingestDistricts(CYCLE),
   civitas: () => ingestCivitas(CYCLE),
   'us-house': () => ingestUsHouse(CYCLE),
+  'us-senate': () => ingestUsSenate(CYCLE),
   metrics: () => ingestSeedMetrics(CYCLE),
   polls: () => ingestPollsFromSource(CYCLE),
   markets: () => ingestMarketsFromSource(CYCLE),
@@ -45,7 +48,7 @@ const JOB = {
 };
 
 async function run(target) {
-  const jobs = target === 'all' ? ['districts', 'civitas', 'us-house', 'metrics', 'polls', 'markets', 'fundraising', 'news'] : [target];
+  const jobs = target === 'all' ? ['districts', 'civitas', 'us-house', 'us-senate', 'metrics', 'polls', 'markets', 'fundraising', 'news'] : [target];
   for (const j of jobs) {
     const fn = JOB[j];
     if (!fn) { console.error(`unknown ingest target: ${j}`); process.exitCode = 1; continue; }

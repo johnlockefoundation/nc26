@@ -1,4 +1,5 @@
 const TYPES = [
+  { key: 'us_senate', label: 'U.S. Senate', sub: 'statewide race' },
   { key: 'us_house', label: 'U.S. House', sub: '14 seats · competitive' },
   { key: 'state_senate', label: 'NC Senate', sub: '50 seats' },
   { key: 'state_house', label: 'NC House', sub: '120 seats' },

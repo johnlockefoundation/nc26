@@ -14,6 +14,10 @@ export const db = new DatabaseSync(DB_PATH);
 export function initSchema() {
   const sql = readFileSync(join(__dirname, 'schema.sql'), 'utf8');
   db.exec(sql);
+  const cols = db.prepare(`PRAGMA table_info(candidates)`).all();
+  if (!cols.some((c) => c.name === 'photo_url')) {
+    db.exec(`ALTER TABLE candidates ADD COLUMN photo_url TEXT`);
+  }
 }
 
 export function nowIso() {

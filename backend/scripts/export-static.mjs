@@ -14,7 +14,7 @@ const races = await import(pathToFileURL(join(BACKEND, 'src', 'lib', 'races.js')
 const OUT = process.env.STATIC_OUT || resolve(BACKEND, '..', 'frontend', 'public', 'demo-data');
 const OUTLINE = join(BACKEND, 'data', 'geojson', 'state-outline.json');
 
-const RACE_TYPES = ['us_house', 'state_senate', 'state_house'];
+const RACE_TYPES = ['us_house', 'us_senate', 'state_senate', 'state_house'];
 
 function writeJson(rel, data) {
   const abs = join(OUT, rel);

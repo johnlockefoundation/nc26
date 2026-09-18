@@ -9,7 +9,7 @@ import { getMapFeatures, getRace, listRaces, getTicker, getSourceStatus } from '
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const OUTLINE = join(__dirname, '..', 'data', 'geojson', 'state-outline.json');
 
-const RACE_TYPES = new Set(['us_house', 'state_senate', 'state_house']);
+const RACE_TYPES = new Set(['us_house', 'us_senate', 'state_senate', 'state_house']);
 export const router = Router();
 
 router.get('/health', (req, res) => res.json({ ok: true, cycle: CYCLE }));

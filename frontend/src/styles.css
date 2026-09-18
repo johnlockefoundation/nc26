@@ -50,7 +50,7 @@ a { color: var(--accent); }
   mask-image: linear-gradient(90deg, transparent, #000 3%, #000 97%, transparent);
 }
 .ticker-run {
-  display: flex; width: max-content; animation: ticker-scroll 32s linear infinite;
+  display: flex; width: max-content; animation: ticker-scroll 72s linear infinite;
   will-change: transform;
 }
 .ticker:hover .ticker-run { animation-play-state: paused; }
@@ -166,8 +166,32 @@ a { color: var(--accent); }
 .cand-d { color: var(--d); font-weight: 700; }
 .cand-r { color: var(--r); font-weight: 700; }
 .vs { color: var(--muted); font-weight: 400; }
-.panel-note { font-size: 12px; color: var(--muted); background: #0c1524; border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; margin-bottom: 14px; }
-.badge { background: rgba(99, 102, 241, 0.12); color: #a5b4fc; border-radius: 999px; padding: 1px 7px; font-weight: 700; font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; margin-right: 4px; }
+
+/* Candidate cards */
+.candidate-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+.candidate-card {
+  display: flex; align-items: center; gap: 14px;
+  background: #0c1524; border: 1px solid var(--line); border-radius: 14px; padding: 12px 14px;
+}
+.candidate-photo {
+  position: relative; flex: none; width: 62px; height: 62px; border-radius: 50%;
+  overflow: hidden; background: #16223a;
+  display: flex; align-items: center; justify-content: center;
+}
+.candidate-photo img { width: 100%; height: 100%; object-fit: cover; }
+.candidate-initials { font-weight: 800; font-size: 20px; letter-spacing: 0.02em; color: var(--muted); }
+.candidate-party {
+  position: absolute; right: -1px; bottom: -1px; width: 22px; height: 22px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 800; color: #fff; border: 2px solid var(--card);
+}
+.candidate-party.party-d { background: var(--d); }
+.candidate-party.party-r { background: var(--r); }
+.candidate-info { flex: 1; min-width: 0; }
+.candidate-name { font-size: 16px; font-weight: 800; letter-spacing: -0.01em; }
+.candidate-meta { font-size: 11.5px; margin-top: 2px; }
+.candidate-site { font-size: 12px; color: var(--accent); text-decoration: none; flex: none; }
+.candidate-site:hover { text-decoration: underline; }
 
 /* Metrics: full-width horizontal rows so values never wrap */
 .metrics { display: flex; flex-direction: column; gap: 8px; }

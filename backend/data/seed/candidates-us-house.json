@@ -2,9 +2,40 @@
   "cycle": "2026",
   "source": "Federal candidates / FEC statements of candidacy via public reporting; 2026 general election",
   "candidates": [
-    { "candidate_id": "nc01_davis_2026", "district_id": "NC-01", "name": "Don Davis", "party": "D", "incumbent": true, "website": "https://www.dondavisforcongress.com/" },
-    { "candidate_id": "nc01_buckhout_2026", "district_id": "NC-01", "name": "Laurie Buckhout", "party": "R", "incumbent": false, "website": "https://www.buckhoutforcongress.com/" },
-    { "candidate_id": "nc11_ager_2026", "district_id": "NC-11", "name": "Jamie Ager", "party": "D", "incumbent": false, "website": "" },
-    { "candidate_id": "nc11_balkcom_2026", "district_id": "NC-11", "name": "Jennifer Balkcom", "party": "R", "incumbent": false, "website": "" }
+    {
+      "candidate_id": "nc01_davis_2026",
+      "district_id": "NC-01",
+      "name": "Don Davis",
+      "party": "D",
+      "incumbent": true,
+      "website": "https://www.dondavisforcongress.com/",
+      "photo_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Portrait%20of%20Congressman%20Don%20Davis.jpg?width=400"
+    },
+    {
+      "candidate_id": "nc01_buckhout_2026",
+      "district_id": "NC-01",
+      "name": "Laurie Buckhout",
+      "party": "R",
+      "incumbent": false,
+      "website": "https://www.buckhoutforcongress.com/",
+      "photo_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Laurie%20Buckhout%20(cropped).jpg?width=400"
+    },
+    {
+      "candidate_id": "nc11_ager_2026",
+      "district_id": "NC-11",
+      "name": "Jamie Ager",
+      "party": "D",
+      "incumbent": false,
+      "website": ""
+    },
+    {
+      "candidate_id": "nc11_balkcom_2026",
+      "district_id": "NC-11",
+      "name": "Jennifer Balkcom",
+      "party": "R",
+      "incumbent": false,
+      "website": "",
+      "photo_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Jennifer%20Balkcom%20(2025).png?width=400"
+    }
   ]
 }

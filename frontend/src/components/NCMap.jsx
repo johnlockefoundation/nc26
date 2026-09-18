@@ -5,6 +5,7 @@ import { advantageColor, primarySignal } from '../lib/colors.js';
 import { BASEMAP_URL, BASEMAP_ATTR, MAP_MIN_ZOOM, MAP_MAX_ZOOM } from '../lib/map.js';
 
 function shortLabel(districtId) {
+  if (districtId === 'NC-SEN') return 'NC';
   return districtId.split('-')[1];
 }
 

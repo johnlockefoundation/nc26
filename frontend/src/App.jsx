@@ -7,6 +7,7 @@ import RacePanel from './components/RacePanel.jsx';
 import { primarySignal } from './lib/colors.js';
 
 const TYPE_BY_PREFIX = { NC: 'us_house', SD: 'state_senate', HD: 'state_house' };
+const TYPE_BY_ID = { 'NC-SEN': 'us_senate' };
 
 export default function App() {
   const [raceType, setRaceType] = useState('us_house');
@@ -56,7 +57,7 @@ export default function App() {
   }, [selectedId]);
 
   const selectRace = useCallback((districtId) => {
-    const type = TYPE_BY_PREFIX[districtId.split('-')[0]];
+    const type = TYPE_BY_ID[districtId] || TYPE_BY_PREFIX[districtId.split('-')[0]];
     if (type && type !== raceType) setRaceType(type);
     setSelectedId(districtId);
   }, [raceType]);

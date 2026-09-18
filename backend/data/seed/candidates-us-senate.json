@@ -1,0 +1,22 @@
+{
+  "cycle": "2026",
+  "source": "2026 NC Senate general election (open seat): Roy Cooper (D) vs. Michael Whatley (R)",
+  "candidates": [
+    {
+      "candidate_id": "ncs_roy_cooper_2026",
+      "name": "Roy Cooper",
+      "party": "D",
+      "incumbent": false,
+      "website": "https://roycooper.com/",
+      "photo_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Gov.%20Cooper%20Cropped.jpg?width=400"
+    },
+    {
+      "candidate_id": "ncs_michael_whatley_2026",
+      "name": "Michael Whatley",
+      "party": "R",
+      "incumbent": false,
+      "website": "https://www.whatleyfornc.com/",
+      "photo_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Michael%20Whatley%20(53809322795)%20(cropped).jpg?width=400"
+    }
+  ]
+}

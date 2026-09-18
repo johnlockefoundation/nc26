@@ -2,15 +2,32 @@ import MetricBlock from './MetricBlock.jsx';
 import NewsList from './NewsList.jsx';
 import { fullDate } from '../lib/format.js';
 
-function CandidateLine({ candidates }) {
-  if (!candidates || candidates.length === 0) return <div className="panel-candidates dim">Candidates not yet available.</div>;
+function initials(name) {
+  return name.split(/\s+/).filter(Boolean).slice(0, 2).map((w) => w[0].toUpperCase()).join('');
+}
+
+function CandidateCards({ candidates }) {
+  if (!candidates || candidates.length === 0) return <div className="candidate-list dim">Candidates not yet available.</div>;
   return (
-    <div className="panel-candidates">
-      {candidates.map((c, i) => (
-        <span key={c.candidate_id || i} className={`cand cand-${c.party}`}>
-          {c.name} ({c.party}{c.incumbent ? ', inc.' : ''})
-          {i < candidates.length - 1 ? <span className="vs"> vs. </span> : null}
-        </span>
+    <div className="candidate-list">
+      {candidates.map((c) => (
+        <div key={c.candidate_id} className="candidate-card">
+          <div className="candidate-photo">
+            {c.photo_url ? (
+              <img src={c.photo_url} alt={`${c.name} (${c.party})`} loading="lazy" />
+            ) : (
+              <span className="candidate-initials">{initials(c.name)}</span>
+            )}
+            <span className={`candidate-party party-${String(c.party).toLowerCase()}`}>{c.party}</span>
+          </div>
+          <div className="candidate-info">
+            <div className={`candidate-name cand-${String(c.party).toLowerCase()}`}>{c.name}</div>
+            <div className="candidate-meta dim">{c.incumbent ? 'Incumbent' : 'Challenger'}</div>
+          </div>
+          {c.website && (
+            <a className="candidate-site" href={c.website} target="_blank" rel="noreferrer">website ↗</a>
+          )}
+        </div>
       ))}
     </div>
   );
@@ -31,12 +48,7 @@ export default function RacePanel({ race, loading, onClose }) {
       <button className="panel-close" onClick={onClose} aria-label="Close">×</button>
       <div className="panel-eyebrow">{race.race_type.replace('_', ' ')}</div>
       <h2 className="panel-title">{race.title}</h2>
-      <CandidateLine candidates={race.candidates} />
-      {race.competitive && race.competitive_reason && (
-        <div className="panel-note">
-          <span className="badge">competitive</span> {race.competitive_reason}
-        </div>
-      )}
+      <CandidateCards candidates={race.candidates} />
 
       <div className="metrics">
         <MetricBlock title="POLLS" emptyText="NO POLLING" summary={polls} />

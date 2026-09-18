@@ -19,6 +19,14 @@ export const US_HOUSE_COMPETITIVE = [
   { id: 'NC-11', source: 'inside_elections_2026_dccc', reason: 'Open seat — Edwards (R) dropped out after House Ethics report. DCCC Red to Blue target; Lean Republican.' },
 ];
 
+// US Senate is a single statewide race; designated competitive for the cycle.
+export const US_SENATE = {
+  district_id: 'NC-SEN',
+  district_number: 0,
+  source: 'ap_2026',
+  reason: 'Open seat — Tillis (R) retiring; Cooper (D) vs. Whatley (R). Top Senate battleground.',
+};
+
 // Manual designation overrides for individual GA districts (e.g. rematches
 // tracked heavily by regional press beyond the CPI rule).
 export const COMPETITIVE_OVERRIDES = [

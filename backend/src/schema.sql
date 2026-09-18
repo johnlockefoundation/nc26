@@ -29,7 +29,8 @@ CREATE TABLE IF NOT EXISTS candidates (
   name           TEXT NOT NULL,
   party          TEXT NOT NULL,              -- D | R | ...
   incumbent      INTEGER NOT NULL DEFAULT 0,
-  website        TEXT
+  website        TEXT,
+  photo_url      TEXT
 );
 
 -- ---------------------------------------------------------------------------
