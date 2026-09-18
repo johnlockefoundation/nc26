@@ -1,258 +1,257 @@
 {
-  "cycle": "2026",
-  "source": "General-election nominees from the NC Board of Elections 2026 candidate list and public reporting (Ballotpedia/Wikipedia); matched to FEC statements of candidacy",
-  "candidates": [
-    {
-      "candidate_id": "nc01_davis_2026",
-      "district_id": "NC-01",
-      "name": "Don Davis",
-      "party": "D",
-      "incumbent": true,
-      "website": "https://www.dondavisforcongress.com/",
-      "photo_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Portrait%20of%20Congressman%20Don%20Davis.jpg?width=400"
-    },
-    {
-      "candidate_id": "nc01_buckhout_2026",
-      "district_id": "NC-01",
-      "name": "Laurie Buckhout",
-      "party": "R",
-      "incumbent": false,
-      "website": "https://www.buckhoutforcongress.com/",
-      "photo_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Laurie%20Buckhout%20(cropped).jpg?width=400"
-    },
-    {
-      "candidate_id": "nc02_ross_2026",
-      "district_id": "NC-02",
-      "name": "Deborah Ross",
-      "party": "D",
-      "incumbent": true,
-      "website": "",
-      "photo_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Deborah_Ross_117th_U.S_Congress.jpg?width=400"
-    },
-    {
-      "candidate_id": "nc02_douglass_2026",
-      "district_id": "NC-02",
-      "name": "Gene Douglass",
-      "party": "R",
-      "incumbent": false,
-      "website": "",
-      "photo_url": ""
-    },
-    {
-      "candidate_id": "nc03_murphy_2026",
-      "district_id": "NC-03",
-      "name": "Greg Murphy",
-      "party": "R",
-      "incumbent": true,
-      "website": "",
-      "photo_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Rep._Greg_Murphy_116th_Congress_Portrait.jpg?width=400"
-    },
-    {
-      "candidate_id": "nc03_smith_2026",
-      "district_id": "NC-03",
-      "name": "Raymond Smith Jr.",
-      "party": "D",
-      "incumbent": false,
-      "website": "",
-      "photo_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Rep._Raymond_E._Smith_Jr.jpg?width=400"
-    },
-    {
-      "candidate_id": "nc04_foushee_2026",
-      "district_id": "NC-04",
-      "name": "Valerie Foushee",
-      "party": "D",
-      "incumbent": true,
-      "website": "",
-      "photo_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Valerie_Foushee_118th_Congress_3.jpg?width=400"
-    },
-    {
-      "candidate_id": "nc04_ganorkar_2026",
-      "district_id": "NC-04",
-      "name": "Max Ganorkar",
-      "party": "R",
-      "incumbent": false,
-      "website": "",
-      "photo_url": ""
-    },
-    {
-      "candidate_id": "nc05_foxx_2026",
-      "district_id": "NC-05",
-      "name": "Virginia Foxx",
-      "party": "R",
-      "incumbent": true,
-      "website": "",
-      "photo_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Virginia_Foxx_official_photo_%28slight_crop%29.jpg?width=400"
-    },
-    {
-      "candidate_id": "nc05_hubbard_2026",
-      "district_id": "NC-05",
-      "name": "Chuck Hubbard",
-      "party": "D",
-      "incumbent": false,
-      "website": "",
-      "photo_url": ""
-    },
-    {
-      "candidate_id": "nc06_mcdowell_2026",
-      "district_id": "NC-06",
-      "name": "Addison McDowell",
-      "party": "R",
-      "incumbent": true,
-      "website": "",
-      "photo_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Addison_McDowell_119th_congress.jpg?width=400"
-    },
-    {
-      "candidate_id": "nc06_jefferson_2026",
-      "district_id": "NC-06",
-      "name": "Cyril Jefferson",
-      "party": "D",
-      "incumbent": false,
-      "website": "",
-      "photo_url": ""
-    },
-    {
-      "candidate_id": "nc07_rouzer_2026",
-      "district_id": "NC-07",
-      "name": "David Rouzer",
-      "party": "R",
-      "incumbent": true,
-      "website": "",
-      "photo_url": "https://commons.wikimedia.org/wiki/Special:FilePath/David_Rouzer_official_photo.jpg?width=400"
-    },
-    {
-      "candidate_id": "nc07_hardy_2026",
-      "district_id": "NC-07",
-      "name": "Kim Hardy",
-      "party": "D",
-      "incumbent": false,
-      "website": "",
-      "photo_url": ""
-    },
-    {
-      "candidate_id": "nc08_harris_2026",
-      "district_id": "NC-08",
-      "name": "Mark Harris",
-      "party": "R",
-      "incumbent": true,
-      "website": "",
-      "photo_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Harris_Mark_119th_Congress_%28crop2%29.jpg?width=400"
-    },
-    {
-      "candidate_id": "nc08_watson_2026",
-      "district_id": "NC-08",
-      "name": "Colby Watson",
-      "party": "D",
-      "incumbent": false,
-      "website": "",
-      "photo_url": ""
-    },
-    {
-      "candidate_id": "nc09_hudson_2026",
-      "district_id": "NC-09",
-      "name": "Richard Hudson",
-      "party": "R",
-      "incumbent": true,
-      "website": "",
-      "photo_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Richard_Hudson%2C_official_portrait%2C_115th_Congress_%28cropped%29.jpg?width=400"
-    },
-    {
-      "candidate_id": "nc09_ojeda_2026",
-      "district_id": "NC-09",
-      "name": "Richard Ojeda",
-      "party": "D",
-      "incumbent": false,
-      "website": "",
-      "photo_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Richard_Ojeda_shirt.jpg?width=400"
-    },
-    {
-      "candidate_id": "nc10_harrigan_2026",
-      "district_id": "NC-10",
-      "name": "Pat Harrigan",
-      "party": "R",
-      "incumbent": true,
-      "website": "",
-      "photo_url": "https://commons.wikimedia.org/wiki/Special:FilePath/CongressmanPatHarriganPortrait.jpg?width=400"
-    },
-    {
-      "candidate_id": "nc10_bell_2026",
-      "district_id": "NC-10",
-      "name": "Ashley Bell",
-      "party": "D",
-      "incumbent": false,
-      "website": "",
-      "photo_url": ""
-    },
-    {
-      "candidate_id": "nc11_ager_2026",
-      "district_id": "NC-11",
-      "name": "Jamie Ager",
-      "party": "D",
-      "incumbent": false,
-      "website": "",
-      "photo_url": ""
-    },
-    {
-      "candidate_id": "nc11_balkcom_2026",
-      "district_id": "NC-11",
-      "name": "Jennifer Balkcom",
-      "party": "R",
-      "incumbent": false,
-      "website": "",
-      "photo_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Jennifer%20Balkcom%20(2025).png?width=400"
-    },
-    {
-      "candidate_id": "nc12_adams_2026",
-      "district_id": "NC-12",
-      "name": "Alma Adams",
-      "party": "D",
-      "incumbent": true,
-      "website": "",
-      "photo_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Alma_Adams_official_portrait_%283x4_cropped%29.jpg?width=400"
-    },
-    {
-      "candidate_id": "nc12_codiga_2026",
-      "district_id": "NC-12",
-      "name": "Jack Codiga",
-      "party": "R",
-      "incumbent": false,
-      "website": "",
-      "photo_url": ""
-    },
-    {
-      "candidate_id": "nc13_knott_2026",
-      "district_id": "NC-13",
-      "name": "Brad Knott",
-      "party": "R",
-      "incumbent": true,
-      "website": "",
-      "photo_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Rep._Brad_Knott_official_photo%2C_119th_Congress.jpg?width=400"
-    },
-    {
-      "candidate_id": "nc13_barringer_2026",
-      "district_id": "NC-13",
-      "name": "Paul Barringer",
-      "party": "D",
-      "incumbent": false,
-      "website": "",
-      "photo_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Paul_Barringer.png?width=400"
-    },
-    {
-      "candidate_id": "nc14_moore_2026",
-      "district_id": "NC-14",
-      "name": "Tim Moore",
-      "party": "R",
-      "incumbent": true,
-      "website": "",
-      "photo_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Moore_Tim_119th_Congress_%28cropped2%29.jpg?width=400"
-    },
-    {
-      "candidate_id": "nc14_womack_2026",
-      "district_id": "NC-14",
-      "name": "LaKesha Womack",
-      "party": "D",
-      "incumbent": false,
-      "website": "",
-      "photo_url": ""
-    }
-  ]
+ "cycle": "2026",
+ "source": "General-election nominees from the NC Board of Elections 2026 candidate list and public reporting (Ballotpedia/Wikipedia); matched to FEC statements of candidacy",
+ "candidates": [
+  {
+   "candidate_id": "nc01_davis_2026",
+   "district_id": "NC-01",
+   "name": "Don Davis",
+   "party": "D",
+   "incumbent": true,
+   "website": "https://www.dondavisforcongress.com/",
+   "photo_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Portrait%20of%20Congressman%20Don%20Davis.jpg?width=400"
+  },
+  {
+   "candidate_id": "nc01_buckhout_2026",
+   "district_id": "NC-01",
+   "name": "Laurie Buckhout",
+   "party": "R",
+   "incumbent": false,
+   "website": "https://www.buckhoutforcongress.com/",
+   "photo_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Laurie%20Buckhout%20(cropped).jpg?width=400"
+  },
+  {
+   "candidate_id": "nc02_ross_2026",
+   "district_id": "NC-02",
+   "name": "Deborah Ross",
+   "party": "D",
+   "incumbent": true,
+   "website": "",
+   "photo_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Deborah_Ross_117th_U.S_Congress.jpg?width=400"
+  },
+  {
+   "candidate_id": "nc02_douglass_2026",
+   "district_id": "NC-02",
+   "name": "Gene Douglass",
+   "party": "R",
+   "incumbent": false,
+   "website": "",
+   "photo_url": ""
+  },
+  {
+   "candidate_id": "nc03_murphy_2026",
+   "district_id": "NC-03",
+   "name": "Greg Murphy",
+   "party": "R",
+   "incumbent": true,
+   "website": "",
+   "photo_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Rep._Greg_Murphy_116th_Congress_Portrait.jpg?width=400"
+  },
+  {
+   "candidate_id": "nc03_smith_2026",
+   "district_id": "NC-03",
+   "name": "Raymond Smith Jr.",
+   "party": "D",
+   "incumbent": false,
+   "website": "",
+   "photo_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Rep._Raymond_E._Smith_Jr.jpg?width=400"
+  },
+  {
+   "candidate_id": "nc04_foushee_2026",
+   "district_id": "NC-04",
+   "name": "Valerie Foushee",
+   "party": "D",
+   "incumbent": true,
+   "website": "",
+   "photo_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Valerie_Foushee_118th_Congress_3.jpg?width=400"
+  },
+  {
+   "candidate_id": "nc04_ganorkar_2026",
+   "district_id": "NC-04",
+   "name": "Max Ganorkar",
+   "party": "R",
+   "incumbent": false,
+   "website": "",
+   "photo_url": ""
+  },
+  {
+   "candidate_id": "nc05_foxx_2026",
+   "district_id": "NC-05",
+   "name": "Virginia Foxx",
+   "party": "R",
+   "incumbent": true,
+   "website": "",
+   "photo_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Virginia_Foxx_official_photo_%28slight_crop%29.jpg?width=400"
+  },
+  {
+   "candidate_id": "nc05_hubbard_2026",
+   "district_id": "NC-05",
+   "name": "Chuck Hubbard",
+   "party": "D",
+   "incumbent": false,
+   "website": "",
+   "photo_url": ""
+  },
+  {
+   "candidate_id": "nc06_mcdowell_2026",
+   "district_id": "NC-06",
+   "name": "Addison McDowell",
+   "party": "R",
+   "incumbent": true,
+   "website": "",
+   "photo_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Addison_McDowell_119th_congress.jpg?width=400"
+  },
+  {
+   "candidate_id": "nc06_jefferson_2026",
+   "district_id": "NC-06",
+   "name": "Cyril Jefferson",
+   "party": "D",
+   "incumbent": false,
+   "website": "",
+   "photo_url": ""
+  },
+  {
+   "candidate_id": "nc07_rouzer_2026",
+   "district_id": "NC-07",
+   "name": "David Rouzer",
+   "party": "R",
+   "incumbent": true,
+   "website": "",
+   "photo_url": "https://commons.wikimedia.org/wiki/Special:FilePath/David_Rouzer_official_photo.jpg?width=400"
+  },
+  {
+   "candidate_id": "nc07_hardy_2026",
+   "district_id": "NC-07",
+   "name": "Kim Hardy",
+   "party": "D",
+   "incumbent": false,
+   "website": "",
+   "photo_url": ""
+  },
+  {
+   "candidate_id": "nc08_harris_2026",
+   "district_id": "NC-08",
+   "name": "Mark Harris",
+   "party": "R",
+   "incumbent": true,
+   "website": "",
+   "photo_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Harris_Mark_119th_Congress_%28crop2%29.jpg?width=400"
+  },
+  {
+   "candidate_id": "nc08_watson_2026",
+   "district_id": "NC-08",
+   "name": "Colby Watson",
+   "party": "D",
+   "incumbent": false,
+   "website": "",
+   "photo_url": ""
+  },
+  {
+   "candidate_id": "nc09_hudson_2026",
+   "district_id": "NC-09",
+   "name": "Richard Hudson",
+   "party": "R",
+   "incumbent": true,
+   "website": "",
+   "photo_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Richard_Hudson%2C_official_portrait%2C_115th_Congress_%28cropped%29.jpg?width=400"
+  },
+  {
+   "candidate_id": "nc09_ojeda_2026",
+   "district_id": "NC-09",
+   "name": "Richard Ojeda",
+   "party": "D",
+   "incumbent": false,
+   "website": "",
+   "photo_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Richard_Ojeda_shirt.jpg?width=400"
+  },
+  {
+   "candidate_id": "nc10_harrigan_2026",
+   "district_id": "NC-10",
+   "name": "Pat Harrigan",
+   "party": "R",
+   "incumbent": true,
+   "website": "",
+   "photo_url": "https://commons.wikimedia.org/wiki/Special:FilePath/CongressmanPatHarriganPortrait.jpg?width=400"
+  },
+  {
+   "candidate_id": "nc10_bell_2026",
+   "district_id": "NC-10",
+   "name": "Ashley Bell",
+   "party": "D",
+   "incumbent": false,
+   "website": "",
+   "photo_url": ""
+  },
+  {
+   "candidate_id": "nc11_ager_2026",
+   "district_id": "NC-11",
+   "name": "Jamie Ager",
+   "party": "D",
+   "incumbent": false,
+   "website": "",
+   "photo_url": ""
+  },
+  {
+   "candidate_id": "nc11_balkcom_2026",
+   "district_id": "NC-11",
+   "name": "Jennifer Balkcom",
+   "party": "R",
+   "incumbent": false,
+   "website": "",
+   "photo_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Jennifer%20Balkcom%20(2025).png?width=400"
+  },
+  {
+   "candidate_id": "nc12_adams_2026",
+   "district_id": "NC-12",
+   "name": "Alma Adams",
+   "party": "D",
+   "incumbent": true,
+   "website": "",
+   "photo_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Alma_Adams_official_portrait_%283x4_cropped%29.jpg?width=400"
+  },
+  {
+   "candidate_id": "nc12_codiga_2026",
+   "district_id": "NC-12",
+   "name": "Jack Codiga",
+   "party": "R",
+   "incumbent": false,
+   "website": "",
+   "photo_url": ""
+  },
+  {
+   "candidate_id": "nc13_knott_2026",
+   "district_id": "NC-13",
+   "name": "Brad Knott",
+   "party": "R",
+   "incumbent": true,
+   "website": "",
+   "photo_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Rep._Brad_Knott_official_photo%2C_119th_Congress.jpg?width=400"
+  },
+  {
+   "candidate_id": "nc13_barringer_2026",
+   "district_id": "NC-13",
+   "name": "Paul Barringer",
+   "party": "D",
+   "incumbent": false,
+   "website": ""
+  },
+  {
+   "candidate_id": "nc14_moore_2026",
+   "district_id": "NC-14",
+   "name": "Tim Moore",
+   "party": "R",
+   "incumbent": true,
+   "website": "",
+   "photo_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Moore_Tim_119th_Congress_%28cropped2%29.jpg?width=400"
+  },
+  {
+   "candidate_id": "nc14_womack_2026",
+   "district_id": "NC-14",
+   "name": "LaKesha Womack",
+   "party": "D",
+   "incumbent": false,
+   "website": "",
+   "photo_url": ""
+  }
+ ]
 }

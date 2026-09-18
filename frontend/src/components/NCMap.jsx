@@ -140,13 +140,18 @@ export default function NCMap({ features, outline, races, selectedId, onSelect }
       layersById.current.set(f.district_id, geo);
 
       if (pathCenter(f)) {
+        const race = isComp ? raceById.current.get(f.district_id) : null;
+        const delta = race?.polls?.delta;
+        const arrow = delta && delta.party && delta.party !== 'EVEN'
+          ? `<span class="map-arrow ${delta.party === 'D' ? 'arrow-d' : 'arrow-r'}">${delta.party === 'D' ? '←' : '→'}</span>`
+          : '';
         const label = L.marker(pathCenter(f), {
           interactive: false,
           icon: L.divIcon({
             className: isComp ? 'district-divlabel' : 'district-divlabel district-divlabel-safe',
-            html: shortLabel(f.district_id),
-            iconSize: [30, 14],
-            iconAnchor: [15, 7],
+            html: `${shortLabel(f.district_id)}${arrow}`,
+            iconSize: [isComp && arrow ? 46 : 30, 16],
+            iconAnchor: [isComp && arrow ? 18 : 15, 8],
           }),
         });
         labelsRef.current.addLayer(label);
