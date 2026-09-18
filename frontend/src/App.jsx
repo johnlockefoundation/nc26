@@ -69,9 +69,9 @@ export default function App() {
           <MiniGauge outlook={meta?.nc_senate_outlook} label="NC SENATE" />
           <MiniGauge outlook={meta?.nc_house_outlook} label="NC HOUSE" />
         </div>
-        <h1 className="brand-title" aria-label="NC 26">
-          <span className="brand-mark">NC</span>
-          <span className="brand-year">26</span>
+        <h1 className="brand-title" aria-label="The Tarheel Tracker">
+          <span className="brand-the">The</span>
+          <span className="brand-word">Tarheel&nbsp;Tracker</span>
         </h1>
         <div className="gauge-cluster gauge-right">
           <MiniGauge outlook={meta?.house_outlook} label="U.S. HOUSE" />
