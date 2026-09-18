@@ -165,7 +165,7 @@ a { color: var(--accent); }
 .district-divlabel-safe {
   color: #7c8ba1; font-weight: 600; font-size: 9px;
 }
-.map-arrow { font-size: 12px; font-weight: 700; margin-left: 2px; animation: arrow-live 1.6s ease-in-out infinite; }
+.map-arrow { font-size: 15px; font-weight: 700; margin-left: 3px; animation: arrow-live 1.6s ease-in-out infinite; }
 .map-arrow.arrow-d { color: #60a5fa; }
 .map-arrow.arrow-r { color: #f87171; }
 
