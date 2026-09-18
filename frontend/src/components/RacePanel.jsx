@@ -1,6 +1,5 @@
 import MetricBlock from './MetricBlock.jsx';
 import NewsList from './NewsList.jsx';
-import { fullDate } from '../lib/format.js';
 
 function initials(name) {
   return name.split(/\s+/).filter(Boolean).slice(0, 2).map((w) => w[0].toUpperCase()).join('');
@@ -55,25 +54,6 @@ export default function RacePanel({ race, loading }) {
         <h3>NC NEWS</h3>
         <NewsList articles={race.all_news && race.all_news.length ? race.all_news : race.news} limit={4} />
       </section>
-
-      {(markets.source_url || moneyS.source_url) && (
-        <section className="panel-section sources">
-          <h3>SOURCES</h3>
-          <ul>
-            {markets.available && <li>{markets.provider} prediction market · {markets.source_url ? <a href={markets.source_url} target="_blank" rel="noreferrer">view source</a> : 'source pending'}</li>}
-            {moneyS.available && (
-              <li>
-                Fundraising ({moneyS.method || 'total receipts'}) · {fullDate(moneyS.updated_at)}
-                {moneyS.source_url ? <> · <a href={moneyS.source_url} target="_blank" rel="noreferrer">view source</a></> : null}
-              </li>
-            )}
-          </ul>
-        </section>
-      )}
-
-      <div className="panel-footer">
-        <div className="dim">Race selection source: {race.competitive_source || '—'}</div>
-      </div>
     </aside>
   );
 }
