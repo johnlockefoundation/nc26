@@ -88,10 +88,6 @@ export default function App() {
             selectedId={selectedId}
             onSelect={setSelectedId}
           />
-          <div className="map-help dim">
-            Competitive districts are colored by their primary signal (polls → markets → money); grey districts are not rated competitive this cycle.
-            Hover for the candidate matchup, click to open a race, drag to pan; use the +/− controls to zoom.
-          </div>
         </section>
 
         <RacePanel race={detail} loading={loadingDetail} />

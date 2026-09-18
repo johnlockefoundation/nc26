@@ -20,7 +20,7 @@ function colorFor(race) {
 }
 
 function safeStyle() {
-  return { color: '#16223a', weight: 0.6, fillColor: '#16223a', fillOpacity: 0.5 };
+  return { color: '#31425c', weight: 0.6, fillColor: '#26364e', fillOpacity: 0.7 };
 }
 
 function raceStyle(f, race) {
@@ -166,12 +166,6 @@ export default function NCMap({ features, outline, races, selectedId, onSelect }
     <div className="map-wrap">
       <div ref={containerRef} className="map-container" aria-label="North Carolina election map" />
       <button className="map-reset" onClick={() => fitToState(mapRef.current)} title="Zoom to North Carolina">⤢</button>
-      <div className="map-legend">
-        <span className="legend-swatch" style={{ background: '#1d4ed8' }} /> D-leading
-        <span className="legend-swatch" style={{ background: '#a78bfa' }} /> toss-up
-        <span className="legend-swatch" style={{ background: '#b91c1c' }} /> R-leading
-        <span className="legend-note">color = primary signal: polls → markets → money</span>
-      </div>
     </div>
   );
 }
