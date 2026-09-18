@@ -1,0 +1,46 @@
+{
+  "source": "PredictIt",
+  "updated_at": "2026-09-18T16:29:54.999Z",
+  "markets": [
+    {
+      "district_id": "NC-01",
+      "provider": "PredictIt",
+      "dem_price": 0.58,
+      "rep_price": 0.56,
+      "updated_at": "2026-09-18T16:29:54.999Z",
+      "source_url": "https://www.predictit.org/markets/detail/8184/"
+    },
+    {
+      "district_id": "NC-11",
+      "provider": "PredictIt",
+      "dem_price": 0,
+      "rep_price": 0.99,
+      "updated_at": "2026-09-18T16:29:54.999Z",
+      "source_url": "https://www.predictit.org/markets/detail/8909/"
+    },
+    {
+      "district_id": "NC-SEN",
+      "provider": "PredictIt",
+      "dem_price": 0.91,
+      "rep_price": 0.1,
+      "updated_at": "2026-09-18T16:29:54.999Z",
+      "source_url": "https://www.predictit.org/markets/detail/8160/"
+    },
+    {
+      "district_id": "US-HOUSE",
+      "provider": "PredictIt",
+      "dem_price": 0.86,
+      "rep_price": 0.16,
+      "updated_at": "2026-09-18T16:29:54.999Z",
+      "source_url": "https://www.predictit.org/markets/detail/8157/"
+    },
+    {
+      "district_id": "US-SENATE",
+      "provider": "PredictIt",
+      "dem_price": 0.6,
+      "rep_price": 0.44,
+      "updated_at": "2026-09-18T16:29:54.999Z",
+      "source_url": "https://www.predictit.org/markets/detail/8155/"
+    }
+  ]
+}

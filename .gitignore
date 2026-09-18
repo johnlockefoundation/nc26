@@ -10,3 +10,5 @@ backend/data/raw/
 *.sqlite-wal
 *.sqlite-shm
 frontend/public/demo-data/
+backend/data/sources/fec-key.txt
+.worktree/

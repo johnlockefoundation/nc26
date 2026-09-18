@@ -9,7 +9,10 @@
     "dev": "node --watch src/index.js",
     "seed": "node src/ingest/index.js seed",
     "ingest": "node src/ingest/index.js all",
-    "static": "node scripts/export-static.mjs"
+    "static": "node scripts/export-static.mjs",
+    "fetch-markets": "node scripts/fetch-markets.mjs",
+    "fetch-news": "node scripts/fetch-news.mjs",
+    "fetch-fec": "node scripts/fetch-fec.mjs"
   },
   "dependencies": {
     "cors": "^2.8.5",

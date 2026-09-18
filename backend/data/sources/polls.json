@@ -1,0 +1,50 @@
+{
+  "source": "Curated real polls (verified release + topline; URLs to primary sources)",
+  "updated_at": "2026-09-18T00:00:00.000Z",
+  "polls": [
+    {
+      "district_id": "NC-SEN",
+      "pollster": "Carolina Journal / Harper Polling",
+      "start_date": "2026-09-13",
+      "end_date": "2026-09-15",
+      "sample_size": 608,
+      "population": "LV",
+      "dem_share": 49,
+      "rep_share": 34,
+      "source_url": "https://www.carolinajournal.com/cj-poll-cooper-leads-whatley-by-15-as-republican-voters-drift-to-undecided/"
+    },
+    {
+      "district_id": "NC-SEN",
+      "pollster": "Elon University Poll / YouGov",
+      "start_date": "2026-08-21",
+      "end_date": "2026-08-31",
+      "sample_size": 565,
+      "population": "LV",
+      "dem_share": 49,
+      "rep_share": 38,
+      "source_url": "https://www.elon.edu/u/news/2026/09/10/elon-university-poll-cooper-maintains-double-digit-lead-in-north-carolina-u-s-senate-race/"
+    },
+    {
+      "district_id": "NC-SEN",
+      "pollster": "ECU Center for Survey Research",
+      "start_date": "2026-08-31",
+      "end_date": "2026-09-03",
+      "sample_size": 675,
+      "population": "LV",
+      "dem_share": 46,
+      "rep_share": 39,
+      "source_url": "https://surveyresearch-ecu.reportablenews.com/pr/ecu-poll-cooper-leads-whatley-by-7-points"
+    },
+    {
+      "district_id": "NC-SEN",
+      "pollster": "Elon University Poll / YouGov",
+      "start_date": "2026-07-23",
+      "end_date": "2026-07-31",
+      "sample_size": 800,
+      "population": "RV",
+      "dem_share": 53,
+      "rep_share": 42,
+      "source_url": "https://www.newsweek.com/cooper-vs-whatleywhat-north-carolina-polls-show-under-2-months-to-midterm-12427356"
+    }
+  ]
+}

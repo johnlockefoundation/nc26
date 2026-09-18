@@ -23,6 +23,9 @@ export function ingestPollsFromSource(cycle = CYCLE) {
   const data = loadDrop('polls');
   if (!data) return null;
   const t = nowIso();
+  // A real source replaces the placeholder seed entirely — no fake rows mixed in.
+  db.prepare(`DELETE FROM polls WHERE election_cycle = ? AND is_seed = 1`).run(cycle);
+  db.prepare(`DELETE FROM polling_averages WHERE election_cycle = ?`).run(cycle);
   const insPoll = db.prepare(`INSERT OR REPLACE INTO polls
     (poll_id, district_id, election_cycle, pollster, start_date, end_date, sample_size, population,
      dem_share, rep_share, margin, source_url, source, is_seed, ingested_at)
@@ -56,6 +59,7 @@ export function ingestPollsFromSource(cycle = CYCLE) {
 export function ingestMarketsFromSource(cycle = CYCLE) {
   const data = loadDrop('markets');
   if (!data) return null;
+  db.prepare(`DELETE FROM markets WHERE election_cycle = ? AND is_seed = 1`).run(cycle);
   const ins = db.prepare(`INSERT OR REPLACE INTO markets
     (district_id, election_cycle, provider, dem_price, rep_price, advantage, updated_at, source_url, is_seed)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, 0)`);
@@ -73,6 +77,7 @@ export function ingestMarketsFromSource(cycle = CYCLE) {
 export function ingestFundraisingFromSource(cycle = CYCLE) {
   const data = loadDrop('fundraising');
   if (!data) return null;
+  db.prepare(`DELETE FROM fundraising WHERE election_cycle = ? AND is_seed = 1`).run(cycle);
   const ins = db.prepare(`INSERT OR REPLACE INTO fundraising
     (district_id, election_cycle, dem_amount, rep_amount, advantage, reporting_period, updated_at, source_url, source_method, is_seed)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 0)`);
@@ -90,6 +95,7 @@ export function ingestFundraisingFromSource(cycle = CYCLE) {
 export function ingestNewsFromSource(cycle = CYCLE) {
   const data = loadDrop('news');
   if (!data) return null;
+  db.prepare(`DELETE FROM news WHERE election_cycle = ?`).run(cycle);
   const ins = db.prepare(`INSERT OR REPLACE INTO news
     (article_id, district_id, election_cycle, headline, outlet, published_at, url, summary, relevance_score, topic)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`);

@@ -19,11 +19,11 @@ export function formatPollAdvantage(value) {
 // Market difference in cents (dem price - rep price). Example: R +16¢.
 export function formatMarketAdvantage(value) {
   if (value == null || !isFinite(value)) return null;
-  if (Math.abs(value) < 0.5) return { party: 'EVEN', label: 'EVEN', value: 0 };
+  const pts = Math.abs(value) * 100;
+  if (pts < 0.5) return { party: 'EVEN', label: 'EVEN', value: 0 };
   const party = value > 0 ? 'D' : 'R';
-  const v = Math.abs(value);
-  const cents = Math.abs(Math.round(v));
-  return { party, label: `${party} +${cents}¢`, value: cents };
+  const p = Math.round(pts);
+  return { party, label: `${party} +${p}`, value: p };
 }
 
 // Fundraising difference in dollars (dem - rep). Examples: D +$3.0M, D +$850K.
