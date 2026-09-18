@@ -3,7 +3,7 @@ import { getMap, getMeta, getRace, getTicker, getOutline } from './api.js';
 import RaceTypeToggle from './components/RaceTypeToggle.jsx';
 import RaceTicker from './components/RaceTicker.jsx';
 import NCMap from './components/NCMap.jsx';
-import HouseGauge from './components/HouseGauge.jsx';
+import MiniGauge from './components/MiniGauge.jsx';
 import RacePanel from './components/RacePanel.jsx';
 
 const TYPE_BY_PREFIX = { NC: 'us_house', SD: 'state_senate', HD: 'state_house' };
@@ -65,10 +65,18 @@ export default function App() {
   return (
     <div className="app">
       <header className="topbar">
+        <div className="gauge-cluster gauge-left">
+          <MiniGauge outlook={meta?.nc_senate_outlook} label="NC SENATE" />
+          <MiniGauge outlook={meta?.nc_house_outlook} label="NC HOUSE" />
+        </div>
         <h1 className="brand-title" aria-label="NC 26">
           <span className="brand-mark">NC</span>
           <span className="brand-year">26</span>
         </h1>
+        <div className="gauge-cluster gauge-right">
+          <MiniGauge outlook={meta?.house_outlook} label="U.S. HOUSE" />
+          <MiniGauge outlook={meta?.senate_outlook} label="U.S. SENATE" />
+        </div>
       </header>
 
       <RaceTicker items={ticker} onSelect={selectRace} />
@@ -80,7 +88,6 @@ export default function App() {
           <div className="map-toolbar">
             <RaceTypeToggle value={raceType} onChange={setRaceType} counts={meta?.race_types?.reduce((acc, r) => ({ ...acc, [r.race_type]: r }), {})} />
           </div>
-          {raceType === 'us_house' && <HouseGauge outlook={meta?.house_outlook} />}
           <NCMap
             features={mapData?.features || []}
             races={races}

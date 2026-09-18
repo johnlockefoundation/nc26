@@ -25,7 +25,11 @@ a { color: var(--accent); }
 .app { max-width: 1440px; margin: 0 auto; padding: 18px 22px 40px; }
 
 /* Topbar */
-.topbar { display: flex; align-items: center; justify-content: center; padding: 10px 2px 18px; }
+.topbar {
+  display: flex; align-items: center; justify-content: center; gap: 18px;
+  padding: 8px 2px 18px; flex-wrap: wrap;
+}
+.gauge-cluster { display: flex; align-items: center; gap: 12px; }
 .brand-title {
   display: inline-flex; align-items: center; gap: 12px; margin: 0;
 }
@@ -102,25 +106,18 @@ a { color: var(--accent); }
 /* Map toolbar */
 .map-toolbar { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; }
 
-/* House gauge */
-.house-gauge {
-  background: var(--card); border: 1px solid var(--line); border-radius: 16px;
-  padding: 14px 16px; margin-bottom: 14px; box-shadow: var(--shadow);
+/* Mini odometer gauges */
+.mini-gauge { width: 106px; }
+.mini-gauge svg { display: block; }
+.mini-gauge-meta { display: flex; align-items: baseline; justify-content: space-between; gap: 6px; margin-top: 1px; }
+.gauge-name { font-size: 8px; letter-spacing: 0.12em; font-weight: 800; color: var(--muted); white-space: nowrap; }
+.gauge-lead { font-size: 10.5px; font-weight: 800; letter-spacing: -0.01em; white-space: nowrap; }
+.gauge-lead.lead-r { color: var(--r); }
+.gauge-lead.lead-d { color: var(--d); }
+@media (max-width: 640px) {
+  .gauge-cluster { gap: 8px; }
+  .mini-gauge { width: 92px; }
 }
-.house-gauge-header { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
-.house-gauge-title { font-size: 10.5px; letter-spacing: 0.14em; font-weight: 800; color: var(--muted); }
-.house-gauge-src { font-size: 11px; }
-.house-gauge-body { display: flex; align-items: center; justify-content: center; gap: 28px; flex-wrap: wrap; margin-top: 6px; }
-.house-gauge-svg { width: 100%; max-width: 300px; }
-.house-gauge-read { text-align: center; }
-.read-lead { font-size: 32px; font-weight: 800; letter-spacing: -0.02em; line-height: 1; }
-.read-lead.lead-r { color: var(--r); }
-.read-lead.lead-d { color: var(--d); }
-.read-seats { display: flex; gap: 12px; justify-content: center; margin-top: 8px; font-size: 13px; font-weight: 700; }
-.read-seats .s-d { color: var(--d); }
-.read-seats .s-r { color: var(--r); }
-.read-seats .s-t { color: #d8b4fe; }
-.read-note { font-size: 11px; margin-top: 5px; }
 
 /* Map (Leaflet) */
 .map-wrap { position: relative; border-radius: 14px; overflow: hidden; border: 1px solid var(--line); }
@@ -147,6 +144,9 @@ a { color: var(--accent); }
 .district-divlabel {
   color: #e2e8f0; font-weight: 800; font-size: 10px; text-align: center; line-height: 14px;
   text-shadow: 0 1px 2px rgba(15, 23, 42, 0.95), 0 0 4px rgba(15, 23, 42, 0.95);
+}
+.district-divlabel-safe {
+  color: #7c8ba1; font-weight: 700; font-size: 9px;
 }
 
 .map-reset {

@@ -3,7 +3,7 @@ import { readFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { db } from './db.js';
-import { CYCLE } from './ingest/config.js';
+import { CYCLE, HOUSE_OUTLOOK, SENATE_OUTLOOK, NC_SENATE_OUTLOOK, NC_HOUSE_OUTLOOK } from './ingest/config.js';
 import { getMapFeatures, getRace, listRaces, getTicker, getSourceStatus } from './lib/races.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -18,7 +18,15 @@ router.get('/meta', (req, res) => {
   const counts = db.prepare(`SELECT race_type, COUNT(*) AS total,
       SUM(CASE WHEN competitive = 1 THEN 1 ELSE 0 END) AS competitive
     FROM districts WHERE election_cycle = ? GROUP BY race_type`).all(CYCLE);
-  res.json({ cycle: CYCLE, race_types: counts, house_outlook: HOUSE_OUTLOOK, sources: getSourceStatus() });
+  res.json({
+    cycle: CYCLE,
+    race_types: counts,
+    house_outlook: HOUSE_OUTLOOK,
+    senate_outlook: SENATE_OUTLOOK,
+    nc_senate_outlook: NC_SENATE_OUTLOOK,
+    nc_house_outlook: NC_HOUSE_OUTLOOK,
+    sources: getSourceStatus(),
+  });
 });
 
 router.get('/sources', (req, res) => res.json(getSourceStatus()));

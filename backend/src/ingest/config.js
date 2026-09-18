@@ -15,6 +15,39 @@ export const HOUSE_OUTLOOK = {
   updated_at: '2026-09-16T12:00:00Z',
 };
 
+// National U.S. Senate outlook (35 Class II seats up in 2026).
+export const SENATE_OUTLOOK = {
+  dem: 51,
+  rep: 49,
+  tossup: 0,
+  threshold: 50,
+  total: 100,
+  source: 'Decision Desk HQ',
+  updated_at: '2026-09-16T12:00:00Z',
+};
+
+// North Carolina Senate (Buckley amendment) chamber outlook.
+export const NC_SENATE_OUTLOOK = {
+  dem: 20,
+  rep: 30,
+  tossup: 0,
+  threshold: 26,
+  total: 50,
+  source: 'JLF Civitas',
+  updated_at: '2026-09-16T12:00:00Z',
+};
+
+// North Carolina House chamber outlook.
+export const NC_HOUSE_OUTLOOK = {
+  dem: 48,
+  rep: 72,
+  tossup: 0,
+  threshold: 61,
+  total: 120,
+  source: 'JLF Civitas',
+  updated_at: '2026-09-16T12:00:00Z',
+};
+
 // For General Assembly districts, JLF/Civitas designates competitive races as
 // toss-ups plus lean-Republican districts in a Republican midterm year (2026).
 export const GA_COMPETITIVE_RULE = {

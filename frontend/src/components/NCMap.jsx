@@ -20,7 +20,7 @@ function colorFor(race) {
 }
 
 function safeStyle() {
-  return { color: '#31425c', weight: 0.6, fillColor: '#26364e', fillOpacity: 0.7 };
+  return { color: '#3d516e', weight: 0.7, fillColor: '#1c2942', fillOpacity: 0.55 };
 }
 
 function raceStyle(f, race) {
@@ -126,10 +126,15 @@ export default function NCMap({ features, outline, races, selectedId, onSelect }
       layerRef.current.addLayer(geo);
       layersById.current.set(f.district_id, geo);
 
-      if (isComp) {
+      if (pathCenter(f)) {
         const label = L.marker(pathCenter(f), {
           interactive: false,
-          icon: L.divIcon({ className: 'district-divlabel', html: shortLabel(f.district_id), iconSize: [30, 14], iconAnchor: [15, 7] }),
+          icon: L.divIcon({
+            className: isComp ? 'district-divlabel' : 'district-divlabel district-divlabel-safe',
+            html: shortLabel(f.district_id),
+            iconSize: [30, 14],
+            iconAnchor: [15, 7],
+          }),
         });
         labelsRef.current.addLayer(label);
       }
