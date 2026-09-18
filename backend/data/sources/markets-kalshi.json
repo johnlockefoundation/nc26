@@ -1,6 +1,127 @@
 {
   "source": "Kalshi",
   "cycle": "2026",
-  "updated_at": "2026-09-18T22:49:31.594Z",
-  "markets": []
+  "updated_at": "2026-09-18T22:59:12.198Z",
+  "markets": [
+    {
+      "district_id": "NC-SEN",
+      "provider": "Kalshi",
+      "dem_price": 0.921,
+      "rep_price": 0.079,
+      "updated_at": "2026-09-18T22:59:12.198Z",
+      "source_url": "https://kalshi.com/markets/senatenc-26"
+    },
+    {
+      "district_id": "NC-01",
+      "provider": "Kalshi",
+      "dem_price": 0.6,
+      "rep_price": 0.39,
+      "updated_at": "2026-09-18T22:59:12.198Z",
+      "source_url": "https://kalshi.com/markets/housenc1-26"
+    },
+    {
+      "district_id": "NC-02",
+      "provider": "Kalshi",
+      "dem_price": 0.937,
+      "rep_price": 0.02,
+      "updated_at": "2026-09-18T22:59:12.198Z",
+      "source_url": "https://kalshi.com/markets/kxhouserace-nc02-26"
+    },
+    {
+      "district_id": "NC-03",
+      "provider": "Kalshi",
+      "dem_price": 0.094,
+      "rep_price": 0.86,
+      "updated_at": "2026-09-18T22:59:12.198Z",
+      "source_url": "https://kalshi.com/markets/kxhouserace-nc03-26"
+    },
+    {
+      "district_id": "NC-04",
+      "provider": "Kalshi",
+      "dem_price": 0.938,
+      "rep_price": 0.005,
+      "updated_at": "2026-09-18T22:59:12.198Z",
+      "source_url": "https://kalshi.com/markets/kxhouserace-nc04-26"
+    },
+    {
+      "district_id": "NC-05",
+      "provider": "Kalshi",
+      "dem_price": 0.088,
+      "rep_price": 0.88,
+      "updated_at": "2026-09-18T22:59:12.198Z",
+      "source_url": "https://kalshi.com/markets/kxhouserace-nc05-26"
+    },
+    {
+      "district_id": "NC-06",
+      "provider": "Kalshi",
+      "dem_price": 0.085,
+      "rep_price": 0.901,
+      "updated_at": "2026-09-18T22:59:12.198Z",
+      "source_url": "https://kalshi.com/markets/kxhouserace-nc06-26"
+    },
+    {
+      "district_id": "NC-07",
+      "provider": "Kalshi",
+      "dem_price": 0.11,
+      "rep_price": 0.86,
+      "updated_at": "2026-09-18T22:59:12.198Z",
+      "source_url": "https://kalshi.com/markets/kxhouserace-nc07-26"
+    },
+    {
+      "district_id": "NC-08",
+      "provider": "Kalshi",
+      "dem_price": 0.042,
+      "rep_price": 0.931,
+      "updated_at": "2026-09-18T22:59:12.198Z",
+      "source_url": "https://kalshi.com/markets/kxhouserace-nc08-26"
+    },
+    {
+      "district_id": "NC-09",
+      "provider": "Kalshi",
+      "dem_price": 0.24,
+      "rep_price": 0.75,
+      "updated_at": "2026-09-18T22:59:12.198Z",
+      "source_url": "https://kalshi.com/markets/kxhouserace-nc09-26"
+    },
+    {
+      "district_id": "NC-10",
+      "provider": "Kalshi",
+      "dem_price": 0.034,
+      "rep_price": 0.918,
+      "updated_at": "2026-09-18T22:59:12.198Z",
+      "source_url": "https://kalshi.com/markets/kxhouserace-nc10-26"
+    },
+    {
+      "district_id": "NC-11",
+      "provider": "Kalshi",
+      "dem_price": 0.62,
+      "rep_price": 0.37,
+      "updated_at": "2026-09-18T22:59:12.198Z",
+      "source_url": "https://kalshi.com/markets/kxhousenc11-26"
+    },
+    {
+      "district_id": "NC-12",
+      "provider": "Kalshi",
+      "dem_price": 0.942,
+      "rep_price": 0.002,
+      "updated_at": "2026-09-18T22:59:12.198Z",
+      "source_url": "https://kalshi.com/markets/kxhouserace-nc12-26"
+    },
+    {
+      "district_id": "NC-13",
+      "provider": "Kalshi",
+      "dem_price": 0.12,
+      "rep_price": 0.86,
+      "updated_at": "2026-09-18T22:59:12.198Z",
+      "source_url": "https://kalshi.com/markets/kxhouserace-nc13-26"
+    },
+    {
+      "district_id": "NC-14",
+      "provider": "Kalshi",
+      "dem_price": 0.096,
+      "rep_price": 0.86,
+      "updated_at": "2026-09-18T22:59:12.198Z",
+      "source_url": "https://kalshi.com/markets/kxhouserace-nc14-26"
+    }
+  ]
 }

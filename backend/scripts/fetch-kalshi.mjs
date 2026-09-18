@@ -2,8 +2,9 @@
 // normalized market drop consumed by:  node src/ingest/index.js kalshi
 //
 // Market data endpoints are public (no API key). Prices are read from the
-// market snapshot when available (yes_bid / last_price, cents); otherwise a
-// mid-market estimate is derived from the public orderbook's top of book.
+// market snapshot's _dollars fields (yes_bid_dollars / last_price_dollars);
+// if those are absent a mid-market estimate is derived from the public
+// orderbook's top of book.
 // Districts with no tradeable price at all are skipped, so a provider row is
 // never written that would shadow another live source.
 import { mkdirSync, writeFileSync } from 'node:fs';
@@ -56,8 +57,8 @@ async function kal(path) {
   throw new Error(`kalshi retry limit exceeded for ${path}`);
 }
 
-// price is cents (0-100) from the snapshot, or dollars (0-1) from the orderbook.
-const toDollars = (v) => (v == null ? null : Math.max(0, Math.min(1, v > 1 ? v / 100 : v)));
+// Clamp a probability estimate (0–1 dollars) into the valid range.
+const clamp01 = (v) => (v == null ? null : Math.max(0, Math.min(1, v)));
 
 function partyOf(ticker) {
   if (/-(?:DEM|D)$/i.test(ticker)) return 'D';
@@ -65,9 +66,17 @@ function partyOf(ticker) {
   return null;
 }
 
+// Prices are returned as _dollars-suffixed string fields (e.g. "0.6000", scale
+// 0–1); prefer the best bid, then the last trade. Falls back to a mid-market
+// estimate from the public orderbook top of book.
 async function snapshotPrice(market) {
-  const raw = market.last_price != null ? market.last_price : market.yes_bid;
-  if (raw != null) return { cents: raw, source: 'snapshot' };
+  const raw =
+    market.yes_bid_dollars != null && market.yes_bid_dollars !== ''
+      ? market.yes_bid_dollars
+      : market.last_price_dollars != null && market.last_price_dollars !== ''
+        ? market.last_price_dollars
+        : market.yes_ask_dollars;
+  if (raw != null && raw !== '') return { dollars: +raw, source: 'snapshot' };
   const orderbook = await kal(`/markets/${market.ticker}/orderbook`).catch(() => null);
   const ob = orderbook?.orderbook_fp ?? null;
   if (!ob?.yes_dollars?.length || !ob?.no_dollars?.length) return null;
@@ -78,7 +87,7 @@ async function snapshotPrice(market) {
   // than shadowing another live source with a meaningless mid-market value.
   if (yesAsk < 0.05 && noAsk < 0.05) return null;
   const yesBid = 1 - noAsk;
-  return { cents: ((yesBid + yesAsk) / 2) * 100, source: 'orderbook' };
+  return { dollars: (yesBid + yesAsk) / 2, source: 'orderbook' };
 }
 
 async function eventMarkets(eventTicker) {
@@ -143,8 +152,8 @@ for (const districtId of districtIds) {
     continue;
   }
 
-  const demo = dem ? toDollars(dem.cents) : null;
-  const repo = rep ? toDollars(rep.cents) : null;
+  const demo = dem ? clamp01(dem.dollars) : null;
+  const repo = rep ? clamp01(rep.dollars) : null;
   markets.push({
     district_id: districtId,
     provider: 'Kalshi',
