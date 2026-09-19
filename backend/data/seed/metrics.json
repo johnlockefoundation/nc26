@@ -429,21 +429,21 @@
       "dem_price": 42,
       "rep_price": 58,
       "updated_at": "2026-09-16T20:00:00Z",
-      "source_url": "https://kalshi.com/markets/kxhouse/general-election-house-district-nc-1"
+      "source_url": "https://kalshi.com/markets/housenc1/house-nc-1/housenc1-26"
     },
     "NC-11": {
       "provider": "Kalshi",
       "dem_price": 38,
       "rep_price": 62,
       "updated_at": "2026-09-16T21:00:00Z",
-      "source_url": "https://kalshi.com/markets/kxhouse/general-election-house-district-nc-11"
+      "source_url": "https://kalshi.com/markets/kxhousenc11/house-nc-11/kxhousenc11-26"
     },
     "NC-SEN": {
       "provider": "Kalshi",
       "dem_price": 64,
       "rep_price": 36,
       "updated_at": "2026-09-16T20:30:00Z",
-      "source_url": "https://kalshi.com/markets/kxsenate/senate-control-north-carolina"
+      "source_url": "https://kalshi.com/markets/senatenc/north-carolina-senate-race/senatenc-26"
     }
   },
   "fundraising": {
