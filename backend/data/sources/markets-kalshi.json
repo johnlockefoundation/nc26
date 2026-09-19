@@ -1,127 +1,127 @@
 {
   "source": "Kalshi",
   "cycle": "2026",
-  "updated_at": "2026-09-19T02:59:19.040Z",
+  "updated_at": "2026-09-19T03:05:38.281Z",
   "markets": [
     {
       "district_id": "NC-SEN",
       "provider": "Kalshi",
       "dem_price": 0.921,
       "rep_price": 0.079,
-      "updated_at": "2026-09-19T02:59:19.040Z",
-      "source_url": "https://kalshi.com/markets/kxsenate/senate-control-north-carolina"
+      "updated_at": "2026-09-19T03:05:38.281Z",
+      "source_url": "https://kalshi.com/markets/senatenc/north-carolina-senate-race/senatenc-26"
     },
     {
       "district_id": "NC-01",
       "provider": "Kalshi",
       "dem_price": 0.59,
       "rep_price": 0.39,
-      "updated_at": "2026-09-19T02:59:19.040Z",
-      "source_url": "https://kalshi.com/markets/kxhouse/general-election-house-district-nc-1"
+      "updated_at": "2026-09-19T03:05:38.281Z",
+      "source_url": "https://kalshi.com/markets/housenc1/house-nc-1/housenc1-26"
     },
     {
       "district_id": "NC-02",
       "provider": "Kalshi",
       "dem_price": 0.939,
       "rep_price": 0.021,
-      "updated_at": "2026-09-19T02:59:19.040Z",
-      "source_url": "https://kalshi.com/markets/kxhouse/general-election-house-district-nc-2"
+      "updated_at": "2026-09-19T03:05:38.281Z",
+      "source_url": "https://kalshi.com/markets/kxhouserace/house-race-winner/kxhouserace-nc02-26"
     },
     {
       "district_id": "NC-03",
       "provider": "Kalshi",
       "dem_price": 0.082,
       "rep_price": 0.87,
-      "updated_at": "2026-09-19T02:59:19.040Z",
-      "source_url": "https://kalshi.com/markets/kxhouse/general-election-house-district-nc-3"
+      "updated_at": "2026-09-19T03:05:38.281Z",
+      "source_url": "https://kalshi.com/markets/kxhouserace/house-race-winner/kxhouserace-nc03-26"
     },
     {
       "district_id": "NC-04",
       "provider": "Kalshi",
       "dem_price": 0.939,
       "rep_price": 0.007,
-      "updated_at": "2026-09-19T02:59:19.040Z",
-      "source_url": "https://kalshi.com/markets/kxhouse/general-election-house-district-nc-4"
+      "updated_at": "2026-09-19T03:05:38.281Z",
+      "source_url": "https://kalshi.com/markets/kxhouserace/house-race-winner/kxhouserace-nc04-26"
     },
     {
       "district_id": "NC-05",
       "provider": "Kalshi",
-      "dem_price": 0.1,
+      "dem_price": 0.086,
       "rep_price": 0.88,
-      "updated_at": "2026-09-19T02:59:19.040Z",
-      "source_url": "https://kalshi.com/markets/kxhouse/general-election-house-district-nc-5"
+      "updated_at": "2026-09-19T03:05:38.281Z",
+      "source_url": "https://kalshi.com/markets/kxhouserace/house-race-winner/kxhouserace-nc05-26"
     },
     {
       "district_id": "NC-06",
       "provider": "Kalshi",
-      "dem_price": 0.086,
-      "rep_price": 0.9,
-      "updated_at": "2026-09-19T02:59:19.040Z",
-      "source_url": "https://kalshi.com/markets/kxhouse/general-election-house-district-nc-6"
+      "dem_price": 0.083,
+      "rep_price": 0.904,
+      "updated_at": "2026-09-19T03:05:38.281Z",
+      "source_url": "https://kalshi.com/markets/kxhouserace/house-race-winner/kxhouserace-nc06-26"
     },
     {
       "district_id": "NC-07",
       "provider": "Kalshi",
       "dem_price": 0.13,
       "rep_price": 0.86,
-      "updated_at": "2026-09-19T02:59:19.040Z",
-      "source_url": "https://kalshi.com/markets/kxhouse/general-election-house-district-nc-7"
+      "updated_at": "2026-09-19T03:05:38.281Z",
+      "source_url": "https://kalshi.com/markets/kxhouserace/house-race-winner/kxhouserace-nc07-26"
     },
     {
       "district_id": "NC-08",
       "provider": "Kalshi",
       "dem_price": 0.042,
       "rep_price": 0.934,
-      "updated_at": "2026-09-19T02:59:19.040Z",
-      "source_url": "https://kalshi.com/markets/kxhouse/general-election-house-district-nc-8"
+      "updated_at": "2026-09-19T03:05:38.281Z",
+      "source_url": "https://kalshi.com/markets/kxhouserace/house-race-winner/kxhouserace-nc08-26"
     },
     {
       "district_id": "NC-09",
       "provider": "Kalshi",
       "dem_price": 0.24,
       "rep_price": 0.75,
-      "updated_at": "2026-09-19T02:59:19.040Z",
-      "source_url": "https://kalshi.com/markets/kxhouse/general-election-house-district-nc-9"
+      "updated_at": "2026-09-19T03:05:38.281Z",
+      "source_url": "https://kalshi.com/markets/kxhouserace/house-race-winner/kxhouserace-nc09-26"
     },
     {
       "district_id": "NC-10",
       "provider": "Kalshi",
       "dem_price": 0.034,
       "rep_price": 0.92,
-      "updated_at": "2026-09-19T02:59:19.040Z",
-      "source_url": "https://kalshi.com/markets/kxhouse/general-election-house-district-nc-10"
+      "updated_at": "2026-09-19T03:05:38.281Z",
+      "source_url": "https://kalshi.com/markets/kxhouserace/house-race-winner/kxhouserace-nc10-26"
     },
     {
       "district_id": "NC-11",
       "provider": "Kalshi",
       "dem_price": 0.62,
       "rep_price": 0.37,
-      "updated_at": "2026-09-19T02:59:19.040Z",
-      "source_url": "https://kalshi.com/markets/kxhouse/general-election-house-district-nc-11"
+      "updated_at": "2026-09-19T03:05:38.281Z",
+      "source_url": "https://kalshi.com/markets/kxhousenc11/house-nc-11/kxhousenc11-26"
     },
     {
       "district_id": "NC-12",
       "provider": "Kalshi",
       "dem_price": 0.942,
       "rep_price": 0.002,
-      "updated_at": "2026-09-19T02:59:19.040Z",
-      "source_url": "https://kalshi.com/markets/kxhouse/general-election-house-district-nc-12"
+      "updated_at": "2026-09-19T03:05:38.281Z",
+      "source_url": "https://kalshi.com/markets/kxhouserace/house-race-winner/kxhouserace-nc12-26"
     },
     {
       "district_id": "NC-13",
       "provider": "Kalshi",
       "dem_price": 0.12,
       "rep_price": 0.85,
-      "updated_at": "2026-09-19T02:59:19.040Z",
-      "source_url": "https://kalshi.com/markets/kxhouse/general-election-house-district-nc-13"
+      "updated_at": "2026-09-19T03:05:38.281Z",
+      "source_url": "https://kalshi.com/markets/kxhouserace/house-race-winner/kxhouserace-nc13-26"
     },
     {
       "district_id": "NC-14",
       "provider": "Kalshi",
       "dem_price": 0.094,
       "rep_price": 0.86,
-      "updated_at": "2026-09-19T02:59:19.040Z",
-      "source_url": "https://kalshi.com/markets/kxhouse/general-election-house-district-nc-14"
+      "updated_at": "2026-09-19T03:05:38.281Z",
+      "source_url": "https://kalshi.com/markets/kxhouserace/house-race-winner/kxhouserace-nc14-26"
     }
   ]
 }

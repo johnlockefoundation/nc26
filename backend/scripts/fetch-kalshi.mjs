@@ -66,6 +66,20 @@ function partyOf(ticker) {
   return null;
 }
 
+// Canonical kalshi.com market-page URLs (verified live). The path shape is
+// /markets/{series-slug}/{event-slug}/{event-ticker-lowercase}.
+const MARKET_URLS = {
+  'NC-01': 'https://kalshi.com/markets/housenc1/house-nc-1/housenc1-26',
+  'NC-11': 'https://kalshi.com/markets/kxhousenc11/house-nc-11/kxhousenc11-26',
+  'NC-SEN': 'https://kalshi.com/markets/senatenc/north-carolina-senate-race/senatenc-26',
+};
+
+function kalshiMarketUrl(districtId) {
+  if (MARKET_URLS[districtId]) return MARKET_URLS[districtId];
+  const n = districtId.replace(/^NC-0?/, '');
+  return `https://kalshi.com/markets/kxhouserace/house-race-winner/kxhouserace-nc${n.padStart(2, '0')}-26`;
+}
+
 // Prices are returned as _dollars-suffixed string fields (e.g. "0.6000", scale
 // 0–1); prefer the best bid, then the last trade. Falls back to a mid-market
 // estimate from the public orderbook top of book.
@@ -154,9 +168,7 @@ for (const districtId of districtIds) {
 
   const demo = dem ? clamp01(dem.dollars) : null;
   const repo = rep ? clamp01(rep.dollars) : null;
-  const marketUrl = districtId === 'NC-SEN'
-    ? 'https://kalshi.com/markets/kxsenate/senate-control-north-carolina'
-    : `https://kalshi.com/markets/kxhouse/general-election-house-district-nc-${Number(districtId.replace(/^NC-0?/, ''))}`;
+  const marketUrl = kalshiMarketUrl(districtId);
   markets.push({
     district_id: districtId,
     provider: 'Kalshi',

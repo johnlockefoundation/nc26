@@ -58,16 +58,22 @@ export default function App() {
     <div className="app">
       <header className="topbar">
         <div className="gauge-cluster gauge-left">
-          <MiniGauge outlook={meta?.nc_senate_outlook} label="NC SENATE" />
-          <MiniGauge outlook={meta?.nc_house_outlook} label="NC HOUSE" />
+          <div className="gauge-cluster-title">Raleigh</div>
+          <div className="gauge-row">
+            <MiniGauge outlook={meta?.nc_senate_outlook} label="NC SENATE" />
+            <MiniGauge outlook={meta?.nc_house_outlook} label="NC HOUSE" />
+          </div>
         </div>
         <h1 className="brand-title" aria-label="Tarheel Tracker">
           <span className="brand-word">Tarheel&nbsp;Tracker</span>
           <span className="brand-byline"><em>from</em> the John Locke Foundation</span>
         </h1>
         <div className="gauge-cluster gauge-right">
-          <MiniGauge outlook={meta?.house_outlook} label="U.S. HOUSE" />
-          <MiniGauge outlook={meta?.senate_outlook} label="U.S. SENATE" />
+          <div className="gauge-cluster-title">Washington</div>
+          <div className="gauge-row">
+            <MiniGauge outlook={meta?.house_outlook} label="U.S. HOUSE" />
+            <MiniGauge outlook={meta?.senate_outlook} label="U.S. SENATE" />
+          </div>
         </div>
       </header>
 
