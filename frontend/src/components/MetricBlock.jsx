@@ -5,8 +5,8 @@ export default function MetricBlock({ title, emptyText, summary, delta }) {
   const href = available ? summary?.source_url : null;
   const arrow = available && delta && delta.party !== 'EVEN'
     ? (delta.party === 'D'
-        ? <span className="metric-arrow move-d" title={`${delta.points.toFixed(1)} pts toward D since last update`}>←</span>
-        : <span className="metric-arrow move-r" title={`${delta.points.toFixed(1)} pts toward R since last update`}>→</span>)
+        ? <span className="metric-arrow move-d" title={`${delta.points.toFixed(0)}¢ toward D on Kalshi over the past week`}>←</span>
+        : <span className="metric-arrow move-r" title={`${delta.points.toFixed(0)}¢ toward R on Kalshi over the past week`}>→</span>)
     : null;
   return (
     <div className={`metric ${available ? '' : 'metric-empty'}`}>

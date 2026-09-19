@@ -99,15 +99,22 @@ export function ingestKalshiFromSource(cycle = CYCLE) {
   const ins = db.prepare(`INSERT OR REPLACE INTO markets
     (district_id, election_cycle, provider, dem_price, rep_price, advantage, updated_at, source_url, is_seed)
     VALUES (?, ?, 'Kalshi', ?, ?, ?, ?, ?, 0)`);
+  const insSnap = db.prepare(`INSERT OR REPLACE INTO market_snapshots
+    (district_id, election_cycle, provider, as_of, dem_price, rep_price)
+    VALUES (?, ?, 'Kalshi', ?, ?, ?)`);
+  const asOf = String(data.updated_at || new Date().toISOString()).slice(0, 10);
   let n = 0;
   for (const m of data.markets || []) {
     if (m.dem_price == null && m.rep_price == null) continue;
     const adv = +((m.dem_price ?? 0) - (m.rep_price ?? 0)).toFixed(2);
     ins.run(m.district_id, cycle, m.dem_price ?? null, m.rep_price ?? null, adv,
       m.updated_at, m.source_url || '');
+    if (m.dem_price != null && m.rep_price != null && asOf) {
+      insSnap.run(m.district_id, cycle, asOf, m.dem_price, m.rep_price);
+    }
     n++;
   }
-  console.log(`[kalshi] ingested ${n} market rows`);
+  console.log(`[kalshi] ingested ${n} market rows (snapshot ${asOf})`);
   return { source: data.source || 'kalshi', count: n };
 }
 

@@ -141,7 +141,7 @@ export default function NCMap({ features, outline, races, selectedId, onSelect }
 
       if (pathCenter(f)) {
         const race = isComp ? raceById.current.get(f.district_id) : null;
-        const delta = race?.polls?.delta;
+        const delta = race?.markets?.delta;
         const hasArrow = Boolean(delta && delta.party && delta.party !== 'EVEN');
         const label = L.marker(pathCenter(f), {
           interactive: false,

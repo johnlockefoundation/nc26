@@ -84,6 +84,19 @@ CREATE TABLE IF NOT EXISTS markets (
   PRIMARY KEY (district_id, election_cycle, provider)
 );
 
+-- Daily price snapshots per provider used to derive weekly movement
+-- (e.g. Kalshi 7-day change) for the map arrows, independent of any
+-- provider-side history API.
+CREATE TABLE IF NOT EXISTS market_snapshots (
+  district_id    TEXT NOT NULL,
+  election_cycle TEXT NOT NULL,
+  provider       TEXT NOT NULL,
+  as_of          TEXT NOT NULL,                -- ISO date (YYYY-MM-DD)
+  dem_price      REAL,                         -- cents per contract
+  rep_price      REAL,
+  PRIMARY KEY (district_id, election_cycle, provider, as_of)
+);
+
 -- ---------------------------------------------------------------------------
 -- Fundraising
 -- ---------------------------------------------------------------------------

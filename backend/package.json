@@ -12,6 +12,7 @@
     "static": "node scripts/export-static.mjs",
     "fetch-markets": "node scripts/fetch-markets.mjs",
     "fetch-kalshi": "node scripts/fetch-kalshi.mjs",
+    "seed-kalshi-history": "node scripts/seed-kalshi-history.mjs",
     "fetch-news": "node scripts/fetch-news.mjs",
     "fetch-fec": "node scripts/fetch-fec.mjs"
   },

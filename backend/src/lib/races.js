@@ -51,6 +51,20 @@ function pollSummary(districtId, cycle) {
   };
 }
 
+function marketWeeklyMove(districtId, cycle) {
+  const days = db.prepare(`SELECT as_of, dem_price, rep_price FROM market_snapshots
+    WHERE district_id = ? AND election_cycle = ? AND provider = 'Kalshi'
+    ORDER BY as_of DESC`).all(districtId, cycle);
+  if (days.length < 2) return null;
+  const advCents = (r) => (r.dem_price - r.rep_price) * 100;
+  const latest = days[0];
+  const cutoff = new Date(`${latest.as_of}T00:00:00Z`);
+  cutoff.setUTCDate(cutoff.getUTCDate() - 7);
+  const prev = days.find((r) => r.as_of <= cutoff.toISOString().slice(0, 10));
+  if (!prev) return null;
+  return marginDelta(advCents(latest), advCents(prev));
+}
+
 function marketSummary(districtId, cycle) {
   const rows = db.prepare(`SELECT provider, dem_price, rep_price, advantage, updated_at, source_url, is_seed
     FROM markets WHERE district_id = ? AND election_cycle = ? ORDER BY updated_at DESC`).all(districtId, cycle);
@@ -62,6 +76,7 @@ function marketSummary(districtId, cycle) {
     dem_price: has ? m.dem_price : null,
     rep_price: has ? m.rep_price : null,
     advantage: has ? formatMarketAdvantage(m.advantage) : null,
+    delta: marketWeeklyMove(districtId, cycle),
     updated_at: m ? m.updated_at : null,
     source_url: m ? m.source_url : null,
     is_seed: m ? Boolean(m.is_seed) : false,

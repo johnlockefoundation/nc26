@@ -14,6 +14,7 @@ import { fileURLToPath } from 'node:url';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const BACKEND = resolve(__dirname, '..');
 const OUT = join(BACKEND, 'data', 'sources', 'markets-kalshi.json');
+const SNAPSHOT_OUT = join(BACKEND, 'data', 'sources', 'kalshi-snapshots.json');
 
 const BASE = 'https://api.elections.kalshi.com/trade-api/v2';
 const CYCLE = '2026';
@@ -80,6 +81,16 @@ function kalshiMarketUrl(districtId) {
   return `https://kalshi.com/markets/kxhouserace/house-race-winner/kxhouserace-nc${n.padStart(2, '0')}-26`;
 }
 
+// Prior-session quote used as a baseline for daily/weekly movement. Prefer the
+// previous bid (comparable to the yes_bid we read for the current price).
+function prevDollars(market) {
+  const raw =
+    market.previous_yes_bid_dollars != null && market.previous_yes_bid_dollars !== ''
+      ? market.previous_yes_bid_dollars
+      : market.previous_price_dollars;
+  return raw != null && raw !== '' ? +raw : null;
+}
+
 // Prices are returned as _dollars-suffixed string fields (e.g. "0.6000", scale
 // 0–1); prefer the best bid, then the last trade. Falls back to a mid-market
 // estimate from the public orderbook top of book.
@@ -90,7 +101,7 @@ async function snapshotPrice(market) {
       : market.last_price_dollars != null && market.last_price_dollars !== ''
         ? market.last_price_dollars
         : market.yes_ask_dollars;
-  if (raw != null && raw !== '') return { dollars: +raw, source: 'snapshot' };
+  if (raw != null && raw !== '') return { dollars: +raw, source: 'snapshot', prev: prevDollars(market) };
   const orderbook = await kal(`/markets/${market.ticker}/orderbook`).catch(() => null);
   const ob = orderbook?.orderbook_fp ?? null;
   if (!ob?.yes_dollars?.length || !ob?.no_dollars?.length) return null;
@@ -101,7 +112,7 @@ async function snapshotPrice(market) {
   // than shadowing another live source with a meaningless mid-market value.
   if (yesAsk < 0.05 && noAsk < 0.05) return null;
   const yesBid = 1 - noAsk;
-  return { dollars: (yesBid + yesAsk) / 2, source: 'orderbook' };
+  return { dollars: (yesBid + yesAsk) / 2, source: 'orderbook', prev: prevDollars(market) };
 }
 
 async function eventMarkets(eventTicker) {
