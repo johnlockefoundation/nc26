@@ -140,6 +140,7 @@ function profileFor(districtId, cycle) {
     FROM district_profiles WHERE district_id = ? AND election_cycle = ?`).get(districtId, cycle);
   if (!f) return null;
   return {
+    scope: districtId === 'NC-SEN' ? 'Statewide' : null,
     median_age: f.median_age,
     median_income: f.median_income,
     bachelors_plus: f.bachelors_plus,

@@ -128,6 +128,16 @@
       "race": { "white": 67.7, "black": 15.3, "hispanic": 8.6 },
       "pres_margin": "R+15.0",
       "cpi": "R+6"
+    },
+    {
+      "district_id": "NC-SEN",
+      "statewide": true,
+      "median_age": 39.5,
+      "median_income": 72388,
+      "bachelors_plus": 35.7,
+      "race": { "white": 59.9, "black": 20.3, "hispanic": 10.9 },
+      "pres_margin": "R+3.3",
+      "cpi": "R+3"
     }
   ]
 }
