@@ -154,13 +154,16 @@ for (const districtId of districtIds) {
 
   const demo = dem ? clamp01(dem.dollars) : null;
   const repo = rep ? clamp01(rep.dollars) : null;
+  const marketUrl = districtId === 'NC-SEN'
+    ? 'https://kalshi.com/markets/kxsenate/senate-control-north-carolina'
+    : `https://kalshi.com/markets/kxhouse/general-election-house-district-nc-${Number(districtId.replace(/^NC-0?/, ''))}`;
   markets.push({
     district_id: districtId,
     provider: 'Kalshi',
     dem_price: demo,
     rep_price: repo,
     updated_at,
-    source_url: `https://kalshi.com/markets/${event.toLowerCase()}`,
+    source_url: marketUrl,
   });
   console.log(`  ${districtId}: D ${demo != null ? demo.toFixed(3) : '—'} / R ${repo != null ? repo.toFixed(3) : '—'} (${[dem?.source, rep?.source].filter(Boolean).join('/')})`);
   await sleep(250);
