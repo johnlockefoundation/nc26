@@ -17,7 +17,7 @@ export default function DistrictProfile({ profile }) {
   if (!profile) {
     return (
       <section className="panel-section">
-<h3>{profile.scope ? `${profile.scope} ` : ''}PROFILE</h3>
+        <h3>PROFILE</h3>
         <div className="dim">District profile not yet available.</div>
       </section>
     );
@@ -34,7 +34,7 @@ export default function DistrictProfile({ profile }) {
 
   return (
     <section className="panel-section">
-      <h3>PROFILE</h3>
+      <h3>{profile.scope ? `${profile.scope} ` : ''}PROFILE</h3>
 
       <div className="profile-stats">
         <div className="profile-stat"><span>MEDIAN AGE</span><b>{profile.median_age ?? '—'}</b></div>
