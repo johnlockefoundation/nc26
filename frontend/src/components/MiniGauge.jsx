@@ -39,7 +39,8 @@ export default function MiniGauge({ outlook, label }) {
     ? 'TOSS-UP'
     : projMaj === currentMaj ? `${projMaj} HOLD` : `${projMaj} FLIP`;
   const outcomeCls = outcome.startsWith('D') ? 'outcome-d' : outcome.startsWith('R') ? 'outcome-r' : 'outcome-t';
-  const gainCls = gainParty === 'D' ? 'lead-d' : gainParty === 'R' ? 'lead-r' : '';
+  const isToss = projMaj === 'TOSS';
+  const gainCls = !isToss && gainParty === 'D' ? 'lead-d' : !isToss && gainParty === 'R' ? 'lead-r' : '';
 
   const needleAngle = angleFor(dem, total);
   const tip = pt(needleAngle, 24);
@@ -48,7 +49,7 @@ export default function MiniGauge({ outlook, label }) {
 
   return (
     <div className="mini-gauge" title={`${label} — today ${todayDem}D/${todayRep}R, projection ${dem}D · ${rep}R${tossup ? ` · ${tossup} T` : ''} (${threshold} for majority). Gain vs today: ${gainLabel}. ${outcome}. ${source}`}>
-      <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label={`${label}: ${outcome}${gainParty !== 'EVEN' ? `, ${gainLabel} vs today` : ''}`}>
+      <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label={`${label}: ${outcome}${!isToss && gainParty !== 'EVEN' ? `, ${gainLabel} vs today` : ''}`}>
         <path d={arcPath(180, 360)} fill="none" stroke="#16223a" strokeWidth={10} strokeLinecap="round" />
         <path d={arcPath(180, thrAngle)} fill="none" stroke="#b91c1c" strokeWidth={10} opacity={0.55} strokeLinecap="round" />
         <path d={arcPath(thrAngle, 360)} fill="none" stroke="#1d4ed8" strokeWidth={10} opacity={0.55} strokeLinecap="round" />
@@ -58,7 +59,7 @@ export default function MiniGauge({ outlook, label }) {
       </svg>
       <div className="mini-gauge-meta">
         <span className="gauge-name">{label}</span>
-        <span className={`gauge-lead ${gainCls}`}>{gainLabel}</span>
+        {!isToss && <span className={`gauge-lead ${gainCls}`}>{gainLabel}</span>}
       </div>
       <div className={`gauge-outcome ${outcomeCls}`}>{outcome}</div>
     </div>
