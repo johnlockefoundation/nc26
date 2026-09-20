@@ -115,6 +115,13 @@ export function getRaceSummary(row, cycle, { includeNews = true } = {}) {
   const markets = marketSummary(row.district_id, cycle);
   const money = moneySummary(row.district_id, cycle);
   const candidates = candidateList(row.district_id, cycle);
+  // Only genuinely in-play races get a movement arrow: within 10 points on
+  // either a polling average or the market spread.
+  const inPlay =
+    (polls.available && polls.margin != null && Math.abs(polls.margin) < 10) ||
+    (markets.available && markets.dem_price != null && markets.rep_price != null &&
+      Math.abs((markets.dem_price - markets.rep_price) * 100) < 10);
+  if (!inPlay) markets.delta = null;
   const updatedCandidates = [polls.updated_at, markets.updated_at, money.updated_at].filter(Boolean).sort();
   return {
     district_id: row.district_id,
