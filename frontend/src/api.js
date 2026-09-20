@@ -8,7 +8,10 @@ const API_BASE = (import.meta.env.VITE_API_BASE || '/api').replace(/\/$/, '');
 const DATA_BASE = `${BASE.replace(/\/$/, '')}/demo-data`;
 
 async function getJson(url) {
-  const res = await fetch(url);
+  // GitHub Pages serves static assets with cache headers, and a stale
+  // demo-data JSON would leave the map showing an older race set (e.g. an
+  // NC-only U.S. Senate map) after a redeploy. Never reuse cached demo data.
+  const res = await fetch(url, STATIC ? { cache: 'no-store' } : undefined);
   if (!res.ok) throw new Error(`${res.status} ${url}`);
   return res.json();
 }

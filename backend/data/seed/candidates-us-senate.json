@@ -21,9 +21,9 @@
       "photo_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Michael%20Whatley%20(53809322795)%20(cropped).jpg?width=400"
     },
     {
-      "candidate_id": "mes_janet_mills_2026",
+      "candidate_id": "mes_troy_jackson_2026",
       "district_id": "ME-SEN",
-      "name": "Janet Mills",
+      "name": "Troy Jackson",
       "party": "D",
       "incumbent": false,
       "website": "",
@@ -57,18 +57,18 @@
       "photo_url": ""
     },
     {
-      "candidate_id": "mis_haley_stevens_2026",
+      "candidate_id": "mis_abdul_el_sayed_2026",
       "district_id": "MI-SEN",
-      "name": "Haley Stevens",
+      "name": "Abdul El-Sayed",
       "party": "D",
       "incumbent": false,
       "website": "",
       "photo_url": ""
     },
     {
-      "candidate_id": "mis_bill_huizenga_2026",
+      "candidate_id": "mis_mike_rogers_2026",
       "district_id": "MI-SEN",
-      "name": "Bill Huizenga",
+      "name": "Mike Rogers",
       "party": "R",
       "incumbent": false,
       "website": "",
@@ -138,9 +138,9 @@
       "photo_url": ""
     },
     {
-      "candidate_id": "gas_brian_kemp_2026",
+      "candidate_id": "gas_mike_collins_2026",
       "district_id": "GA-SEN",
-      "name": "Brian Kemp",
+      "name": "Mike Collins",
       "party": "R",
       "incumbent": false,
       "website": "",
@@ -156,9 +156,9 @@
       "photo_url": ""
     },
     {
-      "candidate_id": "nhs_don_bolduc_2026",
+      "candidate_id": "nhs_john_sununu_2026",
       "district_id": "NH-SEN",
-      "name": "Don Bolduc",
+      "name": "John Sununu",
       "party": "R",
       "incumbent": false,
       "website": "",

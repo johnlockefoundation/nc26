@@ -22,10 +22,14 @@ export function ingestUsSenate(cycle = CYCLE) {
   }
 
   const data = JSON.parse(readFileSync(SEED, 'utf8'));
+  const delCand = db.prepare(`DELETE FROM candidates WHERE election_cycle = ? AND district_id = ?`);
   const insCand = db.prepare(`INSERT OR REPLACE INTO candidates
     (candidate_id, district_id, election_cycle, name, party, incumbent, website, photo_url)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?)`);
   let candidates = 0;
+  for (const districtId of new Set(data.candidates.map((c) => c.district_id))) {
+    delCand.run(cycle, districtId);
+  }
   for (const c of data.candidates) {
     insCand.run(c.candidate_id, c.district_id, cycle, c.name, c.party, c.incumbent ? 1 : 0, c.website || '', c.photo_url || '');
     candidates++;
