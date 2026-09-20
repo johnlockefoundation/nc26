@@ -444,6 +444,69 @@
       "rep_price": 36,
       "updated_at": "2026-09-16T20:30:00Z",
       "source_url": "https://kalshi.com/markets/senatenc/north-carolina-senate-race/senatenc-26"
+    },
+    "ME-SEN": {
+      "provider": "Kalshi",
+      "dem_price": 45,
+      "rep_price": 55,
+      "updated_at": "2026-09-16T20:30:00Z",
+      "source_url": "https://kalshi.com/markets/senateme/maine-senate-race/senateme-26"
+    },
+    "AK-SEN": {
+      "provider": "Kalshi",
+      "dem_price": 42,
+      "rep_price": 58,
+      "updated_at": "2026-09-16T20:30:00Z",
+      "source_url": "https://kalshi.com/markets/senateak/alaska-senate-race/senateak-26"
+    },
+    "MI-SEN": {
+      "provider": "Kalshi",
+      "dem_price": 52,
+      "rep_price": 48,
+      "updated_at": "2026-09-16T20:30:00Z",
+      "source_url": "https://kalshi.com/markets/senatemi/michigan-senate-race/senatemi-26"
+    },
+    "OH-SEN": {
+      "provider": "Kalshi",
+      "dem_price": 38,
+      "rep_price": 62,
+      "updated_at": "2026-09-16T20:30:00Z",
+      "source_url": "https://kalshi.com/markets/senateoh/ohio-senate-race/senateoh-26"
+    },
+    "IA-SEN": {
+      "provider": "Kalshi",
+      "dem_price": 44,
+      "rep_price": 56,
+      "updated_at": "2026-09-16T20:30:00Z",
+      "source_url": "https://kalshi.com/markets/senateia/iowa-senate-race/senateia-26"
+    },
+    "TX-SEN": {
+      "provider": "Kalshi",
+      "dem_price": 34,
+      "rep_price": 66,
+      "updated_at": "2026-09-16T20:30:00Z",
+      "source_url": "https://kalshi.com/markets/senatetx/texas-senate-race/senatetx-26"
+    },
+    "GA-SEN": {
+      "provider": "Kalshi",
+      "dem_price": 58,
+      "rep_price": 42,
+      "updated_at": "2026-09-16T20:30:00Z",
+      "source_url": "https://kalshi.com/markets/senatega/georgia-senate-race/senatega-26"
+    },
+    "NH-SEN": {
+      "provider": "Kalshi",
+      "dem_price": 56,
+      "rep_price": 44,
+      "updated_at": "2026-09-16T20:30:00Z",
+      "source_url": "https://kalshi.com/markets/senatenh/new-hampshire-senate-race/senatenh-26"
+    },
+    "NE-SEN": {
+      "provider": "Kalshi",
+      "dem_price": 24,
+      "rep_price": 76,
+      "updated_at": "2026-09-16T20:30:00Z",
+      "source_url": "https://kalshi.com/markets/senatene/nebraska-senate-race/senatene-26"
     }
   },
   "fundraising": {

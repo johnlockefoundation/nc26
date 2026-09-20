@@ -2,11 +2,14 @@ import { useEffect, useRef } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { partyColor, primarySignal } from '../lib/colors.js';
-import { BASEMAP_URL, BASEMAP_ATTR, MAP_MIN_ZOOM, MAP_MAX_ZOOM, MAP_BOUNDS } from '../lib/map.js';
+import {
+  BASEMAP_URL, BASEMAP_ATTR, MAP_MIN_ZOOM, MAP_MAX_ZOOM, MAP_BOUNDS,
+  SENATE_MIN_ZOOM, SENATE_BOUNDS, SENATE_FIT_BOUNDS, SENATE_VIEW,
+} from '../lib/map.js';
 
 function shortLabel(districtId) {
-  if (districtId === 'NC-SEN') return 'NC';
-  return districtId.split('-')[1];
+  const [state, rest] = districtId.split('-');
+  return rest === 'SEN' ? state : rest;
 }
 
 function matchupText(candidates) {
@@ -54,16 +57,27 @@ function pathCenter(f) {
   return bounds.isValid() ? bounds.getCenter() : null;
 }
 
-// The US Senate is a statewide race drawn with the full state outline, so its
-// bounding-box center lands south of the map's visual center. Anchor it near
-// Asheboro, the geographic heart of the state.
-const SENATE_ANCHOR = L.latLng(35.71, -79.81);
+// Senate races are statewide polygons, so label anchors are hand-picked per
+// state (bounding-box centers land over water or empty terrain for several).
+// NC is anchored near Asheboro, the geographic heart of the state.
+const SENATE_ANCHORS = {
+  'NC-SEN': L.latLng(35.71, -79.81),
+  'ME-SEN': L.latLng(44.95, -69.2),
+  'AK-SEN': L.latLng(62.8, -155.0),
+  'MI-SEN': L.latLng(44.5, -85.0),
+  'OH-SEN': L.latLng(40.2, -82.8),
+  'IA-SEN': L.latLng(42.0, -93.3),
+  'TX-SEN': L.latLng(31.3, -99.5),
+  'GA-SEN': L.latLng(32.7, -83.4),
+  'NH-SEN': L.latLng(43.4, -71.6),
+  'NE-SEN': L.latLng(41.5, -99.7),
+};
 
 function anchorFor(f) {
-  return f.district_id === 'NC-SEN' ? SENATE_ANCHOR : pathCenter(f);
+  return SENATE_ANCHORS[f.district_id] || pathCenter(f);
 }
 
-export default function NCMap({ features, outline, races, selectedId, onSelect }) {
+export default function NCMap({ features, outline, races, selectedId, onSelect, raceType }) {
   const containerRef = useRef(null);
   const mapRef = useRef(null);
   const layerRef = useRef(null);
@@ -83,16 +97,17 @@ export default function NCMap({ features, outline, races, selectedId, onSelect }
   // Initialize the Leaflet map once.
   useEffect(() => {
     if (mapRef.current) return;
+    const isSenate = raceType === 'us_senate';
     const map = L.map(containerRef.current, {
-      minZoom: MAP_MIN_ZOOM,
+      minZoom: isSenate ? SENATE_MIN_ZOOM : MAP_MIN_ZOOM,
       maxZoom: MAP_MAX_ZOOM,
       scrollWheelZoom: false,
-      maxBounds: MAP_BOUNDS,
+      maxBounds: isSenate ? SENATE_BOUNDS : MAP_BOUNDS,
       maxBoundsViscosity: 1,
       zoomControl: true,
       attributionControl: true,
     });
-    map.setView([35.6, -79.5], 6);
+    map.setView(isSenate ? SENATE_VIEW.center : [35.6, -79.5], isSenate ? SENATE_VIEW.zoom : 6);
     L.tileLayer(BASEMAP_URL, {
       attribution: BASEMAP_ATTR,
       maxZoom: MAP_MAX_ZOOM,
@@ -105,6 +120,16 @@ export default function NCMap({ features, outline, races, selectedId, onSelect }
       mapRef.current = null;
     };
   }, []);
+
+  // Tune pan/zoom limits when the race type changes: the Senate tab spans the
+  // nation, the in-state tabs stay locked to North Carolina.
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
+    const isSenate = raceType === 'us_senate';
+    map.setMinZoom(isSenate ? SENATE_MIN_ZOOM : MAP_MIN_ZOOM);
+    map.setMaxBounds(isSenate ? SENATE_BOUNDS : MAP_BOUNDS);
+  }, [raceType]);
 
   // Rebuild district layers when the dataset changes (race type switch).
   useEffect(() => {
@@ -152,7 +177,7 @@ export default function NCMap({ features, outline, races, selectedId, onSelect }
         const race = isComp ? raceById.current.get(f.district_id) : null;
         const delta = race?.markets?.delta;
         const hasArrow = Boolean(delta && delta.party && delta.party !== 'EVEN');
-        const isSenate = f.district_id === 'NC-SEN';
+        const isSenate = race?.race_type === 'us_senate';
         const label = L.marker(center, {
           interactive: false,
           icon: L.divIcon({
@@ -181,8 +206,8 @@ export default function NCMap({ features, outline, races, selectedId, onSelect }
       }
     }
 
-    fitToState(map);
-  }, [features, races, outline]);
+    fitToState(map, raceType);
+  }, [features, races, outline, raceType]);
 
   // Highlight the selected district without rebuilding everything.
   useEffect(() => {
@@ -206,7 +231,12 @@ export default function NCMap({ features, outline, races, selectedId, onSelect }
     };
   }
 
-  function fitToState(map) {
+  function fitToState(map, type) {
+    if (!map) return;
+    if (type === 'us_senate') {
+      map.fitBounds(SENATE_FIT_BOUNDS, { padding: [6, 6] });
+      return;
+    }
     if (outline && outline.type) {
       const b = L.geoJSON(outline).getBounds();
       if (b.isValid()) {
@@ -219,8 +249,8 @@ export default function NCMap({ features, outline, races, selectedId, onSelect }
 
   return (
     <div className="map-wrap">
-      <div ref={containerRef} className="map-container" aria-label="North Carolina election map" />
-      <button className="map-reset" onClick={() => fitToState(mapRef.current)} title="Zoom to North Carolina">⤢</button>
+      <div ref={containerRef} className="map-container" aria-label="Competitive election map" />
+      <button className="map-reset" onClick={() => fitToState(mapRef.current, raceType)} title="Zoom to view">⤢</button>
     </div>
   );
 }

@@ -1,6 +1,6 @@
 import { db } from '../db.js';
 import { CYCLE } from '../ingest/config.js';
-import { CIVITAS_SOURCE_URL } from '../ingest/config.js';
+import { CIVITAS_SOURCE_URL, SENATE_RACES_BY_ID } from '../ingest/config.js';
 import { formatPollAdvantage, formatMarketAdvantage, formatMoney } from './format.js';
 
 const RACE_TYPE_META = {
@@ -10,8 +10,14 @@ const RACE_TYPE_META = {
   state_house: { short: 'NC HOUSE', slug: 'state_house' },
 };
 
-export function raceTitle(raceType, districtNumber) {
-  if (raceType === 'us_senate') return `U.S. SENATE — NORTH CAROLINA`;
+// Senate district ids are <STATE>-SEN; fall back to the slug minus the suffix
+// if a race ever isn't in the configured set (e.g. a newly added state).
+export function senateStateName(districtId) {
+  return SENATE_RACES_BY_ID.get(districtId)?.name || districtId.replace(/-SEN$/, '');
+}
+
+export function raceTitle(raceType, districtNumber, districtId) {
+  if (raceType === 'us_senate') return `U.S. SENATE — ${senateStateName(districtId)}`;
   return `${RACE_TYPE_META[raceType]?.short || raceType} — DISTRICT ${districtNumber}`;
 }
 
@@ -166,7 +172,7 @@ export function getRaceSummary(row, cycle, { includeNews = true } = {}) {
     race_type: row.race_type,
     district_number: row.district_number,
     election_cycle: row.election_cycle,
-    title: raceTitle(row.race_type, row.district_number),
+    title: raceTitle(row.race_type, row.district_number, row.district_id),
     competitive: Boolean(row.competitive),
     competitive_source: row.competitive_source,
     competitive_reason: row.competitive_reason,
@@ -190,7 +196,12 @@ export function listRaces({ cycle = CYCLE, raceType = null, competitiveOnly = tr
   const params = [cycle];
   if (raceType) { sql += ` AND race_type = ?`; params.push(raceType); }
   if (competitiveOnly) sql += ` AND competitive = 1`;
-  sql += ` ORDER BY race_type, district_number`;
+  // The Tarheel Tracker opens the marquee NC Senate race first on the U.S.
+  // Senate tab (senate ids share district_number 0, so an explicit tiebreaker
+  // keeps the initial selection stable).
+  sql += ` ORDER BY race_type,
+    CASE WHEN race_type = 'us_senate' AND district_id = 'NC-SEN' THEN 0 ELSE 1 END,
+    district_number, district_id`;
   const rows = db.prepare(sql).all(...params);
   return rows.map((r) => getRaceSummary(r, cycle));
 }
@@ -201,7 +212,7 @@ function profileFor(districtId, cycle) {
     FROM district_profiles WHERE district_id = ? AND election_cycle = ?`).get(districtId, cycle);
   if (!f) return null;
   return {
-    scope: districtId === 'NC-SEN' ? 'Statewide' : null,
+    scope: districtId.endsWith('-SEN') ? 'Statewide' : null,
     median_age: f.median_age,
     median_income: f.median_income,
     bachelors_plus: f.bachelors_plus,

@@ -88,6 +88,7 @@ export default function App() {
             <RaceTypeToggle value={raceType} onChange={setRaceType} />
           </div>
           <NCMap
+            raceType={raceType}
             features={mapData?.features || []}
             races={races}
             outline={outline}

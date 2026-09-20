@@ -1,9 +1,10 @@
 {
   "cycle": "2026",
-  "source": "2026 NC Senate general election (open seat): Roy Cooper (D) vs. Michael Whatley (R)",
+  "source": "2026 U.S. Senate battleground (Cook Political Report, Sep 2026): general-election contenders per in-play seat.",
   "candidates": [
     {
       "candidate_id": "ncs_roy_cooper_2026",
+      "district_id": "NC-SEN",
       "name": "Roy Cooper",
       "party": "D",
       "incumbent": false,
@@ -12,11 +13,174 @@
     },
     {
       "candidate_id": "ncs_michael_whatley_2026",
+      "district_id": "NC-SEN",
       "name": "Michael Whatley",
       "party": "R",
       "incumbent": false,
       "website": "https://www.whatleyfornc.com/",
       "photo_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Michael%20Whatley%20(53809322795)%20(cropped).jpg?width=400"
+    },
+    {
+      "candidate_id": "mes_janet_mills_2026",
+      "district_id": "ME-SEN",
+      "name": "Janet Mills",
+      "party": "D",
+      "incumbent": false,
+      "website": "",
+      "photo_url": ""
+    },
+    {
+      "candidate_id": "mes_susan_collins_2026",
+      "district_id": "ME-SEN",
+      "name": "Susan Collins",
+      "party": "R",
+      "incumbent": true,
+      "website": "",
+      "photo_url": ""
+    },
+    {
+      "candidate_id": "aks_mary_peltola_2026",
+      "district_id": "AK-SEN",
+      "name": "Mary Peltola",
+      "party": "D",
+      "incumbent": false,
+      "website": "",
+      "photo_url": ""
+    },
+    {
+      "candidate_id": "aks_dan_sullivan_2026",
+      "district_id": "AK-SEN",
+      "name": "Dan Sullivan",
+      "party": "R",
+      "incumbent": true,
+      "website": "",
+      "photo_url": ""
+    },
+    {
+      "candidate_id": "mis_haley_stevens_2026",
+      "district_id": "MI-SEN",
+      "name": "Haley Stevens",
+      "party": "D",
+      "incumbent": false,
+      "website": "",
+      "photo_url": ""
+    },
+    {
+      "candidate_id": "mis_bill_huizenga_2026",
+      "district_id": "MI-SEN",
+      "name": "Bill Huizenga",
+      "party": "R",
+      "incumbent": false,
+      "website": "",
+      "photo_url": ""
+    },
+    {
+      "candidate_id": "ohs_sherrod_brown_2026",
+      "district_id": "OH-SEN",
+      "name": "Sherrod Brown",
+      "party": "D",
+      "incumbent": false,
+      "website": "",
+      "photo_url": ""
+    },
+    {
+      "candidate_id": "ohs_jon_husted_2026",
+      "district_id": "OH-SEN",
+      "name": "Jon Husted",
+      "party": "R",
+      "incumbent": true,
+      "website": "",
+      "photo_url": ""
+    },
+    {
+      "candidate_id": "ias_josh_turek_2026",
+      "district_id": "IA-SEN",
+      "name": "Josh Turek",
+      "party": "D",
+      "incumbent": false,
+      "website": "",
+      "photo_url": ""
+    },
+    {
+      "candidate_id": "ias_ashley_hinson_2026",
+      "district_id": "IA-SEN",
+      "name": "Ashley Hinson",
+      "party": "R",
+      "incumbent": false,
+      "website": "",
+      "photo_url": ""
+    },
+    {
+      "candidate_id": "txs_james_talarico_2026",
+      "district_id": "TX-SEN",
+      "name": "James Talarico",
+      "party": "D",
+      "incumbent": false,
+      "website": "",
+      "photo_url": ""
+    },
+    {
+      "candidate_id": "txs_ken_paxton_2026",
+      "district_id": "TX-SEN",
+      "name": "Ken Paxton",
+      "party": "R",
+      "incumbent": false,
+      "website": "",
+      "photo_url": ""
+    },
+    {
+      "candidate_id": "gas_jon_ossoff_2026",
+      "district_id": "GA-SEN",
+      "name": "Jon Ossoff",
+      "party": "D",
+      "incumbent": true,
+      "website": "",
+      "photo_url": ""
+    },
+    {
+      "candidate_id": "gas_brian_kemp_2026",
+      "district_id": "GA-SEN",
+      "name": "Brian Kemp",
+      "party": "R",
+      "incumbent": false,
+      "website": "",
+      "photo_url": ""
+    },
+    {
+      "candidate_id": "nhs_chris_pappas_2026",
+      "district_id": "NH-SEN",
+      "name": "Chris Pappas",
+      "party": "D",
+      "incumbent": false,
+      "website": "",
+      "photo_url": ""
+    },
+    {
+      "candidate_id": "nhs_don_bolduc_2026",
+      "district_id": "NH-SEN",
+      "name": "Don Bolduc",
+      "party": "R",
+      "incumbent": false,
+      "website": "",
+      "photo_url": ""
+    },
+    {
+      "candidate_id": "nes_dan_osborn_2026",
+      "district_id": "NE-SEN",
+      "name": "Dan Osborn",
+      "party": "I",
+      "incumbent": false,
+      "website": "",
+      "photo_url": ""
+    },
+    {
+      "candidate_id": "nes_pete_ricketts_2026",
+      "district_id": "NE-SEN",
+      "name": "Pete Ricketts",
+      "party": "R",
+      "incumbent": true,
+      "website": "",
+      "photo_url": ""
     }
   ]
 }
