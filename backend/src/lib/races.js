@@ -115,8 +115,10 @@ export function getRaceSummary(row, cycle, { includeNews = true } = {}) {
   const money = moneySummary(row.district_id, cycle);
   const candidates = candidateList(row.district_id, cycle);
   // Only genuinely in-play races get a movement arrow: within 10 points on
-  // either a polling average or the market spread.
+  // either a polling average or the market spread. The US Senate race is the
+  // marquee statewide contest, so it always carries its arrow.
   const inPlay =
+    row.race_type === 'us_senate' ||
     (polls.available && polls.margin != null && Math.abs(polls.margin) < 10) ||
     (markets.available && markets.dem_price != null && markets.rep_price != null &&
       Math.abs((markets.dem_price - markets.rep_price) * 100) < 10);
