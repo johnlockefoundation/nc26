@@ -51,17 +51,34 @@ function pollSummary(districtId, cycle) {
   };
 }
 
+// Signed change in a party spread (Dem - Rep, in cents) between two snapshots,
+// or null if either side lacks a value for that quote series.
+function spreadMove(curDem, curRep, prevDem, prevRep) {
+  if (curDem == null || curRep == null || prevDem == null || prevRep == null) return null;
+  return (curDem - curRep) * 100 - (prevDem - prevRep) * 100;
+}
+
 function marketWeeklyMove(districtId, cycle) {
-  const days = db.prepare(`SELECT as_of, dem_price, rep_price FROM market_snapshots
+  const days = db.prepare(`SELECT as_of, dem_price, rep_price, dem_bid_price, rep_bid_price
+    FROM market_snapshots
     WHERE district_id = ? AND election_cycle = ? AND provider = 'Kalshi'
     ORDER BY as_of DESC`).all(districtId, cycle);
   if (days.length < 2) return null;
-  const advCents = (r) => (r.dem_price - r.rep_price) * 100;
   const latest = days[0];
   const cutoff = new Date(`${latest.as_of}T00:00:00Z`);
   cutoff.setUTCDate(cutoff.getUTCDate() - 7);
   const prev = days.find((r) => r.as_of <= cutoff.toISOString().slice(0, 10)) || days[days.length - 1];
-  return marginDelta(advCents(latest), advCents(prev));
+  // A move can print in either the traded price or the live bid (a one-sided
+  // sweep moves the last trade while the bid sits; a wide book lets the bid
+  // collapse while the last trade goes stale). Use whichever side moved more.
+  const moves = [
+    spreadMove(latest.dem_price, latest.rep_price, prev.dem_price, prev.rep_price),
+    spreadMove(latest.dem_bid_price, latest.rep_bid_price, prev.dem_bid_price, prev.rep_bid_price),
+  ].filter((m) => m != null);
+  if (!moves.length) return null;
+  const move = moves.sort((a, b) => Math.abs(b) - Math.abs(a))[0];
+  if (Math.abs(move) < 0.05) return { party: 'EVEN', points: 0 };
+  return { party: move > 0 ? 'D' : 'R', points: +Math.abs(move).toFixed(1) };
 }
 
 function marketSummary(districtId, cycle) {

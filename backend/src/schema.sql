@@ -92,8 +92,10 @@ CREATE TABLE IF NOT EXISTS market_snapshots (
   election_cycle TEXT NOT NULL,
   provider       TEXT NOT NULL,
   as_of          TEXT NOT NULL,                -- ISO date (YYYY-MM-DD)
-  dem_price      REAL,                         -- cents per contract
+  dem_price      REAL,                         -- last traded price (0-1)
   rep_price      REAL,
+  dem_bid_price  REAL,                         -- live yes bid (0-1)
+  rep_bid_price  REAL,
   PRIMARY KEY (district_id, election_cycle, provider, as_of)
 );
 

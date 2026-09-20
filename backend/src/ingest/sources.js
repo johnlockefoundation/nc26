@@ -100,8 +100,8 @@ export function ingestKalshiFromSource(cycle = CYCLE) {
     (district_id, election_cycle, provider, dem_price, rep_price, advantage, updated_at, source_url, is_seed)
     VALUES (?, ?, 'Kalshi', ?, ?, ?, ?, ?, 0)`);
   const insSnap = db.prepare(`INSERT OR REPLACE INTO market_snapshots
-    (district_id, election_cycle, provider, as_of, dem_price, rep_price)
-    VALUES (?, ?, 'Kalshi', ?, ?, ?)`);
+    (district_id, election_cycle, provider, as_of, dem_price, rep_price, dem_bid_price, rep_bid_price)
+    VALUES (?, ?, 'Kalshi', ?, ?, ?, ?, ?)`);
   const asOf = String(data.updated_at || new Date().toISOString()).slice(0, 10);
   const prevAsOf = new Date(`${asOf}T00:00:00Z`);
   prevAsOf.setUTCDate(prevAsOf.getUTCDate() - 1);
@@ -113,13 +113,14 @@ export function ingestKalshiFromSource(cycle = CYCLE) {
     ins.run(m.district_id, cycle, m.dem_price ?? null, m.rep_price ?? null, adv,
       m.updated_at, m.source_url || '');
     if (m.dem_price != null && m.rep_price != null && asOf) {
-      insSnap.run(m.district_id, cycle, asOf, m.dem_price, m.rep_price);
+      insSnap.run(m.district_id, cycle, asOf, m.dem_price, m.rep_price, m.dem_bid_price ?? null, m.rep_bid_price ?? null);
     }
-    // Baseline from Kalshi's own prior-session quote (previous_yes_bid), so a
-    // genuine movement arrow appears from the first two fetches. Real daily
-    // closes replace the baseline as fresh snapshots arrive.
+    // Baseline from Kalshi's own prior-session quote (previous price / previous
+    // bid), so a genuine movement arrow appears from the first two fetches.
+    // Real daily closes replace the baseline as fresh snapshots arrive.
     if (m.dem_prev_price != null && m.rep_prev_price != null && prevAsOfStr) {
-      insSnap.run(m.district_id, cycle, prevAsOfStr, m.dem_prev_price, m.rep_prev_price);
+      insSnap.run(m.district_id, cycle, prevAsOfStr, m.dem_prev_price, m.rep_prev_price,
+        m.dem_prev_bid_price ?? null, m.rep_prev_bid_price ?? null);
     }
     n++;
   }

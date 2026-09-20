@@ -1,7 +1,9 @@
 // Fetch live 2026 Kalshi election prices for NC federal races and write the
 // normalized market drop consumed by:  node src/ingest/index.js kalshi
 //
-// Market data endpoints are public (no API key). Prices are read from the
+// Market data endpoints are public (no API key). Each market row captures
+// both the last traded price and the live yes bid (plus their prior-session
+// values), since a move can show up in either. Prices are read from the
 // market snapshot's _dollars fields (yes_bid_dollars / last_price_dollars);
 // if those are absent a mid-market estimate is derived from the public
 // orderbook's top of book.
@@ -81,14 +83,25 @@ function kalshiMarketUrl(districtId) {
   return `https://kalshi.com/markets/kxhouserace/house-race-winner/kxhouserace-nc${n.padStart(2, '0')}-26`;
 }
 
-// Prior-session quote used as a baseline for daily/weekly movement. Prefer the
-// previous last price, since that is the traded price we read for the current
-// snapshot and the price users see on kalshi.com.
+// Prior-session quote used as a baseline for daily/weekly movement. Captured
+// for both the traded price and the bid, since a move can show up in either
+// (a one-sided sweep moves the last trade while the bid stays put; a wide book
+// lets the bid collapse while the last trade goes stale).
 function prevDollars(market) {
   const raw =
     market.previous_price_dollars != null && market.previous_price_dollars !== ''
       ? market.previous_price_dollars
       : market.previous_yes_bid_dollars;
+  return raw != null && raw !== '' ? +raw : null;
+}
+
+function prevBidDollars(market) {
+  const raw = market.previous_yes_bid_dollars;
+  return raw != null && raw !== '' ? +raw : null;
+}
+
+function bidDollars(market) {
+  const raw = market.yes_bid_dollars;
   return raw != null && raw !== '' ? +raw : null;
 }
 
@@ -181,16 +194,24 @@ for (const districtId of districtIds) {
 
   const demo = dem ? clamp01(dem.dollars) : null;
   const repo = rep ? clamp01(rep.dollars) : null;
+  const demBid = clamp01(demM ? bidDollars(demM) : null);
+  const repBid = clamp01(repM ? bidDollars(repM) : null);
   const marketUrl = kalshiMarketUrl(districtId);
   const demPrev = dem?.prev != null ? clamp01(dem.prev) : null;
   const repPrev = rep?.prev != null ? clamp01(rep.prev) : null;
+  const demPrevBid = clamp01(demM ? prevBidDollars(demM) : null);
+  const repPrevBid = clamp01(repM ? prevBidDollars(repM) : null);
   markets.push({
     district_id: districtId,
     provider: 'Kalshi',
     dem_price: demo,
     rep_price: repo,
+    dem_bid_price: demBid,
+    rep_bid_price: repBid,
     dem_prev_price: demPrev,
     rep_prev_price: repPrev,
+    dem_prev_bid_price: demPrevBid,
+    rep_prev_bid_price: repPrevBid,
     updated_at,
     source_url: marketUrl,
   });

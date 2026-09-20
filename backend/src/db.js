@@ -22,6 +22,18 @@ export function initSchema() {
   if (!newsCols.some((c) => c.name === 'topic')) {
     db.exec(`ALTER TABLE news ADD COLUMN topic TEXT NOT NULL DEFAULT 'race'`);
   }
+  const hasSnap = db
+    .prepare(`SELECT name FROM sqlite_master WHERE type='table' AND name='market_snapshots'`)
+    .get();
+  if (hasSnap) {
+    const snapCols = db.prepare(`PRAGMA table_info(market_snapshots)`).all();
+    if (!snapCols.some((c) => c.name === 'dem_bid_price')) {
+      db.exec(`ALTER TABLE market_snapshots ADD COLUMN dem_bid_price REAL`);
+    }
+    if (!snapCols.some((c) => c.name === 'rep_bid_price')) {
+      db.exec(`ALTER TABLE market_snapshots ADD COLUMN rep_bid_price REAL`);
+    }
+  }
 }
 
 export function nowIso() {
