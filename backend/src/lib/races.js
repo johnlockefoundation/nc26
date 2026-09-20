@@ -60,8 +60,7 @@ function marketWeeklyMove(districtId, cycle) {
   const latest = days[0];
   const cutoff = new Date(`${latest.as_of}T00:00:00Z`);
   cutoff.setUTCDate(cutoff.getUTCDate() - 7);
-  const prev = days.find((r) => r.as_of <= cutoff.toISOString().slice(0, 10));
-  if (!prev) return null;
+  const prev = days.find((r) => r.as_of <= cutoff.toISOString().slice(0, 10)) || days[days.length - 1];
   return marginDelta(advCents(latest), advCents(prev));
 }
 

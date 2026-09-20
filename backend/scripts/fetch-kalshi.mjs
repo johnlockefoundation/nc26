@@ -180,11 +180,15 @@ for (const districtId of districtIds) {
   const demo = dem ? clamp01(dem.dollars) : null;
   const repo = rep ? clamp01(rep.dollars) : null;
   const marketUrl = kalshiMarketUrl(districtId);
+  const demPrev = dem?.prev != null ? clamp01(dem.prev) : null;
+  const repPrev = rep?.prev != null ? clamp01(rep.prev) : null;
   markets.push({
     district_id: districtId,
     provider: 'Kalshi',
     dem_price: demo,
     rep_price: repo,
+    dem_prev_price: demPrev,
+    rep_prev_price: repPrev,
     updated_at,
     source_url: marketUrl,
   });
