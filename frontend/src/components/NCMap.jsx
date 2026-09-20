@@ -115,9 +115,17 @@ export default function NCMap({ features, outline, races, selectedId, onSelect }
         interactive: true,
         onEachFeature: (_, layer) => {
           layer.options.title = f.district_id;
+          layer.on('click', () => onSelectRef.current(f.district_id));
+          layer.on('mouseover', () => {
+            if (f.district_id !== selectedRef.current) {
+              layer.setStyle({ ...(isComp ? raceStyle(f, race) : safeStyle()), weight: 1.8, color: '#f1f5f9' });
+            }
+          });
+          layer.on('mouseout', () => {
+            layer.setStyle(f.district_id === selectedRef.current ? selectedStyle(f, race) : (isComp ? raceStyle(f, race) : safeStyle()));
+          });
           if (!isComp) {
             const lean = safeLean(f.cpi);
-            layer.on('add', () => { if (layer._path) layer._path.style.cursor = 'default'; });
             if (lean) {
               layer.bindTooltip(`SAFE ${lean.party} +${lean.value}`, { sticky: true, offset: [0, -4], className: 'tip-adv tip-safe' });
             }
@@ -125,15 +133,6 @@ export default function NCMap({ features, outline, races, selectedId, onSelect }
           }
           const tip = tooltipFor(race);
           if (tip) layer.bindTooltip(tip.html, { sticky: true, offset: [0, -4], className: tip.className });
-          layer.on('click', () => onSelectRef.current(f.district_id));
-          layer.on('mouseover', () => {
-            if (f.district_id !== selectedRef.current) {
-              layer.setStyle({ ...raceStyle(f, race), weight: 1.8, color: '#f1f5f9' });
-            }
-          });
-          layer.on('mouseout', () => {
-            layer.setStyle(f.district_id === selectedRef.current ? selectedStyle() : raceStyle(f, race));
-          });
         },
       });
       layerRef.current.addLayer(geo);
@@ -175,15 +174,25 @@ export default function NCMap({ features, outline, races, selectedId, onSelect }
 
   // Highlight the selected district without rebuilding everything.
   useEffect(() => {
-    const prevLayer = selectedRef.current ? layersById.current.get(selectedRef.current) : null;
-    if (prevLayer) prevLayer.setStyle(raceStyle(featuresById.current.get(selectedRef.current), raceById.current.get(selectedRef.current)));
+    const prevId = selectedRef.current;
+    const prevLayer = prevId ? layersById.current.get(prevId) : null;
+    if (prevLayer) prevLayer.setStyle(selectedStyle(prevLayer));
     selectedRef.current = selectedId;
     const layer = selectedId ? layersById.current.get(selectedId) : null;
-    if (layer) layer.setStyle(selectedStyle());
+    if (layer) layer.setStyle(selectedStyle(layer));
   }, [selectedId, features, races]);
 
-  function selectedStyle() {
-    return { color: '#f8fafc', weight: 2.6, fillColor: colorFor(raceById.current.get(selectedRef.current)), fillOpacity: 0.95 };
+  function selectedStyle(layer) {
+    const id = layer ? layer.options.title : selectedRef.current;
+    const f = featuresById.current.get(id);
+    const race = raceById.current.get(id);
+    const isComp = f && f.competitive && race;
+    return {
+      color: '#f8fafc',
+      weight: 2.6,
+      fillColor: isComp ? colorFor(race) : '#475569',
+      fillOpacity: 0.95,
+    };
   }
 
   function fitToState(map) {

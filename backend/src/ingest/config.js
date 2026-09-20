@@ -60,6 +60,10 @@ export const GA_COMPETITIVE_RULE = {
   label: '2026 Civitas Partisan Index (toss-up or lean Republican)',
 };
 
+// Linked from the Civitas partisan breakdown shown for state races.
+export const CIVITAS_SOURCE_URL =
+  'https://www.johnlocke.org/9-14-election-data-dump-which-nc-general-assembly-districts-are-in-play/';
+
 // US House is outside the GA-only CPI; every district is tracked for the
 // cycle regardless of margin, which keeps the map and panels complete even
 // where polling/markets are sparse (they report honestly as unavailable).

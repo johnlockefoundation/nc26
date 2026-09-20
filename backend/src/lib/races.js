@@ -1,5 +1,6 @@
 import { db } from '../db.js';
 import { CYCLE } from '../ingest/config.js';
+import { CIVITAS_SOURCE_URL } from '../ingest/config.js';
 import { formatPollAdvantage, formatMarketAdvantage, formatMoney } from './format.js';
 
 const RACE_TYPE_META = {
@@ -140,8 +141,7 @@ function partisanSummary(row) {
     label: lean ? `${lean.party} +${lean.value}` : null,
     lean: row.partisan_lean || null,
     competitive: Boolean(row.competitive),
-    source: row.competitive_source || null,
-    reason: row.competitive_reason || null,
+    source_url: CIVITAS_SOURCE_URL,
   };
 }
 

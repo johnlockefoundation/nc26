@@ -19,7 +19,13 @@ export default function CivitasPartisan({ partisan }) {
 
   return (
     <section className="panel-section">
-      <h3>CIVITAS PARTISAN INDEX</h3>
+      <h3>
+        {partisan.source_url ? (
+          <a className="section-link" href={partisan.source_url} target="_blank" rel="noreferrer" title="Open 2026 Civitas Partisan Index">CIVITAS PARTISAN INDEX ↗</a>
+        ) : (
+          'CIVITAS PARTISAN INDEX'
+        )}
+      </h3>
 
       <div className="metric-value">
         <span className={partyCls}>{partisan.label}</span>
@@ -40,9 +46,6 @@ export default function CivitasPartisan({ partisan }) {
           <span>REP</span>
         </div>
       </div>
-
-      {partisan.reason && <div className="profile-line dim">{partisan.reason}</div>}
-      {partisan.source && <div className="profile-source dim">Source: {partisan.source}</div>}
     </section>
   );
 }
