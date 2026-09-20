@@ -54,6 +54,15 @@ function pathCenter(f) {
   return bounds.isValid() ? bounds.getCenter() : null;
 }
 
+// The US Senate is a statewide race drawn with the full state outline, so its
+// bounding-box center lands south of the map's visual center. Anchor it near
+// Asheboro, the geographic heart of the state.
+const SENATE_ANCHOR = L.latLng(35.71, -79.81);
+
+function anchorFor(f) {
+  return f.district_id === 'NC-SEN' ? SENATE_ANCHOR : pathCenter(f);
+}
+
 export default function NCMap({ features, outline, races, selectedId, onSelect }) {
   const containerRef = useRef(null);
   const mapRef = useRef(null);
@@ -138,11 +147,13 @@ export default function NCMap({ features, outline, races, selectedId, onSelect }
       layerRef.current.addLayer(geo);
       layersById.current.set(f.district_id, geo);
 
-      if (pathCenter(f)) {
+      const center = anchorFor(f);
+      if (center) {
         const race = isComp ? raceById.current.get(f.district_id) : null;
         const delta = race?.markets?.delta;
         const hasArrow = Boolean(delta && delta.party && delta.party !== 'EVEN');
-        const label = L.marker(pathCenter(f), {
+        const isSenate = f.district_id === 'NC-SEN';
+        const label = L.marker(center, {
           interactive: false,
           icon: L.divIcon({
             className: isComp ? 'district-divlabel' : 'district-divlabel district-divlabel-safe',
@@ -155,13 +166,14 @@ export default function NCMap({ features, outline, races, selectedId, onSelect }
         if (hasArrow) {
           const dirCls = delta.party === 'D' ? 'arrow-d' : 'arrow-r';
           const glyph = delta.party === 'D' ? '↖' : '↗';
-          const arrowMark = L.marker(pathCenter(f), {
+          const size = isSenate ? 64 : 46;
+          const arrowMark = L.marker(center, {
             interactive: false,
             icon: L.divIcon({
               className: 'district-arrow-marker',
-              html: `<span class="map-arrow ${dirCls}">${glyph}</span>`,
-              iconSize: [46, 46],
-              iconAnchor: [23, 23],
+              html: `<span class="map-arrow ${dirCls}${isSenate ? ' map-arrow-senate' : ''}">${glyph}</span>`,
+              iconSize: [size, size],
+              iconAnchor: [size / 2, size / 2],
             }),
           });
           labelsRef.current.addLayer(arrowMark);
