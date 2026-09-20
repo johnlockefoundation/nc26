@@ -82,24 +82,26 @@ function kalshiMarketUrl(districtId) {
 }
 
 // Prior-session quote used as a baseline for daily/weekly movement. Prefer the
-// previous bid (comparable to the yes_bid we read for the current price).
+// previous last price, since that is the traded price we read for the current
+// snapshot and the price users see on kalshi.com.
 function prevDollars(market) {
   const raw =
-    market.previous_yes_bid_dollars != null && market.previous_yes_bid_dollars !== ''
-      ? market.previous_yes_bid_dollars
-      : market.previous_price_dollars;
+    market.previous_price_dollars != null && market.previous_price_dollars !== ''
+      ? market.previous_price_dollars
+      : market.previous_yes_bid_dollars;
   return raw != null && raw !== '' ? +raw : null;
 }
 
 // Prices are returned as _dollars-suffixed string fields (e.g. "0.6000", scale
-// 0–1); prefer the best bid, then the last trade. Falls back to a mid-market
-// estimate from the public orderbook top of book.
+// 0–1). Prefer the last traded price (what kalshi.com shows and what moves),
+// then the best bid; falls back to a mid-market estimate from the public
+// orderbook top of book.
 async function snapshotPrice(market) {
   const raw =
-    market.yes_bid_dollars != null && market.yes_bid_dollars !== ''
-      ? market.yes_bid_dollars
-      : market.last_price_dollars != null && market.last_price_dollars !== ''
-        ? market.last_price_dollars
+    market.last_price_dollars != null && market.last_price_dollars !== ''
+      ? market.last_price_dollars
+      : market.yes_bid_dollars != null && market.yes_bid_dollars !== ''
+        ? market.yes_bid_dollars
         : market.yes_ask_dollars;
   if (raw != null && raw !== '') return { dollars: +raw, source: 'snapshot', prev: prevDollars(market) };
   const orderbook = await kal(`/markets/${market.ticker}/orderbook`).catch(() => null);
