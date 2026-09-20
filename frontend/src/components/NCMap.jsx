@@ -122,7 +122,7 @@ export default function NCMap({ features, outline, races, selectedId, onSelect }
             }
           });
           layer.on('mouseout', () => {
-            layer.setStyle(f.district_id === selectedRef.current ? selectedStyle(f, race) : (isComp ? raceStyle(f, race) : safeStyle()));
+            layer.setStyle(f.district_id === selectedRef.current ? selectedStyle(f.district_id) : (isComp ? raceStyle(f, race) : safeStyle()));
           });
           if (!isComp) {
             const lean = safeLean(f.cpi);
@@ -176,16 +176,15 @@ export default function NCMap({ features, outline, races, selectedId, onSelect }
   useEffect(() => {
     const prevId = selectedRef.current;
     const prevLayer = prevId ? layersById.current.get(prevId) : null;
-    if (prevLayer) prevLayer.setStyle(selectedStyle(prevLayer));
+    if (prevLayer) prevLayer.setStyle(selectedStyle(prevId));
     selectedRef.current = selectedId;
     const layer = selectedId ? layersById.current.get(selectedId) : null;
-    if (layer) layer.setStyle(selectedStyle(layer));
+    if (layer) layer.setStyle(selectedStyle(selectedId));
   }, [selectedId, features, races]);
 
-  function selectedStyle(layer) {
-    const id = layer ? layer.options.title : selectedRef.current;
-    const f = featuresById.current.get(id);
-    const race = raceById.current.get(id);
+  function selectedStyle(districtId) {
+    const f = featuresById.current.get(districtId);
+    const race = raceById.current.get(districtId);
     const isComp = f && f.competitive && race;
     return {
       color: '#f8fafc',
