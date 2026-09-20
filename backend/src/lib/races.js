@@ -126,11 +126,31 @@ function districtRow(districtId, cycle) {
   return db.prepare(`SELECT * FROM districts WHERE district_id = ? AND election_cycle = ?`).get(districtId, cycle);
 }
 
+// Civitas partisan index for a district: the signed party lean (e.g. "R+8"),
+// its rating bucket (Safe / Likely / Lean / Toss-up) and whether the cycle
+// designates the race as competitive. This is the primary in-play signal for
+// state legislative races, which have no polling or market coverage.
+function partisanSummary(row) {
+  const m = /^([DR])\+(\d+)$/.exec(String(row.cpi_value || '').trim());
+  const lean = m ? { party: m[1], value: +m[2] } : null;
+  return {
+    available: Boolean(lean),
+    party: lean ? lean.party : null,
+    value: lean ? lean.value : null,
+    label: lean ? `${lean.party} +${lean.value}` : null,
+    lean: row.partisan_lean || null,
+    competitive: Boolean(row.competitive),
+    source: row.competitive_source || null,
+    reason: row.competitive_reason || null,
+  };
+}
+
 export function getRaceSummary(row, cycle, { includeNews = true } = {}) {
   const polls = pollSummary(row.district_id, cycle);
   const markets = marketSummary(row.district_id, cycle);
   const money = moneySummary(row.district_id, cycle);
   const candidates = candidateList(row.district_id, cycle);
+  const partisan = partisanSummary(row);
   // Only genuinely in-play races get a movement arrow: within 10 points on
   // either a polling average or the market spread. The US Senate race is the
   // marquee statewide contest, so it always carries its arrow.
@@ -151,6 +171,7 @@ export function getRaceSummary(row, cycle, { includeNews = true } = {}) {
     competitive_source: row.competitive_source,
     competitive_reason: row.competitive_reason,
     candidates,
+    partisan,
     polls,
     markets,
     money,

@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { signalColor, primarySignal } from '../lib/colors.js';
+import { partyColor, primarySignal } from '../lib/colors.js';
 import { BASEMAP_URL, BASEMAP_ATTR, MAP_MIN_ZOOM, MAP_MAX_ZOOM, MAP_BOUNDS } from '../lib/map.js';
 
 function shortLabel(districtId) {
@@ -15,7 +15,7 @@ function matchupText(candidates) {
 }
 
 function colorFor(race) {
-  return signalColor(primarySignal(race));
+  return partyColor(primarySignal(race)?.advantage?.party);
 }
 
 function safeLean(cpi) {
@@ -26,7 +26,7 @@ function safeLean(cpi) {
 }
 
 function safeStyle() {
-  return { color: '#3d516e', weight: 0.7, fillColor: '#1c2942', fillOpacity: 0.55 };
+  return { color: '#3d516e', weight: 0.7, fillColor: '#475569', fillOpacity: 0.4 };
 }
 
 function raceStyle(f, race) {

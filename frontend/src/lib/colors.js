@@ -22,9 +22,17 @@ export function advantageColor(adv) {
   return m > 0 ? mix('#dbeafe', '#1d4ed8', t) : mix('#fee2e2', '#b91c1c', t);
 }
 
+// Solid party fill for competitive districts: blue for a D lean, red for an R
+// lean, neutral gray when the signal is unavailable.
+export function partyColor(party) {
+  if (party === 'D') return '#1d4ed8';
+  if (party === 'R') return '#b91c1c';
+  return '#e2e8f0';
+}
+
 // Color a race from its primary signal, scaled in each metric's own units so a
 // money-only district is not painted the same saturated hue as a blowout poll.
-const SCALES = { POLLS: 10, MARKETS: 35, MONEY: 1500000 };
+const SCALES = { POLLS: 10, MARKETS: 35, MONEY: 1500000, PARTISAN: 15 };
 
 export function signalColor(sig) {
   if (!sig || !sig.advantage || !(sig.advantage.value > 0)) return '#e2e8f0';
@@ -33,11 +41,14 @@ export function signalColor(sig) {
   return sig.advantage.party === 'D' ? mix('#dbeafe', '#1d4ed8', t) : mix('#fee2e2', '#b91c1c', t);
 }
 
-// Primary signal for a race: polls -> markets -> money.
+// Primary signal for a race: polls -> markets -> money -> civitas partisan lean.
 export function primarySignal(race) {
   if (race?.polls?.available) return { metric: 'POLLS', advantage: race.polls.advantage, value: race.polls.margin };
   if (race?.markets?.available) return { metric: 'MARKETS', advantage: race.markets.advantage, value: race.markets.advantage?.value ?? null };
   if (race?.money?.available) return { metric: 'MONEY', advantage: race.money.advantage, value: race.money.advantage?.value ?? null };
+  if (race?.partisan?.available) {
+    return { metric: 'PARTISAN', advantage: { party: race.partisan.party, label: race.partisan.label, value: race.partisan.value }, value: race.partisan.value };
+  }
   return { metric: null, advantage: null, value: null };
 }
 

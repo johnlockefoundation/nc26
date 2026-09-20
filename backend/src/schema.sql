@@ -15,7 +15,9 @@ CREATE TABLE IF NOT EXISTS districts (
   competitive        INTEGER NOT NULL DEFAULT 0,
   competitive_source TEXT,
   competitive_reason TEXT,
-  cpi_value          TEXT,                   -- internal use only, e.g. D+2 / R+0
+  cpi_value          TEXT,                   -- e.g. D+2 / R+0 (signed party lean magnitude)
+  partisan_lean      TEXT,                   -- Civitas rating bucket: Safe | Likely | Lean | Toss-up
+  partisan_party     TEXT,                   -- Civitas lean party: D | R
   PRIMARY KEY (district_id, election_cycle)
 );
 

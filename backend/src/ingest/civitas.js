@@ -18,10 +18,10 @@ export function ingestCivitas(cycle = CYCLE) {
     (candidate_id, district_id, election_cycle, name, party, incumbent, website)
     VALUES (?, ?, ?, ?, ?, ?, '')`);
   const updDistrict = db.prepare(
-    `UPDATE districts SET competitive = ?, competitive_source = ?, competitive_reason = ?, cpi_value = ? WHERE district_id = ? AND election_cycle = ?`
+    `UPDATE districts SET competitive = ?, competitive_source = ?, competitive_reason = ?, cpi_value = ?, partisan_lean = ?, partisan_party = ? WHERE district_id = ? AND election_cycle = ?`
   );
   const updCpi = db.prepare(
-    `UPDATE districts SET cpi_value = ? WHERE district_id = ? AND election_cycle = ?`
+    `UPDATE districts SET cpi_value = ?, partisan_lean = ?, partisan_party = ? WHERE district_id = ? AND election_cycle = ?`
   );
 
   let candidates = 0;
@@ -49,7 +49,7 @@ export function ingestCivitas(cycle = CYCLE) {
     const reason = override
       ? override.reason
       : `${rec.rating} (${rec.cpi}) per the ${GA_COMPETITIVE_RULE.label}.`;
-    updDistrict.run(isComp ? 1 : 0, source, reason, rec.cpi, districtId, cycle);
+    updDistrict.run(isComp ? 1 : 0, source, reason, rec.cpi, rec.rating_lean, rec.rating_party, districtId, cycle);
     if (isComp) competitive++;
   };
 
@@ -59,7 +59,7 @@ export function ingestCivitas(cycle = CYCLE) {
   let congressCpi = 0;
   for (const rec of data.congress || []) {
     const districtId = `NC-${String(rec.district_number).padStart(2, '0')}`;
-    updCpi.run(rec.cpi ?? null, districtId, cycle);
+    updCpi.run(rec.cpi ?? null, rec.rating_lean, rec.rating_party, districtId, cycle);
     congressCpi++;
   }
 

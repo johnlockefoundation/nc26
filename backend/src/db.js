@@ -34,6 +34,13 @@ export function initSchema() {
       db.exec(`ALTER TABLE market_snapshots ADD COLUMN rep_bid_price REAL`);
     }
   }
+  const distCols = db.prepare(`PRAGMA table_info(districts)`).all();
+  if (!distCols.some((c) => c.name === 'partisan_lean')) {
+    db.exec(`ALTER TABLE districts ADD COLUMN partisan_lean TEXT`);
+  }
+  if (!distCols.some((c) => c.name === 'partisan_party')) {
+    db.exec(`ALTER TABLE districts ADD COLUMN partisan_party TEXT`);
+  }
 }
 
 export function nowIso() {

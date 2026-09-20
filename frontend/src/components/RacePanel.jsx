@@ -1,5 +1,6 @@
 import MetricBlock from './MetricBlock.jsx';
 import DistrictProfile from './DistrictProfile.jsx';
+import CivitasPartisan from './CivitasPartisan.jsx';
 
 function initials(name) {
   return name.split(/\s+/).filter(Boolean).slice(0, 2).map((w) => w[0].toUpperCase()).join('');
@@ -38,19 +39,24 @@ export default function RacePanel({ race, loading }) {
   const polls = race.polls || {};
   const markets = race.markets || {};
   const moneyS = race.money || {};
+  const isStateRace = race.race_type === 'state_senate' || race.race_type === 'state_house';
 
   return (
     <aside className="panel">
       <h2 className="panel-title">{race.title}</h2>
       <CandidateCards candidates={race.candidates} />
 
-      <div className="metrics">
-        <MetricBlock title="POLLS" emptyText="NO POLLING" summary={polls} />
-        <MetricBlock title="MARKETS" emptyText="NO MARKET" summary={markets} delta={markets.delta} />
-        <MetricBlock title="MONEY" emptyText="NO MONEY" summary={moneyS} />
-      </div>
+      {isStateRace ? (
+        <CivitasPartisan partisan={race.partisan} />
+      ) : (
+        <div className="metrics">
+          <MetricBlock title="POLLS" emptyText="NO POLLING" summary={polls} />
+          <MetricBlock title="MARKETS" emptyText="NO MARKET" summary={markets} delta={markets.delta} />
+          <MetricBlock title="MONEY" emptyText="NO MONEY" summary={moneyS} />
+        </div>
+      )}
 
-      <DistrictProfile profile={race.profile} />
+      {!isStateRace && <DistrictProfile profile={race.profile} />}
     </aside>
   );
 }

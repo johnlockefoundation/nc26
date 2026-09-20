@@ -245,6 +245,10 @@ a { color: var(--accent); }
 .metric-arrow.move-r { color: #f87171; }
 @keyframes arrow-live { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.35; transform: scale(0.92); } }
 
+/* Civitas partisan index (state races without poll/market coverage) */
+.partisan-rating { display: inline-block; margin-left: 10px; font-size: 13px; font-weight: 700; letter-spacing: 0.1em; color: var(--muted); vertical-align: 2px; }
+.partisan-inplay { display: inline-block; margin-left: 10px; font-size: 11px; font-weight: 800; letter-spacing: 0.14em; color: #fbbf24; vertical-align: 3px; }
+
 /* Sections */
 .panel-section { margin-top: 18px; }
 .panel-section h3 { font-family: var(--font-display); font-size: 11px; letter-spacing: 0.14em; color: var(--muted); margin: 0 0 8px; }
