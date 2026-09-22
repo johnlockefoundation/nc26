@@ -48,8 +48,25 @@ function tooltipFor(race) {
   return { html, className: `tip-adv tip-${party}` };
 }
 
-function geometryFeature(f) {
-  return { type: 'Feature', properties: {}, geometry: f.geometry };
+function geometryFeature(f, transform) {
+  return { type: 'Feature', properties: {}, geometry: transform ? transformCoords(f.geometry, transform) : f.geometry };
+}
+
+// Re-map GeoJSON coordinates through an affine function, used to shrink Alaska
+// into its Pacific inset on the Senate map (see insetTransformFor).
+function transformCoords(geometry, fn) {
+  if (!geometry) return geometry;
+  if (geometry.type === 'Polygon') {
+    return { ...geometry, coordinates: geometry.coordinates.map((ring) => ring.map(([lon, lat]) => fn(lon, lat))) };
+  }
+  if (geometry.type === 'MultiPolygon') {
+    return {
+      ...geometry,
+      coordinates: geometry.coordinates.map((poly) =>
+        poly.map((ring) => ring.map(([lon, lat]) => fn(lon, lat)))),
+    };
+  }
+  return geometry;
 }
 
 function pathCenter(f) {
@@ -73,9 +90,33 @@ const SENATE_ANCHORS = {
   'NE-SEN': L.latLng(41.5, -99.7),
 };
 
-function anchorFor(f) {
-  return SENATE_ANCHORS[f.district_id] || pathCenter(f);
+function anchorFor(f, transform) {
+  const base = SENATE_ANCHORS[f.district_id] || pathCenter(f);
+  return transform ? transform(base) : base;
 }
+
+// Alaska (AK-SEN) is the one Senate battleground web Mercator bloats beyond
+// reason: at sea level its polygon stretches far up the page and pushes the
+// other states aside. Shrink it into a compact box floating in the Pacific and
+// leave the view fit to CONUS, which the map bounds in map.js already assume.
+function insetTransformFor(feature) {
+  const src = L.geoJSON(geometryFeature(feature)).getBounds();
+  if (!src.isValid()) return null;
+  return {
+    coords: (lon, lat) => [
+      AK_INSET_WEST + (lon - src.getWest()) * AK_INSET_SCALE,
+      AK_INSET_SOUTH + (lat - src.getSouth()) * AK_INSET_SCALE,
+    ],
+    latLng: (p) => L.latLng(
+      AK_INSET_SOUTH + (p.lat - src.getSouth()) * AK_INSET_SCALE,
+      AK_INSET_WEST + (p.lng - src.getWest()) * AK_INSET_SCALE,
+    ),
+  };
+}
+
+const AK_INSET_WEST = -133;
+const AK_INSET_SOUTH = 7;
+const AK_INSET_SCALE = 0.42;
 
 export default function NCMap({ features, outline, races, selectedId, onSelect, raceType }) {
   const containerRef = useRef(null);
@@ -143,8 +184,9 @@ export default function NCMap({ features, outline, races, selectedId, onSelect, 
     for (const f of features || []) {
       const race = raceById.current.get(f.district_id);
       const isComp = f.competitive && race;
+      const inset = f.district_id === 'AK-SEN' ? insetTransformFor(f) : null;
 
-      const geo = L.geoJSON(geometryFeature(f), {
+      const geo = L.geoJSON(geometryFeature(f, inset?.coords), {
         style: isComp ? raceStyle(f, race) : safeStyle(),
         interactive: true,
         onEachFeature: (_, layer) => {
@@ -172,7 +214,7 @@ export default function NCMap({ features, outline, races, selectedId, onSelect, 
       layerRef.current.addLayer(geo);
       layersById.current.set(f.district_id, geo);
 
-      const center = anchorFor(f);
+      const center = anchorFor(f, inset?.latLng);
       if (center) {
         const race = isComp ? raceById.current.get(f.district_id) : null;
         const delta = race?.markets?.delta;
