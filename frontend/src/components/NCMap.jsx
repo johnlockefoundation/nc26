@@ -232,13 +232,16 @@ export default function NCMap({ features, outline, races, selectedId, onSelect, 
         labelsRef.current.addLayer(label);
         if (hasArrow) {
           const dirCls = delta.party === 'D' ? 'arrow-d' : 'arrow-r';
-          const glyph = delta.party === 'D' ? '↖' : '↗';
           const size = isSenate ? 64 : 46;
           const arrowMark = L.marker(center, {
             interactive: false,
             icon: L.divIcon({
               className: 'district-arrow-marker',
-              html: `<span class="map-arrow ${dirCls}${isSenate ? ' map-arrow-senate' : ''}">${glyph}</span>`,
+              html: `<span class="map-ping ${dirCls}${isSenate ? ' map-ping-senate' : ''}">
+                <span class="ping-dot"></span>
+                <span class="ping-ring"></span>
+                <span class="ping-ring ping-ring-delay"></span>
+              </span>`,
               iconSize: [size, size],
               iconAnchor: [size / 2, size / 2],
             }),
