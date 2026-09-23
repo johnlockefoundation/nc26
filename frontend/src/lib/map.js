@@ -25,6 +25,8 @@ export const SENATE_BOUNDS = [[4.5, -137.0], [51.0, -63.5]];
 // to SENATE_FIT_BOUNDS, so this is just a pre-fit placeholder.
 export const SENATE_VIEW = { center: [37.0, -100.0], zoom: 4 };
 
-// Fit target for the Senate tab: the battleground states across the continent
-// plus Alaska's relocated Pacific inset.
-export const SENATE_FIT_BOUNDS = [[6.5, -133.5], [49.6, -65.8]];
+// Fit target for the Senate tab: every in-play seat except Alaska lies east of
+// ~-107 degrees lon (Texas panhandle to Maine), so the initial view zooms into
+// the eastern half of the country instead of the whole continent. Alaska stays
+// reachable via its Pacific inset by dragging within SENATE_BOUNDS.
+export const SENATE_FIT_BOUNDS = [[24.0, -110.5], [49.2, -64.8]];
