@@ -233,15 +233,22 @@ export default function NCMap({ features, outline, races, selectedId, onSelect, 
         if (hasArrow) {
           const dirCls = delta.party === 'D' ? 'arrow-d' : 'arrow-r';
           const size = isSenate ? 64 : 46;
+          // Dot coordinates forming an upward arrow; the container rotates it
+          // toward the movement direction (D = up-left, R = up-right).
+          const dots = [
+            [0, -10],          // tip
+            [-5, -4], [0, -4], [5, -4],  // head crossbar
+            [0, 2],            // shaft
+            [0, 8],            // shaft
+          ];
+          const dotHtml = dots
+            .map(([x, y]) => `<span class="ad" style="transform:translate(${x}px,${y}px)"></span>`)
+            .join('');
           const arrowMark = L.marker(center, {
             interactive: false,
             icon: L.divIcon({
               className: 'district-arrow-marker',
-              html: `<span class="map-ping ${dirCls}${isSenate ? ' map-ping-senate' : ''}">
-                <span class="ping-dot"></span>
-                <span class="ping-ring"></span>
-                <span class="ping-ring ping-ring-delay"></span>
-              </span>`,
+              html: `<span class="map-arrow-dots ${dirCls}${isSenate ? ' map-arrow-dots-senate' : ''}">${dotHtml}</span>`,
               iconSize: [size, size],
               iconAnchor: [size / 2, size / 2],
             }),
