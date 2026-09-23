@@ -123,15 +123,23 @@ a { color: var(--accent); }
 /* Map toolbar */
 .map-toolbar { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; }
 
-/* Mini odometer gauges */
-.mini-gauge { width: 106px; }
+/* Mini odometer gauges (header barometers double as map race-type tabs) */
+.mini-gauge {
+  width: 106px;
+  border: 0; background: transparent; padding: 6px; border-radius: 9px;
+  font: inherit; color: inherit; cursor: pointer; text-align: inherit;
+  display: flex; flex-direction: column;
+}
+.mini-gauge:hover { background: #16223a; }
+.mini-gauge.active { background: #22334d; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25); }
+.mini-gauge:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
 .mini-gauge svg { display: block; }
-.mini-gauge-meta { display: flex; align-items: baseline; justify-content: space-between; gap: 6px; margin-top: 1px; }
+.mini-gauge-meta { display: flex; align-items: baseline; justify-content: space-between; gap: 6px; margin-top: 1px; width: 100%; }
 .gauge-name { font-family: var(--font-display); font-size: 8px; letter-spacing: 0.12em; font-weight: 700; color: var(--muted); white-space: nowrap; }
 .gauge-lead { font-family: var(--font-display); font-size: 10.5px; font-weight: 700; letter-spacing: -0.01em; white-space: nowrap; }
 .gauge-lead.lead-r { color: var(--r); }
 .gauge-lead.lead-d { color: var(--d); }
-.gauge-outcome { margin-top: 3px; font-family: var(--font-display); font-size: 8.5px; font-weight: 800; letter-spacing: 0.09em; text-align: center; background: #0c1524; border: 1px solid var(--line); border-radius: 6px; padding: 2px 0; }
+.gauge-outcome { display: block; width: 100%; margin-top: 3px; font-family: var(--font-display); font-size: 8.5px; font-weight: 800; letter-spacing: 0.09em; text-align: center; background: #0c1524; border: 1px solid var(--line); border-radius: 6px; padding: 2px 0; }
 .gauge-outcome.outcome-d { color: var(--d); border-color: rgba(59, 130, 246, 0.4); background: rgba(29, 78, 216, 0.12); }
 .gauge-outcome.outcome-r { color: var(--r); border-color: rgba(239, 68, 68, 0.4); background: rgba(185, 28, 28, 0.12); }
 .gauge-outcome.outcome-t { color: #cbd5e1; border-color: rgba(148, 163, 184, 0.35); background: rgba(51, 65, 85, 0.25); }

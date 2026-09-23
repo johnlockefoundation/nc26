@@ -60,8 +60,8 @@ export default function App() {
         <div className="gauge-cluster gauge-left">
           <div className="gauge-cluster-title">Raleigh</div>
           <div className="gauge-row">
-            <MiniGauge outlook={meta?.nc_senate_outlook} label="NC SENATE" />
-            <MiniGauge outlook={meta?.nc_house_outlook} label="NC HOUSE" />
+            <MiniGauge outlook={meta?.nc_senate_outlook} label="NC SENATE" raceType="state_senate" active={raceType === 'state_senate'} onSelect={setRaceType} />
+            <MiniGauge outlook={meta?.nc_house_outlook} label="NC HOUSE" raceType="state_house" active={raceType === 'state_house'} onSelect={setRaceType} />
           </div>
         </div>
         <h1 className="brand-title" aria-label="Tarheel Tracker">
@@ -71,8 +71,8 @@ export default function App() {
         <div className="gauge-cluster gauge-right">
           <div className="gauge-cluster-title">Washington</div>
           <div className="gauge-row">
-            <MiniGauge outlook={meta?.house_outlook} label="U.S. HOUSE" />
-            <MiniGauge outlook={meta?.senate_outlook} label="U.S. SENATE" />
+            <MiniGauge outlook={meta?.house_outlook} label="U.S. HOUSE" raceType="us_house" active={raceType === 'us_house'} onSelect={setRaceType} />
+            <MiniGauge outlook={meta?.senate_outlook} label="U.S. SENATE" raceType="us_senate" active={raceType === 'us_senate'} onSelect={setRaceType} />
           </div>
         </div>
       </header>

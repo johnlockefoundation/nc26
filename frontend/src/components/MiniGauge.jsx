@@ -21,7 +21,7 @@ function angleFor(seats, total) {
   return 180 + Math.min(1, Math.max(0, frac)) * 180;
 }
 
-export default function MiniGauge({ outlook, label }) {
+export default function MiniGauge({ outlook, label, raceType, active = false, onSelect }) {
   if (!outlook) return null;
   const { dem, rep, tossup = 0, threshold, total, today, source } = outlook;
 
@@ -48,7 +48,14 @@ export default function MiniGauge({ outlook, label }) {
   const thrTop = pt(thrAngle, R - 13);
 
   return (
-    <div className="mini-gauge" title={`${label} — today ${todayDem}D/${todayRep}R, projection ${dem}D · ${rep}R${tossup ? ` · ${tossup} T` : ''} (${threshold} for majority). Gain vs today: ${gainLabel}. ${outcome}. ${source}`}>
+    <button
+      type="button"
+      role="tab"
+      aria-selected={active}
+      className={`mini-gauge${active ? ' active' : ''}`}
+      title={`${label} — today ${todayDem}D/${todayRep}R, projection ${dem}D · ${rep}R${tossup ? ` · ${tossup} T` : ''} (${threshold} for majority). Gain vs today: ${gainLabel}. ${outcome}. ${source}`}
+      onClick={() => onSelect?.(raceType)}
+    >
       <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label={`${label}: ${outcome}${!isToss && gainParty !== 'EVEN' ? `, ${gainLabel} vs today` : ''}`}>
         <path d={arcPath(180, 360)} fill="none" stroke="#16223a" strokeWidth={10} strokeLinecap="round" />
         <path d={arcPath(180, thrAngle)} fill="none" stroke="#b91c1c" strokeWidth={10} opacity={0.55} strokeLinecap="round" />
@@ -57,11 +64,11 @@ export default function MiniGauge({ outlook, label }) {
         <line x1={base.x} y1={base.y} x2={tip.x} y2={tip.y} stroke="#e2e8f0" strokeWidth={2.5} strokeLinecap="round" />
         <circle cx={CX} cy={CY} r={3.5} fill="#e2e8f0" />
       </svg>
-      <div className="mini-gauge-meta">
+      <span className="mini-gauge-meta">
         <span className="gauge-name">{label}</span>
         {!isToss && <span className={`gauge-lead ${gainCls}`}>{gainLabel}</span>}
-      </div>
-      <div className={`gauge-outcome ${outcomeCls}`}>{outcome}</div>
-    </div>
+      </span>
+      <span className={`gauge-outcome ${outcomeCls}`}>{outcome}</span>
+    </button>
   );
 }
