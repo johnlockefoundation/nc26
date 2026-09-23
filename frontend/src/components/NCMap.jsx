@@ -258,7 +258,11 @@ export default function NCMap({ features, outline, races, selectedId, onSelect, 
   useEffect(() => {
     const prevId = selectedRef.current;
     const prevLayer = prevId ? layersById.current.get(prevId) : null;
-    if (prevLayer) prevLayer.setStyle(selectedStyle(prevId));
+    if (prevLayer) {
+      const f = featuresById.current.get(prevId);
+      const race = raceById.current.get(prevId);
+      prevLayer.setStyle(f && f.competitive && race ? raceStyle(f, race) : safeStyle());
+    }
     selectedRef.current = selectedId;
     const layer = selectedId ? layersById.current.get(selectedId) : null;
     if (layer) layer.setStyle(selectedStyle(selectedId));
