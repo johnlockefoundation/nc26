@@ -232,29 +232,13 @@ export default function NCMap({ features, outline, races, selectedId, onSelect, 
         labelsRef.current.addLayer(label);
         if (hasArrow) {
           const dirCls = delta.party === 'D' ? 'arrow-d' : 'arrow-r';
+          const glyph = delta.party === 'D' ? '↖' : '↗';
           const size = isSenate ? 64 : 46;
-          // Dots forming an upward arrow, ordered tail -> tip. Each dot delays
-          // its brightening STEP later than the one before it, so the glow
-          // travels toward the point like a charging pulse.
-          const STEP = 0.45;
-          const dots = [
-            { x: 0, y: 7, i: 0 },   // shaft base (tail)
-            { x: 0, y: 3, i: 1 },   // shaft
-            { x: 0, y: -1, i: 2 },  // shaft top
-            { x: -5, y: -4, i: 3 }, // head wing L
-            { x: 5, y: -4, i: 4 },  // head wing R
-            { x: 0, y: -9, i: 5 },  // tip
-          ];
-          const period = (dots.length * STEP).toFixed(2);
-          const dotHtml = dots
-            .map(({ x, y, i }) =>
-              `<span class="ad" style="transform:translate(${x}px,${y}px);animation-duration:${period}s;animation-delay:${(i * STEP).toFixed(2)}s"></span>`)
-            .join('');
           const arrowMark = L.marker(center, {
             interactive: false,
             icon: L.divIcon({
               className: 'district-arrow-marker',
-              html: `<span class="map-arrow-dots ${dirCls}${isSenate ? ' map-arrow-dots-senate' : ''}">${dotHtml}</span>`,
+              html: `<span class="map-arrow ${dirCls}${isSenate ? ' map-arrow-senate' : ''}">${glyph}</span>`,
               iconSize: [size, size],
               iconAnchor: [size / 2, size / 2],
             }),
