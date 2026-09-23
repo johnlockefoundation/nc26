@@ -189,13 +189,17 @@ a { color: var(--accent); }
 .map-arrow-dots.arrow-r { color: #f87171; transform: rotate(45deg); }
 .map-arrow-dots .ad {
   position: absolute; left: 50%; top: 50%; width: 6px; height: 6px; margin: -3px 0 0 -3px;
-  border-radius: 50%; background: currentColor; opacity: 0.3;
-  animation: ad-brighten 1.9s ease-in-out infinite;
+  border-radius: 50%; background: currentColor; opacity: 0.22;
+  animation-name: ad-brighten;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
 }
 .map-arrow-dots-senate .ad { width: 7px; height: 7px; margin: -3.5px 0 0 -3.5px; }
 @keyframes ad-brighten {
-  0%, 100% { opacity: 0.22; box-shadow: 0 0 2px currentColor; }
-  50% { opacity: 1; box-shadow: 0 0 8px currentColor, 0 0 16px currentColor; }
+  0% { opacity: 0.22; box-shadow: 0 0 2px currentColor; }
+  12% { opacity: 1; box-shadow: 0 0 9px currentColor, 0 0 18px currentColor; }
+  24% { opacity: 0.22; box-shadow: 0 0 2px currentColor; }
+  100% { opacity: 0.22; box-shadow: 0 0 2px currentColor; }
 }
 
 .map-reset {
