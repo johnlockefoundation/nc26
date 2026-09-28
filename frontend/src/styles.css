@@ -237,13 +237,12 @@ a { color: var(--accent); }
 
 /* Metrics: full-width horizontal rows so values never wrap */
 .metrics { display: flex; flex-direction: column; gap: 8px; }
-/* Stacked and centred rather than split left/right: the label sits above the
-   figure, both centred, so a short value like "D +8" does not leave a wide
-   empty gap against the edge. */
+/* Title stays hard left, value hard right, but align-items: center puts the
+   label equidistant from the top and bottom edges instead of sitting on the
+   value's baseline and hugging the top. */
 .metric {
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  gap: 5px; text-align: center;
-  border: 1px solid var(--line); border-radius: 12px; padding: 13px 14px; background: #0c1524;
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; background: #0c1524;
 }
 .metric-empty { background: #0a111f; }
 .metric-title { font-family: var(--font-display); font-size: 10.5px; letter-spacing: 0.14em; font-weight: 700; color: var(--muted); flex: none; }
@@ -288,8 +287,7 @@ a { color: var(--accent); }
 /* District demographics */
 .demos-heads { display: flex; gap: 10px; margin-bottom: 4px; }
 .demos-head {
-  flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px;
-  text-align: center;
+  flex: 1; display: flex; flex-direction: column; gap: 2px;
   border: 1px solid var(--line); border-radius: 10px; padding: 9px 11px;
 }
 .demos-head span { font-size: 10px; letter-spacing: 0.08em; color: var(--muted); }
