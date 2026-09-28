@@ -13,7 +13,10 @@
 }
 
 * { box-sizing: border-box; }
-html, body, #root { height: 100%; }
+/* min-height, not height: a fixed 100% caps the document at one viewport and
+   leaves the content overflowing its own box. min-height lets the page grow
+   and gives a single, ordinary scrollbar. */
+html, body, #root { min-height: 100%; }
 body {
   margin: 0;
   font-family: var(--font-body);
@@ -198,9 +201,13 @@ a { color: var(--accent); }
 .map-reset:hover { background: #16223a; }
 
 /* Panel */
+/* One scroll for the whole page. This used to be a sticky column with its own
+   max-height and overflow-y, so a long race had a scrollbar inside a page
+   that also scrolled -- two scrollbars tracking the same content. The panel
+   now grows to fit and the page scrolls. */
 .panel {
-  position: sticky; top: 16px; background: var(--card); border: 1px solid var(--line);
-  border-radius: 16px; padding: 20px; box-shadow: var(--shadow); max-height: calc(100vh - 40px); overflow-y: auto;
+  background: var(--card); border: 1px solid var(--line);
+  border-radius: 16px; padding: 20px; box-shadow: var(--shadow);
 }
 .panel-title { font-family: var(--font-display); font-size: 21px; font-weight: 700; margin: 0 0 10px; letter-spacing: -0.01em; }
 .panel-candidates { font-family: var(--font-display); font-size: 15px; margin-bottom: 8px; }
