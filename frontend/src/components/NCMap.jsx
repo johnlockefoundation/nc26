@@ -118,7 +118,7 @@ const AK_INSET_WEST = -133;
 const AK_INSET_SOUTH = 7;
 const AK_INSET_SCALE = 0.42;
 
-export default function NCMap({ features, outline, races, selectedId, onSelect, raceType }) {
+export default function NCMap({ features, outline, races, selectedId, onSelect, raceType, dimmed = false }) {
   const containerRef = useRef(null);
   const mapRef = useRef(null);
   const layerRef = useRef(null);
@@ -295,7 +295,7 @@ export default function NCMap({ features, outline, races, selectedId, onSelect, 
 
   return (
     <div className="map-wrap">
-      <div ref={containerRef} className="map-container" aria-label="Competitive election map" />
+      <div ref={containerRef} className={`map-container${dimmed ? ' map-dimmed' : ''}`} aria-label="Competitive election map" />
       <button className="map-reset" onClick={() => fitToState(mapRef.current, raceType)} title="Zoom to view">⤢</button>
     </div>
   );

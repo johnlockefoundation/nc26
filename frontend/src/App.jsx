@@ -17,6 +17,7 @@ export default function App() {
   const [detail, setDetail] = useState(null);
   const [loadingDetail, setLoadingDetail] = useState(false);
   const [error, setError] = useState(null);
+  const [switching, setSwitching] = useState(false);
 
   useEffect(() => {
     getOutline().then(setOutline).catch((e) => setError(String(e)));
@@ -26,11 +27,16 @@ export default function App() {
 
   useEffect(() => {
     let alive = true;
+    // Fade the map out while the new dataset loads, then release the dim once
+    // the features arrive — masks the layer rebuild / re-fit jump between tabs.
+    const fadeDuration = 400;
+    setSwitching(true);
     setError(null);
     getMap(raceType)
       .then((d) => { if (alive) setMapData(d); })
       .catch((e) => { if (alive) setError(String(e)); });
-    return () => { alive = false; };
+    const timer = setTimeout(() => { if (alive) setSwitching(false); }, fadeDuration + 60);
+    return () => { alive = false; clearTimeout(timer); };
   }, [raceType]);
 
   const races = useMemo(() => mapData?.races || [], [mapData]);
@@ -94,6 +100,7 @@ export default function App() {
             outline={outline}
             selectedId={selectedId}
             onSelect={setSelectedId}
+            dimmed={switching}
           />
         </section>
 
