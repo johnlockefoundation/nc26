@@ -64,15 +64,17 @@ jobs:
 
       # The two placeholder widgets must stay flagged in the published export.
       # If an NC SBOE extract replaces the mock seed, is_mock flips to 0 and
-      # this check will fail, which is the signal to remove the banner copy.
+      # this check will fail, which is the signal to remove the notice copy.
       - name: Verify placeholder data is still flagged
         run: |
           set -euo pipefail
           node -e '
             const race = require("./frontend/dist/demo-data/race/HD-105.json");
-            if (race.state_funds?.is_mock !== true) throw new Error("state_funds lost its is_mock flag");
+            const funds = race.state_funds;
+            if (funds?.is_mock !== true) throw new Error("state_funds lost its is_mock flag");
             if (race.demographics?.is_mock !== true) throw new Error("demographics lost its is_mock flag");
-            if (!race.state_funds.candidates.length) throw new Error("no candidate money in export");
+            if (!funds.advantage) throw new Error("no money advantage in export");
+            if (funds.dem_amount == null || funds.rep_amount == null) throw new Error("money is not split by party");
             if (race.demographics.change == null) throw new Error("no demographic delta in export");
             console.log("placeholder flags intact, mock generation still active");
           '
