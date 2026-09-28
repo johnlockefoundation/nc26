@@ -161,13 +161,13 @@ export function ingestStateGaMetrics(cycle = CYCLE) {
     const vitals = JSON.parse(readFileSync(vitalsFile, 'utf8'));
     db.prepare(`DELETE FROM district_vitals WHERE election_cycle = ?`).run(cycle);
     const insV = db.prepare(`INSERT OR REPLACE INTO district_vitals
-      (district_id, snapshot, election_cycle, registered_total, registered_dem, registered_rep,
-       registered_unaff, ballots_requested, ballots_returned, days_elapsed, is_mock, source, updated_at)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`);
+      (district_id, snapshot, snapshot_date, election_cycle, registered_total, registered_dem, registered_rep,
+       registered_unaff, ballots_req_dem, ballots_req_rep, ballots_req_unaff, is_mock, source, updated_at)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`);
     for (const r of vitals.rows || []) {
       if (r.election_cycle && r.election_cycle !== cycle) continue;
-      insV.run(r.district_id, r.snapshot, cycle, r.registered_total, r.registered_dem, r.registered_rep,
-        r.registered_unaff, r.ballots_requested, r.ballots_returned, r.days_elapsed,
+      insV.run(r.district_id, r.snapshot, r.snapshot_date, cycle, r.registered_total, r.registered_dem,
+        r.registered_rep, r.registered_unaff, r.ballots_req_dem, r.ballots_req_rep, r.ballots_req_unaff,
         r.is_mock ? 1 : 0, r.source || '', t);
       vitalRows++;
     }

@@ -278,6 +278,7 @@ a { color: var(--accent); }
 
 /* Voter velocity: registration and ballot movement between two snapshots */
 .vel-heads { display: flex; gap: 10px; }
+.vel-window { margin: 7px 0 2px; font-size: 10px; letter-spacing: 0.04em; }
 .vel-head {
   flex: 1; display: flex; flex-direction: column; gap: 2px;
   border: 1px solid var(--line); border-radius: 10px; padding: 9px 11px;
@@ -296,7 +297,6 @@ a { color: var(--accent); }
 .reg-u { background: #8b9cb0; }
 .reg-b { background: var(--accent); }
 .vel-bar-chg { width: 62px; flex: none; text-align: right; color: var(--ink); font-variant-numeric: tabular-nums; }
-.vel-bar-chg em { font-style: normal; font-size: 9.5px; color: var(--muted); margin-left: 1px; }
 .vel-bar-chg.up { color: #4ade80; }
 .vel-bar-chg.down { color: #f87171; }
 

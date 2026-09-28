@@ -198,26 +198,30 @@ CREATE TABLE IF NOT EXISTS state_funds (
   PRIMARY KEY (candidate_id, election_cycle)
 );
 
--- Voter registration and ballot counts at two comparable snapshots, so a race
--- panel can show how fast each is moving rather than only where it stands.
+-- Voter registration and ballot requests at two comparable snapshots, so a
+-- race panel can show how fast each is moving rather than only where it
+-- stands. The two snapshots are the same point in each cycle (mid-September,
+-- ahead of early voting) so the comparison is like-for-like; snapshot_date
+-- carries the actual date because the day matters, not just the year.
 -- NCSBE publishes these by COUNTY; legislative districts are built from
 -- county parts, so real per-district figures need an apportionment step that
 -- does not exist as a published dataset. Rows are currently placeholders.
 -- is_mock = 1 means invented figures.
 CREATE TABLE IF NOT EXISTS district_vitals (
-  district_id        TEXT NOT NULL,
-  snapshot           TEXT NOT NULL,      -- e.g. '2024' | '2026'
-  election_cycle     TEXT NOT NULL,
-  registered_total   INTEGER,
-  registered_dem     INTEGER,
-  registered_rep     INTEGER,
-  registered_unaff   INTEGER,
-  ballots_requested  INTEGER,
-  ballots_returned   INTEGER,
-  days_elapsed       INTEGER,            -- days since the baseline snapshot
-  is_mock            INTEGER NOT NULL DEFAULT 0,
-  source             TEXT,
-  updated_at         TEXT,
+  district_id          TEXT NOT NULL,
+  snapshot             TEXT NOT NULL,      -- '2024' | '2026'
+  snapshot_date        TEXT NOT NULL,      -- e.g. '2024-09-20'
+  election_cycle       TEXT NOT NULL,
+  registered_total     INTEGER,
+  registered_dem       INTEGER,
+  registered_rep       INTEGER,
+  registered_unaff     INTEGER,
+  ballots_req_dem      INTEGER,
+  ballots_req_rep      INTEGER,
+  ballots_req_unaff    INTEGER,
+  is_mock              INTEGER NOT NULL DEFAULT 0,
+  source               TEXT,
+  updated_at           TEXT,
   PRIMARY KEY (district_id, snapshot)
 );
 

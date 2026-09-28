@@ -81,14 +81,17 @@ export function buildStateFunds(cycle = '2026') {
 }
 
 // --- voter velocity ---------------------------------------------------------
-// Invented. Two comparable snapshots so the panel can show movement, not just
-// a level. Registration counts are generated per party from the partisan lean;
-// ballot counts from district size. Neither corresponds to a real filing.
+// Invented. Two snapshots taken at the same point in each cycle so the
+// comparison is like-for-like, with ballot requests split by party because
+// the change in requests is the signal, not the return rate.
 export function buildDistrictVitals(cycle = '2026') {
   const rows = [];
-  // The 2026 general election is Nov 3; the 2024 one was Nov 5, so the
-  // comparable window is 728 days. Rates are per 30 days and per day.
-  const WINDOW_DAYS = 728;
+  // Mid-September in each cycle: after registration drives have settled and
+  // with early voting about to open, which is when absentee requests matter.
+  const SNAPSHOTS = [
+    { snapshot: '2024', date: '2024-09-20', growth: 0.055, spread: 0.55, reqGrowth: 1 },
+    { snapshot: '2026', date: '2026-09-18', growth: 0.082, spread: 1, reqGrowth: 1.14 },
+  ];
   const emit = (districtId, record) => {
     const lean = leanValue(record.cpi_value || record.cpi);
     const senate = districtId.startsWith('SD-');
@@ -100,12 +103,9 @@ export function buildDistrictVitals(cycle = '2026') {
     const size = (senate ? 78000 : 42000) * (0.82 + base * 0.4);
     const raw = (lean.value - 10) / 60 + (base - 0.5) * 0.4;
     const shift = Math.max(-0.12, Math.min(0.12, raw));
-    // The leading party adds registrations faster and the gap widens across
-    // the cycle. That divergence is the signal the widget exists to show, so
-    // the 2026 snapshot carries more partisan spread than the 2024 one.
-    for (const [snapshot, growth, spread] of [['2024', 0.055, 0.55], ['2026', 0.082, 1]]) {
+    for (const { snapshot, date, growth, spread, reqGrowth } of SNAPSHOTS) {
       const u = noise(`${districtId}:${snapshot}:unaff`);
-      const b = noise(`${districtId}:${snapshot}:ballot`);
+      const q = noise(`${districtId}:${snapshot}:req`);
       const s = shift * spread;
       const total = Math.round(size * (1 + growth));
       // Unaffiliated hold a real share, so the two parties split the rest
@@ -115,21 +115,29 @@ export function buildDistrictVitals(cycle = '2026') {
       const dem = Math.round(total * (partyShare / 2 - s / 2));
       const rep = Math.round(total * (partyShare / 2 + s / 2));
       const unaff = total - dem - rep;
-      const requested = Math.round(size * (0.30 + b * 0.16) * (snapshot === '2026' ? 1.12 : 1));
+      // Ballot requests follow registration, and a growing electorate requests
+      // proportionally more of them.
+      const requests = Math.round(size * (0.28 + q * 0.14) * reqGrowth);
+      const reqUnaffShare = 0.11 + q * 0.04;
+      const reqParty = 1 - reqUnaffShare;
+      const rq = shift * spread * 1.3;
       rows.push({
         district_id: districtId,
         snapshot,
+        snapshot_date: date,
         election_cycle: cycle,
         registered_total: total,
         registered_dem: dem,
         registered_rep: rep,
         registered_unaff: unaff,
-        ballots_requested: requested,
-        ballots_returned: Math.round(requested * (0.42 + b * 0.2)),
-        days_elapsed: snapshot === '2026' ? WINDOW_DAYS : 0,
+        ballots_req_dem: Math.round(requests * (reqParty / 2 - rq / 2)),
+        ballots_req_rep: Math.round(requests * (reqParty / 2 + rq / 2)),
+        ballots_req_unaff: 0, // filled in below so the three parts sum to requests
         is_mock: 1,
         source: 'PLACEHOLDER - not NCSBE registration or ballot data',
       });
+      const row = rows[rows.length - 1];
+      row.ballots_req_unaff = requests - row.ballots_req_dem - row.ballots_req_rep;
     }
   };
   for (const rec of civitas.senate || []) if (isCompetitiveGa(rec)) emit(`SD-${String(rec.district_number).padStart(2, '0')}`, rec);

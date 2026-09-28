@@ -78,7 +78,9 @@ jobs:
             if (race.demographics != null) throw new Error("demographics were removed but are still in the export");
             if (vitals?.is_mock !== true) throw new Error("vitals lost its is_mock flag");
             if (!vitals.registration || vitals.registration.net == null) throw new Error("no registration velocity in export");
-            if (vitals.ballot == null || vitals.ballot.returned == null) throw new Error("no ballot velocity in export");
+            if (vitals.ballot == null || vitals.ballot.net == null) throw new Error("no ballot velocity in export");
+            if (!vitals.from_date || !vitals.to_date) throw new Error("snapshots are not dated");
+            if (vitals.registration.per_month != null) throw new Error("per-month rate should have been removed");
             console.log("placeholder flags intact, mock generation still active");
           '
 

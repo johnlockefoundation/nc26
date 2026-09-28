@@ -156,33 +156,39 @@ function districtNews(districtId, cycle, limit = 6) {
     ORDER BY published_at DESC LIMIT ?`).all(cycle, districtId, limit);
 }
 
-// Registration and ballot movement between two comparable snapshots.
-// "Velocity" is the point: a raw count says how many voters there are, the
-// change and the per-period rate say which way the seat is moving, and the
-// party split of the registration change says who is being added.
+// Registration and ballot movement between two snapshots taken at the same
+// point in each cycle. "Velocity" is the point: a raw count says how many
+// voters there are, the change since the equivalent date last cycle says which
+// way the seat is moving, and the party split says who is driving it.
 function districtVitals(districtId, cycle) {
   const rows = db.prepare(`SELECT * FROM district_vitals
     WHERE district_id = ? AND election_cycle = ?
-    ORDER BY days_elapsed ASC`).all(districtId, cycle);
+    ORDER BY snapshot_date ASC`).all(districtId, cycle);
   if (rows.length < 2) return null;
   const from = rows[0];
   const to = rows[rows.length - 1];
-  const days = to.days_elapsed - from.days_elapsed;
-  if (!(days > 0)) return null;
+  if (from.snapshot_date === to.snapshot_date) return null;
 
   const delta = (a, b) => (a != null && b != null ? a - b : null);
-  const perMonth = (d) => (d == null ? null : Math.round((d / days) * 30.44));
   const regChange = {
     total: delta(to.registered_total, from.registered_total),
     dem: delta(to.registered_dem, from.registered_dem),
     rep: delta(to.registered_rep, from.registered_rep),
     unaff: delta(to.registered_unaff, from.registered_unaff),
   };
-  const regNet = regChange.total;
-  const ballChange = {
-    requested: delta(to.ballots_requested, from.ballots_requested),
-    returned: delta(to.ballots_returned, from.ballots_returned),
+  // Ballot velocity is the change in requests by party between the two dated
+  // snapshots -- the same point in each cycle, so the two are comparable. The
+  // return rate is deliberately absent: how many mailed ballots came back is a
+  // turnout mechanic, not a measure of which way a seat is moving.
+  const reqChange = {
+    dem: delta(to.ballots_req_dem, from.ballots_req_dem),
+    rep: delta(to.ballots_req_rep, from.ballots_req_rep),
+    unaff: delta(to.ballots_req_unaff, from.ballots_req_unaff),
   };
+  const reqTotal = {
+    dem: to.ballots_req_dem, rep: to.ballots_req_rep, unaff: to.ballots_req_unaff,
+  };
+  reqChange.total = (reqChange.dem || 0) + (reqChange.rep || 0) + (reqChange.unaff || 0);
 
   return {
     available: true,
@@ -190,32 +196,22 @@ function districtVitals(districtId, cycle) {
     source: to.source || null,
     from: from.snapshot,
     to: to.snapshot,
-    days,
+    from_date: from.snapshot_date,
+    to_date: to.snapshot_date,
     registration: {
       baseline: from.registered_total,
       current: to.registered_total,
-      net: regNet,
-      net_pct: regNet && from.registered_total ? +((regNet / from.registered_total) * 100).toFixed(2) : null,
-      per_month: perMonth(regNet),
+      net: regChange.total,
+      net_pct: regChange.total && from.registered_total
+        ? +((regChange.total / from.registered_total) * 100).toFixed(2) : null,
       change: regChange,
-      per_month_by_party: {
-        dem: perMonth(regChange.dem),
-        rep: perMonth(regChange.rep),
-        unaff: perMonth(regChange.unaff),
-      },
     },
     ballot: {
-      requested: to.ballots_requested,
-      returned: to.ballots_returned,
-      return_rate: to.ballots_requested ? +((to.ballots_returned / to.ballots_requested) * 100).toFixed(1) : null,
-      change: ballChange,
-      // No per-day rate here on purpose. Registration accumulates across the
-      // whole cycle, so a monthly rate is meaningful. Ballots are cast inside
-      // a short voting window, and dividing their change by the two-year gap
-      // would report roughly zero per day and read as "no ballot activity"
-      // when the opposite is true. The level, the return rate and the change
-      // against 2024 are the honest measures.
-      turnout_pct: to.registered_total ? +((to.ballots_returned / to.registered_total) * 100).toFixed(1) : null,
+      // The headline: requests on the later date minus the earlier one.
+      net: reqChange.total,
+      current_total: (reqTotal.dem || 0) + (reqTotal.rep || 0) + (reqTotal.unaff || 0),
+      change: reqChange,
+      by_party: reqTotal,
     },
   };
 }
