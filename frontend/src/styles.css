@@ -285,6 +285,31 @@ a { color: var(--accent); }
 }
 
 
+/* Voter velocity: registration and ballot movement between two snapshots */
+.vel-heads { display: flex; gap: 10px; }
+.vel-head {
+  flex: 1; display: flex; flex-direction: column; gap: 2px;
+  border: 1px solid var(--line); border-radius: 10px; padding: 9px 11px;
+}
+.vel-head span { font-size: 10px; letter-spacing: 0.08em; color: var(--muted); }
+.vel-head b { font-family: var(--font-display); font-size: 16px; color: var(--ink); font-variant-numeric: tabular-nums; }
+.vel-head b.up { color: #4ade80; }
+.vel-head b.down { color: #f87171; }
+.vel-bars { display: flex; flex-direction: column; gap: 6px; margin-top: 4px; }
+.vel-bar-row { display: flex; align-items: center; gap: 9px; font-size: 12px; }
+.vel-bar-name { width: 88px; flex: none; color: var(--muted); text-align: right; }
+.vel-bar-track { flex: 1 1 auto; height: 7px; border-radius: 4px; background: rgba(148, 163, 184, 0.18); overflow: hidden; }
+.vel-bar-track i { display: block; height: 100%; border-radius: 4px; }
+.reg-d { background: var(--d); }
+.reg-r { background: var(--r); }
+.reg-u { background: #8b9cb0; }
+.reg-b { background: var(--accent); }
+.vel-bar-chg { width: 62px; flex: none; text-align: right; color: var(--ink); font-variant-numeric: tabular-nums; }
+.vel-bar-chg em { font-style: normal; font-size: 9.5px; color: var(--muted); margin-left: 1px; }
+.vel-bar-chg.up { color: #4ade80; }
+.vel-bar-chg.down { color: #f87171; }
+.vel-foot { margin-top: 10px; font-size: 10.5px; line-height: 1.45; }
+
 /* Per-race news list */
 .race-news { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 11px; }
 .race-news-item { display: flex; flex-direction: column; gap: 3px; }

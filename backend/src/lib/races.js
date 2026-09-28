@@ -156,6 +156,70 @@ function districtNews(districtId, cycle, limit = 6) {
     ORDER BY published_at DESC LIMIT ?`).all(cycle, districtId, limit);
 }
 
+// Registration and ballot movement between two comparable snapshots.
+// "Velocity" is the point: a raw count says how many voters there are, the
+// change and the per-period rate say which way the seat is moving, and the
+// party split of the registration change says who is being added.
+function districtVitals(districtId, cycle) {
+  const rows = db.prepare(`SELECT * FROM district_vitals
+    WHERE district_id = ? AND election_cycle = ?
+    ORDER BY days_elapsed ASC`).all(districtId, cycle);
+  if (rows.length < 2) return null;
+  const from = rows[0];
+  const to = rows[rows.length - 1];
+  const days = to.days_elapsed - from.days_elapsed;
+  if (!(days > 0)) return null;
+
+  const delta = (a, b) => (a != null && b != null ? a - b : null);
+  const perMonth = (d) => (d == null ? null : Math.round((d / days) * 30.44));
+  const regChange = {
+    total: delta(to.registered_total, from.registered_total),
+    dem: delta(to.registered_dem, from.registered_dem),
+    rep: delta(to.registered_rep, from.registered_rep),
+    unaff: delta(to.registered_unaff, from.registered_unaff),
+  };
+  const regNet = regChange.total;
+  const ballChange = {
+    requested: delta(to.ballots_requested, from.ballots_requested),
+    returned: delta(to.ballots_returned, from.ballots_returned),
+  };
+
+  return {
+    available: true,
+    is_mock: rows.every((r) => Boolean(r.is_mock)),
+    source: to.source || null,
+    from: from.snapshot,
+    to: to.snapshot,
+    days,
+    registration: {
+      baseline: from.registered_total,
+      current: to.registered_total,
+      net: regNet,
+      net_pct: regNet && from.registered_total ? +((regNet / from.registered_total) * 100).toFixed(2) : null,
+      per_month: perMonth(regNet),
+      change: regChange,
+      per_month_by_party: {
+        dem: perMonth(regChange.dem),
+        rep: perMonth(regChange.rep),
+        unaff: perMonth(regChange.unaff),
+      },
+    },
+    ballot: {
+      requested: to.ballots_requested,
+      returned: to.ballots_returned,
+      return_rate: to.ballots_requested ? +((to.ballots_returned / to.ballots_requested) * 100).toFixed(1) : null,
+      change: ballChange,
+      // No per-day rate here on purpose. Registration accumulates across the
+      // whole cycle, so a monthly rate is meaningful. Ballots are cast inside
+      // a short voting window, and dividing their change by the two-year gap
+      // would report roughly zero per day and read as "no ballot activity"
+      // when the opposite is true. The level, the return rate and the change
+      // against 2024 are the honest measures.
+      turnout_pct: to.registered_total ? +((to.ballots_returned / to.registered_total) * 100).toFixed(1) : null,
+    },
+  };
+}
+
 // Money for a state legislative race, shaped exactly like the federal
 // fundraising summary: one advantage figure, not a per-candidate breakdown.
 // MetricBlock renders both identically, which is the point.
@@ -295,6 +359,7 @@ export function getRace(districtId, cycle = CYCLE) {
   // already in race.money and the congressional profile in race.profile.
   if (row.race_type === 'state_senate' || row.race_type === 'state_house') {
     race.state_funds = stateFunds(districtId, cycle);
+    race.vitals = districtVitals(districtId, cycle);
   }
   return race;
 }

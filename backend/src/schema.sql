@@ -198,10 +198,31 @@ CREATE TABLE IF NOT EXISTS state_funds (
   PRIMARY KEY (candidate_id, election_cycle)
 );
 
--- District demographics were prototyped as a two-snapshot widget and removed
--- before any real data existed, so there is no table for them.
+-- Voter registration and ballot counts at two comparable snapshots, so a race
+-- panel can show how fast each is moving rather than only where it stands.
+-- NCSBE publishes these by COUNTY; legislative districts are built from
+-- county parts, so real per-district figures need an apportionment step that
+-- does not exist as a published dataset. Rows are currently placeholders.
+-- is_mock = 1 means invented figures.
+CREATE TABLE IF NOT EXISTS district_vitals (
+  district_id        TEXT NOT NULL,
+  snapshot           TEXT NOT NULL,      -- e.g. '2024' | '2026'
+  election_cycle     TEXT NOT NULL,
+  registered_total   INTEGER,
+  registered_dem     INTEGER,
+  registered_rep     INTEGER,
+  registered_unaff   INTEGER,
+  ballots_requested  INTEGER,
+  ballots_returned   INTEGER,
+  days_elapsed       INTEGER,            -- days since the baseline snapshot
+  is_mock            INTEGER NOT NULL DEFAULT 0,
+  source             TEXT,
+  updated_at         TEXT,
+  PRIMARY KEY (district_id, snapshot)
+);
 
 CREATE INDEX IF NOT EXISTS idx_state_funds_district ON state_funds (district_id, election_cycle);
+CREATE INDEX IF NOT EXISTS idx_district_vitals ON district_vitals (district_id, election_cycle);
 
 CREATE INDEX IF NOT EXISTS idx_polls_district ON polls (district_id, election_cycle);
 CREATE INDEX IF NOT EXISTS idx_news_district ON news (district_id, election_cycle, published_at DESC);

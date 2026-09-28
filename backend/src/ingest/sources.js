@@ -137,6 +137,7 @@ export function ingestNewsFromSource(cycle = CYCLE) {
 // label them and nothing downstream can mistake them for reported totals.
 export function ingestStateGaMetrics(cycle = CYCLE) {
   const fundsFile = join(SOURCES_DIR, '..', 'seed', 'state-funds-mock.json');
+  const vitalsFile = join(SOURCES_DIR, '..', 'seed', 'district-vitals-mock.json');
   if (!existsSync(fundsFile)) return null;
   const funds = JSON.parse(readFileSync(fundsFile, 'utf8'));
 
@@ -154,8 +155,27 @@ export function ingestStateGaMetrics(cycle = CYCLE) {
       r.is_mock ? 1 : 0, t);
     fundRows++;
   }
-  console.log(`[ga-metrics] ${fundRows} candidate money rows${fundRows ? ' (PLACEHOLDER data)' : ''}`);
-  return { source: 'ga-metrics', funds: fundRows, is_mock: fundRows > 0 };
+
+  let vitalRows = 0;
+  if (existsSync(vitalsFile)) {
+    const vitals = JSON.parse(readFileSync(vitalsFile, 'utf8'));
+    db.prepare(`DELETE FROM district_vitals WHERE election_cycle = ?`).run(cycle);
+    const insV = db.prepare(`INSERT OR REPLACE INTO district_vitals
+      (district_id, snapshot, election_cycle, registered_total, registered_dem, registered_rep,
+       registered_unaff, ballots_requested, ballots_returned, days_elapsed, is_mock, source, updated_at)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`);
+    for (const r of vitals.rows || []) {
+      if (r.election_cycle && r.election_cycle !== cycle) continue;
+      insV.run(r.district_id, r.snapshot, cycle, r.registered_total, r.registered_dem, r.registered_rep,
+        r.registered_unaff, r.ballots_requested, r.ballots_returned, r.days_elapsed,
+        r.is_mock ? 1 : 0, r.source || '', t);
+      vitalRows++;
+    }
+  }
+
+  const mock = fundRows || vitalRows;
+  console.log(`[ga-metrics] ${fundRows} candidate money rows, ${vitalRows} voter-vital rows${mock ? ' (PLACEHOLDER data)' : ''}`);
+  return { source: 'ga-metrics', funds: fundRows, vitals: vitalRows, is_mock: mock > 0 };
 }
 
 // Candidate portraits are an UPDATE, never a replace: a candidate row also

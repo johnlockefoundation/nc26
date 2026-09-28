@@ -2,6 +2,7 @@ import MetricBlock from './MetricBlock.jsx';
 import DistrictProfile from './DistrictProfile.jsx';
 import CivitasPartisan from './CivitasPartisan.jsx';
 import DistrictNews from './DistrictNews.jsx';
+import VoterVelocity from './VoterVelocity.jsx';
 
 function initials(name) {
   return name.split(/\s+/).filter(Boolean).slice(0, 2).map((w) => w[0].toUpperCase()).join('');
@@ -82,6 +83,7 @@ export default function RacePanel({ race, loading }) {
           {race.state_funds?.is_mock && (
             <div className="mock-note" role="note">PLACEHOLDER FIGURES — not NC SBOE filings</div>
           )}
+          <VoterVelocity vitals={race.vitals} />
           {showNews && <DistrictNews articles={race.news} />}
         </>
       ) : showFullPanel ? (
