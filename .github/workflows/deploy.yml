@@ -72,10 +72,9 @@ jobs:
             const race = require("./frontend/dist/demo-data/race/HD-105.json");
             const funds = race.state_funds;
             if (funds?.is_mock !== true) throw new Error("state_funds lost its is_mock flag");
-            if (race.demographics?.is_mock !== true) throw new Error("demographics lost its is_mock flag");
             if (!funds.advantage) throw new Error("no money advantage in export");
             if (funds.dem_amount == null || funds.rep_amount == null) throw new Error("money is not split by party");
-            if (race.demographics.change == null) throw new Error("no demographic delta in export");
+            if (race.demographics != null) throw new Error("demographics were removed but are still in the export");
             console.log("placeholder flags intact, mock generation still active");
           '
 

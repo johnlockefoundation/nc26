@@ -284,30 +284,6 @@ a { color: var(--accent); }
   font-weight: 700; letter-spacing: 0.1em; color: #fbbf24;
 }
 
-/* District demographics */
-.demos-heads { display: flex; gap: 10px; margin-bottom: 4px; }
-.demos-head {
-  flex: 1; display: flex; flex-direction: column; gap: 2px;
-  border: 1px solid var(--line); border-radius: 10px; padding: 9px 11px;
-}
-.demos-head span { font-size: 10px; letter-spacing: 0.08em; color: var(--muted); }
-.demos-head b { font-family: var(--font-display); font-size: 16px; color: var(--ink); }
-.demos-head-delta { font-size: 10.5px; font-weight: 700; }
-.demos-head-delta.up { color: #4ade80; }
-.demos-head-delta.down { color: #f87171; }
-.demos-bars { display: flex; flex-direction: column; gap: 6px; }
-.demos-bar-row { display: flex; align-items: center; gap: 9px; font-size: 12px; }
-.demos-bar-name { width: 84px; flex: none; color: var(--muted); text-align: right; }
-.demos-bar-track { flex: 1 1 auto; height: 7px; border-radius: 4px; background: rgba(148, 163, 184, 0.18); overflow: hidden; }
-.demos-bar-track i { display: block; height: 100%; border-radius: 4px; }
-.demos-bar-pct { width: 34px; flex: none; text-align: right; color: var(--ink); font-variant-numeric: tabular-nums; }
-.demos-delta { width: 42px; flex: none; text-align: right; font-size: 10.5px; font-weight: 700; color: var(--muted); font-variant-numeric: tabular-nums; }
-.demos-delta.up { color: #4ade80; }
-.demos-delta.down { color: #f87171; }
-.race-dem { background: var(--d); }
-.race-rep { background: var(--r); }
-.race-unaff { background: #8b9cb0; }
-.demos-foot { margin-top: 11px; font-size: 10.5px; line-height: 1.45; }
 
 /* Per-race news list */
 .race-news { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 11px; }

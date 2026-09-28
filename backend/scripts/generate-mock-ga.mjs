@@ -2,8 +2,8 @@
 //
 // Shapes for the two new state-legislature widgets so the panels can be built
 // and reviewed before an NC SBOE extract lands. Every row here is invented:
-// amounts are scaled off the Civitas partisan index and demographics are
-// interpolated from district number, so neither should ever be published.
+// amounts are scaled off the Civitas partisan index and district number, so
+// none of them should ever be published.
 //
 // When the real data arrives, replace this file with backend/src/ingest/ and
 // delete the generator. The is_mock column exists so no consumer can read a
@@ -80,55 +80,8 @@ export function buildStateFunds(cycle = '2026') {
   return rows;
 }
 
-// --- demographics ----------------------------------------------------------
-// Invented. Two snapshots so the widget can show movement. Registration lean
-// is derived from the partisan index, which is the one real input, and then
-// jittered; everything else is derived from district number.
-export function buildDistrictDemographics(cycle = '2026') {
-  const rows = [];
-  const emit = (districtId, record) => {
-    for (const snapshot of ['2024', '2026']) {
-      const n = noise(`${districtId}:${snapshot}`);
-      const n2 = noise(`${districtId}:${snapshot}:race`);
-      const lean = leanValue(record.cpi_value || record.cpi);
-      // A 2024 line's registration leaned slightly further toward the dominant
-      // party than the same district in 2026, which is the direction real
-      // re-alignment has moved in NC.
-      const drift = snapshot === '2024' ? 2.2 : 0;
-      const partisanShare = 50 + Math.min(lean.value, 24) / 2.4 + drift + (n - 0.5) * 3.5;
-      const white = 34 + n2 * 44;
-      const black = 16 + (1 - n2) * 26;
-      const hispanic = 7 + n * 13;
-      const other = Math.max(2, +(100 - white - black - hispanic).toFixed(1));
-      const registered = Math.round((districtId.startsWith('SD-') ? 62000 : 44000) * (0.78 + n * 0.5) * (snapshot === '2026' ? 1.041 : 1));
-      rows.push({
-        district_id: districtId,
-        snapshot,
-        election_cycle: cycle,
-        total_pop: Math.round(registered * (2.24 + n * 0.14)),
-        pop_white: +white.toFixed(1),
-        pop_black: +black.toFixed(1),
-        pop_hispanic: +hispanic.toFixed(1),
-        pop_other: +other.toFixed(1),
-        registered,
-        reg_dem: +Math.min(58, 50 - (partisanShare - 50)).toFixed(1),
-        reg_rep: +Math.min(62, partisanShare).toFixed(1),
-        reg_unaff: +(14 + n * 9).toFixed(1),
-        reg_other: 1.6,
-        is_mock: 1,
-        source: 'PLACEHOLDER - not NCSBE or Census data',
-      });
-    }
-  };
-  for (const rec of civitas.senate || []) if (isCompetitiveGa(rec)) emit(`SD-${String(rec.district_number).padStart(2, '0')}`, rec);
-  for (const rec of civitas.house || []) if (isCompetitiveGa(rec)) emit(`HD-${rec.district_number}`, rec);
-  return rows;
-}
-
 // Written next to the other seed files so they are version-controlled and the
 // ingest path can pick them up later without a code change.
 export function writeSeeds() {
-  const funds = buildStateFunds();
-  const demos = buildDistrictDemographics();
-  return { funds, demos };
+  return { funds: buildStateFunds() };
 }

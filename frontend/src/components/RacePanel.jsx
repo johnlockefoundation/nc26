@@ -2,7 +2,6 @@ import MetricBlock from './MetricBlock.jsx';
 import DistrictProfile from './DistrictProfile.jsx';
 import CivitasPartisan from './CivitasPartisan.jsx';
 import DistrictNews from './DistrictNews.jsx';
-import DistrictDemographics from './DistrictDemographics.jsx';
 
 function initials(name) {
   return name.split(/\s+/).filter(Boolean).slice(0, 2).map((w) => w[0].toUpperCase()).join('');
@@ -63,6 +62,11 @@ export default function RacePanel({ race, loading }) {
     />
   ));
   const showFullPanel = !isStateRace && hasSubstance;
+  // Per-seat coverage is an NC product. The out-of-state Senate seats are
+  // carried on a price alone, so a coverage list there would be an empty
+  // heading every time. DistrictNews renders nothing when it has no stories,
+  // so this only has to exclude the seats that should never show it.
+  const showNews = race.race_type !== 'us_senate' || race.district_id === 'NC-SEN';
 
   return (
     <aside className="panel">
@@ -78,8 +82,7 @@ export default function RacePanel({ race, loading }) {
           {race.state_funds?.is_mock && (
             <div className="mock-note" role="note">PLACEHOLDER FIGURES — not NC SBOE filings</div>
           )}
-          <DistrictDemographics demographics={race.demographics} />
-          <DistrictNews articles={race.news} />
+          {showNews && <DistrictNews articles={race.news} />}
         </>
       ) : showFullPanel ? (
         <div className="metrics">
@@ -91,12 +94,8 @@ export default function RacePanel({ race, loading }) {
         <div className="metrics">{marketBlocks}</div>
       )}
 
-      {!isStateRace && (
-        <>
-          <DistrictProfile profile={race.profile} />
-          <DistrictNews articles={race.news} />
-        </>
-      )}
+      {!isStateRace && <DistrictProfile profile={race.profile} />}
+      {!isStateRace && showNews && <DistrictNews articles={race.news} />}
     </aside>
   );
 }

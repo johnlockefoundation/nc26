@@ -131,59 +131,37 @@ export function ingestNewsFromSource(cycle = CYCLE) {
   return { source: data.source || 'news', count: n };
 }
 
+// State legislative money. Reads from the seed folder rather than a live drop,
+// and carries is_mock = 1: the figures are placeholders until an NC SBOE
+// extract replaces them. is_mock is written through to the API so the UI can
+// label them and nothing downstream can mistake them for reported totals.
+export function ingestStateGaMetrics(cycle = CYCLE) {
+  const fundsFile = join(SOURCES_DIR, '..', 'seed', 'state-funds-mock.json');
+  if (!existsSync(fundsFile)) return null;
+  const funds = JSON.parse(readFileSync(fundsFile, 'utf8'));
+
+  db.prepare(`DELETE FROM state_funds WHERE election_cycle = ?`).run(cycle);
+  const ins = db.prepare(`INSERT OR REPLACE INTO state_funds
+    (district_id, candidate_id, election_cycle, candidate_name, party, total_raised, total_spent,
+     cash_on_hand, contributions, small_donors, reporting_period, source_url, is_mock, updated_at)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`);
+  const t = nowIso();
+  let fundRows = 0;
+  for (const r of funds.rows || []) {
+    if (r.election_cycle && r.election_cycle !== cycle) continue;
+    ins.run(r.district_id, r.candidate_id, cycle, r.candidate_name, r.party, r.total_raised, r.total_spent,
+      r.cash_on_hand, r.contributions, r.small_donors, r.reporting_period || '', r.source_url || '',
+      r.is_mock ? 1 : 0, t);
+    fundRows++;
+  }
+  console.log(`[ga-metrics] ${fundRows} candidate money rows${fundRows ? ' (PLACEHOLDER data)' : ''}`);
+  return { source: 'ga-metrics', funds: fundRows, is_mock: fundRows > 0 };
+}
+
 // Candidate portraits are an UPDATE, never a replace: a candidate row also
 // carries name/party/incumbent from the seed files, and re-writing the row
 // would discard fields this drop knows nothing about. Candidates the drop
 // omits keep whatever they already had (or the initials fallback).
-// State legislative money and demographics. These read from the seed folder
-// rather than a live drop, and both carry is_mock = 1: the figures are
-// placeholders until an NC SBOE extract replaces them. is_mock is written
-// through to the API so the UI can label them and nothing downstream can
-// mistake them for reported totals.
-export function ingestStateGaMetrics(cycle = CYCLE) {
-  const fundsFile = join(SOURCES_DIR, '..', 'seed', 'state-funds-mock.json');
-  const demoFile = join(SOURCES_DIR, '..', 'seed', 'district-demographics-mock.json');
-  let funds = null;
-  let demos = null;
-  if (existsSync(fundsFile)) funds = JSON.parse(readFileSync(fundsFile, 'utf8'));
-  if (existsSync(demoFile)) demos = JSON.parse(readFileSync(demoFile, 'utf8'));
-
-  let fundRows = 0;
-  let demoRows = 0;
-  if (funds) {
-    db.prepare(`DELETE FROM state_funds WHERE election_cycle = ?`).run(cycle);
-    const ins = db.prepare(`INSERT OR REPLACE INTO state_funds
-      (district_id, candidate_id, election_cycle, candidate_name, party, total_raised, total_spent,
-       cash_on_hand, contributions, small_donors, reporting_period, source_url, is_mock, updated_at)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`);
-    const t = nowIso();
-    for (const r of funds.rows || []) {
-      if (r.election_cycle && r.election_cycle !== cycle) continue;
-      ins.run(r.district_id, r.candidate_id, cycle, r.candidate_name, r.party, r.total_raised, r.total_spent,
-        r.cash_on_hand, r.contributions, r.small_donors, r.reporting_period || '', r.source_url || '',
-        r.is_mock ? 1 : 0, t);
-      fundRows++;
-    }
-  }
-  if (demos) {
-    db.prepare(`DELETE FROM district_demographics WHERE election_cycle = ?`).run(cycle);
-    const ins = db.prepare(`INSERT OR REPLACE INTO district_demographics
-      (district_id, snapshot, election_cycle, total_pop, pop_white, pop_black, pop_hispanic, pop_other,
-       registered, reg_dem, reg_rep, reg_unaff, reg_other, is_mock, source, updated_at)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`);
-    const t = nowIso();
-    for (const r of demos.rows || []) {
-      ins.run(r.district_id, r.snapshot, cycle, r.total_pop, r.pop_white, r.pop_black, r.pop_hispanic,
-        r.pop_other, r.registered, r.reg_dem, r.reg_rep, r.reg_unaff, r.reg_other,
-        r.is_mock ? 1 : 0, r.source || '', t);
-      demoRows++;
-    }
-  }
-  const mock = fundRows || demoRows;
-  console.log(`[ga-metrics] ${fundRows} candidate money rows, ${demoRows} demographic rows${mock ? ' (PLACEHOLDER data)' : ''}`);
-  return { source: 'ga-metrics', funds: fundRows, demographics: demoRows, is_mock: Boolean(mock) };
-}
-
 export function ingestPhotosFromSource(cycle = CYCLE) {
   const data = loadDrop('photos');
   if (!data) return null;

@@ -198,31 +198,10 @@ CREATE TABLE IF NOT EXISTS state_funds (
   PRIMARY KEY (candidate_id, election_cycle)
 );
 
--- District demographics at two snapshots, so a race panel can show what
--- changed between them. Sourced from voter-file registration and Census
--- population estimates.
-CREATE TABLE IF NOT EXISTS district_demographics (
-  district_id     TEXT NOT NULL,
-  snapshot        TEXT NOT NULL,               -- e.g. '2024' | '2026'
-  election_cycle  TEXT NOT NULL,
-  total_pop       INTEGER,
-  pop_white       REAL,
-  pop_black       REAL,
-  pop_hispanic    REAL,
-  pop_other       REAL,
-  registered      INTEGER,
-  reg_dem         REAL,
-  reg_rep         REAL,
-  reg_unaff       REAL,
-  reg_other       REAL,
-  is_mock         INTEGER NOT NULL DEFAULT 0,
-  source          TEXT,
-  updated_at      TEXT,
-  PRIMARY KEY (district_id, snapshot)
-);
+-- District demographics were prototyped as a two-snapshot widget and removed
+-- before any real data existed, so there is no table for them.
 
 CREATE INDEX IF NOT EXISTS idx_state_funds_district ON state_funds (district_id, election_cycle);
-CREATE INDEX IF NOT EXISTS idx_district_demos ON district_demographics (district_id, election_cycle);
 
 CREATE INDEX IF NOT EXISTS idx_polls_district ON polls (district_id, election_cycle);
 CREATE INDEX IF NOT EXISTS idx_news_district ON news (district_id, election_cycle, published_at DESC);

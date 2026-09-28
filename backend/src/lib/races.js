@@ -179,66 +179,6 @@ function stateFunds(districtId, cycle) {
   };
 }
 
-// Demographic snapshots for a district plus the change between them, which is
-// the number that matters after a redistricting cycle.
-function districtDemographics(districtId, cycle) {
-  const rows = db.prepare(`SELECT * FROM district_demographics
-    WHERE district_id = ? AND election_cycle = ?
-    ORDER BY snapshot ASC`).all(districtId, cycle);
-  if (!rows.length) return null;
-  const bySnapshot = new Map(rows.map((r) => [r.snapshot, r]));
-  const snapshots = rows.map((r) => r.snapshot);
-  const latest = rows[rows.length - 1];
-  const prior = rows.length > 1 ? rows[rows.length - 2] : null;
-
-  const delta = (a, b) => (a != null && b != null ? +(a - b).toFixed(1) : null);
-  const pctDelta = (a, b) => (a && b ? +(((a - b) / b) * 100).toFixed(1) : null);
-  const pct = (v) => (v == null ? null : +v.toFixed(1));
-
-  return {
-    available: true,
-    is_mock: rows.every((r) => Boolean(r.is_mock)),
-    source: latest.source || null,
-    snapshots,
-    latest: {
-      snapshot: latest.snapshot,
-      total_pop: latest.total_pop,
-      registered: latest.registered,
-      race: {
-        white: pct(latest.pop_white),
-        black: pct(latest.pop_black),
-        hispanic: pct(latest.pop_hispanic),
-        other: pct(latest.pop_other),
-      },
-      affiliation: {
-        dem: pct(latest.reg_dem),
-        rep: pct(latest.reg_rep),
-        unaffiliated: pct(latest.reg_unaff),
-        other: pct(latest.reg_other),
-      },
-    },
-    change: prior ? {
-      from: prior.snapshot,
-      to: latest.snapshot,
-      total_pop: delta(latest.total_pop, prior.total_pop),
-      total_pop_pct: pctDelta(latest.total_pop, prior.total_pop),
-      registered: delta(latest.registered, prior.registered),
-      registered_pct: pctDelta(latest.registered, prior.registered),
-      race: {
-        white: delta(latest.pop_white, prior.pop_white),
-        black: delta(latest.pop_black, prior.pop_black),
-        hispanic: delta(latest.pop_hispanic, prior.pop_hispanic),
-        other: delta(latest.pop_other, prior.pop_other),
-      },
-      affiliation: {
-        dem: delta(latest.reg_dem, prior.reg_dem),
-        rep: delta(latest.reg_rep, prior.reg_rep),
-        unaffiliated: delta(latest.reg_unaff, prior.reg_unaff),
-        other: delta(latest.reg_other, prior.reg_other),
-      },
-    } : null,
-  };
-}
 
 function districtRow(districtId, cycle) {
   return db.prepare(`SELECT * FROM districts WHERE district_id = ? AND election_cycle = ?`).get(districtId, cycle);
@@ -355,7 +295,6 @@ export function getRace(districtId, cycle = CYCLE) {
   // already in race.money and the congressional profile in race.profile.
   if (row.race_type === 'state_senate' || row.race_type === 'state_house') {
     race.state_funds = stateFunds(districtId, cycle);
-    race.demographics = districtDemographics(districtId, cycle);
   }
   return race;
 }
