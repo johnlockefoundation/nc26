@@ -12,8 +12,8 @@
     "seed": "npm run seed -w backend",
     "ingest": "npm run ingest -w backend",
     "build": "npm run build -w frontend",
-    "fetch": "npm run fetch-markets -w backend && npm run fetch-news -w backend && npm run fetch-fec -w backend && npm run fetch-photos -w backend",
-    "fetch:markets": "npm run fetch-markets -w backend",
+    "fetch": "npm run fetch-kalshi -w backend && npm run fetch-news -w backend && npm run fetch-fec -w backend && npm run fetch-photos -w backend",
+    "fetch:kalshi": "npm run fetch-kalshi -w backend",
     "fetch:news": "npm run fetch-news -w backend",
     "fetch:fec": "npm run fetch-fec -w backend",
     "fetch:photos": "npm run fetch-photos -w backend"

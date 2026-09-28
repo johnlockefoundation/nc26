@@ -65,11 +65,11 @@ function spreadMove(curDem, curRep, prevDem, prevRep) {
   return (curDem - curRep) * 100 - (prevDem - prevRep) * 100;
 }
 
-function marketWeeklyMove(districtId, cycle) {
+function marketWeeklyMove(districtId, cycle, provider = 'Kalshi') {
   const days = db.prepare(`SELECT as_of, dem_price, rep_price, dem_bid_price, rep_bid_price
     FROM market_snapshots
-    WHERE district_id = ? AND election_cycle = ? AND provider = 'Kalshi'
-    ORDER BY as_of DESC`).all(districtId, cycle);
+    WHERE district_id = ? AND election_cycle = ? AND provider = ?
+    ORDER BY as_of DESC`).all(districtId, cycle, provider);
   if (days.length < 2) return null;
   const latest = days[0];
   const cutoff = new Date(`${latest.as_of}T00:00:00Z`);
@@ -88,14 +88,12 @@ function marketWeeklyMove(districtId, cycle) {
   return { party: move > 0 ? 'D' : 'R', points: +Math.abs(move).toFixed(1) };
 }
 
-// `provider` pins the venue. Senate seats can carry both a Kalshi and a
-// PredictIt row, and picking by recency alone would let whichever venue
-// refreshed last take over the panel.
-function marketSummary(districtId, cycle, { provider = null } = {}) {
+// Kalshi is the only market venue, so there is nothing to disambiguate: the
+// single most recent quote for the seat is the one to show.
+function marketSummary(districtId, cycle) {
   const rows = db.prepare(`SELECT provider, dem_price, rep_price, advantage, updated_at, source_url, is_seed
     FROM markets WHERE district_id = ? AND election_cycle = ?
-    ${provider ? 'AND provider = ?' : ''}
-    ORDER BY updated_at DESC`).all(...[districtId, cycle, provider].filter((v) => v != null));
+    ORDER BY updated_at DESC`).all(districtId, cycle);
   const m = rows[0];
   const has = m && m.dem_price != null && m.rep_price != null;
   return {
@@ -109,6 +107,27 @@ function marketSummary(districtId, cycle, { provider = null } = {}) {
     source_url: m ? m.source_url : null,
     is_seed: m ? Boolean(m.is_seed) : false,
   };
+}
+
+// Every quoted venue for a race. Kalshi is currently the only one, but
+// rendering the list rather than a single venue means adding a second source
+// later shows both instead of silently dropping one.
+function marketList(districtId, cycle) {
+  const rows = db.prepare(`SELECT provider, dem_price, rep_price, advantage, updated_at, source_url, is_seed
+    FROM markets WHERE district_id = ? AND election_cycle = ?
+      AND dem_price IS NOT NULL AND rep_price IS NOT NULL
+    ORDER BY provider`).all(districtId, cycle);
+  return rows.map((m) => ({
+    available: true,
+    provider: m.provider,
+    dem_price: m.dem_price,
+    rep_price: m.rep_price,
+    advantage: formatMarketAdvantage(m.advantage),
+    delta: marketWeeklyMove(districtId, cycle, m.provider),
+    updated_at: m.updated_at,
+    source_url: m.source_url,
+    is_seed: Boolean(m.is_seed),
+  }));
 }
 
 function moneySummary(districtId, cycle) {
@@ -128,10 +147,13 @@ function moneySummary(districtId, cycle) {
   };
 }
 
-function newsFeed(cycle, limit = 3) {
-  return db.prepare(`SELECT article_id, district_id, headline, outlet, published_at, url, summary, relevance_score, topic
-    FROM news WHERE election_cycle = ?
-    ORDER BY published_at DESC, relevance_score DESC LIMIT ?`).all(cycle, limit);
+// Stories about one specific seat, for the list under CPI Info. Only rows that
+// were tagged to this exact district qualify, so a district never shows
+// statewide or other-seat coverage.
+function districtNews(districtId, cycle, limit = 6) {
+  return db.prepare(`SELECT article_id, district_id, headline, outlet, published_at, url, summary
+    FROM news WHERE election_cycle = ? AND district_id = ? AND url <> ''
+    ORDER BY published_at DESC LIMIT ?`).all(cycle, districtId, limit);
 }
 
 function districtRow(districtId, cycle) {
@@ -156,13 +178,10 @@ function partisanSummary(row) {
   };
 }
 
-export function getRaceSummary(row, cycle, { includeNews = true } = {}) {
+export function getRaceSummary(row, cycle) {
   const polls = pollSummary(row.district_id, cycle);
-  // Senate races are Kalshi-only; the other race types surface whichever
-  // venue has the freshest quote.
-  const markets = marketSummary(row.district_id, cycle, {
-    provider: row.race_type === 'us_senate' ? 'Kalshi' : null,
-  });
+  const markets = marketSummary(row.district_id, cycle);
+  const market_list = marketList(row.district_id, cycle);
   const money = moneySummary(row.district_id, cycle);
   const candidates = candidateList(row.district_id, cycle);
   const partisan = partisanSummary(row);
@@ -189,8 +208,8 @@ export function getRaceSummary(row, cycle, { includeNews = true } = {}) {
     partisan,
     polls,
     markets,
+    market_list,
     money,
-    news: includeNews ? newsFeed(cycle, 3) : [],
     coverage: {
       polls: polls.available,
       markets: markets.available,
@@ -240,13 +259,13 @@ function profileFor(districtId, cycle) {
 export function getRace(districtId, cycle = CYCLE) {
   const row = districtRow(districtId, cycle);
   if (!row) return null;
-  const race = getRaceSummary(row, cycle, { includeNews: false });
+  const race = getRaceSummary(row, cycle);
   const polls = db.prepare(`SELECT poll_id, pollster, start_date, end_date, sample_size, population,
       dem_share, rep_share, margin, source_url, source, is_seed
     FROM polls WHERE district_id = ? AND election_cycle = ?
     ORDER BY end_date DESC`).all(districtId, cycle);
   race.poll_detail = polls;
-  race.all_news = newsFeed(cycle, 25);
+  race.news = districtNews(districtId, cycle);
   race.profile = profileFor(districtId, cycle);
   return race;
 }
@@ -280,9 +299,11 @@ export function getMapFeatures({ cycle = CYCLE, raceType } = {}) {
   };
 }
 
+// The ticker is a funnel for the two partner outlets only. Seat-level stories
+// from other outlets appear in the per-district list instead, not here.
 export function getTicker({ cycle = CYCLE, limit = 12 } = {}) {
   return db.prepare(`SELECT article_id, district_id, headline, outlet, url, published_at
-    FROM news WHERE election_cycle = ? AND topic = 'race'
+    FROM news WHERE election_cycle = ? AND in_funnel = 1
     ORDER BY published_at DESC LIMIT ?`).all(cycle, limit);
 }
 
