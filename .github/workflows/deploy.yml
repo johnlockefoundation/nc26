@@ -1,0 +1,84 @@
+name: Deploy
+
+# Publishes the static site to GitHub Pages on every push to main, so gh-pages
+# can never drift from main the way a manual deploy does. The build is fully
+# reproducible from committed seed + drop files: the SQLite database is
+# gitignored, so the workflow ingests from scratch rather than shipping a
+# binary.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Required for the Pages deploy token. Concurrency keeps a newer push from
+# waiting behind an older one.
+permissions:
+  contents: write
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # node:sqlite (used throughout the backend) needs Node 22+.
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      # Rebuild the database from committed seed and drop files, then export it
+      # as the static JSON the site reads. build:pages also runs the Vite build.
+      - name: Ingest and build static site
+        run: npm run build:pages -w frontend
+
+      # A guard rather than a test suite: fail the deploy if the export is
+      # missing something the page would then fetch and 404 on.
+      - name: Verify export
+        run: |
+          set -euo pipefail
+          test -f frontend/dist/index.html
+          test -f frontend/dist/demo-data/meta.json
+          test -f frontend/dist/demo-data/ticker.json
+          test -f frontend/dist/demo-data/outline.json
+          for t in us_house us_senate state_house state_senate; do
+            test -f "frontend/dist/demo-data/map/$t.json"
+          done
+          for d in NC-SEN NC-01 SD-42 HD-105; do
+            test -f "frontend/dist/demo-data/race/$d.json"
+          done
+          echo "race files: $(ls frontend/dist/demo-data/race | wc -l)"
+
+      # The two placeholder widgets must stay flagged in the published export.
+      # If an NC SBOE extract replaces the mock seed, is_mock flips to 0 and
+      # this check will fail, which is the signal to remove the banner copy.
+      - name: Verify placeholder data is still flagged
+        run: |
+          set -euo pipefail
+          node -e '
+            const race = require("./frontend/dist/demo-data/race/HD-105.json");
+            if (race.state_funds?.is_mock !== true) throw new Error("state_funds lost its is_mock flag");
+            if (race.demographics?.is_mock !== true) throw new Error("demographics lost its is_mock flag");
+            if (!race.state_funds.candidates.length) throw new Error("no candidate money in export");
+            if (race.demographics.change == null) throw new Error("no demographic delta in export");
+            console.log("placeholder flags intact, mock generation still active");
+          '
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: frontend/dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
