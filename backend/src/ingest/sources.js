@@ -1,6 +1,6 @@
 // Live data-source ingestion. Each source can be updated independently by
 // dropping a normalized JSON file into backend/data/sources/<type>.json and
-// running:  node src/ingest/index.js polls|markets|fundraising|news
+// running:  node src/ingest/index.js polls|markets|fundraising|news|photos
 //
 // File schema mirrors the backend tables so sources stay interchangeable.
 import { readFileSync, existsSync } from 'node:fs';
@@ -144,4 +144,23 @@ export function ingestNewsFromSource(cycle = CYCLE) {
   }
   console.log(`[news] ingested ${n} articles`);
   return { source: data.source || 'news', count: n };
+}
+
+// Candidate portraits are an UPDATE, never a replace: a candidate row also
+// carries name/party/incumbent from the seed files, and re-writing the row
+// would discard fields this drop knows nothing about. Candidates the drop
+// omits keep whatever they already had (or the initials fallback).
+export function ingestPhotosFromSource(cycle = CYCLE) {
+  const data = loadDrop('photos');
+  if (!data) return null;
+  const upd = db.prepare(`UPDATE candidates SET photo_url = ?, photo_source = ?
+    WHERE candidate_id = ? AND election_cycle = ?`);
+  let n = 0;
+  for (const p of data.photos || []) {
+    if (!p.photo_url) continue;
+    const res = upd.run(p.photo_url, p.photo_source || data.source || null, p.candidate_id, cycle);
+    if (res.changes) n++;
+  }
+  console.log(`[photos] updated ${n} candidate portraits (${data.source || 'photos'})`);
+  return { source: data.source || 'photos', count: n };
 }

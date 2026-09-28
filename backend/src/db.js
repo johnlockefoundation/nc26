@@ -18,6 +18,9 @@ export function initSchema() {
   if (!cols.some((c) => c.name === 'photo_url')) {
     db.exec(`ALTER TABLE candidates ADD COLUMN photo_url TEXT`);
   }
+  if (!cols.some((c) => c.name === 'photo_source')) {
+    db.exec(`ALTER TABLE candidates ADD COLUMN photo_source TEXT`);
+  }
   const newsCols = db.prepare(`PRAGMA table_info(news)`).all();
   if (!newsCols.some((c) => c.name === 'topic')) {
     db.exec(`ALTER TABLE news ADD COLUMN topic TEXT NOT NULL DEFAULT 'race'`);

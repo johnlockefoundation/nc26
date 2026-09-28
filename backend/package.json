@@ -13,7 +13,8 @@
     "fetch-markets": "node scripts/fetch-markets.mjs",
     "fetch-kalshi": "node scripts/fetch-kalshi.mjs",
     "fetch-news": "node scripts/fetch-news.mjs",
-    "fetch-fec": "node scripts/fetch-fec.mjs"
+    "fetch-fec": "node scripts/fetch-fec.mjs",
+    "fetch-photos": "node scripts/fetch-photos.mjs"
   },
   "dependencies": {
     "cors": "^2.8.5",

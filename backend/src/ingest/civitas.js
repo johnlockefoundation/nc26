@@ -14,9 +14,18 @@ const CIVITAS_FILE = join(__dirname, '..', '..', 'data', 'seed', 'civitas.json')
 
 export function ingestCivitas(cycle = CYCLE) {
   const data = JSON.parse(readFileSync(CIVITAS_FILE, 'utf8'));
-  const insCand = db.prepare(`INSERT OR REPLACE INTO candidates
+  // Upsert rather than INSERT OR REPLACE: the photo columns are owned by the
+  // photos drop (see scripts/fetch-photos.mjs), and replacing the row would
+  // silently wipe a portrait on every re-ingest of this seed.
+  const insCand = db.prepare(`INSERT INTO candidates
     (candidate_id, district_id, election_cycle, name, party, incumbent, website)
-    VALUES (?, ?, ?, ?, ?, ?, '')`);
+    VALUES (?, ?, ?, ?, ?, ?, '')
+    ON CONFLICT(candidate_id) DO UPDATE SET
+      district_id = excluded.district_id,
+      election_cycle = excluded.election_cycle,
+      name = excluded.name,
+      party = excluded.party,
+      incumbent = excluded.incumbent`);
   const updDistrict = db.prepare(
     `UPDATE districts SET competitive = ?, competitive_source = ?, competitive_reason = ?, cpi_value = ?, partisan_lean = ?, partisan_party = ? WHERE district_id = ? AND election_cycle = ?`
   );

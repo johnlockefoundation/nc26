@@ -1,0 +1,806 @@
+{
+  "source": "openstates-people",
+  "source_url": "https://github.com/openstates/people/tree/main/data/nc/legislature",
+  "license": "CC0-1.0 (public domain in the US)",
+  "updated_at": "2026-09-28T14:04:44.999Z",
+  "photos": [
+    {
+      "candidate_id": "HD-10_R_2026",
+      "name": "John Bell",
+      "district_id": "HD-10",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/H/661/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "HD-101_D_2026",
+      "name": "Carolyn G. Logan",
+      "district_id": "HD-101",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/H/750/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "HD-102_D_2026",
+      "name": "Becky Carney",
+      "district_id": "HD-102",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/H/322/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "HD-103_D_2026",
+      "name": "Laura Budd",
+      "district_id": "HD-103",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/H/796/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "HD-104_D_2026",
+      "name": "Brandon Lofton",
+      "district_id": "HD-104",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/H/751/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "HD-105_R_2026",
+      "name": "Tricia Ann Cotham",
+      "district_id": "HD-105",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/H/817/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "HD-108_R_2026",
+      "name": "John A. Torbett",
+      "district_id": "HD-108",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/H/606/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "HD-109_R_2026",
+      "name": "Donnie Loftis",
+      "district_id": "HD-109",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/H/788/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "HD-11_D_2026",
+      "name": "Allison A. Dahle",
+      "district_id": "HD-11",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/H/740/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "HD-113_R_2026",
+      "name": "Jake Johnson",
+      "district_id": "HD-113",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/H/762/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "HD-114_D_2026",
+      "name": "Eric Ager",
+      "district_id": "HD-114",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/H/819/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "HD-115_D_2026",
+      "name": "Lindsey Prather",
+      "district_id": "HD-115",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/H/809/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "HD-116_D_2026",
+      "name": "Brian Turner",
+      "district_id": "HD-116",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/H/696/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "HD-12_R_2026",
+      "name": "Chris Humphrey",
+      "district_id": "HD-12",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/H/747/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "HD-120_R_2026",
+      "name": "Karl Gillespie",
+      "district_id": "HD-120",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/H/771/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "HD-13_R_2026",
+      "name": "Celeste Cairns",
+      "district_id": "HD-13",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/H/797/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "HD-16_R_2026",
+      "name": "Carson Smith",
+      "district_id": "HD-16",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/H/755/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "HD-17_R_2026",
+      "name": "Frank Iler",
+      "district_id": "HD-17",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/H/598/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "HD-18_D_2026",
+      "name": "Deb Butler",
+      "district_id": "HD-18",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/H/730/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "HD-19_R_2026",
+      "name": "Charlie Miller",
+      "district_id": "HD-19",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/H/778/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "HD-2_D_2026",
+      "name": "Ray Jeffers",
+      "district_id": "HD-2",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/H/805/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "HD-21_D_2026",
+      "name": "Ya Liu",
+      "district_id": "HD-21",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/H/806/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "HD-25_R_2026",
+      "name": "Allen Chesser",
+      "district_id": "HD-25",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/H/799/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "HD-26_R_2026",
+      "name": "Donna McDowell White",
+      "district_id": "HD-26",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/H/728/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "HD-28_R_2026",
+      "name": "Larry C. Strickland",
+      "district_id": "HD-28",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/H/727/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "HD-29_D_2026",
+      "name": "Vernetta Alston",
+      "district_id": "HD-29",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/H/765/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "HD-3_R_2026",
+      "name": "Steve Tyson",
+      "district_id": "HD-3",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/H/774/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "HD-30_D_2026",
+      "name": "Marcia Morey",
+      "district_id": "HD-30",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/H/732/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "HD-31_D_2026",
+      "name": "Zack Hawkins",
+      "district_id": "HD-31",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/H/742/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "HD-34_D_2026",
+      "name": "Tim Longest",
+      "district_id": "HD-34",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/H/818/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "HD-36_D_2026",
+      "name": "Julie von Haefen",
+      "district_id": "HD-36",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/H/758/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "HD-37_R_2026",
+      "name": "Erin Pare",
+      "district_id": "HD-37",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/H/770/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "HD-38_D_2026",
+      "name": "Abe Jones",
+      "district_id": "HD-38",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/H/780/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "HD-39_D_2026",
+      "name": "James A. Roberson",
+      "district_id": "HD-39",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/H/786/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "HD-4_R_2026",
+      "name": "Jimmy Dixon",
+      "district_id": "HD-4",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/H/613/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "HD-41_D_2026",
+      "name": "Maria Cervania",
+      "district_id": "HD-41",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/H/798/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "HD-43_R_2026",
+      "name": "Diane Wheatley",
+      "district_id": "HD-43",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/H/785/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "HD-44_D_2026",
+      "name": "Charles Smith",
+      "district_id": "HD-44",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/H/813/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "HD-45_D_2026",
+      "name": "Frances Jackson",
+      "district_id": "HD-45",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/H/803/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "HD-46_R_2026",
+      "name": "Brenden H. Jones",
+      "district_id": "HD-46",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/H/723/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "HD-48_D_2026",
+      "name": "Garland E. Pierce",
+      "district_id": "HD-48",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/H/497/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "HD-49_D_2026",
+      "name": "Cynthia Ball",
+      "district_id": "HD-49",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/H/711/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "HD-5_R_2026",
+      "name": "Bill Ward",
+      "district_id": "HD-5",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/H/816/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "HD-50_D_2026",
+      "name": "Renee A. Price",
+      "district_id": "HD-50",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/H/810/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "HD-52_R_2026",
+      "name": "Ben Moss",
+      "district_id": "HD-52",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/H/784/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "HD-53_R_2026",
+      "name": "Howard L. Penny, Jr.",
+      "district_id": "HD-53",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/H/768/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "HD-54_D_2026",
+      "name": "Robert T. Reives II",
+      "district_id": "HD-54",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/H/684/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "HD-56_D_2026",
+      "name": "Allen Buansi",
+      "district_id": "HD-56",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/H/790/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "HD-58_D_2026",
+      "name": "Amos Quick",
+      "district_id": "HD-58",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/H/725/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "HD-6_R_2026",
+      "name": "Joe Pike",
+      "district_id": "HD-6",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/H/808/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "HD-61_D_2026",
+      "name": "Mary Price (Pricey) Harrison",
+      "district_id": "HD-61",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/H/504/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "HD-64_R_2026",
+      "name": "Dennis Riddell",
+      "district_id": "HD-64",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/H/665/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "HD-66_D_2026",
+      "name": "Sarah Crawford",
+      "district_id": "HD-66",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/H/800/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "HD-68_R_2026",
+      "name": "David Willis",
+      "district_id": "HD-68",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/H/779/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "HD-69_R_2026",
+      "name": "Dean Arp",
+      "district_id": "HD-69",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/H/640/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "HD-70_R_2026",
+      "name": "Brian Biggs",
+      "district_id": "HD-70",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/H/793/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "HD-71_D_2026",
+      "name": "Kanika Brown",
+      "district_id": "HD-71",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/H/795/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "HD-72_D_2026",
+      "name": "Amber M. Baker",
+      "district_id": "HD-72",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/H/782/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "HD-74_R_2026",
+      "name": "Jeff Zenger",
+      "district_id": "HD-74",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/H/775/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "HD-75_R_2026",
+      "name": "Donny C. Lambeth",
+      "district_id": "HD-75",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/H/646/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "HD-77_R_2026",
+      "name": "Julia Howard",
+      "district_id": "HD-77",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/H/53/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "HD-78_R_2026",
+      "name": "Neal Jackson",
+      "district_id": "HD-78",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/H/804/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "HD-8_D_2026",
+      "name": "Gloristine Brown",
+      "district_id": "HD-8",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/H/794/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "HD-81_R_2026",
+      "name": "Larry Potts",
+      "district_id": "HD-81",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/H/724/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "HD-84_R_2026",
+      "name": "Jeffrey C. McNeely",
+      "district_id": "HD-84",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/H/761/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "HD-85_R_2026",
+      "name": "Dudley Greene",
+      "district_id": "HD-85",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/H/777/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "HD-86_R_2026",
+      "name": "Hugh Blackwell",
+      "district_id": "HD-86",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/H/580/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "HD-87_R_2026",
+      "name": "Destin Hall",
+      "district_id": "HD-87",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/H/719/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "HD-88_D_2026",
+      "name": "Mary Belk",
+      "district_id": "HD-88",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/H/713/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "HD-89_R_2026",
+      "name": "Mitchell Setzer",
+      "district_id": "HD-89",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/H/149/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "HD-9_R_2026",
+      "name": "Timothy Reeder",
+      "district_id": "HD-9",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/H/811/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "HD-91_R_2026",
+      "name": "Kyle Hall",
+      "district_id": "HD-91",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/H/704/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "HD-92_D_2026",
+      "name": "Terry Brown",
+      "district_id": "HD-92",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/H/783/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "HD-93_R_2026",
+      "name": "Ray Pickett",
+      "district_id": "HD-93",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/H/772/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "HD-96_R_2026",
+      "name": "Jay Adams",
+      "district_id": "HD-96",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/H/697/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "SD-02_R_2026",
+      "name": "Norman Sanderson",
+      "district_id": "SD-02",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/S/375/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "SD-04_R_2026",
+      "name": "Buck Newton",
+      "district_id": "SD-04",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/S/443/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "SD-05_D_2026",
+      "name": "Kandie D. Smith",
+      "district_id": "SD-05",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/S/447/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "SD-06_R_2026",
+      "name": "Michael Anthony Lazzara",
+      "district_id": "SD-06",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/S/426/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "SD-07_R_2026",
+      "name": "Michael Lee",
+      "district_id": "SD-07",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/S/387/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "SD-08_R_2026",
+      "name": "Bill Rabon",
+      "district_id": "SD-08",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/S/303/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "SD-09_R_2026",
+      "name": "Brent Jackson",
+      "district_id": "SD-09",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/S/281/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "SD-10_R_2026",
+      "name": "Benton Sawrey",
+      "district_id": "SD-10",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/S/445/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "SD-11_R_2026",
+      "name": "Lisa Stone Barnes",
+      "district_id": "SD-11",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/S/427/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "SD-12_R_2026",
+      "name": "Jim Burgin",
+      "district_id": "SD-12",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/S/412/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "SD-13_D_2026",
+      "name": "Lisa Grafstein",
+      "district_id": "SD-13",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/S/439/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "SD-14_D_2026",
+      "name": "Dan Blue",
+      "district_id": "SD-14",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/S/268/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "SD-15_D_2026",
+      "name": "Jay J. Chaudhuri",
+      "district_id": "SD-15",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/S/395/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "SD-16_D_2026",
+      "name": "Gale Adcock",
+      "district_id": "SD-16",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/S/436/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "SD-17_D_2026",
+      "name": "Mrs. Sydney Batch",
+      "district_id": "SD-17",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/S/434/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "SD-19_D_2026",
+      "name": "Val Applewhite",
+      "district_id": "SD-19",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/S/440/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "SD-20_D_2026",
+      "name": "Natalie S. Murdock",
+      "district_id": "SD-20",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/S/422/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "SD-21_R_2026",
+      "name": "Tom McInnis",
+      "district_id": "SD-21",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/S/389/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "SD-24_R_2026",
+      "name": "Danny Earl Britt, Jr.",
+      "district_id": "SD-24",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/S/399/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "SD-25_R_2026",
+      "name": "Amy Scott Galey",
+      "district_id": "SD-25",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/S/429/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "SD-27_D_2026",
+      "name": "Michael K. Garrett",
+      "district_id": "SD-27",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/S/414/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "SD-28_D_2026",
+      "name": "Gladys A. Robinson",
+      "district_id": "SD-28",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/S/364/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "SD-29_R_2026",
+      "name": "Dave Craven",
+      "district_id": "SD-29",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/S/423/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "SD-30_R_2026",
+      "name": "Steve Jarvis",
+      "district_id": "SD-30",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/S/430/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "SD-32_D_2026",
+      "name": "Paul Lowe, Jr.",
+      "district_id": "SD-32",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/S/394/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "SD-33_R_2026",
+      "name": "Carl Ford",
+      "district_id": "SD-33",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/S/410/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "SD-35_R_2026",
+      "name": "Todd Johnson",
+      "district_id": "SD-35",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/S/406/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "SD-36_R_2026",
+      "name": "Eddie Settle",
+      "district_id": "SD-36",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/S/446/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "SD-37_R_2026",
+      "name": "Vickie Sawyer",
+      "district_id": "SD-37",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/S/405/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "SD-38_D_2026",
+      "name": "Mujtaba A. Mohammed",
+      "district_id": "SD-38",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/S/417/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "SD-39_D_2026",
+      "name": "DeAndrea Salvador",
+      "district_id": "SD-39",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/S/431/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "SD-40_D_2026",
+      "name": "Joyce Waddell",
+      "district_id": "SD-40",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/S/393/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "SD-43_R_2026",
+      "name": "Brad Overcash",
+      "district_id": "SD-43",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/S/444/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "SD-44_R_2026",
+      "name": "Ted Alexander",
+      "district_id": "SD-44",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/S/416/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "SD-46_R_2026",
+      "name": "Warren Daniel",
+      "district_id": "SD-46",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/S/295/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "SD-47_R_2026",
+      "name": "Ralph Hise",
+      "district_id": "SD-47",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/S/298/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "SD-48_R_2026",
+      "name": "Tim Moffitt",
+      "district_id": "SD-48",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/S/438/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "SD-49_D_2026",
+      "name": "Julie Mayfield",
+      "district_id": "SD-49",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/S/432/Low",
+      "photo_source": "ncleg.gov"
+    },
+    {
+      "candidate_id": "SD-50_R_2026",
+      "name": "Kevin Corbin",
+      "district_id": "SD-50",
+      "photo_url": "https://www.ncleg.gov/Members/MemberImage/S/433/Low",
+      "photo_source": "ncleg.gov"
+    }
+  ]
+}
