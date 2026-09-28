@@ -7,12 +7,19 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const BACKEND = resolve(__dirname, '..');
 
-const { db } = await import(pathToFileURL(join(BACKEND, 'src', 'db.js')));
+const { db, initSchema } = await import(pathToFileURL(join(BACKEND, 'src', 'db.js')));
 const { CYCLE, HOUSE_OUTLOOK, SENATE_OUTLOOK, NC_SENATE_OUTLOOK, NC_HOUSE_OUTLOOK } = await import(pathToFileURL(join(BACKEND, 'src', 'ingest', 'config.js')));
 const races = await import(pathToFileURL(join(BACKEND, 'src', 'lib', 'races.js')));
 
 const OUT = process.env.STATIC_OUT || resolve(BACKEND, '..', 'frontend', 'public', 'demo-data');
 const OUTLINE = join(BACKEND, 'data', 'geojson', 'state-outline.json');
+
+// The database is gitignored, so a clean checkout (CI) has no schema at all.
+// Without this the first query fails with "no such table". Callers are still
+// responsible for running the ingest to populate it; this only guarantees the
+// tables exist so a missing ingest fails on an empty export rather than a
+// confusing SQL error.
+initSchema();
 
 const RACE_TYPES = ['us_house', 'us_senate', 'state_senate', 'state_house'];
 
@@ -24,6 +31,14 @@ function writeJson(rel, data) {
 }
 
 console.log(`Exporting static demo data (cycle ${CYCLE}) → ${OUT}`);
+
+const districtCount = db.prepare('SELECT COUNT(*) AS n FROM districts').get().n;
+if (!districtCount) {
+  console.error('\nERROR: the database has no districts.');
+  console.error('Run `npm run ingest` before exporting. The database is gitignored,');
+  console.error('so a clean checkout (CI) starts empty.');
+  process.exit(1);
+}
 
 const meta = {
   cycle: CYCLE,

@@ -32,9 +32,14 @@ jobs:
 
       - run: npm ci
 
-      # Rebuild the database from committed seed and drop files, then export it
-      # as the static JSON the site reads. build:pages also runs the Vite build.
-      - name: Ingest and build static site
+      # The database is gitignored, so a clean checkout has none. Build it from
+      # the committed seed and drop files before exporting. Without this the
+      # export runs against an empty database.
+      - name: Ingest from seed data
+        run: npm run ingest
+
+      # Export the database as the static JSON the site reads, then build.
+      - name: Export static data and build site
         run: npm run build:pages -w frontend
 
       # A guard rather than a test suite: fail the deploy if the export is
