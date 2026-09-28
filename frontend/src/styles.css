@@ -265,6 +265,54 @@ a { color: var(--accent); }
 .section-link { color: var(--muted); text-decoration: none; border-bottom: 1px dotted rgba(148, 163, 184, 0.5); }
 .section-link:hover { color: var(--accent); border-bottom-color: var(--accent); }
 
+/* Placeholder-data notice. Loud by design: these figures are invented and must
+   not read as reported results. */
+.mock-banner {
+  display: block; margin: 0 0 10px; padding: 6px 9px; border-radius: 7px;
+  background: rgba(251, 191, 36, 0.12); border: 1px solid rgba(251, 191, 36, 0.4);
+  font-family: var(--font-display); font-size: 9.5px; font-weight: 700;
+  letter-spacing: 0.1em; color: #fbbf24;
+}
+
+/* Campaign money */
+.funds-bars { display: flex; flex-direction: column; gap: 13px; }
+.funds-row { display: flex; flex-direction: column; gap: 5px; }
+.funds-row-head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+.funds-name { font-family: var(--font-display); font-size: 12.5px; font-weight: 700; }
+.funds-amount { font-family: var(--font-display); font-size: 14px; font-weight: 700; color: var(--ink); }
+.funds-track { height: 7px; border-radius: 4px; background: rgba(148, 163, 184, 0.18); overflow: hidden; }
+.funds-track i { display: block; height: 100%; border-radius: 4px; }
+.funds-fill-d { background: var(--d); }
+.funds-fill-r { background: var(--r); }
+.funds-meta { font-size: 10.5px; color: var(--muted); }
+.funds-tally { margin-top: 12px; font-size: 12px; color: var(--ink); }
+.funds-period { margin-top: 8px; font-size: 10.5px; }
+
+/* District demographics */
+.demos-heads { display: flex; gap: 10px; margin-bottom: 4px; }
+.demos-head {
+  flex: 1; display: flex; flex-direction: column; gap: 2px;
+  border: 1px solid var(--line); border-radius: 10px; padding: 9px 11px;
+}
+.demos-head span { font-size: 10px; letter-spacing: 0.08em; color: var(--muted); }
+.demos-head b { font-family: var(--font-display); font-size: 16px; color: var(--ink); }
+.demos-head-delta { font-size: 10.5px; font-weight: 700; }
+.demos-head-delta.up { color: #4ade80; }
+.demos-head-delta.down { color: #f87171; }
+.demos-bars { display: flex; flex-direction: column; gap: 6px; }
+.demos-bar-row { display: flex; align-items: center; gap: 9px; font-size: 12px; }
+.demos-bar-name { width: 84px; flex: none; color: var(--muted); text-align: right; }
+.demos-bar-track { flex: 1 1 auto; height: 7px; border-radius: 4px; background: rgba(148, 163, 184, 0.18); overflow: hidden; }
+.demos-bar-track i { display: block; height: 100%; border-radius: 4px; }
+.demos-bar-pct { width: 34px; flex: none; text-align: right; color: var(--ink); font-variant-numeric: tabular-nums; }
+.demos-delta { width: 42px; flex: none; text-align: right; font-size: 10.5px; font-weight: 700; color: var(--muted); font-variant-numeric: tabular-nums; }
+.demos-delta.up { color: #4ade80; }
+.demos-delta.down { color: #f87171; }
+.race-dem { background: var(--d); }
+.race-rep { background: var(--r); }
+.race-unaff { background: #8b9cb0; }
+.demos-foot { margin-top: 11px; font-size: 10.5px; line-height: 1.45; }
+
 /* Per-race news list */
 .race-news { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 11px; }
 .race-news-item { display: flex; flex-direction: column; gap: 3px; }

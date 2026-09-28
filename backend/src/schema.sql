@@ -174,6 +174,54 @@ CREATE TABLE IF NOT EXISTS district_profiles (
   PRIMARY KEY (district_id, election_cycle)
 );
 
+-- Per-candidate money for state legislative races. The federal fundraising
+-- table is party-aggregate; GA races need the individual candidate because
+-- there is no primary contest to infer a nominee from.
+-- is_mock = 1 means placeholder figures pending an NC SBOE extract.
+CREATE TABLE IF NOT EXISTS state_funds (
+  district_id     TEXT NOT NULL,
+  candidate_id    TEXT NOT NULL,
+  election_cycle  TEXT NOT NULL,
+  candidate_name  TEXT NOT NULL,
+  party           TEXT NOT NULL,
+  total_raised    REAL,
+  total_spent     REAL,
+  cash_on_hand    REAL,
+  contributions   INTEGER,                     -- count of distinct donors
+  small_donors    INTEGER,                     -- contributors under $200
+  reporting_period TEXT,
+  source_url      TEXT,
+  is_mock         INTEGER NOT NULL DEFAULT 0,
+  updated_at      TEXT,
+  PRIMARY KEY (candidate_id, election_cycle)
+);
+
+-- District demographics at two snapshots, so a race panel can show what
+-- changed between them. Sourced from voter-file registration and Census
+-- population estimates.
+CREATE TABLE IF NOT EXISTS district_demographics (
+  district_id     TEXT NOT NULL,
+  snapshot        TEXT NOT NULL,               -- e.g. '2024' | '2026'
+  election_cycle  TEXT NOT NULL,
+  total_pop       INTEGER,
+  pop_white       REAL,
+  pop_black       REAL,
+  pop_hispanic    REAL,
+  pop_other       REAL,
+  registered      INTEGER,
+  reg_dem         REAL,
+  reg_rep         REAL,
+  reg_unaff       REAL,
+  reg_other       REAL,
+  is_mock         INTEGER NOT NULL DEFAULT 0,
+  source          TEXT,
+  updated_at      TEXT,
+  PRIMARY KEY (district_id, snapshot)
+);
+
+CREATE INDEX IF NOT EXISTS idx_state_funds_district ON state_funds (district_id, election_cycle);
+CREATE INDEX IF NOT EXISTS idx_district_demos ON district_demographics (district_id, election_cycle);
+
 CREATE INDEX IF NOT EXISTS idx_polls_district ON polls (district_id, election_cycle);
 CREATE INDEX IF NOT EXISTS idx_news_district ON news (district_id, election_cycle, published_at DESC);
 CREATE INDEX IF NOT EXISTS idx_candidates_district ON candidates (district_id, election_cycle);

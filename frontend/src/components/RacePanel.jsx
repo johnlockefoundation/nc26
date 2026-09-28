@@ -2,6 +2,8 @@ import MetricBlock from './MetricBlock.jsx';
 import DistrictProfile from './DistrictProfile.jsx';
 import CivitasPartisan from './CivitasPartisan.jsx';
 import DistrictNews from './DistrictNews.jsx';
+import StateFunds from './StateFunds.jsx';
+import DistrictDemographics from './DistrictDemographics.jsx';
 
 function initials(name) {
   return name.split(/\s+/).filter(Boolean).slice(0, 2).map((w) => w[0].toUpperCase()).join('');
@@ -68,6 +70,8 @@ export default function RacePanel({ race, loading }) {
       {isStateRace ? (
         <>
           <CivitasPartisan partisan={race.partisan} />
+          <StateFunds funds={race.state_funds} />
+          <DistrictDemographics demographics={race.demographics} />
           <DistrictNews articles={race.news} />
         </>
       ) : showFullPanel ? (

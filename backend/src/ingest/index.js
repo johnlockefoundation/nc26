@@ -20,7 +20,7 @@ import { ingestSeedMetrics } from './metrics.js';
 import { ingestProfiles } from './profile.js';
 import {
   ingestPollsFromSource, ingestKalshiFromSource, ingestFundraisingFromSource, ingestNewsFromSource,
-  ingestPhotosFromSource,
+  ingestPhotosFromSource, ingestStateGaMetrics,
 } from './sources.js';
 
 initSchema();
@@ -50,10 +50,11 @@ const JOB = {
   fundraising: () => ingestFundraisingFromSource(CYCLE),
   news: () => ingestNewsFromSource(CYCLE),
   photos: () => ingestPhotosFromSource(CYCLE),
+  'ga-metrics': () => ingestStateGaMetrics(CYCLE),
 };
 
 async function run(target) {
-  const jobs = target === 'all' ? ['districts', 'civitas', 'us-house', 'us-senate', 'metrics', 'profiles', 'polls', 'kalshi', 'fundraising', 'news', 'photos'] : [target];
+  const jobs = target === 'all' ? ['districts', 'civitas', 'us-house', 'us-senate', 'metrics', 'profiles', 'polls', 'kalshi', 'fundraising', 'news', 'photos', 'ga-metrics'] : [target];
   for (const j of jobs) {
     const fn = JOB[j];
     if (!fn) { console.error(`unknown ingest target: ${j}`); process.exitCode = 1; continue; }

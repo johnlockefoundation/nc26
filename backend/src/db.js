@@ -21,6 +21,9 @@ export function initSchema() {
   if (!cols.some((c) => c.name === 'photo_source')) {
     db.exec(`ALTER TABLE candidates ADD COLUMN photo_source TEXT`);
   }
+  // state_funds and district_demographics are new tables rather than altered
+  // columns, so there is nothing to migrate for them; schema.sql creates both
+  // with CREATE TABLE IF NOT EXISTS.
   const newsCols = db.prepare(`PRAGMA table_info(news)`).all();
   if (!newsCols.some((c) => c.name === 'topic')) {
     db.exec(`ALTER TABLE news ADD COLUMN topic TEXT NOT NULL DEFAULT 'race'`);
