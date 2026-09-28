@@ -268,22 +268,13 @@ a { color: var(--accent); }
 .section-link { color: var(--muted); text-decoration: none; border-bottom: 1px dotted rgba(148, 163, 184, 0.5); }
 .section-link:hover { color: var(--accent); border-bottom-color: var(--accent); }
 
-/* Placeholder-data notice. Loud by design: these figures are invented and must
-   not read as reported results. */
-.mock-banner {
-  display: block; margin: 0 0 10px; padding: 6px 9px; border-radius: 7px;
-  background: rgba(251, 191, 36, 0.12); border: 1px solid rgba(251, 191, 36, 0.4);
-  font-family: var(--font-display); font-size: 9.5px; font-weight: 700;
-  letter-spacing: 0.1em; color: #fbbf24;
-}
 
-/* Compact placeholder note, for a single metric block where the full banner
-   would be too heavy. */
-.mock-note {
-  margin: -6px 0 4px; font-family: var(--font-display); font-size: 9.5px;
-  font-weight: 700; letter-spacing: 0.1em; color: #fbbf24;
+/* Single disclaimer for every placeholder figure on a state race. Deliberately
+   quiet: it sits under the Civitas index and covers money and vitals alike,
+   rather than repeating a banner over each widget. */
+.data-disclaimer {
+  margin: 2px 0 0; font-size: 10.5px; line-height: 1.45; color: #fbbf24; opacity: 0.85;
 }
-
 
 /* Voter velocity: registration and ballot movement between two snapshots */
 .vel-heads { display: flex; gap: 10px; }
@@ -308,7 +299,6 @@ a { color: var(--accent); }
 .vel-bar-chg em { font-style: normal; font-size: 9.5px; color: var(--muted); margin-left: 1px; }
 .vel-bar-chg.up { color: #4ade80; }
 .vel-bar-chg.down { color: #f87171; }
-.vel-foot { margin-top: 10px; font-size: 10.5px; line-height: 1.45; }
 
 /* Per-race news list */
 .race-news { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 11px; }

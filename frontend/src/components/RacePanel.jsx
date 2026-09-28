@@ -77,12 +77,16 @@ export default function RacePanel({ race, loading }) {
       {isStateRace ? (
         <>
           <CivitasPartisan partisan={race.partisan} />
+          {/* One disclaimer for every placeholder figure on a state race,
+              sitting directly under the index they all hang off. */}
+          {(race.state_funds?.is_mock || race.vitals?.is_mock) && (
+            <p className="data-disclaimer" role="note">
+              Campaign money and voter figures above are placeholders, not NC SBOE records.
+            </p>
+          )}
           <div className="metrics">
             <MetricBlock title="MONEY" emptyText="NO MONEY" summary={moneyS} />
           </div>
-          {race.state_funds?.is_mock && (
-            <div className="mock-note" role="note">PLACEHOLDER FIGURES — not NC SBOE filings</div>
-          )}
           <VoterVelocity vitals={race.vitals} />
           {showNews && <DistrictNews articles={race.news} />}
         </>

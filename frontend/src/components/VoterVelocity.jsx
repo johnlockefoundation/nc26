@@ -1,8 +1,9 @@
 // Two voter-movement widgets under one snapshot header: how fast
 // registration is growing, and how fast ballots are coming back.
 //
-// PLACEHOLDER DATA. is_mock comes from the API and renders as a banner, so an
-// invented registration count can never be read as an NCSBE filing.
+// PLACEHOLDER DATA. is_mock still comes from the API so nothing downstream can
+// read these as NCSBE filings, but the panel carries a single disclaimer
+// beneath the Civitas index rather than a notice per widget.
 function sign(v, suffix = '') {
   if (v == null) return '—';
   return v > 0 ? `+${v.toLocaleString('en-US')}${suffix}` : v < 0 ? `${v.toLocaleString('en-US')}${suffix}` : `0${suffix}`;
@@ -79,10 +80,6 @@ function BallotVelocity({ ballot }) {
           <span className="vel-bar-chg">{ballot.returned != null ? ballot.returned.toLocaleString('en-US') : '—'}</span>
         </div>
       </div>
-      <div className="vel-foot dim">
-        {ballot.turnout_pct != null ? `${ballot.turnout_pct}% of registered have returned a ballot. ` : ''}
-        Requests {sign(ballot.change.requested)} vs the earlier snapshot.
-      </div>
     </>
   );
 }
@@ -94,18 +91,8 @@ export default function VoterVelocity({ vitals }) {
     <section className="panel-section">
       <h3>{`${vitals.from} v ${vitals.to}`}</h3>
 
-      {vitals.is_mock && (
-        <div className="mock-banner" role="note">
-          PLACEHOLDER FIGURES — not NCSBE registration or ballot data
-        </div>
-      )}
-
       <RegistrationVelocity reg={vitals.registration} />
       <BallotVelocity ballot={vitals.ballot} />
-
-      <div className="vel-foot dim">
-        {vitals.days} days between snapshots. {vitals.source || ''}
-      </div>
     </section>
   );
 }
