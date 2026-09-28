@@ -1,6 +1,7 @@
 import MetricBlock from './MetricBlock.jsx';
 import DistrictProfile from './DistrictProfile.jsx';
 import CivitasPartisan from './CivitasPartisan.jsx';
+import DistrictNews from './DistrictNews.jsx';
 
 function initials(name) {
   return name.split(/\s+/).filter(Boolean).slice(0, 2).map((w) => w[0].toUpperCase()).join('');
@@ -39,8 +40,25 @@ export default function RacePanel({ race, loading }) {
   const polls = race.polls || {};
   const markets = race.markets || {};
   const moneyS = race.money || {};
+  const marketList = race.market_list || (markets.available ? [markets] : []);
   const isStateRace = race.race_type === 'state_senate' || race.race_type === 'state_house';
-  const isUsSenate = race.race_type === 'us_senate';
+
+  // Whether a race carries anything beyond a market quote. Every in-play
+  // senate seat except NC is a shell with a single Kalshi contract, and
+  // rendering four empty blocks for those says more about the pipeline than
+  // the race. This reads the payload rather than hardcoding a district, so a
+  // seat that later picks up polling or money fills in on its own.
+  const hasSubstance = Boolean(polls.available || moneyS.available);
+  const marketBlocks = marketList.map((m) => (
+    <MetricBlock
+      key={m.provider}
+      title={(m.provider || 'MARKET').toUpperCase()}
+      emptyText="NO MARKET"
+      summary={m}
+      delta={m.delta}
+    />
+  ));
+  const showFullPanel = !isStateRace && hasSubstance;
 
   return (
     <aside className="panel">
@@ -48,22 +66,26 @@ export default function RacePanel({ race, loading }) {
       <CandidateCards candidates={race.candidates} />
 
       {isStateRace ? (
-        <CivitasPartisan partisan={race.partisan} />
-      ) : isUsSenate ? (
-        // A senate seat has one usable signal, the Kalshi contract. Polls and
-        // money are left out rather than shown as empty blocks.
-        <div className="metrics">
-          <MetricBlock title="KALSHI" emptyText="NO MARKET" summary={markets} delta={markets.delta} />
-        </div>
-      ) : (
+        <>
+          <CivitasPartisan partisan={race.partisan} />
+          <DistrictNews articles={race.news} />
+        </>
+      ) : showFullPanel ? (
         <div className="metrics">
           <MetricBlock title="POLLS" emptyText="NO POLLING" summary={polls} />
-          <MetricBlock title="MARKETS" emptyText="NO MARKET" summary={markets} delta={markets.delta} />
+          {marketBlocks}
           <MetricBlock title="MONEY" emptyText="NO MONEY" summary={moneyS} />
         </div>
+      ) : (
+        <div className="metrics">{marketBlocks}</div>
       )}
 
-      {!isStateRace && !isUsSenate && <DistrictProfile profile={race.profile} />}
+      {!isStateRace && (
+        <>
+          <DistrictProfile profile={race.profile} />
+          <DistrictNews articles={race.news} />
+        </>
+      )}
     </aside>
   );
 }

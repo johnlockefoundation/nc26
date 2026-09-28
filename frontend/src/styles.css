@@ -265,6 +265,17 @@ a { color: var(--accent); }
 .section-link { color: var(--muted); text-decoration: none; border-bottom: 1px dotted rgba(148, 163, 184, 0.5); }
 .section-link:hover { color: var(--accent); border-bottom-color: var(--accent); }
 
+/* Per-race news list */
+.race-news { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 11px; }
+.race-news-item { display: flex; flex-direction: column; gap: 3px; }
+.race-news-link {
+  font-family: var(--font-display); font-size: 12.5px; font-weight: 500; line-height: 1.38;
+  color: var(--ink); text-decoration: none;
+}
+.race-news-link:hover { color: var(--accent); text-decoration: underline; }
+.race-news-meta { font-size: 10.5px; letter-spacing: 0.05em; color: var(--muted); }
+.race-news-outlet { color: var(--muted); font-weight: 600; }
+
 /* Collapsible section (district profile) */
 .collapsible > summary { display: flex; align-items: center; justify-content: space-between; gap: 10px; cursor: pointer; list-style: none; }
 .collapsible > summary::-webkit-details-marker { display: none; }
