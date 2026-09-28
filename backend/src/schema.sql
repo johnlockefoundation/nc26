@@ -37,6 +37,12 @@ CREATE TABLE IF NOT EXISTS candidates (
 );
 
 -- ---------------------------------------------------------------------------
+-- News. in_funnel marks the outlets that drive the top ticker (Locke, Carolina
+-- Journal); district_id is the seat the story is about, null when it is not
+-- seat-specific.
+-- ---------------------------------------------------------------------------
+
+-- ---------------------------------------------------------------------------
 -- Individual polls (raw), one row per poll. The polling average is separate.
 -- ---------------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS polls (
@@ -132,7 +138,8 @@ CREATE TABLE IF NOT EXISTS news (
   url             TEXT,
   summary         TEXT,
   relevance_score REAL NOT NULL DEFAULT 0.5,
-  topic           TEXT NOT NULL DEFAULT 'race'   -- race | news
+  topic           TEXT NOT NULL DEFAULT 'race',  -- race | news
+  in_funnel       INTEGER NOT NULL DEFAULT 0     -- 1 = drives the top ticker
 );
 
 -- ---------------------------------------------------------------------------

@@ -1,53 +1,81 @@
 {
   "source": "RSS + curated",
-  "updated_at": "2026-09-22T22:11:47.750Z",
+  "updated_at": "2026-09-28T14:50:26.878Z",
   "news": [
     {
-      "article_id": "rss_WRAL_0",
+      "article_id": "rss_John_Locke_Foundation_0",
       "district_id": "NC",
-      "headline": "Federal judge blocks Trump-backed changes to food stamps that could've cut over $400M to NC",
-      "outlet": "WRAL",
-      "published_at": "2026-09-22T20:59:57.000Z",
-      "url": "https://www.wral.com/news/state/attorney-general-jackson-fights-changes-in-food-assistance-wins-second-case/",
-      "summary": "Congress recently passed a bill changing eligibility for food benefits. Attorney General Jeff Jackson challenged the USDA changes in court and won.",
+      "headline": "Standardized tests’ role in college success",
+      "outlet": "John Locke Foundation",
+      "published_at": "2026-09-28T09:42:00.000Z",
+      "url": "https://www.johnlocke.org/standardized-tests-role-in-college-success/",
+      "summary": "Preston Cooper explains the significant role standardized tests play in predicting college students’ likelihood of success. Most selective colleges and universities stopped requiring standardized tests in admissions during the COVID-19 pand",
       "relevance_score": 0.7,
-      "topic": "race"
+      "topic": "race",
+      "in_funnel": 1
     },
     {
-      "article_id": "rss_Carolina_Journal_1",
-      "district_id": "NC-SEN",
-      "headline": "Vance hammers Cooper’s record at Greensboro Whatley rally",
-      "outlet": "Carolina Journal",
-      "published_at": "2026-09-22T16:15:00.000Z",
-      "url": "https://www.carolinajournal.com/vance-hammers-coopers-record-at-greensboro-whatley-rally/",
-      "summary": "Vance stumps for Whatley in Greensboro, hitting Cooper on voter ID, crime and 2023 vetoes of parents’ rights, girls’ sports and youth gender care. The post Vance hammers Cooper’s record at Greensboro Whatley rally appeared first on Carolina",
-      "relevance_score": 0.7,
-      "topic": "race"
+      "article_id": "rss_John_Locke_Foundation_1",
+      "district_id": "NC",
+      "headline": "Time for a return to free trade",
+      "outlet": "John Locke Foundation",
+      "published_at": "2026-09-28T09:36:00.000Z",
+      "url": "https://www.johnlocke.org/time-for-a-return-to-free-trade/",
+      "summary": "Phil Gramm and Donald Boudreaux predict a Republican revolt against tariffs. Donald Trump’s tariffs are hurting Americans. Real economic growth is slowing, consumer prices rising, and real wages stagnating. Now the Republican Party is set t",
+      "relevance_score": 0.4,
+      "topic": "news",
+      "in_funnel": 1
     },
     {
       "article_id": "rss_Carolina_Journal_2",
       "district_id": "NC",
-      "headline": "Charges now dismissed against three lobbyists tied to bourbon trip",
+      "headline": "Bar owners take argument for Cooper deposition to NC Appeals Court",
       "outlet": "Carolina Journal",
-      "published_at": "2026-09-22T13:31:02.000Z",
-      "url": "https://www.carolinajournal.com/charges-now-dismissed-against-three-lobbyists-tied-to-bourbon-trip/",
-      "summary": "The Wake County district attorney dismissed charges Monday against three of four lobbyists charged this spring in connection with 2024 bourbon tours in Kentucky involving state legislators. The post Charges now dismissed against three lobby",
+      "published_at": "2026-09-25T20:50:00.000Z",
+      "url": "https://www.carolinajournal.com/bar-owners-take-argument-for-cooper-deposition-to-nc-appeals-court/",
+      "summary": "North Carolina bar owners seeking to question former Gov. Roy Cooper about his decision to keep their businesses closed during the COVID-19 pandemic are asking the state’s second-highest court for help. The post Bar owners take argument for",
       "relevance_score": 0.7,
-      "topic": "race"
+      "topic": "race",
+      "in_funnel": 1
     },
     {
-      "article_id": "rss_WRAL_3",
+      "article_id": "rss_John_Locke_Foundation_3",
       "district_id": "NC",
-      "headline": "A $5,000 'bribe'? Fact-checking claims that Trump's promise to send post-election checks is illegal",
-      "outlet": "WRAL",
-      "published_at": "2026-09-21T18:12:45.000Z",
-      "url": "https://www.wral.com/news/state/fact-check-trump-5000-republicans-win-midterms-september-21/",
-      "summary": "\"I am gonna get for all adults, Democrat, Republican, all adults in our country. And you deserve it with what you had to do and how you had to suffer for four years under Biden. We're going to get you, if we win, we're going to get you $5,0",
+      "headline": "State elections board proposes political party sales rules",
+      "outlet": "John Locke Foundation",
+      "published_at": "2026-09-25T17:06:31.000Z",
+      "url": "https://www.johnlocke.org/state-elections-board-proposes-political-party-sales-rules/",
+      "summary": "The North Carolina State Board of Elections (SBE) has opened a public comment period on rules governing political party committees’ plans to sell goods or services. The rules will provide a mechanism for complying with state campaign financ",
       "relevance_score": 0.7,
-      "topic": "race"
+      "topic": "race",
+      "in_funnel": 1
     },
     {
-      "article_id": "rss_WRAL_4",
+      "article_id": "rss_Carolina_Journal_4",
+      "district_id": "NC",
+      "headline": "Charlotte-Mecklenburg school board splits 5-4 to fire superintendent",
+      "outlet": "Carolina Journal",
+      "published_at": "2026-09-25T13:22:48.000Z",
+      "url": "https://www.carolinajournal.com/charlotte-mecklenburg-school-board-splits-5-4-to-fire-superintendent/",
+      "summary": "CMS board terminates Crystal Hill 5-4, effective immediately. A $379,000 review found no misconduct. The district will pay her about $340,000. The post Charlotte-Mecklenburg school board splits 5-4 to fire superintendent appeared first on C",
+      "relevance_score": 0.7,
+      "topic": "race",
+      "in_funnel": 1
+    },
+    {
+      "article_id": "rss_John_Locke_Foundation_5",
+      "district_id": "NC",
+      "headline": "Panning a proposed ban on diesel exports",
+      "outlet": "John Locke Foundation",
+      "published_at": "2026-09-25T09:33:00.000Z",
+      "url": "https://www.johnlocke.org/panning-a-proposed-ban-on-diesel-exports/",
+      "summary": "Editors at National Review Online critique the latest bad energy idea circulating in the nation’s capital. Not long ago, Republicans were battling Democrats to repeal a decades-long prohibition on U.S. crude oil exports. Now in a political ",
+      "relevance_score": 0.4,
+      "topic": "news",
+      "in_funnel": 1
+    },
+    {
+      "article_id": "rss_WRAL_6",
       "district_id": "NC-SEN",
       "headline": "Roy Cooper campaigns in Charlotte in U.S. Senate race",
       "outlet": "WRAL",
@@ -55,29 +83,8 @@
       "url": "https://www.wral.com/news/state/roy-cooper-campaigns-charlotte-u-s-senate-race-september-2026/",
       "summary": "Former NC Gov. Roy Cooper spoke with Charlotte residents Friday as he campaigns for the U.S. Senate, focusing on his proposals to lower the cost of everyday goods.",
       "relevance_score": 0.7,
-      "topic": "race"
-    },
-    {
-      "article_id": "rss_WRAL_5",
-      "district_id": "NC-SEN",
-      "headline": "Vance backs Whatley during Republican rally in Greensboro",
-      "outlet": "WRAL",
-      "published_at": "2026-09-19T00:02:49.000Z",
-      "url": "https://www.wral.com/news/state/vice-president-jd-vance-speaks-greensboro-rally-sept-2026/",
-      "summary": "Vice President JD Vance spoke at the Republican Midterm Rally at the Koury Convention Center in Greensboro in support of U.S. Senate candidate Michael Whatley.",
-      "relevance_score": 0.7,
-      "topic": "race"
-    },
-    {
-      "article_id": "rss_WRAL_6",
-      "district_id": "NC-SEN",
-      "headline": "‘Blood-soaked killing fields’: Fact-checking Trump and Whatley’s claims about Cooper and crime in NC",
-      "outlet": "WRAL",
-      "published_at": "2026-09-17T15:56:33.000Z",
-      "url": "https://www.wral.com/news/state/fact-check-trump-whatley-cooper-crime-nc-killing-september-17/",
-      "summary": "President Donald Trump joined Republican US Senate candidate Michael Whatley in Gastonia to bash Whatley’s Democratic opponent, former North Carolina Gov. Roy Cooper.",
-      "relevance_score": 0.7,
-      "topic": "race"
+      "topic": "race",
+      "in_funnel": 0
     },
     {
       "article_id": "cj_sd42_rematch_2026",
@@ -88,7 +95,8 @@
       "url": "https://www.carolinajournal.com/sd42-rematch-bradley-mcginn",
       "summary": "The 2024 recount-margin rematch is among the most expensive Senate contests in the state this cycle.",
       "relevance_score": 0.93,
-      "topic": "race"
+      "topic": "race",
+      "in_funnel": 0
     },
     {
       "article_id": "co_sd42_tv_2026",
@@ -99,7 +107,8 @@
       "url": "https://www.charlotteobserver.com/news/politics/sd42-tv-spending",
       "summary": "Ad-tracking firm shows both parties blanketing Charlotte airwaves in the final stretch.",
       "relevance_score": 0.9,
-      "topic": "race"
+      "topic": "race",
+      "in_funnel": 0
     },
     {
       "article_id": "jlf_data_dump_2026_sd18",
@@ -110,7 +119,8 @@
       "url": "https://www.johnlocke.org/9-14-election-data-dump-which-nc-general-assembly-districts-are-in-play/",
       "summary": "JLF flags six competitive Senate districts and 22 competitive House districts for 2026 using the toss-up plus lean-Republican CPI rule.",
       "relevance_score": 0.7,
-      "topic": "race"
+      "topic": "race",
+      "in_funnel": 0
     },
     {
       "article_id": "cl_hd98_transit_2026",
@@ -121,7 +131,8 @@
       "url": "https://charlotteledger.substack.com/hd98-transit-ads",
       "summary": "A Charlotte House seat that flipped last cycle is drawing heavy outside cash.",
       "relevance_score": 0.89,
-      "topic": "race"
+      "topic": "race",
+      "in_funnel": 0
     },
     {
       "article_id": "cj_hd105_2026",
@@ -132,7 +143,8 @@
       "url": "https://www.carolinajournal.com/hd105-outside-spending",
       "summary": "Independent expenditures have already doubled the candidates' own ad budgets.",
       "relevance_score": 0.88,
-      "topic": "race"
+      "topic": "race",
+      "in_funnel": 0
     },
     {
       "article_id": "wral_sd18_2026",
@@ -143,7 +155,8 @@
       "url": "https://www.wral.com/sd18-wake-senate-rematch",
       "summary": "A district Democrats swept in 2024 is now among their toughest state Senate holds.",
       "relevance_score": 0.9,
-      "topic": "race"
+      "topic": "race",
+      "in_funnel": 0
     },
     {
       "article_id": "co_meck2026",
@@ -154,7 +167,8 @@
       "url": "https://www.charlotteobserver.com/news/politics-government/election/article316832679.html",
       "summary": "Rematches in Senate District 42 and House District 105 could have razor-thin margins; fundraising is flowing in Charlotte-area battlegrounds.",
       "relevance_score": 0.9,
-      "topic": "race"
+      "topic": "race",
+      "in_funnel": 0
     },
     {
       "article_id": "co_meck2026_hd98",
@@ -165,7 +179,8 @@
       "url": "https://www.charlotteobserver.com/news/politics-government/election/article316832679.html",
       "summary": "Democratic Rep. Beth Helfrich seeks a second term against Republican John Rhodes in a district rated a D+1 toss-up by the CPI.",
       "relevance_score": 0.85,
-      "topic": "race"
+      "topic": "race",
+      "in_funnel": 0
     },
     {
       "article_id": "co_meck2026_hd105",
@@ -176,7 +191,8 @@
       "url": "https://www.charlotteobserver.com/news/politics-government/election/article316832679.html",
       "summary": "Tricia Cotham faces Democrat Ken McCool in a recounted-margin rematch; the CPI rates the district an R+0 toss-up.",
       "relevance_score": 0.88,
-      "topic": "race"
+      "topic": "race",
+      "in_funnel": 0
     },
     {
       "article_id": "cj_everitt_2026",
@@ -187,7 +203,8 @@
       "url": "https://www.carolinajournal.com/terence-everitt-resigns-from-the-nc-senate",
       "summary": "The SD-18 seat covering Granville and northern Wake counties is one of just three toss-up Senate districts in the 2026 CPI.",
       "relevance_score": 0.95,
-      "topic": "race"
+      "topic": "race",
+      "in_funnel": 0
     }
   ]
 }

@@ -1,6 +1,6 @@
 // Live data-source ingestion. Each source can be updated independently by
 // dropping a normalized JSON file into backend/data/sources/<type>.json and
-// running:  node src/ingest/index.js polls|markets|fundraising|news|photos
+// running:  node src/ingest/index.js polls|kalshi|fundraising|news|photos
 //
 // File schema mirrors the backend tables so sources stay interchangeable.
 import { readFileSync, existsSync } from 'node:fs';
@@ -54,24 +54,6 @@ export function ingestPollsFromSource(cycle = CYCLE) {
   }
   console.log(`[polls] ingested ${polls} polls across ${groups.size} districts`);
   return { source: data.source || 'polls', count: polls };
-}
-
-export function ingestMarketsFromSource(cycle = CYCLE) {
-  const data = loadDrop('markets');
-  if (!data) return null;
-  db.prepare(`DELETE FROM markets WHERE election_cycle = ? AND is_seed = 1`).run(cycle);
-  const ins = db.prepare(`INSERT OR REPLACE INTO markets
-    (district_id, election_cycle, provider, dem_price, rep_price, advantage, updated_at, source_url, is_seed)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, 0)`);
-  let n = 0;
-  for (const m of data.markets || []) {
-    const adv = +((m.dem_price ?? 0) - (m.rep_price ?? 0)).toFixed(2);
-    ins.run(m.district_id, cycle, m.provider, m.dem_price ?? null, m.rep_price ?? null, adv,
-      m.updated_at, m.source_url || '');
-    n++;
-  }
-  console.log(`[markets] ingested ${n} market rows`);
-  return { source: data.source || 'markets', count: n };
 }
 
 export function ingestFundraisingFromSource(cycle = CYCLE) {
@@ -133,13 +115,16 @@ export function ingestNewsFromSource(cycle = CYCLE) {
   if (!data) return null;
   db.prepare(`DELETE FROM news WHERE election_cycle = ?`).run(cycle);
   const ins = db.prepare(`INSERT OR REPLACE INTO news
-    (article_id, district_id, election_cycle, headline, outlet, published_at, url, summary, relevance_score, topic)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`);
+    (article_id, district_id, election_cycle, headline, outlet, published_at, url, summary, relevance_score, topic, in_funnel)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`);
   let n = 0;
   for (const a of data.news || []) {
+    // Rows are dropped rather than defaulted to 'NC': the per-district list
+    // queries on district_id, so an untagged row would never surface there.
+    if (!a.district_id) continue;
     ins.run(a.article_id ?? `${a.district_id}_${cycle}_${slugify(a.headline)}`,
       a.district_id, cycle, a.headline, a.outlet, a.published_at, a.url || '', a.summary || '',
-      a.relevance_score ?? 0.5, a.topic || 'race');
+      a.relevance_score ?? 0.5, a.topic || 'race', a.in_funnel ? 1 : 0);
     n++;
   }
   console.log(`[news] ingested ${n} articles`);

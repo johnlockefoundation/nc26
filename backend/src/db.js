@@ -25,6 +25,9 @@ export function initSchema() {
   if (!newsCols.some((c) => c.name === 'topic')) {
     db.exec(`ALTER TABLE news ADD COLUMN topic TEXT NOT NULL DEFAULT 'race'`);
   }
+  if (!newsCols.some((c) => c.name === 'in_funnel')) {
+    db.exec(`ALTER TABLE news ADD COLUMN in_funnel INTEGER NOT NULL DEFAULT 0`);
+  }
   const hasSnap = db
     .prepare(`SELECT name FROM sqlite_master WHERE type='table' AND name='market_snapshots'`)
     .get();

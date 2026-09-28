@@ -14,15 +14,40 @@ const BACKEND = resolve(__dirname, '..');
 const OUT = join(BACKEND, 'data', 'sources', 'news.json');
 const SEED = join(BACKEND, 'data', 'seed');
 
+// Two tiers of source, per the news hierarchy on the site:
+//   funnel - Locke and Carolina Journal. The top ticker is a funnel for these
+//            two only, so a story is marked in_funnel regardless of which tier
+//            it came from.
+//   race   - outlets that cover specific NC seats, which feed the per-district
+//            list under CPI Info. They do not drive the ticker.
 const FEEDS = [
+  { outlet: 'John Locke Foundation', url: 'https://www.johnlocke.org/feed/', funnel: true },
+  { outlet: 'Carolina Journal', url: 'https://www.carolinajournal.com/feed/?post_type=article', funnel: true },
   { outlet: 'WRAL', url: 'https://www.wral.com/news/rss/35/' },   // Political
   { outlet: 'WRAL', url: 'https://www.wral.com/news/rss/74/' },   // NC news
-  { outlet: 'Carolina Journal', url: 'https://www.carolinajournal.com/feed/' },
-  { outlet: 'Carolina Journal', url: 'https://www.carolinajournal.com/politics/feed/' },
+  { outlet: 'Carolina Public Press', url: 'https://carolinapublicpress.org/feed/' },
+  { outlet: 'Our State', url: 'https://www.ourstate.com/feed' },
+  { outlet: 'indyweek', url: 'https://indyweek.com/feed/' },
 ];
+
+// Outlets that may appear in the top ticker.
+const FUNNEL_OUTLETS = new Set(feedsFilter());
+function feedsFilter() {
+  return FEEDS.filter((f) => f.funnel).map((f) => f.outlet);
+}
 
 const RACE_KEYS = /\b(senate|senator|congress|congressional|cooper|whatley|tillis|buckhout|davis|ager|balkcom|district|election|campaign|ballot|voting|voter|midterm|debate|endorse|gop|democrat|republican)\b/i;
 const RACE_TOPIC = /\b(senate|senator|cooper|whatley|tillis|congress|house race|congressional district|midterm|election|campaign|district|debate|ballot)\b/i;
+
+// A surname on its own is not a safe signal. The candidate list contains
+// surnames that are also ordinary English words or state fragments ("North",
+// "Quick", "Lee", "Bell", "Page", "Pike", "Ward"), and matching those against
+// body text tags unrelated stories to the wrong seat -- every mention of
+// "North Carolina" resolved to a House seat. A surname is only accepted as a
+// secondary signal, alongside one of these corroborators.
+const SEAT_CONTEXT = /\b(seat|race|rematch|challenger|incumbent|reelection|re-election|primary|general election|ballot|campaign|donor|fundraising|spend|spending|polling|pollster|debate|endorsement|endorsed|candidate|legislator|representative|senator|district|county|voters?|turnout|opponent|primary challenger)\b/i;
+// Substrings that are never a standalone candidate mention.
+const SURNAME_STOPWORDS = new Set(['north', 'south', 'east', 'west', 'quick', 'lee', 'page', 'bell', 'pike', 'ward', 'blue', 'ford', 'gray', 'moss', 'ball', 'hamm', 'cruz', 'ii', 'iii', 'iv', 'jr', 'sr']);
 
 // Explicit North Carolina anchor. Required for a story to reach the ticker,
 // which keeps Iowa/Russia/national-wire items out of the NC-exclusive loop.
@@ -43,9 +68,12 @@ const SURNAME_TO_DISTRICTS = new Map();
 function addCandidate(name, district) {
   if (!name) return;
   const full = String(name).toLowerCase().replace(/\s+/g, ' ').trim();
-  if (full) NAME_TO_DISTRICT.set(full, district);
+  if (!full) return;
+  NAME_TO_DISTRICT.set(full, district);
+  // Surnames unique to a single district are usable, minus the stopwords
+  // above. Everything ambiguous is dropped rather than guessed at.
   const surname = full.split(' ').pop();
-  if (!surname) return;
+  if (!surname || SURNAME_STOPWORDS.has(surname) || surname.length < 4) return;
   if (!SURNAME_TO_DISTRICTS.has(surname)) SURNAME_TO_DISTRICTS.set(surname, new Set());
   SURNAME_TO_DISTRICTS.get(surname).add(district);
 }
@@ -70,42 +98,67 @@ function loadCandidates() {
 }
 loadCandidates();
 
-// Confident mappings from article text -> district. Fallback: statewide 'NC'.
+// Maps article text -> a specific district, or null when the story is not
+// about one seat in particular. Callers treat null as "not seat-specific",
+// which is what keeps unrelated policy coverage out of a district's list.
 function tagDistrict(text) {
   const t = ' ' + text + ' ';
-  if (/cooper|whatley|tillis/i.test(t) || /us senate.{0,20}carolina/i.test(t)) return 'NC-SEN';
+  // The marquee names alone are not enough: "Cooper" shows up in deposition and
+  // litigation coverage, and "Cooper University"/"Tillis Hill" are not the
+  // race. Require the story to read as coverage of the Senate contest.
+  if (/us senate.{0,30}carolina|carolina.{0,30}us senate|senate race|senate contest|senate seat|senate candidate|cooper.{0,60}(whatley|vance|senate|campaign|senator|debate)|whatley.{0,60}(cooper|vance|senate|campaign|senator|debate)/i.test(t)) {
+    return 'NC-SEN';
+  }
 
-  const ncHouse = /\bnc[- ](\d{1,2})\b/i.exec(t);
-  if (ncHouse) return `NC-${ncHouse[1].padStart(2, '0')}`;
-
+  // Explicit district tokens are the strongest signal and are checked first.
   const sd = /\bsd[- ](\d{1,2})\b/i.exec(t) || /\bsenate district\s+(\d{1,2})\b/i.exec(t);
   if (sd) return `SD-${sd[1].padStart(2, '0')}`;
 
   const hd = /\bhd[- ](\d{1,3})\b/i.exec(t) || /\bhouse district\s+(\d{1,3})\b/i.exec(t);
   if (hd) return `HD-${hd[1]}`;
 
+  const ncHouse = /\bnc[- ](\d{1,2})\b/i.exec(t);
+  if (ncHouse) return `NC-${ncHouse[1].padStart(2, '0')}`;
+
   const district = /(?:north carolina|nc)[\s\S]{0,25}(\d{1,2})(?:st|nd|rd|th)?\s+(?:congressional\s+)?district/i.exec(t);
   if (district && Number(district[1]) <= 14) return `NC-${district[1].padStart(2, '0')}`;
-  if (/11th\s+district|jamie ager|jennifer balkcom|balkcom/i.test(t)) return 'NC-11';
 
-  const tl = ` ${t.toLowerCase()} `;
-  for (const [name, districtId] of NAME_TO_DISTRICT) {
-    if (tl.includes(` ${name} `)) return districtId;
+  // Candidate names are a strong signal but not sufficient alone: the former
+  // governor's name runs in litigation and policy coverage too. Any
+  // name-derived tag therefore also has to read as coverage of a contest.
+  if (SEAT_CONTEXT.test(t)) {
+    const tl = ` ${t.toLowerCase()} `;
+    for (const [name, districtId] of NAME_TO_DISTRICT) {
+      if (tl.includes(` ${name} `)) return districtId;
+    }
+    // Surname alone needs the same corroboration, and only surnames unique
+    // to one district are considered.
+    for (const [surname, districts] of SURNAME_TO_DISTRICTS) {
+      if (districts.size !== 1) continue;
+      if (new RegExp(`\\b${surname}\\b`, 'i').test(t)) return [...districts][0];
+    }
   }
 
-  for (const [surname, districts] of SURNAME_TO_DISTRICTS) {
-    if (districts.size !== 1) continue;
-    if (new RegExp(`\\b${surname}\\b`, 'i').test(t)) return [...districts][0];
-  }
+  return null;
+}
 
-  return 'NC';
+const ENTITIES = {
+  amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: ' ', rsquo: '’', lsquo: '‘',
+  ldquo: '“', rdquo: '”', mdash: '—', ndash: '–', hellip: '…', eacute: 'é',
+};
+
+function decodeEntities(s) {
+  return String(s || '')
+    .replace(/&#(\d+);/g, (_, n) => String.fromCharCode(Number(n)))
+    .replace(/&#x([0-9a-f]+);/gi, (_, n) => String.fromCharCode(parseInt(n, 16)))
+    .replace(/&([a-z]+);/gi, (m, name) => ENTITIES[name.toLowerCase()] ?? m);
 }
 
 function strip(s) {
-  return String(s || '')
+  return decodeEntities(String(s || '')
     .replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g, '$1')
     .replace(/<[^>]+>/g, ' ')
-    .replace(/https?:\/\/\S+/g, ' ')
+    .replace(/https?:\/\/\S+/g, ' '))
     .replace(/\s+/g, ' ')
     .trim();
 }
@@ -119,7 +172,7 @@ function isNorthCarolina(text) {
   return NC_ANCHOR.test(text);
 }
 
-function collect(xml, outlet) {
+function collect(xml, feed) {
   const items = xml.split(/<item[ >]/).slice(1);
   const out = [];
   for (const raw of items) {
@@ -130,8 +183,14 @@ function collect(xml, outlet) {
     if (!title || !link || !pubDate) continue;
     const text = `${title} ${description}`;
     if (!RACE_KEYS.test(text)) continue;
-    if (!isNorthCarolina(text)) continue;
-    out.push({ outlet, title, link, description, pubDate, text });
+    // The per-district list is seat-specific, so it only ever draws on
+    // seat-tagged stories. The ticker is broader: a funnel outlet's
+    // statewide policy coverage still belongs there.
+    if (!feed.funnel) {
+      if (!tagDistrict(text)) continue;
+      if (!isNorthCarolina(text)) continue;
+    }
+    out.push({ outlet: feed.outlet, funnel: Boolean(feed.funnel), title, link, description, pubDate, text });
   }
   return out;
 }
@@ -142,7 +201,7 @@ async function fetchFeed(feed) {
     signal: AbortSignal.timeout(25000),
   });
   if (!res.ok) throw new Error(`${feed.outlet} ${feed.url} http ${res.status}`);
-  return collect(await res.text(), feed.outlet);
+  return collect(await res.text(), feed);
 }
 
 // Curated race-specific stories for the "Raleigh races" (NC Senate SD-xx and
@@ -156,7 +215,7 @@ function curatedRaceStories() {
   return data.news.filter((n) => /^SD-|^HD-/.test(n.district_id || ''));
 }
 
-const CUTOFF = Date.now() - 7 * 24 * 60 * 60 * 1000;
+const CUTOFF = Date.now() - 14 * 24 * 60 * 60 * 1000;
 
 const all = [];
 const seen = new Set();
@@ -176,9 +235,11 @@ for (const feed of FEEDS) {
 }
 
 all.sort((a, b) => Date.parse(b.pubDate) - Date.parse(a.pubDate));
-let news = all.slice(0, 40).map((item, i) => {
+let news = all.slice(0, 60).map((item, i) => {
   const raceTopic = RACE_TOPIC.test(item.text);
-  const district = tagDistrict(item.text);
+  // Funnel outlets stay eligible for the ticker even when the story is not
+  // about one seat; race outlets are seat-tagged by construction.
+  const district = tagDistrict(item.text) || (item.funnel ? 'NC' : null);
   return {
     article_id: `rss_${item.outlet.replace(/[^a-z0-9]/gi, '_')}_${i}`,
     district_id: district,
@@ -189,12 +250,13 @@ let news = all.slice(0, 40).map((item, i) => {
     summary: item.description.slice(0, 240),
     relevance_score: raceTopic ? 0.7 : 0.4,
     topic: raceTopic ? 'race' : 'news',
+    in_funnel: item.funnel ? 1 : 0,
   };
 });
 
-// Re-attach the curated race-specific SD/HD stories for the Raleigh races, so
-// the ticker is not emptied of district news just because the feeds only had
-// statewide articles this cycle. RSS items that tagged the same district win.
+// Re-attach the curated race-specific SD/HD stories, so a district's list is
+// not empty just because no live feed covered that seat this cycle. Curated
+// rows are seat-tagged by construction and are not funnel-eligible.
 const rssDistricts = new Set(news.map((n) => n.district_id));
 const curated = curatedRaceStories()
   .filter((n) => !rssDistricts.has(n.district_id))
@@ -208,6 +270,7 @@ const curated = curatedRaceStories()
     summary: n.summary || '',
     relevance_score: n.relevance_score ?? 0.7,
     topic: n.topic || 'race',
+    in_funnel: 0,
   }));
 news = news.concat(curated).sort((a, b) => Date.parse(b.published_at) - Date.parse(a.published_at));
 

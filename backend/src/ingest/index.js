@@ -6,7 +6,6 @@
 //   node src/ingest/index.js us-senate      -> NC Senate race + candidates
 //   node src/ingest/index.js metrics        -> baseline metrics (polls/markets/money/news)
 //   node src/ingest/index.js polls          -> live polls from ./data/sources/polls.json
-//   node src/ingest/index.js markets        -> live markets from ./data/sources/markets.json
 //   node src/ingest/index.js kalshi         -> live Kalshi markets from ./data/sources/markets-kalshi.json
 //   node src/ingest/index.js fundraising    -> live fundraising from ./data/sources/fundraising.json
 //   node src/ingest/index.js news           -> live news from ./data/sources/news.json
@@ -20,7 +19,7 @@ import { ingestUsSenate } from './us-senate.js';
 import { ingestSeedMetrics } from './metrics.js';
 import { ingestProfiles } from './profile.js';
 import {
-  ingestPollsFromSource, ingestMarketsFromSource, ingestKalshiFromSource, ingestFundraisingFromSource, ingestNewsFromSource,
+  ingestPollsFromSource, ingestKalshiFromSource, ingestFundraisingFromSource, ingestNewsFromSource,
   ingestPhotosFromSource,
 } from './sources.js';
 
@@ -47,7 +46,6 @@ const JOB = {
   metrics: () => ingestSeedMetrics(CYCLE),
   profiles: () => ingestProfiles(CYCLE),
   polls: () => ingestPollsFromSource(CYCLE),
-  markets: () => ingestMarketsFromSource(CYCLE),
   kalshi: () => ingestKalshiFromSource(CYCLE),
   fundraising: () => ingestFundraisingFromSource(CYCLE),
   news: () => ingestNewsFromSource(CYCLE),
@@ -55,7 +53,7 @@ const JOB = {
 };
 
 async function run(target) {
-  const jobs = target === 'all' ? ['districts', 'civitas', 'us-house', 'us-senate', 'metrics', 'profiles', 'polls', 'markets', 'kalshi', 'fundraising', 'news', 'photos'] : [target];
+  const jobs = target === 'all' ? ['districts', 'civitas', 'us-house', 'us-senate', 'metrics', 'profiles', 'polls', 'kalshi', 'fundraising', 'news', 'photos'] : [target];
   for (const j of jobs) {
     const fn = JOB[j];
     if (!fn) { console.error(`unknown ingest target: ${j}`); process.exitCode = 1; continue; }
