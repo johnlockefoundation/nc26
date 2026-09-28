@@ -95,27 +95,47 @@ function anchorFor(f, transform) {
   return transform ? transform(base) : base;
 }
 
+// Web Mercator, and its inverse. Mercator stretches latitude strongly near the
+// poles and barely at all near the equator, so the same number of degrees of
+// latitude is a very different height depending on where it is drawn.
+const mercatorY = (lat) => Math.log(Math.tan(Math.PI / 4 + (lat * Math.PI) / 360));
+const mercatorLat = (y) => (2 * Math.atan(Math.exp(y)) * 180) / Math.PI - 90;
+
 // Alaska (AK-SEN) is the one Senate battleground web Mercator bloats beyond
-// reason: at sea level its polygon stretches far up the page and pushes the
-// other states aside. Shrink it into a compact box floating in the Pacific and
+// reason: at its true latitude its polygon stretches far up the page and pushes
+// the other states aside. Shrink it into a box floating in the Pacific and
 // leave the view fit to CONUS, which the map bounds in map.js already assume.
+//
+// The y scale is not the same as the x scale, and that is the whole point.
+// Relocating Alaska from 51-71N down to the Pacific removes the Mercator
+// stretch it was drawn with, so a uniform scale would flatten the state: it
+// came out 53% vertically squashed, reading as a smear rather than a state.
+// Deriving the y scale from the source's own Mercator height keeps the inset's
+// shape equal to Alaska's real one, whatever the anchor or scale.
 function insetTransformFor(feature) {
   const src = L.geoJSON(geometryFeature(feature)).getBounds();
   if (!src.isValid()) return null;
+  const trueHeight = mercatorY(src.getNorth()) - mercatorY(src.getSouth());
+  // Mercator height the inset must cover to match the source's proportions.
+  const insetHeight = AK_INSET_SCALE * trueHeight;
+  const top = mercatorLat(mercatorY(AK_INSET_SOUTH) + insetHeight);
+  const scaleY = (top - AK_INSET_SOUTH) / (src.getNorth() - src.getSouth());
   return {
     coords: (lon, lat) => [
       AK_INSET_WEST + (lon - src.getWest()) * AK_INSET_SCALE,
-      AK_INSET_SOUTH + (lat - src.getSouth()) * AK_INSET_SCALE,
+      AK_INSET_SOUTH + (lat - src.getSouth()) * scaleY,
     ],
     latLng: (p) => L.latLng(
-      AK_INSET_SOUTH + (p.lat - src.getSouth()) * AK_INSET_SCALE,
+      AK_INSET_SOUTH + (p.lat - src.getSouth()) * scaleY,
       AK_INSET_WEST + (p.lng - src.getWest()) * AK_INSET_SCALE,
     ),
   };
 }
 
 const AK_INSET_WEST = -133;
-const AK_INSET_SOUTH = 7;
+// The anchor sits low enough that the taller, unsquashed inset still clears
+// the bottom edge of the CONUS fit bounds (lat 24.0) in map.js.
+const AK_INSET_SOUTH = 6.0;
 const AK_INSET_SCALE = 0.42;
 
 export default function NCMap({ features, outline, races, selectedId, onSelect, raceType, dimmed = false }) {
