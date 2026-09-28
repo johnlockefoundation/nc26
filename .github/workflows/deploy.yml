@@ -10,10 +10,13 @@ on:
     branches: [main]
   workflow_dispatch:
 
-# Required for the Pages deploy token. Concurrency keeps a newer push from
-# waiting behind an older one.
+# contents: write for the Pages API. id-token: write lets actions/deploy-pages
+# mint the OIDC token it presents to GitHub Pages -- without it the deploy job
+# fails with "Ensure GITHUB_TOKEN has permission id-token: write".
 permissions:
   contents: write
+  pages: write
+  id-token: write
 concurrency:
   group: pages
   cancel-in-progress: true
