@@ -2,7 +2,6 @@ import MetricBlock from './MetricBlock.jsx';
 import DistrictProfile from './DistrictProfile.jsx';
 import CivitasPartisan from './CivitasPartisan.jsx';
 import DistrictNews from './DistrictNews.jsx';
-import StateFunds from './StateFunds.jsx';
 import DistrictDemographics from './DistrictDemographics.jsx';
 
 function initials(name) {
@@ -41,7 +40,10 @@ export default function RacePanel({ race, loading }) {
 
   const polls = race.polls || {};
   const markets = race.markets || {};
-  const moneyS = race.money || {};
+  // State races read their money from state_funds; federal races use the
+  // party-aggregate fundraising summary. Both are shaped the same way, so the
+  // same MetricBlock renders either.
+  const moneyS = race.state_funds || race.money || {};
   const marketList = race.market_list || (markets.available ? [markets] : []);
   const isStateRace = race.race_type === 'state_senate' || race.race_type === 'state_house';
 
@@ -70,7 +72,12 @@ export default function RacePanel({ race, loading }) {
       {isStateRace ? (
         <>
           <CivitasPartisan partisan={race.partisan} />
-          <StateFunds funds={race.state_funds} />
+          <div className="metrics">
+            <MetricBlock title="MONEY" emptyText="NO MONEY" summary={moneyS} />
+          </div>
+          {race.state_funds?.is_mock && (
+            <div className="mock-note" role="note">PLACEHOLDER FIGURES — not NC SBOE filings</div>
+          )}
           <DistrictDemographics demographics={race.demographics} />
           <DistrictNews articles={race.news} />
         </>

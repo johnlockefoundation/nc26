@@ -156,34 +156,26 @@ function districtNews(districtId, cycle, limit = 6) {
     ORDER BY published_at DESC LIMIT ?`).all(cycle, districtId, limit);
 }
 
-// Per-candidate money for a state legislative race. Federal races use the
-// party-aggregate fundraising table instead; there is no primary in a state
-// seat, so the individual candidate is the only meaningful unit.
+// Money for a state legislative race, shaped exactly like the federal
+// fundraising summary: one advantage figure, not a per-candidate breakdown.
+// MetricBlock renders both identically, which is the point.
 function stateFunds(districtId, cycle) {
-  const rows = db.prepare(`SELECT candidate_id, candidate_name, party, total_raised, total_spent,
-      cash_on_hand, contributions, small_donors, reporting_period, source_url, is_mock
-    FROM state_funds WHERE district_id = ? AND election_cycle = ?
-    ORDER BY total_raised DESC`).all(districtId, cycle);
+  const rows = db.prepare(`SELECT party, total_raised, reporting_period, source_url, is_mock
+    FROM state_funds WHERE district_id = ? AND election_cycle = ?`).all(districtId, cycle);
   if (!rows.length) return null;
-  const total = rows.reduce((a, r) => a + (r.total_raised || 0), 0);
+  const byParty = { D: 0, R: 0 };
+  for (const r of rows) {
+    if (r.party in byParty) byParty[r.party] += r.total_raised || 0;
+  }
   return {
     available: true,
-    // Surfaces prominently in the UI: these are placeholders, not filings.
+    // Surfaces in the UI: these are placeholders, not filings.
     is_mock: rows.every((r) => Boolean(r.is_mock)),
+    dem_amount: Math.round(byParty.D),
+    rep_amount: Math.round(byParty.R),
+    advantage: formatMoney((byParty.D || 0) - (byParty.R || 0)),
     reporting_period: rows[0].reporting_period || null,
     source_url: rows[0].source_url || null,
-    total_raised: Math.round(total),
-    candidates: rows.map((r) => ({
-      candidate_id: r.candidate_id,
-      name: r.candidate_name,
-      party: r.party,
-      total_raised: r.total_raised,
-      total_spent: r.total_spent,
-      cash_on_hand: r.cash_on_hand,
-      contributions: r.contributions,
-      small_donors: r.small_donors,
-      share_of_total: total ? +((r.total_raised / total) * 100).toFixed(1) : null,
-    })),
   };
 }
 

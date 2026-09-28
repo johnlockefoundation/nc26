@@ -34,7 +34,7 @@ export default function DistrictDemographics({ demographics }) {
   if (!demographics || !demographics.available) {
     return (
       <section className="panel-section">
-        <h3>DISTRICT CHANGE</h3>
+        <h3>DEMOGRAPHICS</h3>
         <div className="dim">Demographic data not yet available for this district.</div>
       </section>
     );
@@ -46,7 +46,7 @@ export default function DistrictDemographics({ demographics }) {
 
   return (
     <section className="panel-section">
-      <h3>DISTRICT CHANGE</h3>
+      <h3>{c ? `${c.from} v ${c.to}` : `SNAPSHOT ${snap}`}</h3>
 
       {demographics.is_mock && (
         <div className="mock-banner" role="note">
@@ -95,7 +95,9 @@ export default function DistrictDemographics({ demographics }) {
       />
 
       <div className="demos-foot dim">
-        {c ? `Snapshot ${c.from} → ${c.to}. ` : `Snapshot ${snap}. `}
+        {c
+          ? `${c.from} → ${c.to}: change since the ${c.from} snapshot. `
+          : `Single ${snap} snapshot. `}
         {demographics.source || ''}
       </div>
     </section>

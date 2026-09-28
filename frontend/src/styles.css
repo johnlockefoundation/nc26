@@ -274,19 +274,12 @@ a { color: var(--accent); }
   letter-spacing: 0.1em; color: #fbbf24;
 }
 
-/* Campaign money */
-.funds-bars { display: flex; flex-direction: column; gap: 13px; }
-.funds-row { display: flex; flex-direction: column; gap: 5px; }
-.funds-row-head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
-.funds-name { font-family: var(--font-display); font-size: 12.5px; font-weight: 700; }
-.funds-amount { font-family: var(--font-display); font-size: 14px; font-weight: 700; color: var(--ink); }
-.funds-track { height: 7px; border-radius: 4px; background: rgba(148, 163, 184, 0.18); overflow: hidden; }
-.funds-track i { display: block; height: 100%; border-radius: 4px; }
-.funds-fill-d { background: var(--d); }
-.funds-fill-r { background: var(--r); }
-.funds-meta { font-size: 10.5px; color: var(--muted); }
-.funds-tally { margin-top: 12px; font-size: 12px; color: var(--ink); }
-.funds-period { margin-top: 8px; font-size: 10.5px; }
+/* Compact placeholder note, for a single metric block where the full banner
+   would be too heavy. */
+.mock-note {
+  margin: -6px 0 4px; font-family: var(--font-display); font-size: 9.5px;
+  font-weight: 700; letter-spacing: 0.1em; color: #fbbf24;
+}
 
 /* District demographics */
 .demos-heads { display: flex; gap: 10px; margin-bottom: 4px; }

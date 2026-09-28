@@ -174,9 +174,11 @@ CREATE TABLE IF NOT EXISTS district_profiles (
   PRIMARY KEY (district_id, election_cycle)
 );
 
--- Per-candidate money for state legislative races. The federal fundraising
--- table is party-aggregate; GA races need the individual candidate because
--- there is no primary contest to infer a nominee from.
+-- Money for state legislative races, stored per candidate. The federal
+-- fundraising table is already party-aggregate, but an NCSBE extract arrives
+-- per committee, so the raw rows are kept at that grain and summed by party
+-- when the API assembles a race. The panel shows one advantage figure for a
+-- state race, exactly as it does for a federal one.
 -- is_mock = 1 means placeholder figures pending an NC SBOE extract.
 CREATE TABLE IF NOT EXISTS state_funds (
   district_id     TEXT NOT NULL,
