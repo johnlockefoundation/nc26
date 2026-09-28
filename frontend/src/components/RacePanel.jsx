@@ -40,6 +40,7 @@ export default function RacePanel({ race, loading }) {
   const markets = race.markets || {};
   const moneyS = race.money || {};
   const isStateRace = race.race_type === 'state_senate' || race.race_type === 'state_house';
+  const isUsSenate = race.race_type === 'us_senate';
 
   return (
     <aside className="panel">
@@ -48,6 +49,12 @@ export default function RacePanel({ race, loading }) {
 
       {isStateRace ? (
         <CivitasPartisan partisan={race.partisan} />
+      ) : isUsSenate ? (
+        // A senate seat has one usable signal, the Kalshi contract. Polls and
+        // money are left out rather than shown as empty blocks.
+        <div className="metrics">
+          <MetricBlock title="KALSHI" emptyText="NO MARKET" summary={markets} delta={markets.delta} />
+        </div>
       ) : (
         <div className="metrics">
           <MetricBlock title="POLLS" emptyText="NO POLLING" summary={polls} />
@@ -56,7 +63,7 @@ export default function RacePanel({ race, loading }) {
         </div>
       )}
 
-      {!isStateRace && <DistrictProfile profile={race.profile} />}
+      {!isStateRace && !isUsSenate && <DistrictProfile profile={race.profile} />}
     </aside>
   );
 }

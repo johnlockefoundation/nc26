@@ -265,6 +265,16 @@ a { color: var(--accent); }
 .section-link { color: var(--muted); text-decoration: none; border-bottom: 1px dotted rgba(148, 163, 184, 0.5); }
 .section-link:hover { color: var(--accent); border-bottom-color: var(--accent); }
 
+/* Collapsible section (district profile) */
+.collapsible > summary { display: flex; align-items: center; justify-content: space-between; gap: 10px; cursor: pointer; list-style: none; }
+.collapsible > summary::-webkit-details-marker { display: none; }
+.collapsible > summary:focus-visible { outline: 1px solid var(--accent); outline-offset: 3px; border-radius: 3px; }
+.collapsible-title { font-family: var(--font-display); font-size: 11px; letter-spacing: 0.14em; color: var(--muted); }
+.collapsible > summary:hover .collapsible-title { color: var(--accent); }
+.collapsible-caret { flex: none; width: 7px; height: 7px; color: var(--muted); border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; transform: rotate(-45deg); transition: transform 0.15s ease; }
+.collapsible[open] > summary .collapsible-caret { transform: rotate(45deg); }
+.collapsible-body { padding-top: 10px; }
+
 /* District profile */
 .profile-stats { display: flex; gap: 18px; border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
 .profile-stat { display: flex; flex-direction: column; gap: 2px; }

@@ -88,9 +88,14 @@ function marketWeeklyMove(districtId, cycle) {
   return { party: move > 0 ? 'D' : 'R', points: +Math.abs(move).toFixed(1) };
 }
 
-function marketSummary(districtId, cycle) {
+// `provider` pins the venue. Senate seats can carry both a Kalshi and a
+// PredictIt row, and picking by recency alone would let whichever venue
+// refreshed last take over the panel.
+function marketSummary(districtId, cycle, { provider = null } = {}) {
   const rows = db.prepare(`SELECT provider, dem_price, rep_price, advantage, updated_at, source_url, is_seed
-    FROM markets WHERE district_id = ? AND election_cycle = ? ORDER BY updated_at DESC`).all(districtId, cycle);
+    FROM markets WHERE district_id = ? AND election_cycle = ?
+    ${provider ? 'AND provider = ?' : ''}
+    ORDER BY updated_at DESC`).all(...[districtId, cycle, provider].filter((v) => v != null));
   const m = rows[0];
   const has = m && m.dem_price != null && m.rep_price != null;
   return {
@@ -153,7 +158,11 @@ function partisanSummary(row) {
 
 export function getRaceSummary(row, cycle, { includeNews = true } = {}) {
   const polls = pollSummary(row.district_id, cycle);
-  const markets = marketSummary(row.district_id, cycle);
+  // Senate races are Kalshi-only; the other race types surface whichever
+  // venue has the freshest quote.
+  const markets = marketSummary(row.district_id, cycle, {
+    provider: row.race_type === 'us_senate' ? 'Kalshi' : null,
+  });
   const money = moneySummary(row.district_id, cycle);
   const candidates = candidateList(row.district_id, cycle);
   const partisan = partisanSummary(row);

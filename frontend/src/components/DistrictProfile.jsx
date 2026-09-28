@@ -14,72 +14,80 @@ function markerPos(margin) {
 }
 
 export default function DistrictProfile({ profile }) {
+  const title = `${profile?.scope ? `${profile.scope} ` : ''}PROFILE`;
+
+  let body;
   if (!profile) {
-    return (
-      <section className="panel-section">
-        <h3>PROFILE</h3>
-        <div className="dim">District profile not yet available.</div>
-      </section>
+    body = <div className="dim">District profile not yet available.</div>;
+  } else {
+    const race = profile.race || {};
+    const races = [
+      { key: 'white', label: 'White', pct: race.white, cls: 'race-white' },
+      { key: 'black', label: 'Black', pct: race.black, cls: 'race-black' },
+      { key: 'hispanic', label: 'Hispanic', pct: race.hispanic, cls: 'race-hispanic' },
+      { key: 'other', label: 'Other / Two+', pct: race.other, cls: 'race-other' },
+    ].filter((r) => r.pct != null);
+    const margin = parseLean(profile.pres_margin);
+
+    body = (
+      <>
+        <div className="profile-stats">
+          <div className="profile-stat"><span>MEDIAN AGE</span><b>{profile.median_age ?? '—'}</b></div>
+          <div className="profile-stat"><span>MEDIAN INCOME</span><b>{fmtIncome(profile.median_income)}</b></div>
+          <div className="profile-stat"><span>BACHELOR'S+</span><b>{profile.bachelors_plus != null ? `${profile.bachelors_plus}%` : '—'}</b></div>
+        </div>
+
+        {races.length > 0 && (
+          <>
+            <div className="profile-label">RACE / ETHNICITY</div>
+            <div className="profile-bars">
+              {races.map((r) => (
+                <div key={r.key} className="profile-bar-row">
+                  <span className="profile-bar-name">{r.label}</span>
+                  <div className="profile-bar-track"><i className={r.cls} style={{ width: `${r.pct}%` }} /></div>
+                  <span className="profile-bar-pct">{Math.round(r.pct)}%</span>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
+
+        <div className="profile-label">2024 PRESIDENTIAL MARGIN</div>
+        {margin ? (
+          <>
+            <div className="leanbar">
+              <div className="leanbar-track">
+                <i className={`leanbar-marker m-${margin.party.toLowerCase()}`} style={markerPos(margin)} />
+                <span className="leanbar-mid" />
+              </div>
+              <div className="leanbar-labels">
+                <span>DEM</span>
+                <span>REP</span>
+              </div>
+            </div>
+            <div className="profile-line">
+              <span>2024 {margin.party} +{margin.value}</span>
+              {profile.cpi ? <span> · CPI {profile.cpi}</span> : null}
+            </div>
+          </>
+        ) : (
+          <div className="dim">—</div>
+        )}
+
+        {profile.source && <div className="profile-source dim">{profile.source}</div>}
+      </>
     );
   }
 
-  const race = profile.race || {};
-  const races = [
-    { key: 'white', label: 'White', pct: race.white, cls: 'race-white' },
-    { key: 'black', label: 'Black', pct: race.black, cls: 'race-black' },
-    { key: 'hispanic', label: 'Hispanic', pct: race.hispanic, cls: 'race-hispanic' },
-    { key: 'other', label: 'Other / Two+', pct: race.other, cls: 'race-other' },
-  ].filter((r) => r.pct != null);
-  const margin = parseLean(profile.pres_margin);
-
+  // Census context is supporting detail, not a headline signal, so it starts
+  // folded. <details> keeps it keyboard-accessible without extra state.
   return (
-    <section className="panel-section">
-      <h3>{profile.scope ? `${profile.scope} ` : ''}PROFILE</h3>
-
-      <div className="profile-stats">
-        <div className="profile-stat"><span>MEDIAN AGE</span><b>{profile.median_age ?? '—'}</b></div>
-        <div className="profile-stat"><span>MEDIAN INCOME</span><b>{fmtIncome(profile.median_income)}</b></div>
-        <div className="profile-stat"><span>BACHELOR'S+</span><b>{profile.bachelors_plus != null ? `${profile.bachelors_plus}%` : '—'}</b></div>
-      </div>
-
-      {races.length > 0 && (
-        <>
-          <div className="profile-label">RACE / ETHNICITY</div>
-          <div className="profile-bars">
-            {races.map((r) => (
-              <div key={r.key} className="profile-bar-row">
-                <span className="profile-bar-name">{r.label}</span>
-                <div className="profile-bar-track"><i className={r.cls} style={{ width: `${r.pct}%` }} /></div>
-                <span className="profile-bar-pct">{Math.round(r.pct)}%</span>
-              </div>
-            ))}
-          </div>
-        </>
-      )}
-
-      <div className="profile-label">2024 PRESIDENTIAL MARGIN</div>
-      {margin ? (
-        <>
-          <div className="leanbar">
-            <div className="leanbar-track">
-              <i className={`leanbar-marker m-${margin.party.toLowerCase()}`} style={markerPos(margin)} />
-              <span className="leanbar-mid" />
-            </div>
-            <div className="leanbar-labels">
-              <span>DEM</span>
-              <span>REP</span>
-            </div>
-          </div>
-          <div className="profile-line">
-            <span>2024 {margin.party} +{margin.value}</span>
-            {profile.cpi ? <span> · CPI {profile.cpi}</span> : null}
-          </div>
-        </>
-      ) : (
-        <div className="dim">—</div>
-      )}
-
-      {profile.source && <div className="profile-source dim">{profile.source}</div>}
-    </section>
+    <details className="panel-section collapsible">
+      <summary className="collapsible-head">
+        <span className="collapsible-title">{title}</span>
+        <span className="collapsible-caret" aria-hidden="true" />
+      </summary>
+      <div className="collapsible-body">{body}</div>
+    </details>
   );
 }
