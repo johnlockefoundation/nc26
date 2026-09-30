@@ -308,7 +308,10 @@ export function listRaces({ cycle = CYCLE, raceType = null, competitiveOnly = tr
   const params = [cycle];
   if (raceType) { sql += ` AND race_type = ?`; params.push(raceType); }
   if (competitiveOnly) sql += ` AND competitive = 1`;
-  sql += ` ORDER BY race_type, district_number, district_id`;
+// In-play districts first, so a client that opens on the first race lands on a
+  // contested seat rather than whichever district happens to sort lowest. With
+  // competitiveOnly off this is what keeps SD-01 or HD-1 from being the default.
+  sql += ` ORDER BY competitive DESC, district_number, district_id`;
   const rows = db.prepare(sql).all(...params);
   return rows.map((r) => getRaceSummary(r, cycle));
 }
@@ -356,8 +359,13 @@ export function getRace(districtId, cycle = CYCLE) {
 }
 
 export function getMapFeatures({ cycle = CYCLE, raceType } = {}) {
-  const race = listRaces({ cycle, raceType, competitiveOnly: true });
-  const features = db.prepare(`SELECT district_id, race_type, district_number, competitive, cpi_value, geometry
+  // Every district the tracker covers, not only the ones in play. The General
+  // Assembly maps carry all 50 senate and all 120 house districts so the map is
+  // the whole state; which of them are competitive is a per-district flag the
+  // client colours by, not a filter on what exists.
+  const race = listRaces({ cycle, raceType, competitiveOnly: false });
+  const features = db.prepare(`SELECT district_id, race_type, district_number, competitive, cpi_value,
+      partisan_lean, partisan_party, geometry
     FROM districts WHERE election_cycle = ? AND race_type = ? ORDER BY district_number`)
     .all(cycle, raceType);
   const byId = new Map(race.map((r) => [r.district_id, r]));
@@ -372,6 +380,10 @@ export function getMapFeatures({ cycle = CYCLE, raceType } = {}) {
         district_number: f.district_number,
         competitive: Boolean(f.competitive),
         cpi: f.cpi_value || null,
+        // The Civitas bucket as well as the signed lean, so the map can say Lean
+        // or Likely rather than calling everything safe.
+        partisan_lean: f.partisan_lean || null,
+        partisan_party: f.partisan_party || null,
         geometry: JSON.parse(f.geometry),
         metrics: r ? {
           polls: r.polls.advantage,

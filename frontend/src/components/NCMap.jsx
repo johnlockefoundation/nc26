@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { partyColor, primarySignal } from '../lib/colors.js';
+import { partyColor, primarySignal, leanColor, leanLabel, SAFE_FILL_OPACITY } from '../lib/colors.js';
 import {
   BASEMAP_URL, BASEMAP_ATTR, MAP_MIN_ZOOM, MAP_MAX_ZOOM, MAP_BOUNDS, MAP_VIEW,
 } from '../lib/map.js';
@@ -20,15 +20,26 @@ function colorFor(race) {
   return partyColor(primarySignal(race)?.advantage?.party);
 }
 
-function safeLean(cpi) {
-  if (!cpi) return null;
-  const m = /^([DR])\+(\d+)$/.exec(String(cpi).trim());
+// The signed partisan lean for a district, read off the Civitas value ("R+9")
+// and carrying its bucket so it can be labelled honestly. Returns null when the
+// district has no lean recorded.
+function leanOf(f) {
+  if (!f.cpi) return null;
+  const m = /^([DR])\+(\d+(?:\.\d+)?)$/.exec(String(f.cpi).trim());
   if (!m) return null;
-  return { party: m[1], value: +m[2] };
+  return { party: m[1], value: +m[2], bucket: f.partisan_lean };
 }
 
-function safeStyle() {
-  return { color: '#3d516e', weight: 0.7, fillColor: '#475569', fillOpacity: 0.4 };
+// Districts that are not in play still get a party colour, dulled rather than
+  // grey, so the General Assembly maps read as the whole state instead of a
+  // handful of contested seats floating in nothing.
+function safeStyle(f) {
+  return {
+    color: '#1e2a3a',
+    weight: 0.6,
+    fillColor: leanColor(leanOf(f)),
+    fillOpacity: SAFE_FILL_OPACITY,
+  };
 }
 
 function raceStyle(f, race) {
@@ -264,26 +275,27 @@ export default function NCMap({ features, outline, races, selectedId, onSelect, 
 
     for (const f of features || []) {
       const race = raceById.current.get(f.district_id);
-      const isComp = f.competitive && race;
+      const isComp = Boolean(f.competitive && race);
+      const style = isComp ? raceStyle(f, race) : safeStyle(f);
 
       const geo = L.geoJSON(geometryFeature(f), {
-        style: isComp ? raceStyle(f, race) : safeStyle(),
+        style,
         interactive: true,
         onEachFeature: (_, layer) => {
           layer.options.title = f.district_id;
           layer.on('click', () => onSelectRef.current(f.district_id));
           layer.on('mouseover', () => {
             if (f.district_id !== selectedRef.current) {
-              layer.setStyle({ ...(isComp ? raceStyle(f, race) : safeStyle()), weight: 1.8, color: '#f1f5f9' });
+              layer.setStyle({ ...style, weight: 1.8, color: '#f1f5f9' });
             }
           });
           layer.on('mouseout', () => {
-            layer.setStyle(f.district_id === selectedRef.current ? selectedStyle(f.district_id) : (isComp ? raceStyle(f, race) : safeStyle()));
+            layer.setStyle(f.district_id === selectedRef.current ? selectedStyle(f.district_id) : style);
           });
           if (!isComp) {
-            const lean = safeLean(f.cpi);
+            const lean = leanOf(f);
             if (lean) {
-              layer.bindTooltip(`SAFE ${lean.party} +${lean.value}`, { sticky: true, offset: [0, -4], className: 'tip-adv tip-safe' });
+              layer.bindTooltip(leanLabel(lean), { sticky: true, offset: [0, -4], className: `tip-adv tip-safe tip-lean-${lean.party.toLowerCase()}` });
             }
             return;
           }
@@ -338,7 +350,7 @@ export default function NCMap({ features, outline, races, selectedId, onSelect, 
     if (prevLayer) {
       const f = featuresById.current.get(prevId);
       const race = raceById.current.get(prevId);
-      prevLayer.setStyle(f && f.competitive && race ? raceStyle(f, race) : safeStyle());
+      prevLayer.setStyle(f && f.competitive && race ? raceStyle(f, race) : safeStyle(f));
     }
     selectedRef.current = selectedId;
     const layer = selectedId ? layersById.current.get(selectedId) : null;
@@ -352,7 +364,7 @@ export default function NCMap({ features, outline, races, selectedId, onSelect, 
     return {
       color: '#f8fafc',
       weight: 2.6,
-      fillColor: isComp ? colorFor(race) : '#475569',
+      fillColor: isComp ? colorFor(race) : leanColor(f && leanOf(f)),
       fillOpacity: 0.95,
     };
   }

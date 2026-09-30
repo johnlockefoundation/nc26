@@ -30,6 +30,32 @@ export function partyColor(party) {
   return '#e2e8f0';
 }
 
+// Fill for a district that is not in play. Flat and dull, deliberately: the map
+// is two levels, in play and not, so a Safe seat never competes for attention
+// with a contested one. The lean still decides which way it tilts, which is what
+// makes the map read as the whole state rather than as a handful of contested
+// seats floating in grey. In-play districts get the full party colour from
+// partyColor() via the race signal, so the two levels are always the same hue
+// and differ only in weight.
+const DULL_PARTY = { D: '#183058', R: '#5c1e1e' };
+
+export const SAFE_FILL_OPACITY = 1;
+
+export function leanColor(lean) {
+  if (!lean || !lean.party) return '#475569';
+  return DULL_PARTY[lean.party] || '#475569';
+}
+
+// How a district is labelled when it carries no race signal of its own. The
+// Civitas bucket is the honest word for it -- calling a Likely R+9 "SAFE"
+// overstates how settled the seat is.
+const LEAN_LABELS = { 'Safe': 'SAFE', 'Likely': 'LIKELY', 'Lean': 'LEAN', 'Toss-up': 'TOSS-UP' };
+
+export function leanLabel(lean) {
+  const bucket = LEAN_LABELS[lean?.bucket] || 'SAFE';
+  return `${bucket} ${lean.party}+${lean.value}`;
+}
+
 // Color a race from its primary signal, scaled in each metric's own units so a
 // money-only district is not painted the same saturated hue as a blowout poll.
 const SCALES = { POLLS: 10, MARKETS: 35, MONEY: 1500000, PARTISAN: 15 };

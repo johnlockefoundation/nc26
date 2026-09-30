@@ -177,7 +177,10 @@ a { color: var(--accent); }
 .leaflet-tooltip.tip-d { background: #1d4ed8; }
 .leaflet-tooltip.tip-r { background: #b91c1c; }
 .leaflet-tooltip.tip-even { background: #7c3aed; }
-.leaflet-tooltip.tip-safe { background: #334155; }
+/* A district that is not in play is labelled with its Civitas bucket rather
+   than a race signal, so it is tinted by party instead of neutral grey. */
+.leaflet-tooltip.tip-safe.tip-lean-d { background: #1e3a8a; }
+.leaflet-tooltip.tip-safe.tip-lean-r { background: #7f1d1d; }
 
 .leaflet-control-zoom a { background: var(--card); color: var(--ink); border-color: var(--line) !important; }
 .leaflet-control-zoom a:hover { background: #16223a; }
