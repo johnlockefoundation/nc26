@@ -35,7 +35,7 @@ function leanOf(f) {
   // handful of contested seats floating in nothing.
 function safeStyle(f) {
   return {
-    color: '#1e2a3a',
+    color: '#cbd5e1',
     weight: 0.6,
     fillColor: leanColor(leanOf(f)),
     fillOpacity: SAFE_FILL_OPACITY,
@@ -44,7 +44,7 @@ function safeStyle(f) {
 
 function raceStyle(f, race) {
   return {
-    color: '#0b1220',
+    color: '#ffffff',
     weight: 0.8,
     fillColor: colorFor(race),
     fillOpacity: 0.85,
@@ -286,7 +286,7 @@ export default function NCMap({ features, outline, races, selectedId, onSelect, 
           layer.on('click', () => onSelectRef.current(f.district_id));
           layer.on('mouseover', () => {
             if (f.district_id !== selectedRef.current) {
-              layer.setStyle({ ...style, weight: 1.8, color: '#f1f5f9' });
+              layer.setStyle({ ...style, weight: 1.8, color: '#334155' });
             }
           });
           layer.on('mouseout', () => {
@@ -362,7 +362,7 @@ export default function NCMap({ features, outline, races, selectedId, onSelect, 
     const race = raceById.current.get(districtId);
     const isComp = f && f.competitive && race;
     return {
-      color: '#f8fafc',
+      color: '#0f172a',
       weight: 2.6,
       fillColor: isComp ? colorFor(race) : leanColor(f && leanOf(f)),
       fillOpacity: 0.95,

@@ -1,13 +1,13 @@
 :root {
-  --ink: #e2e8f0;
-  --muted: #8b9cb0;
-  --line: #1e2a3a;
-  --bg: #0b1220;
-  --card: #101a2c;
-  --d: #60a5fa;
-  --r: #f87171;
-  --accent: #6dabff;
-  --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 8px 24px rgba(0, 0, 0, 0.4);
+  --ink: #0f172a;
+  --muted: #475569;
+  --line: #dbe3ec;
+  --bg: #eef2f7;
+  --card: #ffffff;
+  --d: #2563eb;
+  --r: #dc2626;
+  --accent: #1d4ed8;
+  --shadow: 0 1px 2px rgba(15, 23, 42, 0.06), 0 8px 24px rgba(15, 23, 42, 0.08);
   /* Locke brand standard: Barlow Condensed for display, Effra for body.
      Effra is a licensed font and cannot be served from Google Fonts, so Mulish
      -- the closest freely available match -- stands in. To finish the swap,
@@ -75,11 +75,11 @@ a { color: var(--accent); }
 
 /* Ticker */
 .ticker {
-  display: flex; align-items: center; gap: 10px; background: #0d1524; color: #e2e8f0;
-  border: 1px solid rgba(148, 163, 184, 0.12); border-radius: 12px;
+  display: flex; align-items: center; gap: 10px; background: var(--card); color: var(--ink);
+  border: 1px solid var(--line); border-radius: 12px;
   padding: 8px 12px; margin-bottom: 16px; overflow: hidden;
 }
-.ticker-label { font-family: var(--font-display); font-size: 10px; letter-spacing: 0.14em; font-weight: 700; color: #93c5fd; flex: none; }
+.ticker-label { font-family: var(--font-display); font-size: 10px; letter-spacing: 0.14em; font-weight: 700; color: var(--accent); flex: none; }
 .ticker-track {
   flex: 1; overflow: hidden;
   -webkit-mask-image: linear-gradient(90deg, transparent, #000 3%, #000 97%, transparent);
@@ -93,13 +93,13 @@ a { color: var(--accent); }
 .ticker-group { display: flex; gap: 8px; flex: none; padding-right: 8px; }
 .ticker-chip {
   flex: none; display: inline-flex; align-items: center; gap: 7px;
-  background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(15, 23, 42, 0.04); border: 1px solid rgba(15, 23, 42, 0.10);
   border-radius: 999px; padding: 6px 13px; cursor: pointer; white-space: nowrap;
   text-decoration: none; color: inherit; max-width: 560px;
 }
-.ticker-chip:hover { background: rgba(255, 255, 255, 0.14); }
+.ticker-chip:hover { background: rgba(15, 23, 42, 0.07); }
 .ticker-headline { font-family: var(--font-display); font-size: 13px; font-weight: 600; color: var(--ink); overflow: hidden; text-overflow: ellipsis; }
-.ticker-dot { color: #64748b; }
+.ticker-dot { color: #94a3b8; }
 .ticker-outlet { font-family: var(--font-display); color: var(--muted); font-size: 9.5px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; flex: none; }
 
 @keyframes ticker-scroll {
@@ -122,12 +122,12 @@ a { color: var(--accent); }
 }
 
 /* Toggle */
-.toggle-bar { display: inline-flex; background: #16223a; border-radius: 12px; padding: 4px; gap: 4px; margin-bottom: 12px; flex-wrap: wrap; }
+.toggle-bar { display: inline-flex; background: #e4eaf2; border-radius: 12px; padding: 4px; gap: 4px; margin-bottom: 12px; flex-wrap: wrap; }
 .toggle {
   border: 0; background: transparent; border-radius: 9px; padding: 8px 16px; cursor: pointer;
   display: flex; flex-direction: column; align-items: flex-start; gap: 1px; color: var(--muted);
 }
-.toggle.active { background: #22334d; color: var(--ink); box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25); }
+.toggle.active { background: #ffffff; color: var(--ink); box-shadow: 0 1px 3px rgba(15, 23, 42, 0.14); }
 .toggle-label { font-family: var(--font-display); font-weight: 700; font-size: 14px; }
 
 /* Map toolbar */
@@ -140,8 +140,8 @@ a { color: var(--accent); }
   font: inherit; color: inherit; cursor: pointer; text-align: inherit;
   display: flex; flex-direction: column;
 }
-.mini-gauge:hover { background: #16223a; }
-.mini-gauge.active { background: #22334d; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25); }
+.mini-gauge:hover { background: #e4eaf2; }
+.mini-gauge.active { background: #ffffff; box-shadow: 0 1px 3px rgba(15, 23, 42, 0.14); }
 .mini-gauge:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
 .mini-gauge svg { display: block; }
 .mini-gauge-meta { display: flex; align-items: baseline; justify-content: space-between; gap: 6px; margin-top: 1px; width: 100%; }
@@ -149,10 +149,10 @@ a { color: var(--accent); }
 .gauge-lead { font-family: var(--font-display); font-size: 10.5px; font-weight: 700; letter-spacing: -0.01em; white-space: nowrap; }
 .gauge-lead.lead-r { color: var(--r); }
 .gauge-lead.lead-d { color: var(--d); }
-.gauge-outcome { display: block; width: 100%; margin-top: 3px; font-family: var(--font-display); font-size: 8.5px; font-weight: 800; letter-spacing: 0.09em; text-align: center; background: #0c1524; border: 1px solid var(--line); border-radius: 6px; padding: 2px 0; }
+.gauge-outcome { display: block; width: 100%; margin-top: 3px; font-family: var(--font-display); font-size: 8.5px; font-weight: 800; letter-spacing: 0.09em; text-align: center; background: #f1f5f9; border: 1px solid var(--line); border-radius: 6px; padding: 2px 0; }
 .gauge-outcome.outcome-d { color: var(--d); border-color: rgba(59, 130, 246, 0.4); background: rgba(29, 78, 216, 0.12); }
 .gauge-outcome.outcome-r { color: var(--r); border-color: rgba(239, 68, 68, 0.4); background: rgba(185, 28, 28, 0.12); }
-.gauge-outcome.outcome-t { color: #cbd5e1; border-color: rgba(148, 163, 184, 0.35); background: rgba(51, 65, 85, 0.25); }
+.gauge-outcome.outcome-t { color: var(--muted); border-color: rgba(148, 163, 184, 0.45); background: rgba(148, 163, 184, 0.16); }
 @media (max-width: 640px) {
   .gauge-cluster { gap: 6px; }
   .gauge-row { gap: 8px; }
@@ -162,16 +162,16 @@ a { color: var(--accent); }
 /* Map (Leaflet) */
 .map-wrap { position: relative; border-radius: 14px; overflow: hidden; border: 1px solid var(--line); }
 .map-loading { padding: 80px; text-align: center; color: var(--muted); }
-.map-container { width: 100%; height: 560px; background: #091322; transition: opacity 0.4s ease; }
+.map-container { width: 100%; height: 560px; background: #e4ebf2; transition: opacity 0.4s ease; }
 .map-container.map-dimmed { opacity: 0; }
 @media (max-width: 720px) { .map-container { height: 420px; } }
 
-.leaflet-container { font-family: inherit; background: #091322; }
+.leaflet-container { font-family: inherit; background: #e4ebf2; }
 .leaflet-tooltip {
   font-family: var(--font-display);
-  background: #0b1220; color: #fff; border: 0; border-radius: 999px; padding: 3px 11px;
+  background: #334155; color: #fff; border: 0; border-radius: 999px; padding: 3px 11px;
   font-size: 12.5px; font-weight: 700; letter-spacing: 0.02em;
-  box-shadow: 0 6px 18px rgba(2, 6, 23, 0.45);
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.24);
 }
 .leaflet-tooltip::before { display: none; }
 .leaflet-tooltip.tip-d { background: #1d4ed8; }
@@ -183,23 +183,23 @@ a { color: var(--accent); }
 .leaflet-tooltip.tip-safe.tip-lean-r { background: #7f1d1d; }
 
 .leaflet-control-zoom a { background: var(--card); color: var(--ink); border-color: var(--line) !important; }
-.leaflet-control-zoom a:hover { background: #16223a; }
-.leaflet-control-attribution { background: rgba(11, 18, 32, 0.7); color: var(--muted) !important; }
-.leaflet-control-attribution a { color: #93c5fd !important; }
+.leaflet-control-zoom a:hover { background: #eef2f7; }
+.leaflet-control-attribution { background: rgba(255, 255, 255, 0.82); color: var(--muted) !important; }
+.leaflet-control-attribution a { color: var(--accent) !important; }
 
 .district-divlabel {
   font-family: var(--font-display);
-  color: #e2e8f0; font-weight: 700; font-size: 10px; text-align: center; line-height: 14px;
-  text-shadow: 0 1px 2px rgba(15, 23, 42, 0.95), 0 0 4px rgba(15, 23, 42, 0.95);
+  color: var(--ink); font-weight: 700; font-size: 10px; text-align: center; line-height: 14px;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.92), 0 0 4px rgba(255, 255, 255, 0.92);
 }
 .district-divlabel-safe {
-  color: #7c8ba1; font-weight: 600; font-size: 9px;
+  color: #64748b; font-weight: 600; font-size: 9px;
 }
 .district-arrow-marker { background: transparent; border: none; }
-.map-arrow { display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; font-size: 46px; line-height: 1; font-weight: 700; text-shadow: 0 1px 3px rgba(15, 23, 42, 0.95); }
+.map-arrow { display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; font-size: 46px; line-height: 1; font-weight: 700; text-shadow: 0 1px 3px rgba(255, 255, 255, 0.92); }
 .map-arrow.map-arrow-senate { font-size: 64px; }
-.map-arrow.arrow-d { color: #60a5fa; animation: arrow-live 1.6s ease-in-out infinite; }
-.map-arrow.arrow-r { color: #f87171; animation: arrow-live-r 1.6s ease-in-out infinite; }
+.map-arrow.arrow-d { color: var(--d); animation: arrow-live 1.6s ease-in-out infinite; }
+.map-arrow.arrow-r { color: var(--r); animation: arrow-live-r 1.6s ease-in-out infinite; }
 @keyframes arrow-live { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.35; transform: scale(0.94); } }
 @keyframes arrow-live-r { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.35; transform: scale(0.94); } }
 
@@ -208,7 +208,7 @@ a { color: var(--accent); }
   border: 1px solid var(--line); border-radius: 8px; background: var(--card); color: var(--ink);
   font-size: 16px; cursor: pointer; box-shadow: var(--shadow);
 }
-.map-reset:hover { background: #16223a; }
+.map-reset:hover { background: #eef2f7; }
 
 /* Panel */
 /* One scroll for the whole page. This used to be a sticky column with its own
@@ -232,11 +232,11 @@ a { color: var(--accent); }
 @media (max-width: 560px) { .candidate-list { grid-template-columns: 1fr; } }
 .candidate-card {
   display: flex; flex-direction: column; align-items: center; text-align: center; gap: 9px;
-  background: #0c1524; border: 1px solid var(--line); border-radius: 14px; padding: 14px;
+  background: #f8fafc; border: 1px solid var(--line); border-radius: 14px; padding: 14px;
 }
 .candidate-photo {
   position: relative; width: 100%; aspect-ratio: 1 / 1.06; border-radius: 10px;
-  overflow: hidden; background: #16223a;
+  overflow: hidden; background: #e2e8f0;
   display: flex; align-items: center; justify-content: center;
 }
 .candidate-photo img { width: 100%; height: 100%; object-fit: cover; }
@@ -259,25 +259,25 @@ a { color: var(--accent); }
    value's baseline and hugging the top. */
 .metric {
   display: flex; align-items: center; justify-content: space-between; gap: 16px;
-  border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; background: #0c1524;
+  border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; background: #f8fafc;
 }
-.metric-empty { background: #0a111f; }
+.metric-empty { background: #f1f5f9; }
 .metric-title { font-family: var(--font-display); font-size: 10.5px; letter-spacing: 0.14em; font-weight: 700; color: var(--muted); flex: none; }
 .metric-title-link { color: var(--muted); text-decoration: none; border-bottom: 1px dotted rgba(148, 163, 184, 0.5); }
 .metric-title-link:hover { color: var(--accent); border-bottom-color: var(--accent); }
 .metric-value { font-family: var(--font-display); font-size: 26px; font-weight: 700; letter-spacing: 0; line-height: 1; white-space: nowrap; }
 .metric-value.val-d { color: var(--d); }
 .metric-value.val-r { color: var(--r); }
-.metric-na { font-family: var(--font-display); font-size: 15px; color: #64748b; font-weight: 700; letter-spacing: 0.02em; }
+.metric-na { font-family: var(--font-display); font-size: 15px; color: #94a3b8; font-weight: 700; letter-spacing: 0.02em; }
 
 .metric-arrow { display: inline-block; margin-left: 7px; font-size: 20px; vertical-align: -1px; animation: arrow-live 1.6s ease-in-out infinite; }
-.metric-arrow.move-d { color: #60a5fa; }
-.metric-arrow.move-r { color: #f87171; }
+.metric-arrow.move-d { color: var(--d); }
+.metric-arrow.move-r { color: var(--r); }
 @keyframes arrow-live { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.35; transform: scale(0.92); } }
 
 /* Civitas partisan index (state races without poll/market coverage) */
 .partisan-rating { display: inline-block; margin-left: 10px; font-size: 13px; font-weight: 700; letter-spacing: 0.1em; color: var(--muted); vertical-align: 2px; }
-.partisan-inplay { display: inline-block; margin-left: 10px; font-size: 11px; font-weight: 800; letter-spacing: 0.14em; color: #fbbf24; vertical-align: 3px; }
+.partisan-inplay { display: inline-block; margin-left: 10px; font-size: 11px; font-weight: 800; letter-spacing: 0.14em; color: #b45309; vertical-align: 3px; }
 
 /* Sections */
 .panel-section { margin-top: 18px; }
@@ -290,7 +290,7 @@ a { color: var(--accent); }
    quiet: it sits under the Civitas index and covers money and vitals alike,
    rather than repeating a banner over each widget. */
 .data-disclaimer {
-  margin: 2px 0 0; font-size: 10.5px; line-height: 1.45; color: #fbbf24; opacity: 0.85;
+  margin: 2px 0 0; font-size: 10.5px; line-height: 1.45; color: #92600a;
 }
 
 /* Voter velocity: registration and ballot movement between two snapshots */
@@ -302,8 +302,8 @@ a { color: var(--accent); }
 }
 .vel-head span { font-size: 10px; letter-spacing: 0.08em; color: var(--muted); }
 .vel-head b { font-family: var(--font-display); font-size: 16px; color: var(--ink); font-variant-numeric: tabular-nums; }
-.vel-head b.up { color: #4ade80; }
-.vel-head b.down { color: #f87171; }
+.vel-head b.up { color: #16a34a; }
+.vel-head b.down { color: var(--r); }
 .vel-bars { display: flex; flex-direction: column; gap: 6px; margin-top: 4px; }
 .vel-bar-row { display: flex; align-items: center; gap: 9px; font-size: 12px; }
 .vel-bar-name { width: 88px; flex: none; color: var(--muted); text-align: right; }
@@ -311,11 +311,11 @@ a { color: var(--accent); }
 .vel-bar-track i { display: block; height: 100%; border-radius: 4px; }
 .reg-d { background: var(--d); }
 .reg-r { background: var(--r); }
-.reg-u { background: #8b9cb0; }
+.reg-u { background: #94a3b8; }
 .reg-b { background: var(--accent); }
 .vel-bar-chg { width: 62px; flex: none; text-align: right; color: var(--ink); font-variant-numeric: tabular-nums; }
-.vel-bar-chg.up { color: #4ade80; }
-.vel-bar-chg.down { color: #f87171; }
+.vel-bar-chg.up { color: #16a34a; }
+.vel-bar-chg.down { color: var(--r); }
 
 /* Per-race news list */
 .race-news { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 11px; }
@@ -351,14 +351,14 @@ a { color: var(--accent); }
 .profile-bar-track i { display: block; height: 100%; border-radius: 5px; }
 .profile-bar-track .race-white { background: #94a3b8; }
 .profile-bar-track .race-black { background: #334155; }
-.profile-bar-track .race-hispanic { background: #f59e0b; }
-.profile-bar-track .race-other { background: #64748b; }
+.profile-bar-track .race-hispanic { background: #d97706; }
+.profile-bar-track .race-other { background: #94a3b8; }
 .profile-bar-pct { width: 34px; flex: none; text-align: right; color: var(--muted); }
 
 .leanbar { margin-bottom: 6px; }
-.leanbar-track { position: relative; height: 10px; border-radius: 6px; background: linear-gradient(90deg, var(--d, #5b8cff), var(--center, #334155) 50%, var(--r, #f87171)); }
-.leanbar-marker { position: absolute; top: -3px; width: 3px; height: 16px; border-radius: 2px; background: #fff; box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.6); }
-.leanbar-mid { position: absolute; top: 0; left: 50%; width: 1px; height: 100%; background: rgba(15, 23, 42, 0.45); }
+.leanbar-track { position: relative; height: 10px; border-radius: 6px; background: linear-gradient(90deg, var(--d, #2563eb), var(--center, #e2e8f0) 50%, var(--r, #dc2626)); }
+.leanbar-marker { position: absolute; top: -3px; width: 3px; height: 16px; border-radius: 2px; background: var(--ink); box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.9); }
+.leanbar-mid { position: absolute; top: 0; left: 50%; width: 1px; height: 100%; background: rgba(15, 23, 42, 0.30); }
 .leanbar-labels { display: flex; justify-content: space-between; font-family: var(--font-display); font-size: 10px; letter-spacing: 0.1em; color: var(--muted); margin-top: 3px; }
 .profile-line { font-size: 12px; color: var(--ink); }
 .profile-source { font-size: 10.5px; margin-top: 10px; line-height: 1.4; }
@@ -368,4 +368,4 @@ a { color: var(--accent); }
 .panel-footer { margin-top: 18px; padding-top: 10px; border-top: 1px solid var(--line); font-size: 11px; }
 
 .panel-loading { padding: 60px 0; text-align: center; color: var(--muted); }
-.error-banner { background: rgba(153, 27, 27, 0.12); color: #fca5a5; border: 1px solid rgba(153, 27, 27, 0.4); border-radius: 10px; padding: 10px 14px; margin-bottom: 12px; font-size: 13px; }
+.error-banner { background: rgba(220, 38, 38, 0.07); color: #991b1b; border: 1px solid rgba(220, 38, 38, 0.32); border-radius: 10px; padding: 10px 14px; margin-bottom: 12px; font-size: 13px; }

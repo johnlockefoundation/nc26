@@ -57,12 +57,12 @@ export default function MiniGauge({ outlook, label, raceType, active = false, on
       onClick={() => onSelect?.(raceType)}
     >
       <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label={`${label}: ${outcome}${!isToss && gainParty !== 'EVEN' ? `, ${gainLabel} vs today` : ''}`}>
-        <path d={arcPath(180, 360)} fill="none" stroke="#16223a" strokeWidth={10} strokeLinecap="round" />
-        <path d={arcPath(180, thrAngle)} fill="none" stroke="#b91c1c" strokeWidth={10} opacity={0.55} strokeLinecap="round" />
-        <path d={arcPath(thrAngle, 360)} fill="none" stroke="#1d4ed8" strokeWidth={10} opacity={0.55} strokeLinecap="round" />
-        <line x1={thrTop.x} y1={thrTop.y} x2={pt(thrAngle, R - 3).x} y2={pt(thrAngle, R - 3).y} stroke="#8b9cb0" strokeWidth={1.5} />
-        <line x1={base.x} y1={base.y} x2={tip.x} y2={tip.y} stroke="#e2e8f0" strokeWidth={2.5} strokeLinecap="round" />
-        <circle cx={CX} cy={CY} r={3.5} fill="#e2e8f0" />
+        <path d={arcPath(180, 360)} fill="none" stroke="#e2e8f0" strokeWidth={10} strokeLinecap="round" />
+        <path d={arcPath(180, thrAngle)} fill="none" stroke="#b91c1c" strokeWidth={10} opacity={0.9} strokeLinecap="round" />
+        <path d={arcPath(thrAngle, 360)} fill="none" stroke="#1d4ed8" strokeWidth={10} opacity={0.9} strokeLinecap="round" />
+        <line x1={thrTop.x} y1={thrTop.y} x2={pt(thrAngle, R - 3).x} y2={pt(thrAngle, R - 3).y} stroke="#64748b" strokeWidth={1.5} />
+        <line x1={base.x} y1={base.y} x2={tip.x} y2={tip.y} stroke="#0f172a" strokeWidth={2.5} strokeLinecap="round" />
+        <circle cx={CX} cy={CY} r={3.5} fill="#0f172a" />
       </svg>
       <span className="mini-gauge-meta">
         <span className="gauge-name">{label}</span>

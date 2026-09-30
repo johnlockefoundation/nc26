@@ -27,23 +27,24 @@ export function advantageColor(adv) {
 export function partyColor(party) {
   if (party === 'D') return '#1d4ed8';
   if (party === 'R') return '#b91c1c';
-  return '#e2e8f0';
+  return '#cbd5e1';
 }
 
-// Fill for a district that is not in play. Flat and dull, deliberately: the map
-// is two levels, in play and not, so a Safe seat never competes for attention
-// with a contested one. The lean still decides which way it tilts, which is what
-// makes the map read as the whole state rather than as a handful of contested
-// seats floating in grey. In-play districts get the full party colour from
-// partyColor() via the race signal, so the two levels are always the same hue
-// and differ only in weight.
-const DULL_PARTY = { D: '#183058', R: '#5c1e1e' };
+// Fill for a district that is not in play. A pale tint, deliberately: the map
+// is two levels, in play and not, and on a light background a pale district
+// recedes where a dark one would compete. This is the inverse of the dark
+// treatment, where dull-and-dark was what made a safe seat sit back. The lean
+// still decides which way it tilts, which is what makes the map read as the
+// whole state rather than as a handful of contested seats floating in nothing.
+// In-play districts get the full party colour from partyColor() via the race
+// signal, so the two levels are always the same hue and differ only in weight.
+const PALE_PARTY = { D: '#dbe7f7', R: '#f7dfdf' };
 
 export const SAFE_FILL_OPACITY = 1;
 
 export function leanColor(lean) {
-  if (!lean || !lean.party) return '#475569';
-  return DULL_PARTY[lean.party] || '#475569';
+  if (!lean || !lean.party) return '#e2e8f0';
+  return PALE_PARTY[lean.party] || '#e2e8f0';
 }
 
 // How a district is labelled when it carries no race signal of its own. The
