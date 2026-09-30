@@ -89,20 +89,13 @@ export const US_HOUSE_COMPETITIVE = Object.entries(HOUSE_RATED).map(([id, reason
   reason,
 }));
 
-// U.S. Senate races designated in play for the cycle. The Cook Political
-// Report battleground (Sep 2026): toss-ups plus lean races, including
-// likely-Republican Nebraska from its "races to watch" list.
+// The U.S. Senate race this tracker follows. North Carolina is the only state
+// covered: Cooper (D) vs. Whatley (R) in the seat Tillis (R) is vacating, the
+// top Senate battleground per Cook. Other in-play seats are deliberately not
+// carried -- they had a quote and nothing else, and a map of ten shells said
+// more about the pipeline than about any one race.
 export const SENATE_RACES = [
   { id: 'NC-SEN', state: 'NC', name: 'North Carolina', source: 'cook_2026', reason: 'Open seat — Tillis (R) retiring; Cooper (D) vs. Whatley (R). Lean D per Cook. Top Senate battleground.' },
-  { id: 'ME-SEN', state: 'ME', name: 'Maine', source: 'cook_2026', reason: 'Collins (R) seeks a sixth term; Toss-up per Cook.' },
-  { id: 'AK-SEN', state: 'AK', name: 'Alaska', source: 'cook_2026', reason: 'Sullivan (R) seeks re-election; Toss-up per Cook (ranked-choice state).' },
-  { id: 'MI-SEN', state: 'MI', name: 'Michigan', source: 'cook_2026', reason: 'Open seat — Stabenow (D) retiring; Toss-up per Cook.' },
-  { id: 'OH-SEN', state: 'OH', name: 'Ohio', source: 'cook_2026', reason: 'Husted (R) seeks first full term; Toss-up per Cook.' },
-  { id: 'IA-SEN', state: 'IA', name: 'Iowa', source: 'cook_2026', reason: 'Open seat — Ernst (R) retiring; Hinson (R) vs. Turek (D); Toss-up per Cook.' },
-  { id: 'TX-SEN', state: 'TX', name: 'Texas', source: 'cook_2026', reason: 'Open seat — Paxton (R) vs. Talarico (D); moved to Toss-up per Cook.' },
-  { id: 'GA-SEN', state: 'GA', name: 'Georgia', source: 'cook_2026', reason: 'Ossoff (D) seeks re-election; Lean D per Cook.' },
-  { id: 'NH-SEN', state: 'NH', name: 'New Hampshire', source: 'cook_2026', reason: 'Open seat — Shaheen (D) retiring; Lean D per Cook.' },
-  { id: 'NE-SEN', state: 'NE', name: 'Nebraska', source: 'cook_2026', reason: 'Ricketts (R) seeks re-election; Likely R per Cook but a 2024 Osborn wildcard.' },
 ];
 export const SENATE_RACES_BY_ID = new Map(SENATE_RACES.map((r) => [r.id, r]));
 

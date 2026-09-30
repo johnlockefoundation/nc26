@@ -1,7 +1,7 @@
 // Export the normalized database as static JSON for the GitHub Pages demo.
 // Writes into frontend/public/demo-data so Vite packages it with the site.
-import { mkdirSync, writeFileSync, readFileSync } from 'node:fs';
-import { join, dirname, resolve } from 'node:path';
+import { mkdirSync, writeFileSync, readFileSync, readdirSync, rmSync, existsSync } from 'node:fs';
+import { join, dirname, resolve, basename } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -60,9 +60,26 @@ for (const raceType of RACE_TYPES) {
 }
 
 const districts = db.prepare(`SELECT district_id FROM districts WHERE election_cycle = ?`).all(CYCLE);
+const exported = new Set();
 for (const { district_id } of districts) {
   const race = races.getRace(district_id, CYCLE);
-  if (race) writeJson(`race/${district_id}.json`, race);
+  if (!race) continue;
+  writeJson(`race/${district_id}.json`, race);
+  exported.add(district_id);
+}
+
+// Drop race files for seats the database no longer carries, e.g. a state whose
+// Senate race this tracker has stopped following. The export only ever writes,
+// so without this a stale file from a previous run is packaged into the site by
+// the Vite build and published alongside the current data.
+const raceDir = join(OUT, 'race');
+if (existsSync(raceDir)) {
+  for (const file of readdirSync(raceDir)) {
+    const id = basename(file, '.json');
+    if (!file.endsWith('.json') || exported.has(id)) continue;
+    rmSync(join(raceDir, file));
+    console.log(`  removed demo-data/race/${file} (no longer a tracked seat)`);
+  }
 }
 
 writeJson('ticker.json', { cycle: CYCLE, items: races.getTicker({ cycle: CYCLE, limit: 25 }) });

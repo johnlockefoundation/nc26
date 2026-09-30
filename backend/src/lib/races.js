@@ -10,8 +10,8 @@ const RACE_TYPE_META = {
   state_house: { short: 'NC HOUSE', slug: 'state_house' },
 };
 
-// Senate district ids are <STATE>-SEN; fall back to the slug minus the suffix
-// if a race ever isn't in the configured set (e.g. a newly added state).
+// Senate district ids are <STATE>-SEN, and the configured name is preferred;
+// the suffix-stripped id is the fallback for a seat with no config entry yet.
 export function senateStateName(districtId) {
   return SENATE_RACES_BY_ID.get(districtId)?.name || districtId.replace(/-SEN$/, '');
 }
@@ -308,12 +308,7 @@ export function listRaces({ cycle = CYCLE, raceType = null, competitiveOnly = tr
   const params = [cycle];
   if (raceType) { sql += ` AND race_type = ?`; params.push(raceType); }
   if (competitiveOnly) sql += ` AND competitive = 1`;
-  // The Tarheel Tracker opens the marquee NC Senate race first on the U.S.
-  // Senate tab (senate ids share district_number 0, so an explicit tiebreaker
-  // keeps the initial selection stable).
-  sql += ` ORDER BY race_type,
-    CASE WHEN race_type = 'us_senate' AND district_id = 'NC-SEN' THEN 0 ELSE 1 END,
-    district_number, district_id`;
+  sql += ` ORDER BY race_type, district_number, district_id`;
   const rows = db.prepare(sql).all(...params);
   return rows.map((r) => getRaceSummary(r, cycle));
 }

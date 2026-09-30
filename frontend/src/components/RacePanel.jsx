@@ -47,11 +47,11 @@ export default function RacePanel({ race, loading }) {
   const marketList = race.market_list || (markets.available ? [markets] : []);
   const isStateRace = race.race_type === 'state_senate' || race.race_type === 'state_house';
 
-  // Whether a race carries anything beyond a market quote. Every in-play
-  // senate seat except NC is a shell with a single Kalshi contract, and
-  // rendering four empty blocks for those says more about the pipeline than
-  // the race. This reads the payload rather than hardcoding a district, so a
-  // seat that later picks up polling or money fills in on its own.
+  // Whether a race carries anything beyond a market quote. A seat with only a
+  // price would otherwise render four empty blocks, which says more about the
+  // pipeline than about the race. This reads the payload rather than hardcoding
+  // a district, so a seat that later picks up polling or money fills in on its
+  // own.
   const hasSubstance = Boolean(polls.available || moneyS.available);
   const marketBlocks = marketList.map((m) => (
     <MetricBlock
@@ -63,11 +63,6 @@ export default function RacePanel({ race, loading }) {
     />
   ));
   const showFullPanel = !isStateRace && hasSubstance;
-  // Per-seat coverage is an NC product. The out-of-state Senate seats are
-  // carried on a price alone, so a coverage list there would be an empty
-  // heading every time. DistrictNews renders nothing when it has no stories,
-  // so this only has to exclude the seats that should never show it.
-  const showNews = race.race_type !== 'us_senate' || race.district_id === 'NC-SEN';
 
   return (
     <aside className="panel">
@@ -88,7 +83,7 @@ export default function RacePanel({ race, loading }) {
             <MetricBlock title="MONEY" emptyText="NO MONEY" summary={moneyS} />
           </div>
           <VoterVelocity vitals={race.vitals} />
-          {showNews && <DistrictNews articles={race.news} />}
+          <DistrictNews articles={race.news} />
         </>
       ) : showFullPanel ? (
         <div className="metrics">
@@ -101,7 +96,7 @@ export default function RacePanel({ race, loading }) {
       )}
 
       {!isStateRace && <DistrictProfile profile={race.profile} />}
-      {!isStateRace && showNews && <DistrictNews articles={race.news} />}
+      {!isStateRace && <DistrictNews articles={race.news} />}
     </aside>
   );
 }

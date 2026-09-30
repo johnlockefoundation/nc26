@@ -28,14 +28,27 @@ export async function ingestDistricts(cycle) {
       race_type = excluded.race_type,
       district_number = excluded.district_number,
       geometry = excluded.geometry`);
+  // The geometry files are the full set of seats the tracker covers, so anything
+  // else left in the table for this cycle is a seat that has been dropped --
+  // the other U.S. Senate states, say. Without this they would keep rendering
+  // from a database that predates the change; nothing else removes them,
+  // because the jobs that touch these rows only ever insert or update.
+  const prune = db.prepare(`DELETE FROM districts
+    WHERE election_cycle = ? AND race_type = ? AND district_id NOT IN (SELECT value FROM json_each(?))`);
+
+  let pruned = 0;
   for (const [raceType, file] of Object.entries(RACE_TYPES)) {
     const coll = JSON.parse(readFileSync(join(GEOM, file), 'utf8'));
+    const ids = [];
     for (const f of coll.features) {
       const p = f.properties;
       ins.run(p.district_id, raceType, p.district_number, cycle, JSON.stringify(f.geometry));
+      ids.push(p.district_id);
       total++;
     }
+    pruned += prune.run(cycle, raceType, JSON.stringify(ids)).changes;
   }
-  console.log(`[districts] seeded ${total} district rows for cycle ${cycle}`);
-  return { source: 'districts', count: total };
+  const note = pruned ? `, pruned ${pruned} dropped seat${pruned === 1 ? '' : 's'}` : '';
+  console.log(`[districts] seeded ${total} district rows for cycle ${cycle}${note}`);
+  return { source: 'districts', count: total, pruned };
 }

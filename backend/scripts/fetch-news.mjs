@@ -93,6 +93,8 @@ function loadCandidates() {
   for (const c of usHouse.candidates || []) addCandidate(c.name, c.district_id);
   const usSenate = JSON.parse(readFileSync(join(SEED, 'candidates-us-senate.json'), 'utf8'));
   for (const c of usSenate.candidates || []) {
+    // The seat is named explicitly rather than taken from the seed, so this
+    // stays correct if the seed ever carries a state the tracker doesn't follow.
     if (c.district_id === 'NC-SEN') addCandidate(c.name, c.district_id);
   }
 }

@@ -1,6 +1,7 @@
-// US Senate: each in-play state is stored as a single "district" row whose
-// geometry is the full state outline, so the map renders the whole state.
-// Marks every 2026 battleground seat competitive and adds candidates.
+// US Senate: a seat is stored as a single "district" row whose geometry is the
+// full state outline, so the map renders the whole state. North Carolina is the
+// only state covered, so this marks one seat competitive and adds its two
+// candidates.
 import { readFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';

@@ -9,24 +9,9 @@ export const BASEMAP_ATTR = '&copy; OpenStreetMap contributors &copy; CARTO';
 export const MAP_MIN_ZOOM = 5;
 export const MAP_MAX_ZOOM = 14;
 
-// Keep the view locked to North Carolina (plus a little margin) so users never
-// scroll or drag away from the state for the in-state race types.
+// Every tab is North Carolina, so the view is locked to the state (plus a little
+// margin) on all of them and users can never scroll or drag away from it.
 export const MAP_BOUNDS = [[32.7, -87.0], [37.7, -74.0]];
 
-// The U.S. Senate tab spans the in-play battleground states nationally, so its
-// pan/zoom limits are national rather than state-locked. Alaska is rendered as
-// a compact inset in the Pacific (see NCMap), so the limits cover the
-// contiguous states plus that inset instead of the Mercator-inflated 49th
-// state, which otherwise dwarfs its neighbors.
-export const SENATE_MIN_ZOOM = 3;
-export const SENATE_BOUNDS = [[4.5, -137.0], [51.0, -63.5]];
-
-// Initial view when the Senate tab first loads. fitToState() immediately fits
-// to SENATE_FIT_BOUNDS, so this is just a pre-fit placeholder.
-export const SENATE_VIEW = { center: [37.0, -100.0], zoom: 4 };
-
-// Fit target for the Senate tab: every in-play seat except Alaska lies east of
-// ~-107 degrees lon (Texas panhandle to Maine), so the initial view zooms into
-// the eastern half of the country instead of the whole continent. Alaska stays
-// reachable via its Pacific inset by dragging within SENATE_BOUNDS.
-export const SENATE_FIT_BOUNDS = [[24.0, -110.5], [49.2, -64.8]];
+// Initial view before fitToState() runs; it immediately fits to the outline.
+export const MAP_VIEW = { center: [35.6, -79.5], zoom: 6 };

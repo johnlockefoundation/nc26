@@ -3,8 +3,7 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { partyColor, primarySignal } from '../lib/colors.js';
 import {
-  BASEMAP_URL, BASEMAP_ATTR, MAP_MIN_ZOOM, MAP_MAX_ZOOM, MAP_BOUNDS,
-  SENATE_MIN_ZOOM, SENATE_BOUNDS, SENATE_FIT_BOUNDS, SENATE_VIEW,
+  BASEMAP_URL, BASEMAP_ATTR, MAP_MIN_ZOOM, MAP_MAX_ZOOM, MAP_BOUNDS, MAP_VIEW,
 } from '../lib/map.js';
 
 function shortLabel(districtId) {
@@ -48,95 +47,167 @@ function tooltipFor(race) {
   return { html, className: `tip-adv tip-${party}` };
 }
 
-function geometryFeature(f, transform) {
-  return { type: 'Feature', properties: {}, geometry: transform ? transformCoords(f.geometry, transform) : f.geometry };
+function geometryFeature(f) {
+  return { type: 'Feature', properties: {}, geometry: f.geometry };
 }
 
-// Re-map GeoJSON coordinates through an affine function, used to shrink Alaska
-// into its Pacific inset on the Senate map (see insetTransformFor).
-function transformCoords(geometry, fn) {
-  if (!geometry) return geometry;
-  if (geometry.type === 'Polygon') {
-    return { ...geometry, coordinates: geometry.coordinates.map((ring) => ring.map(([lon, lat]) => fn(lon, lat))) };
-  }
-  if (geometry.type === 'MultiPolygon') {
-    return {
-      ...geometry,
-      coordinates: geometry.coordinates.map((poly) =>
-        poly.map((ring) => ring.map(([lon, lat]) => fn(lon, lat)))),
-    };
-  }
-  return geometry;
-}
-
-function pathCenter(f) {
-  const bounds = L.geoJSON(geometryFeature(f)).getBounds();
-  return bounds.isValid() ? bounds.getCenter() : null;
-}
-
-// Senate races are statewide polygons, so label anchors are hand-picked per
-// state (bounding-box centers land over water or empty terrain for several).
-// NC is anchored near Asheboro, the geographic heart of the state.
-const SENATE_ANCHORS = {
-  'NC-SEN': L.latLng(35.71, -79.81),
-  'ME-SEN': L.latLng(44.95, -69.2),
-  'AK-SEN': L.latLng(62.8, -155.0),
-  'MI-SEN': L.latLng(44.5, -85.0),
-  'OH-SEN': L.latLng(40.2, -82.8),
-  'IA-SEN': L.latLng(42.0, -93.3),
-  'TX-SEN': L.latLng(31.3, -99.5),
-  'GA-SEN': L.latLng(32.7, -83.4),
-  'NH-SEN': L.latLng(43.4, -71.6),
-  'NE-SEN': L.latLng(41.5, -99.7),
-};
-
-function anchorFor(f, transform) {
-  const base = SENATE_ANCHORS[f.district_id] || pathCenter(f);
-  return transform ? transform(base) : base;
-}
-
-// Web Mercator, and its inverse. Mercator stretches latitude strongly near the
-// poles and barely at all near the equator, so the same number of degrees of
-// latitude is a very different height depending on where it is drawn.
-const mercatorY = (lat) => Math.log(Math.tan(Math.PI / 4 + (lat * Math.PI) / 360));
-const mercatorLat = (y) => (2 * Math.atan(Math.exp(y)) * 180) / Math.PI - 90;
-
-// Alaska (AK-SEN) is the one Senate battleground web Mercator bloats beyond
-// reason: at its true latitude its polygon stretches far up the page and pushes
-// the other states aside. Shrink it into a box floating in the Pacific and
-// leave the view fit to CONUS, which the map bounds in map.js already assume.
+// ---------------------------------------------------------------------------
+// Label anchors
 //
-// The y scale is not the same as the x scale, and that is the whole point.
-// Relocating Alaska from 51-71N down to the Pacific removes the Mercator
-// stretch it was drawn with, so a uniform scale would flatten the state: it
-// came out 53% vertically squashed, reading as a smear rather than a state.
-// Deriving the y scale from the source's own Mercator height keeps the inset's
-// shape equal to Alaska's real one, whatever the anchor or scale.
-function insetTransformFor(feature) {
-  const src = L.geoJSON(geometryFeature(feature)).getBounds();
-  if (!src.isValid()) return null;
-  const trueHeight = mercatorY(src.getNorth()) - mercatorY(src.getSouth());
-  // Mercator height the inset must cover to match the source's proportions.
-  const insetHeight = AK_INSET_SCALE * trueHeight;
-  const top = mercatorLat(mercatorY(AK_INSET_SOUTH) + insetHeight);
-  const scaleY = (top - AK_INSET_SOUTH) / (src.getNorth() - src.getSouth());
-  return {
-    coords: (lon, lat) => [
-      AK_INSET_WEST + (lon - src.getWest()) * AK_INSET_SCALE,
-      AK_INSET_SOUTH + (lat - src.getSouth()) * scaleY,
-    ],
-    latLng: (p) => L.latLng(
-      AK_INSET_SOUTH + (p.lat - src.getSouth()) * scaleY,
-      AK_INSET_WEST + (p.lng - src.getWest()) * AK_INSET_SCALE,
-    ),
-  };
+// A district's bounding-box centre is not reliably inside the district. The box
+// spans the whole extent of the shape, so for a district that wraps around a
+// concavity -- most of a state's coastline, or the notch where Mecklenburg sits
+// -- the centre lands in whatever is in that notch. NC-05 and NC-13 both put
+// the number outside their own district this way, and NC-13's area-weighted
+// centroid is outside it too, so neither the box nor the centroid is enough on
+// its own.
+//
+// Anchors are the area-weighted centroid where that is comfortably inside the
+// shape, and otherwise the pole of inaccessibility -- the interior point furthest
+// from the district's own boundary -- found by sampling a grid over the box and
+// refining around the winner twice. The centroid covers nearly every district
+// and costs a single pass over the edges; the search is only for the few that
+// pinch to a sliver or wrap a concavity, which keeps a tab switch from paying
+// for it fourteen times. The pole lands in the widest part of the shape, which
+// is also where a number reads best: NC-05 goes from 3.6 km clear of its border
+// to 36.8 km.
+// ---------------------------------------------------------------------------
+
+// How far a label must sit from its district's border to be good enough to take
+// the cheap centroid path. About 6 km, which at any zoom the map opens at is
+// many times the width of the number itself.
+const MIN_LABEL_CLEARANCE = 0.06;
+
+function districtPolygons(f) {
+  const g = f.geometry;
+  return g.type === 'Polygon' ? [g.coordinates] : g.coordinates;
 }
 
-const AK_INSET_WEST = -133;
-// The anchor sits low enough that the taller, unsquashed inset still clears
-// the bottom edge of the CONUS fit bounds (lat 24.0) in map.js.
-const AK_INSET_SOUTH = 6.0;
-const AK_INSET_SCALE = 0.42;
+function bboxOf(polygons) {
+  let b = [Infinity, Infinity, -Infinity, -Infinity];
+  for (const poly of polygons) {
+    for (const [x, y] of poly[0]) {
+      if (x < b[0]) b[0] = x;
+      if (y < b[1]) b[1] = y;
+      if (x > b[2]) b[2] = x;
+      if (y > b[3]) b[3] = y;
+    }
+  }
+  return b;
+}
+
+function pointInRing(ring, x, y) {
+  let inside = false;
+  for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+    const [xi, yi] = ring[i];
+    const [xj, yj] = ring[j];
+    if ((yi > y) !== (yj > y) && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi) inside = !inside;
+  }
+  return inside;
+}
+
+// A polygon is its exterior ring minus its holes.
+function pointInDistrict(polygons, x, y) {
+  return polygons.some((poly) => (
+    pointInRing(poly[0], x, y) && !poly.slice(1).some((hole) => pointInRing(hole, x, y))
+  ));
+}
+
+// Squared distance to the nearest edge. Squared, because this runs in the
+// innermost loop of the grid search and only the winning value needs a sqrt.
+function clearanceSq(polygons, x, y) {
+  let min = Infinity;
+  for (const poly of polygons) {
+    for (const ring of poly) {
+      for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+        const [ax, ay] = ring[j];
+        const [bx, by] = ring[i];
+        const dx = bx - ax;
+        const dy = by - ay;
+        const lenSq = dx * dx + dy * dy;
+        let t = lenSq === 0 ? 0 : ((x - ax) * dx + (y - ay) * dy) / lenSq;
+        t = t < 0 ? 0 : t > 1 ? 1 : t;
+        const ex = x - (ax + t * dx);
+        const ey = y - (ay + t * dy);
+        const d = ex * ex + ey * ey;
+        if (d < min) {
+          min = d;
+          if (min === 0) return 0;
+        }
+      }
+    }
+  }
+  return min;
+}
+
+// Rings are signed, so a hole subtracts itself from the total and pulls the
+// centroid the way it should.
+function areaCentroid(polygons) {
+  let area = 0;
+  let cx = 0;
+  let cy = 0;
+  for (const poly of polygons) {
+    for (const ring of poly) {
+      let a = 0;
+      let rx = 0;
+      let ry = 0;
+      for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+        const cross = ring[j][0] * ring[i][1] - ring[i][0] * ring[j][1];
+        a += cross;
+        rx += (ring[j][0] + ring[i][0]) * cross;
+        ry += (ring[j][1] + ring[i][1]) * cross;
+      }
+      a /= 2;
+      if (a === 0) continue;
+      area += a;
+      cx += (rx / (6 * a)) * a;
+      cy += (ry / (6 * a)) * a;
+    }
+  }
+  return area === 0 ? null : [cx / area, cy / area];
+}
+
+function poleOfInaccessibility(polygons) {
+  const box = bboxOf(polygons);
+  let [x0, y0, x1, y1] = box;
+  let best = null;
+  let bestSq = -1;
+
+  for (let pass = 0; pass < 3; pass++) {
+    const steps = pass === 0 ? 24 : 12;
+    const halfW = (x1 - x0) / 2;
+    const halfH = (y1 - y0) / 2;
+    for (let i = 0; i <= steps; i++) {
+      const x = x0 + ((x1 - x0) * i) / steps;
+      for (let j = 0; j <= steps; j++) {
+        const y = y0 + ((y1 - y0) * j) / steps;
+        if (!pointInDistrict(polygons, x, y)) continue;
+        const d = clearanceSq(polygons, x, y);
+        if (d > bestSq) {
+          bestSq = d;
+          best = [x, y];
+        }
+      }
+    }
+    if (best) {
+      [x0, x1] = [best[0] - halfW, best[0] + halfW];
+      [y0, y1] = [best[1] - halfH, best[1] + halfH];
+    }
+  }
+
+  return best ? L.latLng(best[1], best[0]) : null;
+}
+
+function anchorFor(f) {
+  const polygons = districtPolygons(f);
+  const centroid = areaCentroid(polygons);
+  if (centroid
+    && pointInDistrict(polygons, centroid[0], centroid[1])
+    && clearanceSq(polygons, centroid[0], centroid[1]) >= MIN_LABEL_CLEARANCE ** 2) {
+    return L.latLng(centroid[1], centroid[0]);
+  }
+  return poleOfInaccessibility(polygons);
+}
 
 export default function NCMap({ features, outline, races, selectedId, onSelect, raceType, dimmed = false }) {
   const containerRef = useRef(null);
@@ -155,20 +226,20 @@ export default function NCMap({ features, outline, races, selectedId, onSelect, 
     featuresById.current = new Map((features || []).map((f) => [f.district_id, f]));
   }, [features, races]);
 
-  // Initialize the Leaflet map once.
+  // Initialize the Leaflet map once. Every tab is North Carolina, so the view
+  // limits never change with the race type.
   useEffect(() => {
     if (mapRef.current) return;
-    const isSenate = raceType === 'us_senate';
     const map = L.map(containerRef.current, {
-      minZoom: isSenate ? SENATE_MIN_ZOOM : MAP_MIN_ZOOM,
+      minZoom: MAP_MIN_ZOOM,
       maxZoom: MAP_MAX_ZOOM,
       scrollWheelZoom: false,
-      maxBounds: isSenate ? SENATE_BOUNDS : MAP_BOUNDS,
+      maxBounds: MAP_BOUNDS,
       maxBoundsViscosity: 1,
       zoomControl: true,
       attributionControl: true,
     });
-    map.setView(isSenate ? SENATE_VIEW.center : [35.6, -79.5], isSenate ? SENATE_VIEW.zoom : 6);
+    map.setView(MAP_VIEW.center, MAP_VIEW.zoom);
     L.tileLayer(BASEMAP_URL, {
       attribution: BASEMAP_ATTR,
       maxZoom: MAP_MAX_ZOOM,
@@ -182,16 +253,6 @@ export default function NCMap({ features, outline, races, selectedId, onSelect, 
     };
   }, []);
 
-  // Tune pan/zoom limits when the race type changes: the Senate tab spans the
-  // nation, the in-state tabs stay locked to North Carolina.
-  useEffect(() => {
-    const map = mapRef.current;
-    if (!map) return;
-    const isSenate = raceType === 'us_senate';
-    map.setMinZoom(isSenate ? SENATE_MIN_ZOOM : MAP_MIN_ZOOM);
-    map.setMaxBounds(isSenate ? SENATE_BOUNDS : MAP_BOUNDS);
-  }, [raceType]);
-
   // Rebuild district layers when the dataset changes (race type switch).
   useEffect(() => {
     const map = mapRef.current;
@@ -204,9 +265,8 @@ export default function NCMap({ features, outline, races, selectedId, onSelect, 
     for (const f of features || []) {
       const race = raceById.current.get(f.district_id);
       const isComp = f.competitive && race;
-      const inset = f.district_id === 'AK-SEN' ? insetTransformFor(f) : null;
 
-      const geo = L.geoJSON(geometryFeature(f, inset?.coords), {
+      const geo = L.geoJSON(geometryFeature(f), {
         style: isComp ? raceStyle(f, race) : safeStyle(),
         interactive: true,
         onEachFeature: (_, layer) => {
@@ -234,7 +294,7 @@ export default function NCMap({ features, outline, races, selectedId, onSelect, 
       layerRef.current.addLayer(geo);
       layersById.current.set(f.district_id, geo);
 
-      const center = anchorFor(f, inset?.latLng);
+      const center = anchorFor(f);
       if (center) {
         const race = isComp ? raceById.current.get(f.district_id) : null;
         const delta = race?.markets?.delta;
@@ -268,7 +328,7 @@ export default function NCMap({ features, outline, races, selectedId, onSelect, 
       }
     }
 
-    fitToState(map, raceType);
+    fitToState(map);
   }, [features, races, outline, raceType]);
 
   // Highlight the selected district without rebuilding everything.
@@ -297,12 +357,9 @@ export default function NCMap({ features, outline, races, selectedId, onSelect, 
     };
   }
 
-  function fitToState(map, type) {
+  // Every tab is North Carolina, so the outline is the fit target for all of them.
+  function fitToState(map) {
     if (!map) return;
-    if (type === 'us_senate') {
-      map.fitBounds(SENATE_FIT_BOUNDS, { padding: [6, 6] });
-      return;
-    }
     if (outline && outline.type) {
       const b = L.geoJSON(outline).getBounds();
       if (b.isValid()) {
@@ -310,13 +367,13 @@ export default function NCMap({ features, outline, races, selectedId, onSelect, 
         return;
       }
     }
-    map.setView([35.6, -79.5], 6);
+    map.setView(MAP_VIEW.center, MAP_VIEW.zoom);
   }
 
   return (
     <div className="map-wrap">
       <div ref={containerRef} className={`map-container${dimmed ? ' map-dimmed' : ''}`} aria-label="Competitive election map" />
-      <button className="map-reset" onClick={() => fitToState(mapRef.current, raceType)} title="Zoom to view">⤢</button>
+      <button className="map-reset" onClick={() => fitToState(mapRef.current)} title="Zoom to view">⤢</button>
     </div>
   );
 }
