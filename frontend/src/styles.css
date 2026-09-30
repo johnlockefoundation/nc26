@@ -4,15 +4,15 @@
    it. #root is the GitHub Pages mount point; .jce-root is the plugin's. */
 #root,
 .jce-root {
-  --ink: #0f172a;
-  --muted: #475569;
-  --line: #dbe3ec;
-  --bg: #eef2f7;
-  --card: #ffffff;
-  --d: #2563eb;
-  --r: #dc2626;
-  --accent: #1d4ed8;
-  --shadow: 0 1px 2px rgba(15, 23, 42, 0.06), 0 8px 24px rgba(15, 23, 42, 0.08);
+  --ink: #e2e8f0;
+  --muted: #8b9cb0;
+  --line: #1e2a3a;
+  --bg: #0b1220;
+  --card: #101a2c;
+  --d: #60a5fa;
+  --r: #f87171;
+  --accent: #6dabff;
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 8px 24px rgba(0, 0, 0, 0.4);
   /* Locke brand standard: Barlow Condensed for display, Effra for body.
      Effra is a licensed font and cannot be served from Google Fonts, so Mulish
      -- the closest freely available match -- stands in. To finish the swap,
