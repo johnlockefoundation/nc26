@@ -63,7 +63,7 @@
 
 /* Topbar */
 .topbar {
-  display: flex; align-items: center; justify-content: center; gap: 18px;
+  display: flex; align-items: center; justify-content: center; gap: 24px;
   padding: 8px 2px 18px; flex-wrap: wrap;
 }
 .gauge-cluster { display: flex; align-items: center; }
