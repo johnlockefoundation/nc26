@@ -8,8 +8,13 @@
   --r: #f87171;
   --accent: #6dabff;
   --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 8px 24px rgba(0, 0, 0, 0.4);
-  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  --font-display: 'Space Grotesk', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  /* Locke brand standard: Barlow Condensed for display, Effra for body.
+     Effra is a licensed font and cannot be served from Google Fonts, so Mulish
+     -- the closest freely available match -- stands in. To finish the swap,
+     drop the licensed woff2 files in and add an @font-face for 'Effra'; it is
+     already first in this stack, so nothing else needs to change. */
+  --font-body: 'Effra', 'Mulish', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --font-display: 'Barlow Condensed', 'Mulish', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
 * { box-sizing: border-box; }
@@ -57,7 +62,9 @@ a { color: var(--accent); }
   font-family: var(--font-display); color: var(--ink);
 }
 .brand-word {
-  font-size: 34px; font-weight: 700; letter-spacing: -0.03em; color: var(--ink);
+  /* Positive tracking: Barlow Condensed is narrow, so the -0.03em that suited
+     the previous display face closes the uppercase counters up. */
+  font-size: 34px; font-weight: 700; letter-spacing: 0.02em; color: var(--ink);
   text-transform: uppercase;
 }
 .brand-byline {
@@ -255,7 +262,7 @@ a { color: var(--accent); }
 .metric-title { font-family: var(--font-display); font-size: 10.5px; letter-spacing: 0.14em; font-weight: 700; color: var(--muted); flex: none; }
 .metric-title-link { color: var(--muted); text-decoration: none; border-bottom: 1px dotted rgba(148, 163, 184, 0.5); }
 .metric-title-link:hover { color: var(--accent); border-bottom-color: var(--accent); }
-.metric-value { font-family: var(--font-display); font-size: 26px; font-weight: 700; letter-spacing: -0.02em; line-height: 1; white-space: nowrap; }
+.metric-value { font-family: var(--font-display); font-size: 26px; font-weight: 700; letter-spacing: 0; line-height: 1; white-space: nowrap; }
 .metric-value.val-d { color: var(--d); }
 .metric-value.val-r { color: var(--r); }
 .metric-na { font-family: var(--font-display); font-size: 15px; color: #64748b; font-weight: 700; letter-spacing: 0.02em; }
