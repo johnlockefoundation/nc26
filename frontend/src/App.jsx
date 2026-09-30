@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { getMap, getMeta, getRace, getTicker, getOutline } from './api.js';
+import { getMap, getMeta, getRace, getTicker, getOutline, assetUrl } from './api.js';
 import RaceTypeToggle from './components/RaceTypeToggle.jsx';
 import RaceTicker from './components/RaceTicker.jsx';
 import NCMap from './components/NCMap.jsx';
@@ -68,8 +68,14 @@ export default function App() {
             <MiniGauge outlook={meta?.nc_house_outlook} label="NC HOUSE" raceType="state_house" active={raceType === 'state_house'} onSelect={setRaceType} />
           </div>
         </div>
-        <h1 className="brand-title" aria-label="Tarheel Tracker">
-          <span className="brand-word">Tarheel&nbsp;Tracker</span>
+        <h1 className="brand-title">
+          <img
+            className="brand-logo"
+            src={assetUrl('assets/carolina-election-map.png')}
+            alt="Carolina Election Map"
+            width="777"
+            height="339"
+          />
           <span className="brand-byline"><em>from</em> the John Locke Foundation</span>
         </h1>
         <div className="gauge-cluster gauge-right">

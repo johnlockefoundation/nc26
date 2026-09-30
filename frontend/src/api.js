@@ -64,6 +64,16 @@ function wpAsset(rel) {
   return new URL(rel, WP.assetBase).toString();
 }
 
+// Static files that ship in both builds, so the same <img> works whichever host
+// is serving. In WordPress they come off the plugin directory via assetBase; on
+// Pages they are served from the site root, which Vite reports as BASE_URL.
+// Without this the logo would need two different src attributes per build, and
+// getting it wrong is a silent broken image rather than an error.
+export function assetUrl(rel) {
+  if (WP) return wpAsset(rel);
+  return new URL(rel, import.meta.env.BASE_URL || '/').toString();
+}
+
 function wpSnapshot(rel) {
   return () => getJson(wpAsset(`data/snapshot/${rel}`));
 }
