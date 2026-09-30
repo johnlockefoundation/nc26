@@ -50,3 +50,34 @@ Related, and worth settling in the same conversation:
 - **A poll outranking the index is sometimes right and sometimes wrong.** For a
   genuinely close race the poll is the better read. For NC-11 at R+15 it is not,
   and no threshold currently distinguishes the two.
+
+## The build cannot see a runtime throw
+
+`d91f92d` fixed a blank page I shipped in `9674bdd`: `new URL(rel, BASE_URL)`
+throws for every base value Pages supplies, and because it ran inside render
+React unmounted the entire app. No partial page, no visible error.
+
+The build was green the whole time. It is green for the *broken* version and for
+the fixed one alike, because a bundler never executes the code it emits, and
+nothing else in this repo does either. Three separate checks in the plugin build
+all passed while the site was down.
+
+So the honest state is that the only verification available here covers syntax,
+data shape, artifact contents and rendered markup -- not behaviour. Anything that
+runs in a browser is unverified, and that is a much larger surface than it
+sounds: render paths, the Leaflet lifecycle, fetches, and anything touching
+`window`.
+
+What would actually close it, cheapest first:
+
+- **A headless smoke test that renders `App` and asserts the header exists.**
+  Catches this class outright. Needs jsdom and a few fetch stubs; there is no
+  test runner in the repo yet, so this is also the thing that would justify one.
+- **Load the built pages bundle in jsdom once and fail on any console error.**
+  Broader, catches Leaflet and the data paths too, and does not need a runner.
+- **A staging WordPress page.** The plugin's own `tools/build.sh` is thorough,
+  but it verifies the *artifact*, never the rendered page. Nobody has yet put
+  this in front of a browser.
+
+Until at least the first of those exists, "the build is green" should be read as
+"the artifact is well-formed", not as "the site works".
