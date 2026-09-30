@@ -16,20 +16,23 @@ const RACE_TYPES = {
 
 export async function ingestDistricts(cycle) {
   let total = 0;
-  const ins = db.prepare(`INSERT OR IGNORE INTO districts
+  // Geometry is rewritten on conflict so a boundary rebuild -- a newly enacted
+  // district plan, say -- actually reaches rows already in the table. Only the
+  // geometry is updated: `competitive`, its provenance and the CPI columns are
+  // left alone so that rebuilding boundaries cannot silently drop a
+  // designation, whatever order the ingest jobs are run in.
+  const ins = db.prepare(`INSERT INTO districts
     (district_id, race_type, district_number, election_cycle, geometry, competitive)
-    VALUES (?, ?, ?, ?, ?, 0)`);
-  // The senate outline is refreshed (not just ignored) so a geometry rebuild
-  // reaches every in-play state; competitiveness is re-marked by us-senate later.
-  const insSenate = db.prepare(`INSERT OR REPLACE INTO districts
-    (district_id, race_type, district_number, election_cycle, geometry, competitive)
-    VALUES (?, ?, ?, ?, ?, 0)`);
+    VALUES (?, ?, ?, ?, ?, 0)
+    ON CONFLICT (district_id, election_cycle) DO UPDATE SET
+      race_type = excluded.race_type,
+      district_number = excluded.district_number,
+      geometry = excluded.geometry`);
   for (const [raceType, file] of Object.entries(RACE_TYPES)) {
     const coll = JSON.parse(readFileSync(join(GEOM, file), 'utf8'));
-    const use = raceType === 'us_senate' ? insSenate : ins;
     for (const f of coll.features) {
       const p = f.properties;
-      use.run(p.district_id, raceType, p.district_number, cycle, JSON.stringify(f.geometry));
+      ins.run(p.district_id, raceType, p.district_number, cycle, JSON.stringify(f.geometry));
       total++;
     }
   }
