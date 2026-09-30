@@ -177,8 +177,7 @@
 /* Map (Leaflet) */
 .map-wrap { position: relative; border-radius: 14px; overflow: hidden; border: 1px solid var(--line); }
 .map-loading { padding: 80px; text-align: center; color: var(--muted); }
-.map-container { width: 100%; height: 560px; background: #091322; transition: opacity 0.4s ease; }
-.map-container.map-dimmed { opacity: 0; }
+.map-container { width: 100%; height: 560px; background: #091322; }
 @media (max-width: 720px) { .map-container { height: 420px; } }
 
 .leaflet-container { font-family: inherit; background: #091322; }

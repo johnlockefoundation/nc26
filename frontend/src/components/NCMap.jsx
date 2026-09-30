@@ -220,7 +220,7 @@ function anchorFor(f) {
   return poleOfInaccessibility(polygons);
 }
 
-export default function NCMap({ features, outline, races, selectedId, onSelect, raceType, dimmed = false }) {
+export default function NCMap({ features, outline, races, selectedId, onSelect, raceType }) {
   const containerRef = useRef(null);
   const mapRef = useRef(null);
   const layerRef = useRef(null);
@@ -384,7 +384,7 @@ export default function NCMap({ features, outline, races, selectedId, onSelect, 
 
   return (
     <div className="map-wrap">
-      <div ref={containerRef} className={`map-container${dimmed ? ' map-dimmed' : ''}`} aria-label="Competitive election map" />
+      <div ref={containerRef} className="map-container" aria-label="Competitive election map" />
       <button className="map-reset" onClick={() => fitToState(mapRef.current)} title="Zoom to view">⤢</button>
     </div>
   );

@@ -17,7 +17,6 @@ export default function App() {
   const [detail, setDetail] = useState(null);
   const [loadingDetail, setLoadingDetail] = useState(false);
   const [error, setError] = useState(null);
-  const [switching, setSwitching] = useState(false);
 
   useEffect(() => {
     getOutline().then(setOutline).catch((e) => setError(String(e)));
@@ -27,16 +26,15 @@ export default function App() {
 
   useEffect(() => {
     let alive = true;
-    // Fade the map out while the new dataset loads, then release the dim once
-    // the features arrive — masks the layer rebuild / re-fit jump between tabs.
-    const fadeDuration = 400;
-    setSwitching(true);
+    // No crossfade between chambers. Every map is framed on North Carolina over
+    // the same basemap, so there is no view to soften the transition into -- the
+    // fade only ever hid the layer rebuild, at the cost of a blank half-second
+    // on every tab switch.
     setError(null);
     getMap(raceType)
       .then((d) => { if (alive) setMapData(d); })
       .catch((e) => { if (alive) setError(String(e)); });
-    const timer = setTimeout(() => { if (alive) setSwitching(false); }, fadeDuration + 60);
-    return () => { alive = false; clearTimeout(timer); };
+    return () => { alive = false; };
   }, [raceType]);
 
   const races = useMemo(() => mapData?.races || [], [mapData]);
@@ -100,7 +98,6 @@ export default function App() {
             outline={outline}
             selectedId={selectedId}
             onSelect={setSelectedId}
-            dimmed={switching}
           />
         </section>
 
