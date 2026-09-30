@@ -1,13 +1,18 @@
-:root {
-  --ink: #e2e8f0;
-  --muted: #8b9cb0;
-  --line: #1e2a3a;
-  --bg: #0b1220;
-  --card: #101a2c;
-  --d: #60a5fa;
-  --r: #f87171;
-  --accent: #6dabff;
-  --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 8px 24px rgba(0, 0, 0, 0.4);
+/* The variables are declared on the app's own container, not on :root. A
+   WordPress theme is free to define --ink, --line or --accent itself, and
+   declaring them here would either collide with that or, worse, be overridden by
+   it. #root is the GitHub Pages mount point; .jce-root is the plugin's. */
+#root,
+.jce-root {
+  --ink: #0f172a;
+  --muted: #475569;
+  --line: #dbe3ec;
+  --bg: #eef2f7;
+  --card: #ffffff;
+  --d: #2563eb;
+  --r: #dc2626;
+  --accent: #1d4ed8;
+  --shadow: 0 1px 2px rgba(15, 23, 42, 0.06), 0 8px 24px rgba(15, 23, 42, 0.08);
   /* Locke brand standard: Barlow Condensed for display, Effra for body.
      Effra is a licensed font and cannot be served from Google Fonts, so Mulish
      -- the closest freely available match -- stands in. To finish the swap,
@@ -17,22 +22,32 @@
   --font-display: 'Barlow Condensed', 'Mulish', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
-* { box-sizing: border-box; }
+/* Everything below is scoped to the app's own container. Nothing in this
+   stylesheet touches html or body, so it cannot restyle an active WordPress
+   theme. The page-level resets the standalone site needs (body margin, a full
+   height) live in index.html instead, where they cannot reach the plugin. */
+
+.app,
+.app *,
+.jce-root,
+.jce-root * { box-sizing: border-box; }
+
 /* min-height, not height: a fixed 100% caps the document at one viewport and
    leaves the content overflowing its own box. min-height lets the page grow
    and gives a single, ordinary scrollbar. */
-html, body, #root { min-height: 100%; }
-body {
-  margin: 0;
-  font-family: var(--font-body);
-  color: var(--ink);
-  background: var(--bg);
+#root, .jce-root { min-height: 100%; }
+#root { background: var(--bg); }
+
+/* Type, colour and the page ground are scoped to the app's own wrapper. Set on
+   body instead, the stylesheet would restyle whichever WordPress theme is
+   active -- its fonts, its text colour, its whole background. */
+.app {
+  max-width: 1440px; margin: 0 auto; padding: 18px 22px 40px; position: relative;
+  font-family: var(--font-body); color: var(--ink);
   -webkit-font-smoothing: antialiased;
 }
-a { color: var(--accent); }
+.app a { color: var(--accent); }
 .dim { color: var(--muted); }
-
-.app { max-width: 1440px; margin: 0 auto; padding: 18px 22px 40px; position: relative; }
 
 /* Countdown (top-right) */
 .countdown {

@@ -12,6 +12,13 @@
          available there, so Mulish stands in for it. Swap Mulish for the real
          Effra webfonts when they are available (see --font-body in styles.css). -->
     <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Mulish:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <!-- Page-level resets for the standalone site only. The bundled stylesheet is
+         scoped to its own container so it cannot restyle a WordPress theme, which
+         means these have to live here where the plugin will never see them. -->
+    <style>
+      html, body { min-height: 100%; }
+      body { margin: 0; }
+    </style>
   </head>
   <body>
     <div id="root"></div>
