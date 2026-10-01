@@ -36,7 +36,7 @@ const __dirname = fileURLToPath(new URL('.', import.meta.url));
 const BACKEND = resolve(__dirname, '..');
 
 const { db, initSchema } = await import(pathToFileURL(join(BACKEND, 'src', 'db.js')));
-const { CYCLE } = await import(pathToFileURL(join(BACKEND, 'src', 'ingest', 'config.js')));
+const { CYCLE, HOUSE_OUTLOOK, SENATE_OUTLOOK, NC_SENATE_OUTLOOK, NC_HOUSE_OUTLOOK } = await import(pathToFileURL(join(BACKEND, 'src', 'ingest', 'config.js')));
 const races = await import(pathToFileURL(join(BACKEND, 'src', 'lib', 'races.js')));
 
 // The plugin is a directory that can be uploaded, so the default output is a
@@ -201,9 +201,20 @@ if (existsSync(OUTLINE)) {
 // --- meta ------------------------------------------------------------------
 // Provenance is per-field rather than one global "source", because the fields
 // in this file do not share a source and do not share a strength of claim.
+// The chamber outlooks are bundled for the same reason the Civitas leans are:
+// a forecast is dated and sourced, so freezing it is honest, and freezing the
+// *absence* of it is not. Without these the plugin's meta.json carries no gauge
+// figures at all, and since Supabase's outlooks table is empty the four gauge
+// tabs silently disappear from the shipped plugin -- a regression from the
+// Pages build, which gets them from the static export. They stay overridable
+// from Supabase: api.js prefers a live outlook and falls back to these.
 bytes += writeJson('meta.json', {
   cycle: CYCLE,
   generated_at: new Date().toISOString(),
+  house_outlook: HOUSE_OUTLOOK,
+  senate_outlook: SENATE_OUTLOOK,
+  nc_senate_outlook: NC_SENATE_OUTLOOK,
+  nc_house_outlook: NC_HOUSE_OUTLOOK,
   race_types: db.prepare(`SELECT race_type, COUNT(*) AS total,
       SUM(CASE WHEN competitive = 1 THEN 1 ELSE 0 END) AS competitive
     FROM districts WHERE election_cycle = ? GROUP BY race_type`).all(CYCLE),

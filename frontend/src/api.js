@@ -1,48 +1,75 @@
-// Data access layer. Three targets, in order of precedence:
+// Data access layer. Three targets:
 //
-//   1. WordPress (the shipping target). The plugin prints a `window.jceConfig`
-//      from PHP, so the Supabase URL and anon key are runtime configuration
-//      rather than baked into this bundle. One build then works across staging
-//      and production, and a WP filter can repoint either without a rebuild.
-//   2. Static demo (GitHub Pages). Reads pre-generated JSON from the same
-//      normalised model, exported by backend/scripts/export-static.mjs.
-//   3. Local development. Talks to the backend API.
+//   1. plugin  -- the WordPress plugin. Ships its own reference layer and reads
+//      Supabase live. Built by `npm run build:plugin`, which bakes the target in.
+//   2. pages   -- the GitHub Pages demo. Same overlay, bundled files come from
+//      the static export instead of the plugin directory.
+//   3. dev     -- `npm run dev`, talking to the backend API. No bundled layer.
 //
-// WordPress and Pages both layer Supabase over a bundled reference layer; they
-// differ only in where the Supabase config comes from (PHP global vs build env)
-// and where the bundled files sit. Local development has neither, so it talks to
-// the backend API directly.
+// Every target layers Supabase over a bundled reference layer. They differ only
+// in where the bundled files sit and where the Supabase config comes from, so
+// the overlay is written once and both builds share it.
 //
-// In the WordPress target the plugin ships its own reference layer, and Supabase
-// is layered on top for the data that moves. The reference layer is static
-// files in the plugin, so the page is fully readable with no network at all:
-// candidate names, the Civitas lean, which seats are in play, and the geometry.
-// The Supabase orchestrators are not built yet, so on first load every live
-// read misses and the bundled layer stands alone -- that is the expected state,
-// not an outage. For 170 of the 185 seats there is nothing else to show anyway.
+// Why the target is a build-time constant rather than a runtime check for
+// `window.jceConfig`: the plugin has to work without any PHP cooperating. If
+// "am I the plugin?" is answered by a global that only the plugin's PHP sets,
+// then a missing or misnamed global silently turns the shipped plugin into the
+// dev target, which fetches /api and renders nothing. That failure is invisible
+// until someone loads the page. Baking the target means the shipped bundle
+// cannot be the wrong one.
+//
+// The Supabase config is baked the same way. That is what lets the plugin be
+// uploaded once and then track Supabase forever: the anon key is a publishable
+// key, not a credential, so embedding it grants nothing that RLS would not
+// already grant to anyone who loads the page. Changing data means changing the
+// database, not re-uploading a zip. window.jceConfig still wins when present,
+// so a site that would rather configure PHP can, and the two can disagree
+// without either build changing.
+
+// The plugin's own directory, derived from the URL its script was served from.
+// This is the one thing that genuinely cannot be known at build time: WordPress
+// decides the plugins URL, and it differs per install. currentScript is read
+// during initial evaluation, which is before any async fetch, so the src is
+// still the bundle's own tag rather than a later injected script.
+function pluginAssetBase() {
+  if (typeof document === 'undefined') return '';
+  const src = document.currentScript?.src;
+  return src ? src.slice(0, src.lastIndexOf('/') + 1) : '';
+}
 
 const WP = typeof window !== 'undefined' ? window.jceConfig : null;
-const STATIC = import.meta.env.VITE_STATIC === '1';
-
-// Supabase endpoint and anon key. The WordPress plugin prints these at runtime
-// from PHP; the static build reads them from the environment, so one source of
-// truth can be repointed without a code change in either target. The anon key
-// is designed to be public -- PostgREST requires it on every request even for
-// reads, and it grants nothing on its own, since every table has RLS on and the
-// anon policies are SELECT-only.
-const SUPABASE_URL = WP?.supabaseUrl || import.meta.env.VITE_SUPABASE_URL || '';
-const SUPABASE_KEY = WP?.supabaseAnonKey || import.meta.env.VITE_SUPABASE_ANON_KEY || '';
+const TARGET = import.meta.env.VITE_TARGET || 'dev';
+const PLUGIN = TARGET === 'plugin';
+const STATIC = TARGET === 'pages' || import.meta.env.VITE_STATIC === '1';
 const CYCLE = WP?.cycle || import.meta.env.VITE_CYCLE || '2026';
-// Supabase is a live overlay on top of the bundled reference layer, so it is
-// used whenever it is configured -- including on Pages, which was static-only
-// until this. Without an endpoint the app still works from bundled data.
-const LIVE = Boolean(SUPABASE_URL && SUPABASE_KEY);
 const BASE = import.meta.env.BASE_URL || '/';
 const API_BASE = (import.meta.env.VITE_API_BASE || '/api').replace(/\/$/, '');
-const DATA_BASE = `${BASE.replace(/\/$/, '')}/demo-data`;
+
+// Root of the bundled files, before the reference/ or geo/ subdirectory. The
+// plugin serves them from its own directory; Pages serves them from the site
+// root that Vite reports as BASE_URL.
+const ASSET_BASE = PLUGIN
+  ? (WP?.assetBase || pluginAssetBase())
+  : BASE.endsWith('/') ? BASE : `${BASE}/`;
+
+// Where the invariant reference layer lives, relative to that root. These are
+// two different directories on purpose: the plugin's reference layer is the
+// shipped product, so it is versioned with the code, while demo-data is
+// regenerated by export-static.mjs on every deploy.
+const REFERENCE_BASE = PLUGIN ? `${ASSET_BASE}data/reference/` : `${ASSET_BASE}demo-data/`;
+
+const SUPABASE_URL = WP?.supabaseUrl || import.meta.env.VITE_SUPABASE_URL || '';
+const SUPABASE_KEY = WP?.supabaseAnonKey || import.meta.env.VITE_SUPABASE_ANON_KEY || '';
+// Supabase is a live overlay on the bundled layer, so it is used whenever it is
+// configured. Without an endpoint the app still renders from bundled data.
+const LIVE = Boolean(SUPABASE_URL && SUPABASE_KEY);
+// Only the plugin and Pages ship a reference layer; dev has none and talks to
+// the backend API instead.
+const BUNDLED = PLUGIN || STATIC;
 
 export const isStatic = STATIC;
-export const isWordPress = Boolean(WP);
+export const isWordPress = PLUGIN;
+export const isBundled = BUNDLED;
 
 // Fetch with a one-shot fallback. `primary` is the live source, `fallback` the
 // bundled reference. A fallback failure is fatal; a primary failure is reported
@@ -101,19 +128,20 @@ async function rpc(fn, params = {}) {
   });
 }
 
-// Bundled reference paths, relative to the plugin directory. The geometry lives
-// beside these: boundaries change once a redistricting cycle, so they ship in
-// the plugin rather than being fetched.
+// A file that ships inside the plugin or the site root, addressed from the
+// target's own base. The geometry lives beside the reference layer rather than
+// inside it: boundaries change once a redistricting cycle, so it is shipped
+// rather than fetched.
 function wpAsset(rel) {
-  return new URL(rel, WP.assetBase).toString();
+  return new URL(rel, ASSET_BASE).toString();
 }
 
 // The reference layer is the guaranteed floor, not a fallback. It is a static
-// file inside the plugin, so it resolves without a network and without
-// Supabase, and it carries only what does not move: candidate names, the
-// Civitas lean, and which seats are in play. 170 of the 185 seats have no
-// polling, no market and no fundraising at all, so for 92% of the map this is
-// the whole content and the page is fully readable with Supabase absent.
+// file, so it resolves without a network and without Supabase, and it carries
+// only what does not move: candidate names, the Civitas lean, and which seats
+// are in play. 170 of the 185 seats have no polling, no market and no
+// fundraising at all, so for 92% of the map this is the whole content and the
+// page is fully readable with Supabase absent.
 //
 // Volatile data is layered on top from Supabase when it answers. It is never
 // substituted for a bundled number: a hand-entered poll or a live market price
@@ -121,43 +149,42 @@ function wpAsset(rel) {
 // in a stale copy of a price would be worse than showing none, because a stale
 // price looks exactly like a live one.
 function wpReference(rel) {
-  return getJson(wpAsset(`data/reference/${rel}`));
+  return getJson(`${REFERENCE_BASE}${rel}`);
 }
 
-// The bundled record for the current target, by race type or district. WordPress
-// ships the reference layer inside the plugin; Pages bakes the same normalised
-// model into demo-data. Same shape either way, so the Supabase overlay below is
-// written once against it.
+// The bundled record for the current target, by race type or district. Both
+// builds ship the same normalised model, so the Supabase overlay is written
+// once against it.
 function bundled(rel) {
-  return WP ? wpReference(rel) : getJson(`${DATA_BASE}/${rel}`);
+  return wpReference(rel);
 }
 
 // Static files that ship in both builds, so the same <img> works whichever host
-// is serving. In WordPress they come off the plugin directory via assetBase; on
-// Pages they are served from the site root, which Vite reports as BASE_URL.
+// is serving. In the plugin they come off the plugin directory; on Pages they
+// are served from the site root.
 //
 // Joined as strings rather than resolved with new URL(), because BASE_URL is
 // root-relative ("/" or "/nc26/") and the URL constructor requires an absolute
 // base -- it throws "Invalid URL" on exactly the values Pages supplies. That
 // throw happened inside render, so React tore down the whole tree and the page
-// went blank with no partial fallback. assetBase is absolute, so new URL() is
-// safe on the WordPress branch and is kept there.
+// went blank with no partial fallback. ASSET_BASE is absolute on the plugin
+// branch, so new URL() is safe there and is kept.
 export function assetUrl(rel) {
-  if (WP) return wpAsset(rel);
+  if (PLUGIN) return wpAsset(rel);
   const base = import.meta.env.BASE_URL || '/';
   return base.endsWith('/') ? base + rel : `${base}/${rel}`;
 }
 
 // Attach geometry to a map payload, keyed by district_id.
 //
-// In WordPress geometry ships beside the reference layer rather than inside it,
-// because it is 636 KB of the total and changes only at a redistricting. The
-// Pages build bakes geometry directly into each map file, so there the bundled
-// features already carry it and this is a no-op. Merging by district_id rather
-// than by position is what keeps a seat added on one side from shifting every
-// later feature onto the wrong shape.
+// In the plugin, geometry ships beside the reference layer rather than inside
+// it, because it is 636 KB of the total and changes only at a redistricting.
+// The Pages build bakes geometry directly into each map file, so there the
+// bundled features already carry it and this is a no-op. Merging by
+// district_id rather than by position is what keeps a seat added on one side
+// from shifting every later feature onto the wrong shape.
 async function withGeometry(payload, raceType) {
-  if (!WP) return payload;
+  if (!PLUGIN) return payload;
   const geo = await getJson(wpAsset(`data/geo/${raceType}.json`));
   const shapes = new Map(geo.features.map((f) => [f.district_id, f.geometry]));
   return {
@@ -224,7 +251,7 @@ export function getMeta() {
         })),
         () => base));
   }
-  return STATIC ? getJson(`${DATA_BASE}/meta.json`) : getJson(`${API_BASE}/meta`);
+  return getJson(`${API_BASE}/meta`);
 }
 
 export function getMap(raceType) {
@@ -236,13 +263,11 @@ export function getMap(raceType) {
         awaitQuietly(`map:${raceType}`, () => rpc('map_payload', { p_race_type: raceType, p_cycle: CYCLE })),
       ), raceType));
   }
-  return STATIC
-    ? getJson(`${DATA_BASE}/map/${raceType}.json`)
-    : getJson(`${API_BASE}/map?race_type=${raceType}`);
+  return getJson(`${API_BASE}/map?race_type=${raceType}`);
 }
 
 export function getRace(districtId) {
-  if (WP) {
+  if (BUNDLED) {
     // Reference-only for now. Per-seat volatile reads (polls, money, news) have
     // no Supabase endpoint defined yet, so the bundled invariant record is the
     // whole payload rather than a fallback -- the panel renders its unavailable
@@ -251,9 +276,7 @@ export function getRace(districtId) {
       throw new Error(`race ${districtId} not in the bundled reference layer`);
     });
   }
-  return STATIC
-    ? getJson(`${DATA_BASE}/race/${districtId}.json`)
-    : getJson(`${API_BASE}/races/${districtId}`);
+  return getJson(`${API_BASE}/races/${districtId}`);
 }
 
 export function getTicker(limit = 12) {
@@ -265,12 +288,15 @@ export function getTicker(limit = 12) {
       () => rpc('ticker', { p_limit: limit }).then((items) => ({ items })),
       () => ({ items: [] }));
   }
-  return STATIC
-    ? getJson(`${DATA_BASE}/ticker.json`)
-    : getJson(`${API_BASE}/ticker?limit=${limit}`);
+  return getJson(`${API_BASE}/ticker?limit=${limit}`);
 }
 
 export function getOutline() {
-  if (WP) return getJson(wpAsset('data/outline.json'));
-  return STATIC ? getJson(`${DATA_BASE}/outline.json`) : getJson(`${API_BASE}/outline`);
+  // The state outline sits beside the reference layer in the plugin
+  // (data/outline.json) but inside demo-data on Pages, where the exporter writes
+  // the whole set into one directory. So the path is per-target rather than
+  // derived from REFERENCE_BASE, which would put it one level too deep on Pages.
+  if (PLUGIN) return getJson(wpAsset('data/outline.json'));
+  if (STATIC) return getJson(`${REFERENCE_BASE}outline.json`);
+  return getJson(`${API_BASE}/outline`);
 }
