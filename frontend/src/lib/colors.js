@@ -16,8 +16,8 @@
 // 20 cents look like a certainty and 90 cents indistinguishable from it, and
 // that comparison is a reader's to make from the panel, not the map's to encode.
 const PARTY_FILL = {
-  D: { live: '#1d4ed8', dull: '#1e3a5f' },
-  R: { live: '#b91c1c', dull: '#5c1e1e' },
+  D: { live: '#2563eb', dull: '#1e3a5f' },
+  R: { live: '#dc2626', dull: '#5c1e1e' },
 };
 
 // Neutral for a seat with no lean recorded at all, so "unrated" stays visibly
