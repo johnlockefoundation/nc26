@@ -21,11 +21,17 @@
 
 import { fillForFeature } from '../lib/colors.js';
 
-// Web Mercator, the projection Leaflet draws the main map in. Both are used so
-// a district keeps the same shape in the inset as on the map; a plain lat/lon
-// squashed into a square would visibly distort the shapes at this scale.
+// Web Mercator, the projection Leaflet draws the main map in, so a district keeps
+// the same shape in the inset as on the state map.
+//
+// Everything is kept in Mercator *degrees* rather than mixing units. Mercator y
+// is naturally a logarithm and comes out in radians, about 57x smaller per
+// degree than x, so feeding longitude in degrees and Mercator y in radians into
+// the same scale silently squashed the window horizontally -- 9.4% at this
+// window's latitude. Converting y to degrees and applying the cos(latitude)
+// factor to x puts both axes in the same units, and the aspect is then true.
 function mercY(lat) {
-  return Math.log(Math.tan(Math.PI / 4 + (lat * Math.PI) / 360));
+  return (Math.log(Math.tan(Math.PI / 4 + (lat * Math.PI) / 360)) * 180) / Math.PI;
 }
 
 // Windows are [minLon, minLat, maxLon, maxLat]. They are the county's own
@@ -35,7 +41,7 @@ function mercY(lat) {
 // close-up of the area, not as a clipped county outline.
 export const INSETS = [
   { id: 'mecklenburg', label: 'MECKLENBURG', sub: 'CHARLOTTE', window: [-81.09, 34.99, -80.49, 35.56] },
-  { id: 'wake', label: 'WAKE', sub: 'RALEIGH', window: [-79.03, 35.38, -78.26, 36.07] },
+  { id: 'wake', label: 'WAKE', sub: 'RALEIGH', window: [-79.10, 35.42, -78.33, 36.11] },
 ];
 
 function boundsOf(geom) {
@@ -64,14 +70,11 @@ const overlaps = (a, b) =>
 
 // GeoJSON ring -> SVG path in the inset's own coordinate space. Coordinates are
 // Mercator-x and Mercator-y in degrees, then scaled into the viewBox.
-function pathFor(geom, view) {
-  const { minX, minY, maxX, maxY } = view;
-  const sx = view.w / (maxX - minX);
-  const sy = view.h / (maxY - minY);
-  const px = (x) => (x - minX) * sx;
+function pathFor(geom, view, { kx, scale, originX, originY }) {
+  const px = (lon) => originX + lon * kx * scale;
   // SVG y grows downward, Mercator y grows upward.
-  const py = (y) => view.h - (y - minY) * sy;
-  const ring = (r) => `${r.map(([x, y]) => `${px(x).toFixed(1)},${py(mercY(y)).toFixed(1)}`).join('L')}Z`;
+  const py = (lat) => originY - mercY(lat) * scale;
+  const ring = (r) => `${r.map(([lon, lat]) => `${px(lon).toFixed(1)},${py(lat).toFixed(1)}`).join('L')}Z`;
   const polys = geom.type === 'Polygon' ? [geom.coordinates] : geom.coordinates;
   const d = polys
     .map((poly) => `M${poly.map(ring).join('')}`)
@@ -84,6 +87,18 @@ export default function MapInset({ inset, features, races, selectedId, onSelect 
   // The window carries its own size: pathFor scales lon/lat into these, so a
   // view without w/h yields NaN for every coordinate and silently draws nothing.
   const view = { minX: minLon, minY: mercY(minLat), maxX: maxLon, maxY: mercY(maxLat), w: 100, h: 100 };
+
+  // One scale for both axes, chosen so the window fits the viewBox, and the
+  // window centred in it. Scaling each axis independently is what let the two
+  // get out of step; a single scale is what keeps a district's proportions right,
+  // and centring means a window that is not quite the viewBox's shape leaves
+  // margin at the edges instead of stretching the geography to fit.
+  const kx = Math.cos((((minLat + maxLat) / 2) * Math.PI) / 180);
+  const contentW = (maxLon - minLon) * kx;
+  const contentH = view.maxY - view.minY;
+  const scale = Math.min(view.w / contentW, view.h / contentH);
+  const originX = view.w / 2 - ((view.minX + view.maxX) / 2) * kx * scale;
+  const originY = view.h / 2 + ((view.minY + view.maxY) / 2) * scale;
 
   const raceById = new Map((races || []).map((r) => [r.district_id, r]));
 
@@ -115,7 +130,7 @@ export default function MapInset({ inset, features, races, selectedId, onSelect 
           {shown.map(({ f }) => {
             const { fill } = fillForFeature(f, raceById.get(f.district_id));
             const isSel = f.district_id === selectedId;
-            const d = pathFor(f.geometry, view);
+            const d = pathFor(f.geometry, view, { kx, scale, originX, originY });
             return (
               <path
                 key={f.district_id}
