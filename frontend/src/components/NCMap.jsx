@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { partyColor, primarySignal, leanColor, leanLabel, SAFE_FILL_OPACITY } from '../lib/colors.js';
+import { fillFor, primarySignal, leanLabel, SAFE_FILL_OPACITY } from '../lib/colors.js';
 import {
   BASEMAP_URL, BASEMAP_ATTR, MAP_MIN_ZOOM, MAP_MAX_ZOOM, MAP_BOUNDS, MAP_VIEW,
 } from '../lib/map.js';
@@ -16,38 +16,42 @@ function matchupText(candidates) {
   return candidates.map((c) => c.name.split(/\s+/).pop()).join(' v ');
 }
 
-function colorFor(race) {
-  return partyColor(primarySignal(race)?.advantage?.party);
-}
-
-// The signed partisan lean for a district, read off the Civitas value ("R+9")
-// and carrying its bucket so it can be labelled honestly. Returns null when the
-// district has no lean recorded.
+// The lean for a district, and the bucket to label it with. NCGA features carry
+// the Civitas value, so the label can be honest -- "LIKELY R+9" rather than
+// calling a Likely seat Safe. Congressional features carry a bare party with no
+// magnitude, so they get no lean label; the panel is where their numbers live.
 function leanOf(f) {
-  if (!f.cpi) return null;
+  if (!f.cpi) return f.lean_party ? { party: f.lean_party } : null;
   const m = /^([DR])\+(\d+(?:\.\d+)?)$/.exec(String(f.cpi).trim());
   if (!m) return null;
   return { party: m[1], value: +m[2], bucket: f.partisan_lean };
 }
 
-// Districts that are not in play still get a party colour, dulled rather than
-  // grey, so the General Assembly maps read as the whole state instead of a
-  // handful of contested seats floating in nothing.
-function safeStyle(f) {
-  return {
-    color: '#1e2a3a',
-    weight: 0.6,
-    fillColor: leanColor(leanOf(f)),
-    fillOpacity: SAFE_FILL_OPACITY,
-  };
+// One style function, because there is one rule: the hue comes from the lean and
+// the brightness from the competitive flag. A seat reads the same in all four
+// chambers, and an in-play seat is brighter than a settled one in both the hue
+// the signal gives it and the hue the NCGA index gives it.
+//
+// The live race signal wins when there is one, so a seat that picks up polling
+// or a fresh price is coloured by it. The feature's own lean is the fallback,
+// which is what lets the map be fully coloured with no network at all.
+function leanFor(f, race) {
+  if (f.competitive && race) {
+    const s = primarySignal(race);
+    if (s.advantage && s.advantage.party && s.advantage.party !== 'EVEN') {
+      return { party: s.advantage.party };
+    }
+  }
+  return leanOf(f);
 }
 
-function raceStyle(f, race) {
+function styleFor(f, race) {
+  const inPlay = Boolean(f.competitive && race);
   return {
-    color: '#0b1220',
-    weight: 0.8,
-    fillColor: colorFor(race),
-    fillOpacity: 0.85,
+    color: inPlay ? '#0b1220' : '#1e2a3a',
+    weight: inPlay ? 0.8 : 0.6,
+    fillColor: fillFor(leanFor(f, race), inPlay),
+    fillOpacity: inPlay ? 0.85 : SAFE_FILL_OPACITY,
   };
 }
 
@@ -276,7 +280,7 @@ export default function NCMap({ features, outline, races, selectedId, onSelect, 
     for (const f of features || []) {
       const race = raceById.current.get(f.district_id);
       const isComp = Boolean(f.competitive && race);
-      const style = isComp ? raceStyle(f, race) : safeStyle(f);
+      const style = styleFor(f, race);
 
       const geo = L.geoJSON(geometryFeature(f), {
         style,
@@ -293,8 +297,10 @@ export default function NCMap({ features, outline, races, selectedId, onSelect, 
             layer.setStyle(f.district_id === selectedRef.current ? selectedStyle(f.district_id) : style);
           });
           if (!isComp) {
+            // Only NCGA features carry a bucket, and only a bucket can be
+            // labelled honestly -- leanLabel needs the value and the rating.
             const lean = leanOf(f);
-            if (lean) {
+            if (lean && lean.bucket) {
               layer.bindTooltip(leanLabel(lean), { sticky: true, offset: [0, -4], className: `tip-adv tip-safe tip-lean-${lean.party.toLowerCase()}` });
             }
             return;
@@ -350,7 +356,7 @@ export default function NCMap({ features, outline, races, selectedId, onSelect, 
     if (prevLayer) {
       const f = featuresById.current.get(prevId);
       const race = raceById.current.get(prevId);
-      prevLayer.setStyle(f && f.competitive && race ? raceStyle(f, race) : safeStyle(f));
+      prevLayer.setStyle(styleFor(f, race));
     }
     selectedRef.current = selectedId;
     const layer = selectedId ? layersById.current.get(selectedId) : null;
@@ -358,15 +364,10 @@ export default function NCMap({ features, outline, races, selectedId, onSelect, 
   }, [selectedId, features, races]);
 
   function selectedStyle(districtId) {
-    const f = featuresById.current.get(districtId);
-    const race = raceById.current.get(districtId);
-    const isComp = f && f.competitive && race;
-    return {
-      color: '#f8fafc',
-      weight: 2.6,
-      fillColor: isComp ? colorFor(race) : leanColor(f && leanOf(f)),
-      fillOpacity: 0.95,
-    };
+    const base = styleFor(featuresById.current.get(districtId), raceById.current.get(districtId));
+    // Selection is a heavier outline, not a different fill: changing the colour
+    // on hover would misreport the seat's lean.
+    return { ...base, color: '#f8fafc', weight: 2.6, fillOpacity: 0.95 };
   }
 
   // Every tab is North Carolina, so the outline is the fit target for all of them.

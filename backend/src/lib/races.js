@@ -376,6 +376,16 @@ export function getRace(districtId, cycle = CYCLE) {
   return race;
 }
 
+// The party a congressional seat leans, with the margin deliberately dropped.
+// The market price is the only lean we hold for those districts -- the Civitas
+// index does not cover them and the Council of State proxy is a cycle-old
+// baseline -- so the price decides the hue and nothing else is read off it.
+function marketLeanParty(race) {
+  const adv = race?.markets?.advantage;
+  if (!adv || !adv.party || adv.party === 'EVEN') return null;
+  return adv.party;
+}
+
 export function getMapFeatures({ cycle = CYCLE, raceType } = {}) {
   // Every district the tracker covers, not only the ones in play. The General
   // Assembly maps carry all 50 senate and all 120 house districts so the map is
@@ -397,6 +407,15 @@ export function getMapFeatures({ cycle = CYCLE, raceType } = {}) {
         district_id: f.district_id,
         district_number: f.district_number,
         competitive: Boolean(f.competitive),
+        // Which way the seat tilts, for the map fill. NCGA reads it off the
+        // Civitas value; congressional seats have no Civitas rating, so they get
+        // a bare party letter with no magnitude attached, derived from the
+        // market price. That is deliberately not a rating -- it says D, never
+        // "D +85" -- because the panel owns the numbers and the map only needs
+        // the hue.
+        lean_party: isNcgaRaceType(raceType)
+          ? (f.partisan_party || null)
+          : marketLeanParty(r),
         // The full Civitas triple is NCGA-only. The map's lean label reads the
         // bucket to say "Likely" rather than calling everything safe, and that
         // vocabulary is General Assembly vocabulary -- a congressional seat has
