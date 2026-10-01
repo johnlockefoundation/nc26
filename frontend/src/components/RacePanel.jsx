@@ -4,21 +4,7 @@ import Demographics from './Demographics.jsx';
 import MoneyBlock from './MoneyBlock.jsx';
 import { Registration, Ballot } from './VoterVelocity.jsx';
 import DistrictNews from './DistrictNews.jsx';
-
-// Two letters off the front and last name. Parenthetical nicknames are dropped
-// rather than counted: a name stored as "Jessica (Jess) Rivera" would otherwise
-// yield "J(", and the seed data carries that form for candidates who use it on
-// the ballot. Suffixes and middle initials are kept, so "James M. Rogers" is JR
-// and "Robert J. Jackson III" is RJ.
-function initials(name) {
-  return (name || '')
-    .replace(/\([^)]*\)/g, ' ')
-    .split(/\s+/)
-    .filter((w) => /[A-Za-z]/.test(w[0] || ''))
-    .slice(0, 2)
-    .map((w) => w[0].toUpperCase())
-    .join('');
-}
+import { initials } from '../lib/candidateName.js';
 
 function CandidateCards({ candidates }) {
   if (!candidates || candidates.length === 0) return <div className="candidate-list dim">Candidates not yet available.</div>;

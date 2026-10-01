@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { fillFor, primarySignal, leanLabel, SAFE_FILL_OPACITY, leanOf, leanFor } from '../lib/colors.js';
+import { surname } from '../lib/candidateName.js';
 import MapInset, { INSETS } from './MapInset.jsx';
 import {
   BASEMAP_URL, BASEMAP_ATTR, MAP_MIN_ZOOM, MAP_MAX_ZOOM, MAP_BOUNDS, MAP_VIEW,
@@ -22,7 +23,7 @@ function shortLabel(districtId) {
 
 function matchupText(candidates) {
   if (!candidates || candidates.length === 0) return null;
-  return candidates.map((c) => c.name.split(/\s+/).pop()).join(' v ');
+  return candidates.map((c) => surname(c.name)).join(' v ');
 }
 
 // Every district is outlined in the same near-white, whatever it leans and
