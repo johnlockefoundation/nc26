@@ -20,8 +20,13 @@ export default function CivitasPartisan({ partisan }) {
     );
   }
   const partyCls = partisan.party === 'D' ? 'val-d' : 'val-r';
-  const rating =
-    partisan.lean === 'Toss-up' ? 'TOSS-UP' : `${partisan.lean || ''} ${partisan.party}`.trim();
+  // The Civitas bucket -- "Safe", "Likely", "Lean" -- is dropped, because every
+  // one of those chips spells the party a second time and the party is already
+  // the margin sitting beside it ("LIKELY R" next to "R +8"). A toss-up is the
+  // one kept: it names no party, and it is what separates a seat Civitas rates
+  // as undetermined from one that merely rounds to zero -- "D +1" alone reads
+  // as settled when it means the opposite.
+  const isTossUp = partisan.lean === 'Toss-up';
 
   return (
     <div className="metric metric-elongated">
@@ -35,7 +40,7 @@ export default function CivitasPartisan({ partisan }) {
 
       <div className="metric-value">
         <span className={partyCls}>{partisan.label}</span>
-        <span className="partisan-rating">{rating}</span>
+        {isTossUp && <span className="partisan-rating">TOSS-UP</span>}
         {partisan.competitive && <span className="partisan-inplay">IN PLAY</span>}
       </div>
 
