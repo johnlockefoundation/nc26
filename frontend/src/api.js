@@ -8,6 +8,11 @@
 //      normalised model, exported by backend/scripts/export-static.mjs.
 //   3. Local development. Talks to the backend API.
 //
+// WordPress and Pages both layer Supabase over a bundled reference layer; they
+// differ only in where the Supabase config comes from (PHP global vs build env)
+// and where the bundled files sit. Local development has neither, so it talks to
+// the backend API directly.
+//
 // In the WordPress target the plugin ships its own reference layer, and Supabase
 // is layered on top for the data that moves. The reference layer is static
 // files in the plugin, so the page is fully readable with no network at all:
@@ -18,6 +23,20 @@
 
 const WP = typeof window !== 'undefined' ? window.jceConfig : null;
 const STATIC = import.meta.env.VITE_STATIC === '1';
+
+// Supabase endpoint and anon key. The WordPress plugin prints these at runtime
+// from PHP; the static build reads them from the environment, so one source of
+// truth can be repointed without a code change in either target. The anon key
+// is designed to be public -- PostgREST requires it on every request even for
+// reads, and it grants nothing on its own, since every table has RLS on and the
+// anon policies are SELECT-only.
+const SUPABASE_URL = WP?.supabaseUrl || import.meta.env.VITE_SUPABASE_URL || '';
+const SUPABASE_KEY = WP?.supabaseAnonKey || import.meta.env.VITE_SUPABASE_ANON_KEY || '';
+const CYCLE = WP?.cycle || import.meta.env.VITE_CYCLE || '2026';
+// Supabase is a live overlay on top of the bundled reference layer, so it is
+// used whenever it is configured -- including on Pages, which was static-only
+// until this. Without an endpoint the app still works from bundled data.
+const LIVE = Boolean(SUPABASE_URL && SUPABASE_KEY);
 const BASE = import.meta.env.BASE_URL || '/';
 const API_BASE = (import.meta.env.VITE_API_BASE || '/api').replace(/\/$/, '');
 const DATA_BASE = `${BASE.replace(/\/$/, '')}/demo-data`;
@@ -69,10 +88,17 @@ async function awaitQuietly(label, primary) {
 // --- WordPress / Supabase ---------------------------------------------------
 
 async function rpc(fn, params = {}) {
-  if (!WP) throw new Error('not running in WordPress');
-  const url = new URL(`/rest/v1/rpc/${fn}`, WP.supabaseUrl);
+  if (!LIVE) throw new Error('no Supabase endpoint configured');
+  const url = new URL(`/rest/v1/rpc/${fn}`, SUPABASE_URL);
   for (const [k, v] of Object.entries(params)) url.searchParams.set(k, v);
-  return getJson(url.toString());
+  // PostgREST returns 401 without the apikey, even for a public read, so the
+  // anon key is not optional here.
+  return fetch(url.toString(), {
+    headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` },
+  }).then(async (res) => {
+    if (!res.ok) throw new Error(`${res.status} ${fn}`);
+    return res.json();
+  });
 }
 
 // Bundled reference paths, relative to the plugin directory. The geometry lives
@@ -98,6 +124,14 @@ function wpReference(rel) {
   return getJson(wpAsset(`data/reference/${rel}`));
 }
 
+// The bundled record for the current target, by race type or district. WordPress
+// ships the reference layer inside the plugin; Pages bakes the same normalised
+// model into demo-data. Same shape either way, so the Supabase overlay below is
+// written once against it.
+function bundled(rel) {
+  return WP ? wpReference(rel) : getJson(`${DATA_BASE}/${rel}`);
+}
+
 // Static files that ship in both builds, so the same <img> works whichever host
 // is serving. In WordPress they come off the plugin directory via assetBase; on
 // Pages they are served from the site root, which Vite reports as BASE_URL.
@@ -114,10 +148,16 @@ export function assetUrl(rel) {
   return base.endsWith('/') ? base + rel : `${base}/${rel}`;
 }
 
-// Attach geometry to a map payload, keyed by district_id. Geometry ships
-// separately from the reference layer because it is 636 KB of the total and
-// changes only at a redistricting.
+// Attach geometry to a map payload, keyed by district_id.
+//
+// In WordPress geometry ships beside the reference layer rather than inside it,
+// because it is 636 KB of the total and changes only at a redistricting. The
+// Pages build bakes geometry directly into each map file, so there the bundled
+// features already carry it and this is a no-op. Merging by district_id rather
+// than by position is what keeps a seat added on one side from shifting every
+// later feature onto the wrong shape.
 async function withGeometry(payload, raceType) {
+  if (!WP) return payload;
   const geo = await getJson(wpAsset(`data/geo/${raceType}.json`));
   const shapes = new Map(geo.features.map((f) => [f.district_id, f.geometry]));
   return {
@@ -162,22 +202,25 @@ function overlayMap(base, live) {
 // --- public surface ---------------------------------------------------------
 
 export function getMeta() {
-  if (WP) {
-    // The reference meta is the cycle, the race-type counts and the provenance
-    // block -- all invariant, so the gauges' outlook figures are the only part
-    // that can be missing. MiniGauge returns null without an outlook, which
-    // leaves the tab absent rather than showing an empty dial.
-    return wpReference('meta.json').then((base) =>
+  // The reference meta is the cycle, the race-type counts and the provenance
+  // block -- all invariant, so the gauges' outlook figures are the only part
+  // that can be missing. MiniGauge returns null without an outlook, which
+  // leaves the tab absent rather than showing an empty dial.
+  if (LIVE) {
+    return bundled('meta.json').then((base) =>
       withFallback('meta',
-        () => rpc('meta', { p_cycle: WP.cycle || '2026' }).then((m) => ({
+        () => rpc('meta', { p_cycle: CYCLE }).then((m) => ({
           ...base,
           ...m,
           // The demo payload nests the gauges one-per-chamber; keep the shape the
           // components expect so there is a single contract across all targets.
-          house_outlook: m.outlooks?.us_house || null,
-          senate_outlook: m.outlooks?.us_senate || null,
-          nc_senate_outlook: m.outlooks?.nc_senate || null,
-          nc_house_outlook: m.outlooks?.nc_house || null,
+          // A key Supabase omits falls back to the bundled value rather than
+          // null: a missing outlook should leave the tab absent, not blank a
+          // gauge the build already knows the answer for.
+          house_outlook: m.outlooks?.us_house ?? base.house_outlook ?? null,
+          senate_outlook: m.outlooks?.us_senate ?? base.senate_outlook ?? null,
+          nc_senate_outlook: m.outlooks?.nc_senate ?? base.nc_senate_outlook ?? null,
+          nc_house_outlook: m.outlooks?.nc_house ?? base.nc_house_outlook ?? null,
         })),
         () => base));
   }
@@ -185,12 +228,12 @@ export function getMeta() {
 }
 
 export function getMap(raceType) {
-  if (WP) {
-    return wpReference(`map/${raceType}.json`).then((base) =>
+  if (LIVE) {
+    return bundled(`map/${raceType}.json`).then((base) =>
       withGeometry(overlayMap(base,
-        // A failed read is normal, not exceptional: the orchestrators are not
-        // built yet, so this resolves to the bundled map on first load.
-        awaitQuietly(`map:${raceType}`, () => rpc('map_payload', { p_race_type: raceType, p_cycle: WP.cycle || '2026' })),
+        // A failed read is normal, not exceptional: it resolves to the bundled
+        // map so the page is still readable.
+        awaitQuietly(`map:${raceType}`, () => rpc('map_payload', { p_race_type: raceType, p_cycle: CYCLE })),
       ), raceType));
   }
   return STATIC
@@ -214,10 +257,10 @@ export function getRace(districtId) {
 }
 
 export function getTicker(limit = 12) {
-  if (WP) {
-    // No bundled ticker: every story is by definition newer than the plugin
-    // build, so a frozen copy would be stale on arrival. With Supabase absent
-    // the ticker is simply absent, which is honest.
+  if (LIVE) {
+    // No bundled ticker: every story is by definition newer than the build that
+    // shipped it, so a frozen copy would be stale on arrival. With Supabase
+    // absent the ticker is simply absent, which is honest.
     return withFallback('ticker',
       () => rpc('ticker', { p_limit: limit }).then((items) => ({ items })),
       () => ({ items: [] }));

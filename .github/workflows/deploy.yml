@@ -42,8 +42,19 @@ jobs:
         run: npm run ingest
 
       # Export the database as the static JSON the site reads, then build.
+      # Supabase is a live overlay on the Pages demo, the same as in WordPress.
+      # The anon key is designed to be public: PostgREST requires it on every
+      # request, and it grants nothing by itself because every table has RLS on
+      # with SELECT-only policies for anon. If these are absent the build still
+      # succeeds and the site renders from bundled data alone, so they are
+      # passed through rather than asserted on -- a missing key should degrade
+      # the page, not break the deploy.
       - name: Export static data and build site
         run: npm run build:pages -w frontend
+        env:
+          VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ vars.VITE_SUPABASE_ANON_KEY }}
+          VITE_CYCLE: ${{ vars.VITE_CYCLE }}
 
       # A guard rather than a test suite: fail the deploy if the export is
       # missing something the page would then fetch and 404 on.
