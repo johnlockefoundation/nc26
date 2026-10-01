@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { fillFor, primarySignal, leanLabel, SAFE_FILL_OPACITY } from '../lib/colors.js';
+import { fillFor, primarySignal, leanLabel, HATCH_ID, PARTY_COLOR, NO_LEAN_COLOR } from '../lib/colors.js';
 import {
   BASEMAP_URL, BASEMAP_ATTR, MAP_MIN_ZOOM, MAP_MAX_ZOOM, MAP_BOUNDS, MAP_VIEW,
 } from '../lib/map.js';
@@ -27,10 +27,11 @@ function leanOf(f) {
   return { party: m[1], value: +m[2], bucket: f.partisan_lean };
 }
 
-// One style function, because there is one rule: the hue comes from the lean and
-// the brightness from the competitive flag. A seat reads the same in all four
-// chambers, and an in-play seat is brighter than a settled one in both the hue
-// the signal gives it and the hue the NCGA index gives it.
+// One style function, because there is one rule: the hue comes from the lean,
+// and the competitive flag decides whether the district is filled solid or
+// hatched. A seat reads the same in all four chambers, and an in-play seat looks
+// different from a settled one in both the hue the signal gives it and the hue
+// the NCGA index gives it.
 //
 // The live race signal wins when there is one, so a seat that picks up polling
 // or a fresh price is coloured by it. The feature's own lean is the fallback,
@@ -51,8 +52,55 @@ function styleFor(f, race) {
     color: inPlay ? '#0b1220' : '#1e2a3a',
     weight: inPlay ? 0.8 : 0.6,
     fillColor: fillFor(leanFor(f, race), inPlay),
-    fillOpacity: inPlay ? 0.85 : SAFE_FILL_OPACITY,
+    // A hatch has to be drawn at full opacity or the lines thin out and the
+    // district reads as empty. The pattern itself carries the spacing, so there
+    // is nothing to soften here -- a solid district and a hatched one end up
+    // with comparable weight on screen.
+    fillOpacity: 1,
   };
+}
+
+// The slanted lines themselves. Leaflet fills paths with plain colour, so a
+// hatch has to be an SVG pattern living in the map's <defs> and referenced by
+// url(#id) from fillColor. The patterns are party-tinted rather than neutral so
+// that an in-play district still shows which way it leans at a glance -- the
+// texture carries "in play", the hue carries the lean, and the two never compete
+// for the same job.
+//
+// They are rotated rather than drawn diagonal so the angle stays constant at
+// every zoom level: a pattern in userSpaceOnUse coordinates scales with the map,
+// so a district that fills the screen shows the same line spacing as one that is
+// a few pixels across.
+function hatchDefs() {
+  const NS = 'http://www.w3.org/2000/svg';
+  const svg = document.createElementNS(NS, 'svg');
+  const defs = document.createElementNS(NS, 'defs');
+  const patterns = [
+    [HATCH_ID.D, PARTY_COLOR.D],
+    [HATCH_ID.R, PARTY_COLOR.R],
+    [HATCH_ID.NONE, NO_LEAN_COLOR],
+  ];
+  for (const [id, color] of patterns) {
+    const p = document.createElementNS(NS, 'pattern');
+    p.setAttribute('id', id);
+    p.setAttribute('width', '9');
+    p.setAttribute('height', '9');
+    p.setAttribute('patternUnits', 'userSpaceOnUse');
+    p.setAttribute('patternTransform', 'rotate(45)');
+    const line = document.createElementNS(NS, 'line');
+    line.setAttribute('x1', '0');
+    line.setAttribute('y1', '0');
+    line.setAttribute('x2', '0');
+    line.setAttribute('y2', '9');
+    line.setAttribute('stroke', color);
+    // Wide enough that the gaps stay open at low zoom, where a district can be
+    // only a handful of pixels across.
+    line.setAttribute('stroke-width', '3.5');
+    p.appendChild(line);
+    defs.appendChild(p);
+  }
+  svg.appendChild(defs);
+  return defs;
 }
 
 function tooltipFor(race) {
@@ -261,6 +309,17 @@ export default function NCMap({ features, outline, races, selectedId, onSelect, 
     }).addTo(map);
     layerRef.current = L.layerGroup().addTo(map);
     labelsRef.current = L.layerGroup().addTo(map);
+    // The hatch patterns have to live in the same document as the paths that
+    // reference them by url(#id). Leaflet's own SVG renderer is created with the
+    // map, so its <svg> is already in the DOM by the time this runs; the defs go
+    // in there rather than in a detached node that would not resolve.
+    const renderer = map.getRenderer(layerRef.current);
+    const svg = renderer && renderer._container;
+    if (svg && !svg.querySelector('defs[data-hatch]')) {
+      const defs = hatchDefs();
+      defs.setAttribute('data-hatch', '1');
+      svg.insertBefore(defs, svg.firstChild);
+    }
     mapRef.current = map;
     return () => {
       map.remove();
