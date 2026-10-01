@@ -389,7 +389,7 @@ export default function NCMap({ features, outline, races, selectedId, onSelect, 
       <button className="map-reset" onClick={() => fitToState(mapRef.current)} title="Zoom to view">⤢</button>
       {showInsets && (
         <div className="map-insets">
-          {INSETS.map((inset) => (
+          {INSETS.filter((inset) => !inset.raceTypes || inset.raceTypes.includes(raceType)).map((inset) => (
             <MapInset
               key={inset.id}
               inset={inset}

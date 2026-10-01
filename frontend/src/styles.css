@@ -227,6 +227,9 @@
 .map-insets {
   position: absolute; left: 12px; bottom: 12px; z-index: 500;
   display: flex; gap: 10px; align-items: flex-end;
+  /* Three close-ups are wider than a phone-width map, so wrap rather than run
+     off the side. max-width keeps the row inside the map's own padding. */
+  flex-wrap: wrap; max-width: calc(100% - 24px);
 }
 .map-inset {
   margin: 0; width: 165px;
@@ -248,13 +251,23 @@
   display: flex; align-items: baseline; gap: 5px;
   padding: 4px 7px 5px; border-top: 1px solid var(--line);
   font-family: var(--font-display);
+  /* A caption that wraps to two lines makes its card taller than its neighbours,
+     and the row is bottom-aligned, so the SVG tops stop lining up. */
+  white-space: nowrap; overflow: hidden;
 }
 .map-inset-name { font-size: 9.5px; font-weight: 700; letter-spacing: 0.09em; color: var(--ink); }
 .map-inset-sub { font-size: 8.5px; letter-spacing: 0.08em; color: var(--muted); }
 @media (max-width: 720px) {
-  /* Two 132px insets plus a gap do not fit beside anything on a phone. */
-  .map-inset { width: 120px; }
-  .map-inset-svg { height: 87px; }
+  /* Three insets at the desktop size will not fit beside a phone-width map.
+     80px keeps all three on one row even on a 360px phone (3x80 + 2x8 = 256px
+     against 256px of available width), so the close-ups stay a strip along the
+     bottom instead of wrapping into rows that cover half the map. */
+  .map-inset { width: 80px; }
+  .map-inset-svg { height: 58px; }
+  .map-insets { gap: 8px; }
+  .map-inset-cap { padding: 3px 5px 4px; }
+  .map-inset-name { font-size: 8px; letter-spacing: 0.05em; }
+  .map-inset-sub { font-size: 7px; letter-spacing: 0.03em; }
 }
 
 .map-reset {

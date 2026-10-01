@@ -39,9 +39,20 @@ function mercY(lat) {
 // edge. There is no county boundary in the data -- the geometry carries only a
 // district id -- so a rectangle is what can be honest here: it is labelled as a
 // close-up of the area, not as a clipped county outline.
+//
+// raceTypes limits an inset to particular maps; omit it and it appears on every
+// NCGA map. The Triad is House-only because it is a three-county region rather
+// than a single county, and the House is where it reads as a district close-up.
 export const INSETS = [
   { id: 'mecklenburg', label: 'MECKLENBURG', sub: 'CHARLOTTE', window: [-81.09, 34.99, -80.49, 35.56] },
   { id: 'wake', label: 'WAKE', sub: 'RALEIGH', window: [-79.10, 35.42, -78.33, 36.11] },
+  {
+    id: 'triad',
+    label: 'TRIAD',
+    sub: 'GREENSBORO',
+    window: [-80.38, 35.89, -79.70, 36.18],
+    raceTypes: ['state_house'],
+  },
 ];
 
 function boundsOf(geom) {
