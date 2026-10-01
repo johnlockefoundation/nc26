@@ -274,12 +274,14 @@
    label equidistant from the top and bottom edges instead of sitting on the
    value's baseline and hugging the top. */
 .metric {
-  display: flex; align-items: center; justify-content: space-between; gap: 16px;
-  border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; background: #0c1524;
-  /* The value's rendered height, which is what every metric box is sized by.
-     Declared here so a collapsed box with no value can match it without
-     restating 26px and drifting the moment the type scale changes. */
+  /* The value's rendered height, which is what every metric box is sized by, and
+     the vertical padding every one of them shares. Both are named so a collapsed
+     box with no value can match the rest without restating 26px or 12px in a
+     second place and drifting the moment the type scale changes. */
   --metric-row: 26px;
+  --metric-pad-y: 12px;
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  border: 1px solid var(--line); border-radius: 12px; padding: var(--metric-pad-y) 14px; background: #0c1524;
 }
 .metric-empty { background: #0a111f; }
 .metric-title { font-family: var(--font-display); font-size: 10.5px; letter-spacing: 0.14em; font-weight: 700; color: var(--muted); flex: none; }
@@ -307,11 +309,16 @@
 .collapsible-metric > summary {
   display: flex; align-items: center; justify-content: space-between; gap: 16px;
   padding: 12px 14px; cursor: pointer; list-style: none;
-  /* The folded box holds a title and a 7px caret, so on its own it would sit
-     ~13px shorter than the blocks beside it and the stack would step. Holding
-     the summary to the value's height makes a folded DEMOGRAPHICS exactly the
-     same box as POLLS, MONEY and a market quote. */
-  min-height: var(--metric-row);
+  /* The folded box holds a 12px title and a 10px caret, so on its own it would
+     sit 14px shorter than the blocks beside it and the stack would step. It has
+     to be padded to the value's height rather than simply held to it: every
+     element here is border-box, so a min-height of --metric-row would be spent
+     on the summary's own 12px top and bottom padding and leave the box short by
+     exactly those 24px.
+     The padding is named rather than repeated so the two stay in step. */
+  padding-top: var(--metric-pad-y);
+  padding-bottom: var(--metric-pad-y);
+  min-height: calc(var(--metric-row) + var(--metric-pad-y) * 2);
 }
 .collapsible-metric > summary::-webkit-details-marker { display: none; }
 .collapsible-metric > summary:focus-visible { outline: 1px solid var(--accent); outline-offset: -2px; border-radius: 12px; }
