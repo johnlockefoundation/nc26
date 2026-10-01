@@ -394,30 +394,21 @@
 .metric-static > .metric-title { display: block; padding: var(--metric-pad-y) 14px; }
 .metric-static-body { padding: 0 14px 14px; }
 
-/* POLLING. The same elongated, never-folded treatment as IN THIS RACE, for the
-   same reason: the number on its own is not the claim. An average has to be read
-   with how many polls are behind it and when they were fielded, so the count and
-   the field window sit under the figure rather than behind a disclosure.
-   .metric is a flex row, so the box drops to block layout and the rows stack --
-   same border, radius and title treatment as every other metric, just taller. */
+/* POLLING. Elongated and never folded, but for a different reason than IN THIS
+   RACE: not to date the number, but to hold two of them. The average and the CJ
+   poll are a pair that has to be read together, and the box is what makes the
+   second one read as the second rather than as a rival answer.
+   Each row is laid out exactly as a .metric row -- label hard left, figure hard
+   right -- so a single-figure seat is indistinguishable from one carrying a
+   market quote, and a two-figure seat is the same box twice the height. */
 .metric-poll { display: block; padding: 0; }
 .metric-poll > .metric-title { display: block; padding: var(--metric-pad-y) 14px 0; }
-.poll-rows { padding: 8px 14px 13px; }
-/* The average and the CJ poll are the same kind of thing, so they are the same
-   kind of row: label hard left, advantage hard right on one line, provenance
-   beneath. A hairline between them rather than more vertical space, because the
-   two figures are meant to be read as one verdict stated twice, and a divider
-   says "these are related" where a gap would say "and also this". */
-.poll-row + .poll-row { border-top: 1px solid var(--line); margin-top: 11px; padding-top: 11px; }
-.poll-row-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.poll-rows { padding: 0 14px; }
+.poll-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 11px 0; }
+.poll-row + .poll-row { border-top: 1px solid var(--line); }
 .poll-row-label { font-family: var(--font-display); font-size: 10.5px; letter-spacing: 0.14em; font-weight: 700; color: var(--muted); }
 .poll-row-link { color: var(--muted); text-decoration: none; border-bottom: 1px dotted rgba(148, 163, 184, 0.5); }
 .poll-row-link:hover { color: var(--accent); border-bottom-color: var(--accent); }
-/* Provenance. Below the label's optical size, because it is context for the
-   figure and not a competing headline, but not so small it stops being the
-   thing that dates the number. */
-.poll-row-meta { margin-top: 4px; font-size: 11.5px; line-height: 1.45; color: #8b9bb4; }
-.poll-row-sep { color: var(--line); }
 
 /* Civitas partisan index (state races without poll/market coverage) */
 .partisan-rating { display: inline-block; margin-left: 10px; font-size: 13px; font-weight: 700; letter-spacing: 0.1em; color: var(--muted); vertical-align: 2px; }
