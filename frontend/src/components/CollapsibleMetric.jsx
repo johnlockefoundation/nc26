@@ -1,5 +1,5 @@
 // The disclosure box shared by every panel category that folds away its content
-// -- DEMOGRAPHICS, REGISTRATION, BALLOT and MONEY.
+// -- DEMOGRAPHICS, REGISTRATIONS, BALLOTS and MONEY.
 //
 // The point of extracting this is that all of them must be the same box. They
 // previously shared one component, which is what kept them aligned; splitting
@@ -13,7 +13,7 @@
 //
 // Which of the two the right-hand slot holds is the only difference between the
 // boxes, and it is a real difference rather than a styling choice. DEMOGRAPHICS,
-// REGISTRATION and BALLOT have no single party-advantage figure, and a stand-in
+// REGISTRATIONS and BALLOTS have no single party-advantage figure, and a stand-in
 // number would mean something different in every chamber -- so they show a caret
 // and everything lives behind it. MONEY does have a figure, so it shows that,
 // same as POLLS, with the caret after it.

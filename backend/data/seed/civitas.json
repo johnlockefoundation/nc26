@@ -71,7 +71,7 @@
       "candidates": [
         {
           "party": "D",
-          "name": "Jessica (Jess) Rivera",
+          "name": "Jessica Rivera",
           "incumbent": false
         },
         {
@@ -151,7 +151,7 @@
       "candidates": [
         {
           "party": "D",
-          "name": "Richard (Rick) Combes",
+          "name": "Richard Combes",
           "incumbent": false
         },
         {
@@ -2113,7 +2113,7 @@
       "candidates": [
         {
           "party": "D",
-          "name": "Mary Price (Pricey) Harrison",
+          "name": "Mary Price Harrison",
           "incumbent": true
         },
         null
@@ -2285,7 +2285,7 @@
       "candidates": [
         {
           "party": "D",
-          "name": "William (Bill) McCaskill",
+          "name": "William McCaskill",
           "incumbent": false
         },
         {
@@ -2649,7 +2649,7 @@
       "candidates": [
         {
           "party": "D",
-          "name": "Robert (Spider) Thompson",
+          "name": "Robert Thompson",
           "incumbent": false
         },
         {
@@ -2770,7 +2770,7 @@
         },
         {
           "party": "R",
-          "name": "Richard (Todd) Carver",
+          "name": "Richard Carver",
           "incumbent": true
         }
       ],
@@ -3190,7 +3190,7 @@
         },
         {
           "party": "R",
-          "name": "James M. (Jimmy) Rogers",
+          "name": "James M. Rogers",
           "incumbent": false
         }
       ],

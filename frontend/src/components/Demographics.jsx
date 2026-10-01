@@ -1,7 +1,7 @@
 // DEMOGRAPHICS: the Census profile of a district -- who lives there, how old,
 // how much they earn, and how the place voted in 2024.
 //
-// This is a sibling of REGISTRATION and BALLOT, not their parent. Registration
+// This is a sibling of REGISTRATIONS and BALLOTS, not their parent. Registration
 // and ballot velocity are about who is turning out and in which party; a census
 // profile is about the electorate's composition. Different questions, different
 // snapshots, different sources, and they are only ever rendered side by side by

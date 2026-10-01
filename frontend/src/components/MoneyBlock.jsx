@@ -68,8 +68,14 @@ export default function MoneyBlock({ summary, candidates }) {
   }
   const parties = Object.keys(byParty).sort();
 
+  // Same colour coding the other metric boxes use: the folded figure carries the
+  // party that is ahead, so the advantage is legible without opening the box.
+  // MetricBlock applies val-d/val-r the same way, and the rule that fixes it is
+  // .metric-value.val-d / .val-r.
+  const party = summary.advantage.party;
+  const valueCls = party === 'D' ? 'val-d' : party === 'R' ? 'val-r' : '';
   const value = (
-    <span className="metric-value collapsible-metric-value">
+    <span className={`metric-value collapsible-metric-value ${valueCls}`}>
       {summary.advantage.label}
     </span>
   );

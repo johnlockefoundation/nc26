@@ -1,4 +1,4 @@
-// REGISTRATION and BALLOT: the two voter-movement blocks.
+// REGISTRATIONS and BALLOTS: the two voter-movement blocks.
 //
 // These were one DEMOGRAPHICS body until this split, which was wrong twice over.
 // They are not demographics -- both measure how the electorate is moving between
@@ -90,7 +90,7 @@ export function Registration({ vitals }) {
   if (!registration) return null;
 
   return (
-    <CollapsibleMetric title="REGISTRATION" source={vitals.source}>
+    <CollapsibleMetric title="REGISTRATIONS" source={vitals.source}>
       <div className="vel-heads">
         <Headline
           label="NET NEW VOTERS"
@@ -113,7 +113,7 @@ export function Ballot({ vitals }) {
   if (!ballot) return null;
 
   return (
-    <CollapsibleMetric title="BALLOT" source={vitals.source}>
+    <CollapsibleMetric title="BALLOTS" source={vitals.source}>
       <div className="vel-heads">
         <Headline
           label="BALLOTS REQUESTED"
