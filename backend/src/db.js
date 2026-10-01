@@ -50,6 +50,15 @@ export function initSchema() {
   if (!distCols.some((c) => c.name === 'partisan_party')) {
     db.exec(`ALTER TABLE districts ADD COLUMN partisan_party TEXT`);
   }
+  // Per-party FEC pages, added after the fact so the money panel can link each
+  // candidate to their own filing rather than one of them.
+  const fundCols = db.prepare(`PRAGMA table_info(fundraising)`).all();
+  if (!fundCols.some((c) => c.name === 'dem_source_url')) {
+    db.exec(`ALTER TABLE fundraising ADD COLUMN dem_source_url TEXT`);
+  }
+  if (!fundCols.some((c) => c.name === 'rep_source_url')) {
+    db.exec(`ALTER TABLE fundraising ADD COLUMN rep_source_url TEXT`);
+  }
 }
 
 export function nowIso() {

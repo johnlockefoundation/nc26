@@ -26,8 +26,8 @@ export function ingestSeedMetrics(cycle = CYCLE) {
     (district_id, election_cycle, provider, dem_price, rep_price, advantage, updated_at, source_url, is_seed)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, 1)`);
   const insFund = db.prepare(`INSERT OR REPLACE INTO fundraising
-    (district_id, election_cycle, dem_amount, rep_amount, advantage, reporting_period, updated_at, source_url, source_method, is_seed)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 1)`);
+    (district_id, election_cycle, dem_amount, rep_amount, advantage, reporting_period, updated_at, source_url, dem_source_url, rep_source_url, source_method, is_seed)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1)`);
   const insNews = db.prepare(`INSERT OR REPLACE INTO news
     (article_id, district_id, election_cycle, headline, outlet, published_at, url, summary, relevance_score, topic)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`);
@@ -60,7 +60,8 @@ export function ingestSeedMetrics(cycle = CYCLE) {
   for (const [districtId, spec] of Object.entries(data.fundraising)) {
     const adv = Math.round((spec.dem_amount || 0) - (spec.rep_amount || 0));
     insFund.run(districtId, cycle, spec.dem_amount ?? null, spec.rep_amount ?? null, adv,
-      spec.reporting_period || '', spec.updated_at, spec.source_url || '', spec.source_method || 'total_receipts');
+      spec.reporting_period || '', spec.updated_at, spec.source_url || '',
+      spec.dem_source_url || '', spec.rep_source_url || '', spec.source_method || 'total_receipts');
     fundraising++;
   }
 

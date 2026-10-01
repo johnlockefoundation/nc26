@@ -154,6 +154,12 @@ for (const d of districts.values()) {
     rep_amount: d.rep_amount,
     reporting_period: d.coverage_end_date ? `Through ${d.coverage_end_date}` : '',
     updated_at,
+    // Both candidates get their own filing page. Keeping only one of them would
+    // make the money panel link a reader to the leading candidate's record while
+    // showing the trailing candidate's total with nowhere to check it, which is
+    // the half of the race a reader most wants to verify.
+    dem_source_url: d.source_urls.D || '',
+    rep_source_url: d.source_urls.R || '',
     source_url: d.source_urls.D || d.source_urls.R || '',
     source_method: 'total_receipts',
   });

@@ -61,13 +61,14 @@ export function ingestFundraisingFromSource(cycle = CYCLE) {
   if (!data) return null;
   db.prepare(`DELETE FROM fundraising WHERE election_cycle = ? AND is_seed = 1`).run(cycle);
   const ins = db.prepare(`INSERT OR REPLACE INTO fundraising
-    (district_id, election_cycle, dem_amount, rep_amount, advantage, reporting_period, updated_at, source_url, source_method, is_seed)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 0)`);
+    (district_id, election_cycle, dem_amount, rep_amount, advantage, reporting_period, updated_at, source_url, dem_source_url, rep_source_url, source_method, is_seed)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0)`);
   let n = 0;
   for (const f of data.fundraising || []) {
     const adv = Math.round((f.dem_amount || 0) - (f.rep_amount || 0));
     ins.run(f.district_id, cycle, f.dem_amount ?? null, f.rep_amount ?? null, adv,
-      f.reporting_period || '', f.updated_at, f.source_url || '', f.source_method || 'total_receipts');
+      f.reporting_period || '', f.updated_at, f.source_url || '',
+      f.dem_source_url || '', f.rep_source_url || '', f.source_method || 'total_receipts');
     n++;
   }
   console.log(`[fundraising] ingested ${n} fundraising rows`);

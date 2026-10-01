@@ -1,13 +1,15 @@
 {
   "source": "FEC",
-  "updated_at": "2026-09-18T21:40:45.030Z",
+  "updated_at": "2026-10-01T03:05:06.002Z",
   "fundraising": [
     {
       "district_id": "NC-SEN",
       "dem_amount": 34975789,
       "rep_amount": 11272504,
       "reporting_period": "Through 2026-06-30",
-      "updated_at": "2026-09-18T21:40:45.030Z",
+      "updated_at": "2026-10-01T03:05:06.002Z",
+      "dem_source_url": "https://www.fec.gov/data/candidate/S6NC00407/",
+      "rep_source_url": "https://www.fec.gov/data/candidate/S6NC00415/",
       "source_url": "https://www.fec.gov/data/candidate/S6NC00407/",
       "source_method": "total_receipts"
     },
@@ -16,7 +18,9 @@
       "dem_amount": 4287386,
       "rep_amount": 3793077,
       "reporting_period": "Through 2026-06-30",
-      "updated_at": "2026-09-18T21:40:45.030Z",
+      "updated_at": "2026-10-01T03:05:06.002Z",
+      "dem_source_url": "https://www.fec.gov/data/candidate/H2NC02287/",
+      "rep_source_url": "https://www.fec.gov/data/candidate/H4NC01137/",
       "source_url": "https://www.fec.gov/data/candidate/H2NC02287/",
       "source_method": "total_receipts"
     },
@@ -25,7 +29,9 @@
       "dem_amount": 1675978,
       "rep_amount": 0,
       "reporting_period": "Through 2026-06-30",
-      "updated_at": "2026-09-18T21:40:45.030Z",
+      "updated_at": "2026-10-01T03:05:06.002Z",
+      "dem_source_url": "https://www.fec.gov/data/candidate/H0NC02125/",
+      "rep_source_url": "https://www.fec.gov/data/candidate/H4NC02135/",
       "source_url": "https://www.fec.gov/data/candidate/H0NC02125/",
       "source_method": "total_receipts"
     },
@@ -34,7 +40,9 @@
       "dem_amount": 223119,
       "rep_amount": 2357956,
       "reporting_period": "Through 2026-06-30",
-      "updated_at": "2026-09-18T21:40:45.030Z",
+      "updated_at": "2026-10-01T03:05:06.002Z",
+      "dem_source_url": "https://www.fec.gov/data/candidate/H6NC03229/",
+      "rep_source_url": "https://www.fec.gov/data/candidate/H0NC03172/",
       "source_url": "https://www.fec.gov/data/candidate/H6NC03229/",
       "source_method": "total_receipts"
     },
@@ -43,7 +51,9 @@
       "dem_amount": 912011,
       "rep_amount": 11917,
       "reporting_period": "Through 2026-06-30",
-      "updated_at": "2026-09-18T21:40:45.030Z",
+      "updated_at": "2026-10-01T03:05:06.002Z",
+      "dem_source_url": "https://www.fec.gov/data/candidate/H2NC06114/",
+      "rep_source_url": "https://www.fec.gov/data/candidate/H4NC02150/",
       "source_url": "https://www.fec.gov/data/candidate/H2NC06114/",
       "source_method": "total_receipts"
     },
@@ -52,7 +62,9 @@
       "dem_amount": 394695,
       "rep_amount": 1662604,
       "reporting_period": "Through 2026-06-30",
-      "updated_at": "2026-09-18T21:40:45.030Z",
+      "updated_at": "2026-10-01T03:05:06.002Z",
+      "dem_source_url": "https://www.fec.gov/data/candidate/H4NC05294/",
+      "rep_source_url": "https://www.fec.gov/data/candidate/H4NC05146/",
       "source_url": "https://www.fec.gov/data/candidate/H4NC05294/",
       "source_method": "total_receipts"
     },
@@ -61,7 +73,9 @@
       "dem_amount": 199881,
       "rep_amount": 1226408,
       "reporting_period": "Through 2026-06-30",
-      "updated_at": "2026-09-18T21:40:45.030Z",
+      "updated_at": "2026-10-01T03:05:06.002Z",
+      "dem_source_url": "https://www.fec.gov/data/candidate/H6NC06164/",
+      "rep_source_url": "https://www.fec.gov/data/candidate/H4NC06177/",
       "source_url": "https://www.fec.gov/data/candidate/H6NC06164/",
       "source_method": "total_receipts"
     },
@@ -70,7 +84,9 @@
       "dem_amount": 293818,
       "rep_amount": 1990423,
       "reporting_period": "Through 2026-06-30",
-      "updated_at": "2026-09-18T21:40:45.030Z",
+      "updated_at": "2026-10-01T03:05:06.002Z",
+      "dem_source_url": "https://www.fec.gov/data/candidate/H6NC07196/",
+      "rep_source_url": "https://www.fec.gov/data/candidate/H2NC07096/",
       "source_url": "https://www.fec.gov/data/candidate/H6NC07196/",
       "source_method": "total_receipts"
     },
@@ -79,7 +95,9 @@
       "dem_amount": 39569,
       "rep_amount": 1019134,
       "reporting_period": "Through 2026-06-30",
-      "updated_at": "2026-09-18T21:40:45.030Z",
+      "updated_at": "2026-10-01T03:05:06.002Z",
+      "dem_source_url": "https://www.fec.gov/data/candidate/H6NC08202/",
+      "rep_source_url": "https://www.fec.gov/data/candidate/H6NC09200/",
       "source_url": "https://www.fec.gov/data/candidate/H6NC08202/",
       "source_method": "total_receipts"
     },
@@ -88,7 +106,9 @@
       "dem_amount": 2237508,
       "rep_amount": 3215341,
       "reporting_period": "Through 2026-06-30",
-      "updated_at": "2026-09-18T21:40:45.030Z",
+      "updated_at": "2026-10-01T03:05:06.002Z",
+      "dem_source_url": "https://www.fec.gov/data/candidate/H6NC09218/",
+      "rep_source_url": "https://www.fec.gov/data/candidate/H2NC08185/",
       "source_url": "https://www.fec.gov/data/candidate/H6NC09218/",
       "source_method": "total_receipts"
     },
@@ -97,7 +117,9 @@
       "dem_amount": 84024,
       "rep_amount": 1081821,
       "reporting_period": "Through 2026-06-30",
-      "updated_at": "2026-09-18T21:40:45.030Z",
+      "updated_at": "2026-10-01T03:05:06.002Z",
+      "dem_source_url": "https://www.fec.gov/data/candidate/H6NC10174/",
+      "rep_source_url": "https://www.fec.gov/data/candidate/H2NC13243/",
       "source_url": "https://www.fec.gov/data/candidate/H6NC10174/",
       "source_method": "total_receipts"
     },
@@ -106,7 +128,9 @@
       "dem_amount": 3052354,
       "rep_amount": 0,
       "reporting_period": "Through 2026-06-30",
-      "updated_at": "2026-09-18T21:40:45.030Z",
+      "updated_at": "2026-10-01T03:05:06.002Z",
+      "dem_source_url": "https://www.fec.gov/data/candidate/H6NC11248/",
+      "rep_source_url": "https://www.fec.gov/data/candidate/H6NC11321/",
       "source_url": "https://www.fec.gov/data/candidate/H6NC11248/",
       "source_method": "total_receipts"
     },
@@ -115,7 +139,9 @@
       "dem_amount": 370506,
       "rep_amount": 28704,
       "reporting_period": "Through 2026-06-30",
-      "updated_at": "2026-09-18T21:40:45.030Z",
+      "updated_at": "2026-10-01T03:05:06.002Z",
+      "dem_source_url": "https://www.fec.gov/data/candidate/H4NC12100/",
+      "rep_source_url": "https://www.fec.gov/data/candidate/H6NC12113/",
       "source_url": "https://www.fec.gov/data/candidate/H4NC12100/",
       "source_method": "total_receipts"
     },
@@ -124,7 +150,9 @@
       "dem_amount": 1022610,
       "rep_amount": 1339161,
       "reporting_period": "Through 2026-06-30",
-      "updated_at": "2026-09-18T21:40:45.030Z",
+      "updated_at": "2026-10-01T03:05:06.002Z",
+      "dem_source_url": "https://www.fec.gov/data/candidate/H6NC13228/",
+      "rep_source_url": "https://www.fec.gov/data/candidate/H4NC13116/",
       "source_url": "https://www.fec.gov/data/candidate/H6NC13228/",
       "source_method": "total_receipts"
     },
@@ -133,7 +161,9 @@
       "dem_amount": 24888,
       "rep_amount": 1538952,
       "reporting_period": "Through 2026-06-30",
-      "updated_at": "2026-09-18T21:40:45.030Z",
+      "updated_at": "2026-10-01T03:05:06.002Z",
+      "dem_source_url": "https://www.fec.gov/data/candidate/H6NC14069/",
+      "rep_source_url": "https://www.fec.gov/data/candidate/H4NC14015/",
       "source_url": "https://www.fec.gov/data/candidate/H6NC14069/",
       "source_method": "total_receipts"
     }

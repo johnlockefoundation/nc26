@@ -131,7 +131,7 @@ function marketList(districtId, cycle) {
 }
 
 function moneySummary(districtId, cycle) {
-  const f = db.prepare(`SELECT dem_amount, rep_amount, advantage, reporting_period, updated_at, source_url, source_method, is_seed
+  const f = db.prepare(`SELECT dem_amount, rep_amount, advantage, reporting_period, updated_at, source_url, dem_source_url, rep_source_url, source_method, is_seed
     FROM fundraising WHERE district_id = ? AND election_cycle = ?`).get(districtId, cycle);
   const has = f && (f.dem_amount != null || f.rep_amount != null);
   return {
@@ -139,6 +139,14 @@ function moneySummary(districtId, cycle) {
     dem_amount: has ? f.dem_amount : null,
     rep_amount: has ? f.rep_amount : null,
     advantage: has ? formatMoney(f.advantage) : null,
+    // The per-candidate split, so the panel can attribute a total to a person
+    // and link that person to their own filing. The advantage figure alone says
+    // D beat R by a margin; it says nothing about either total, which is the
+    // part a reader wants to check.
+    by_party: has ? {
+      D: { amount: f.dem_amount, source_url: f.dem_source_url || null },
+      R: { amount: f.rep_amount, source_url: f.rep_source_url || null },
+    } : null,
     reporting_period: f ? f.reporting_period : null,
     updated_at: f ? f.updated_at : null,
     source_url: f ? f.source_url : null,
@@ -229,11 +237,26 @@ function stateFunds(districtId, cycle) {
   }
   return {
     available: true,
-    // Surfaces in the UI: these are placeholders, not filings.
+    // Still shipped so a consumer can tell a placeholder from a filing, but
+    // nothing in the panel reads it: the disclaimer that used to sit above the
+    // block stack was removed, and the per-candidate rows deliberately render no
+    // link for state money, which is what keeps the distinction visible in the
+    // UI without a banner over every figure.
     is_mock: rows.every((r) => Boolean(r.is_mock)),
     dem_amount: Math.round(byParty.D),
     rep_amount: Math.round(byParty.R),
     advantage: formatMoney((byParty.D || 0) - (byParty.R || 0)),
+    // Same shape as the federal summary so the money panel renders one way for
+    // every chamber. Deliberately no source_url: the state_funds rows carry a
+    // placeholder NCSBE portal link rather than a per-candidate filing, and
+    // pointing a reader at a portal for figures that are not filings yet would
+    // be worse than showing none. Filling these in is a data change, not a
+    // rendering one -- the panel already renders a plain row when the URL is
+    // absent.
+    by_party: {
+      D: { amount: Math.round(byParty.D), source_url: null },
+      R: { amount: Math.round(byParty.R), source_url: null },
+    },
     reporting_period: rows[0].reporting_period || null,
     source_url: rows[0].source_url || null,
   };

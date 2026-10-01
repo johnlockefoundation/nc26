@@ -120,6 +120,12 @@ CREATE TABLE IF NOT EXISTS fundraising (
   reporting_period TEXT,
   updated_at      TEXT,
   source_url      TEXT,
+  -- Per-party filings pages. The panel links each candidate to their own FEC
+  -- record, and a single source_url can only name one of them, so the pair is
+  -- stored explicitly. source_url is kept as the district-level pointer for
+  -- anything that wants one link rather than two.
+  dem_source_url  TEXT,
+  rep_source_url  TEXT,
   source_method   TEXT,                       -- total_receipts | cash_on_hand
   is_seed         INTEGER NOT NULL DEFAULT 0,
   PRIMARY KEY (district_id, election_cycle)
