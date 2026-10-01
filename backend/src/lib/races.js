@@ -244,11 +244,23 @@ function districtRow(districtId, cycle) {
   return db.prepare(`SELECT * FROM districts WHERE district_id = ? AND election_cycle = ?`).get(districtId, cycle);
 }
 
+// The Civitas index is an NCGA instrument. It is published for General Assembly
+// seats only, so it is exposed for state House/Senate races and withheld from
+// US House/Senate ones. The congressional rows in the database carry a
+// Council-of-State-derived stand-in, which is a baseline lean rather than a
+// rating of the race -- shipping it under a Civitas heading would overstate what
+// the number is, and a baseline lean is not what a federal seat is judged by
+// here: those are carried by polling and money in Supabase.
+function isNcgaRaceType(raceType) {
+  return raceType === 'state_house' || raceType === 'state_senate';
+}
+
 // Civitas partisan index for a district: the signed party lean (e.g. "R+8"),
 // its rating bucket (Safe / Likely / Lean / Toss-up) and whether the cycle
 // designates the race as competitive. This is the primary in-play signal for
 // state legislative races, which have no polling or market coverage.
 function partisanSummary(row) {
+  if (!isNcgaRaceType(row.race_type)) return { available: false };
   const m = /^([DR])\+(\d+)$/.exec(String(row.cpi_value || '').trim());
   const lean = m ? { party: m[1], value: +m[2] } : null;
   return {
@@ -316,7 +328,7 @@ export function listRaces({ cycle = CYCLE, raceType = null, competitiveOnly = tr
   return rows.map((r) => getRaceSummary(r, cycle));
 }
 
-function profileFor(districtId, cycle) {
+function profileFor(districtId, cycle, raceType) {
   const f = db.prepare(`SELECT median_age, median_income, bachelors_plus,
       race_white, race_black, race_hispanic, pres_margin, cpi, source
     FROM district_profiles WHERE district_id = ? AND election_cycle = ?`).get(districtId, cycle);
@@ -333,8 +345,14 @@ function profileFor(districtId, cycle) {
       other: f.race_white == null ? null : +Math.max(0, 100 - f.race_white - f.race_black - f.race_hispanic).toFixed(1),
     },
     pres_margin: f.pres_margin,
-    cpi: f.cpi,
-    source: f.source,
+    // Profiles are a federal dataset today, so no profile in the tree is NCGA
+    // and the key is dropped off every one of them rather than shipped null --
+    // a profile should carry no Civitas vocabulary at all. An NCGA profile, if
+    // one is ever added, keeps its index.
+    ...(isNcgaRaceType(raceType) && f.cpi ? { cpi: f.cpi } : {}),
+    // The source line is trimmed to match, rather than continuing to credit
+    // "Civitas CPI" for a figure the profile no longer shows.
+    source: f.source.replace(/\s*·\s*Civitas CPI\s*$/, ''),
   };
 }
 
@@ -348,7 +366,7 @@ export function getRace(districtId, cycle = CYCLE) {
     ORDER BY end_date DESC`).all(districtId, cycle);
   race.poll_detail = polls;
   race.news = districtNews(districtId, cycle);
-  race.profile = profileFor(districtId, cycle);
+  race.profile = profileFor(districtId, cycle, row.race_type);
   // State-legislature only. Federal races keep the party-aggregate money
   // already in race.money and the congressional profile in race.profile.
   if (row.race_type === 'state_senate' || row.race_type === 'state_house') {
@@ -379,11 +397,16 @@ export function getMapFeatures({ cycle = CYCLE, raceType } = {}) {
         district_id: f.district_id,
         district_number: f.district_number,
         competitive: Boolean(f.competitive),
-        cpi: f.cpi_value || null,
-        // The Civitas bucket as well as the signed lean, so the map can say Lean
-        // or Likely rather than calling everything safe.
-        partisan_lean: f.partisan_lean || null,
-        partisan_party: f.partisan_party || null,
+        // The full Civitas triple is NCGA-only. The map's lean label reads the
+        // bucket to say "Likely" rather than calling everything safe, and that
+        // vocabulary is General Assembly vocabulary -- a congressional seat has
+        // no Civitas rating to report, so the keys are dropped rather than
+        // nulled and the feature carries none of them.
+        ...(isNcgaRaceType(raceType) ? {
+          cpi: f.cpi_value || null,
+          partisan_lean: f.partisan_lean || null,
+          partisan_party: f.partisan_party || null,
+        } : {}),
         geometry: JSON.parse(f.geometry),
         metrics: r ? {
           polls: r.polls.advantage,

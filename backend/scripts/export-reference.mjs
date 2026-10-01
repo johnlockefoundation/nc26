@@ -123,6 +123,11 @@ const districts = db.prepare(
 ).all(CYCLE);
 
 const exported = new Set();
+// Civitas is an NCGA instrument, so the per-seat partisan block is exported for
+// General Assembly races only. The congressional rows in the database carry a
+// Council-of-State-derived stand-in rather than a Civitas rating, and races.js
+// already withholds it, so nothing further is needed here beyond not
+// reintroducing the us_house source_note correction that is now moot.
 for (const { district_id } of districts) {
   const race = races.getRace(district_id, CYCLE);
   if (!race) continue;
@@ -130,18 +135,6 @@ for (const { district_id } of districts) {
   for (const [k, v] of Object.entries(race)) {
     if (VOLATILE_RACE_KEYS.includes(k)) continue;
     stripped[k] = v;
-  }
-  // Keep the provenance pointer on the partisan block honest. races.js stamps
-  // the Civitas source URL unconditionally, which is wrong for the House
-  // districts: those leans are a "Civitas-style CPI" derived from 2024 Council
-  // of State races, not from the General Assembly dump that URL describes.
-  // Without this the plugin would ship a mis-attribution that is invisible once
-  // it is baked into a file.
-  if (stripped.partisan && stripped.partisan.available && race.race_type === 'us_house') {
-    stripped.partisan = {
-      ...stripped.partisan,
-      source_note: 'Civitas-style index derived from 2024 Council of State results, not a Civitas congressional rating.',
-    };
   }
   bytes += writeJson(`race/${district_id}.json`, stripped);
   exported.add(district_id);
@@ -227,13 +220,19 @@ bytes += writeJson('meta.json', {
       source: 'NC Board of Elections 2026 candidate list and public reporting; matched to FEC statements of candidacy.',
       note: 'Hand-curated. Changes on a withdrawal or a convention selection, not on a schedule.',
     },
-    us_house_partisan: {
-      source: 'Civitas-style index derived from 2024 Council of State results.',
-      note: 'Not a Civitas rating of the congressional race. Treat as a baseline lean only.',
-    },
     us_senate: {
       source: 'Cook Political Report, September 2026.',
       note: 'No Civitas index for this seat; the panel reports the partisan block as unavailable.',
+    },
+    // Civitas is an NCGA instrument, so it is deliberately absent from the
+    // congressional payloads rather than approximated. There is no us_house
+    // partisan provenance entry because there is no us_house partisan data:
+    // federal races are carried by polling and money in Supabase, and a
+    // Council-of-State stand-in would be a baseline lean wearing a rating's
+    // name.
+    civitas_scope: {
+      source: civitas.source,
+      note: 'Applies to General Assembly seats only. Withheld from US House and US Senate races.',
     },
     geometry: {
       source: 'NC General Assembly redistricting shapefiles (2023); US House and Senate from Census TIGER/Line.',
