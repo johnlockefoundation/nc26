@@ -324,6 +324,19 @@
 .collapsible-metric > summary:focus-visible { outline: 1px solid var(--accent); outline-offset: -2px; border-radius: 12px; }
 .collapsible-metric > summary:hover .metric-title { color: var(--accent); }
 .collapsible-metric-body { padding: 2px 14px 14px; }
+/* A folded box that does have a figure to show -- MONEY. The value is pushed
+   hard right and the caret follows it, which is the arrangement .metric already
+   uses, so a folded MONEY is laid out exactly like an unfolded one and the two
+   are indistinguishable from POLLS or a market quote. */
+.collapsible-metric-value { margin-left: auto; }
+
+/* An elongated box: same border, radius and title row as .metric, body always
+   showing. Used where the content is a short list a reader wants to see rather
+   than go looking for -- news. It is a .metric that has opted out of the fold,
+   not a second kind of panel, so it sits in the same stack at the same width. */
+.metric-static { display: block; padding: 0; }
+.metric-static > .metric-title { display: block; padding: var(--metric-pad-y) 14px; }
+.metric-static-body { padding: 0 14px 14px; }
 
 /* Civitas partisan index (state races without poll/market coverage) */
 .partisan-rating { display: inline-block; margin-left: 10px; font-size: 13px; font-weight: 700; letter-spacing: 0.1em; color: var(--muted); vertical-align: 2px; }
@@ -337,17 +350,6 @@
 .metric-elongated { flex-direction: column; align-items: stretch; gap: 10px; }
 .metric-elongated .metric-value { white-space: normal; }
 .metric-elongated .leanbar { margin-bottom: 0; }
-
-/* Sections */
-.panel-section { margin-top: 18px; }
-.panel-section h3 { font-family: var(--font-display); font-size: 11px; letter-spacing: 0.14em; color: var(--muted); margin: 0 0 8px; }
-
-/* Single disclaimer for every placeholder figure on a state race. Deliberately
-   quiet: it sits above the block stack and covers money and vitals alike,
-   rather than repeating a banner over each widget. */
-.data-disclaimer {
-  margin: 2px 0 10px; font-size: 10.5px; line-height: 1.45; color: #fbbf24; opacity: 0.85;
-}
 
 /* Voter velocity: registration and ballot movement between two snapshots */
 .vel-heads { display: flex; gap: 10px; }
@@ -383,6 +385,30 @@
 .race-news-link:hover { color: var(--accent); text-decoration: underline; }
 .race-news-meta { font-size: 10.5px; letter-spacing: 0.05em; color: var(--muted); }
 .race-news-outlet { color: var(--muted); font-weight: 600; }
+
+/* Per-candidate fundraising rows inside the expanded MONEY box. Each row ties a
+   total to the person who raised it and, where a filing exists, links that
+   person to their own record. The link wraps the whole row rather than sitting
+   as a trailing glyph: the name is what a reader clicks, not a decorative arrow,
+   and an arrow would read as decoration when there is nothing behind it. */
+.money-rows { display: flex; flex-direction: column; }
+.money-row {
+  display: flex; align-items: baseline; gap: 10px;
+  padding: 9px 0; border-top: 1px solid var(--line);
+  font-size: 12.5px; text-decoration: none; color: var(--ink);
+}
+.money-row:first-child { border-top: none; padding-top: 2px; }
+a.money-row:hover { color: var(--accent); }
+.money-row-name { font-family: var(--font-display); font-weight: 600; flex: 1 1 auto; min-width: 0; }
+/* The party is a quiet tag, not a colour code. The row already sits inside a
+   box whose title carries the advantage, and a second strong hue here would
+   compete with it for the reader's attention. */
+.money-row-party { font-size: 9.5px; letter-spacing: 0.12em; color: var(--muted); flex: none; }
+.money-row-amount { font-family: var(--font-display); font-weight: 700; font-variant-numeric: tabular-nums; flex: none; }
+/* A row with no filing behind it is rendered without an href rather than as a
+   dead link. The figures still show; there is simply nowhere to verify them. */
+.money-row-note { font-size: 10.5px; color: var(--muted); font-style: italic; flex: none; }
+.money-foot { font-size: 10.5px; letter-spacing: 0.04em; color: var(--muted); margin-top: 8px; }
 
 /* Collapsible section (district profile) */
 .collapsible > summary { display: flex; align-items: center; justify-content: space-between; gap: 10px; cursor: pointer; list-style: none; }

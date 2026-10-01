@@ -1,6 +1,7 @@
 import MetricBlock from './MetricBlock.jsx';
 import CivitasPartisan from './CivitasPartisan.jsx';
 import Demographics from './Demographics.jsx';
+import MoneyBlock from './MoneyBlock.jsx';
 import { Registration, Ballot } from './VoterVelocity.jsx';
 import DistrictNews from './DistrictNews.jsx';
 
@@ -41,8 +42,8 @@ export default function RacePanel({ race, loading }) {
   const polls = race.polls || {};
   const markets = race.markets || {};
   // State races read their money from state_funds; federal races use the
-  // party-aggregate fundraising summary. Both are shaped the same way, so the
-  // same MetricBlock renders either.
+  // party-aggregate fundraising summary. Both are shaped the same way, so
+  // MoneyBlock renders either without knowing which it has.
   const moneyS = race.state_funds || race.money || {};
   const marketList = race.market_list || (markets.available ? [markets] : []);
   const isStateRace = race.race_type === 'state_senate' || race.race_type === 'state_house';
@@ -69,49 +70,42 @@ export default function RacePanel({ race, loading }) {
   // rather than hardcoded per district: federal seats carry the Census profile,
   // General Assembly seats carry the two velocity blocks, and a seat that later
   // picks up another dataset grows its own block. Each returns null on its own
-  // when its dataset is absent, so the list needs no filtering here.
+  // when its dataset is absent, so the list needs no filtering here. MONEY sits
+  // with them because it folds the same way; only the right-hand slot differs.
   const disclosureBlocks = [<Demographics key="demographics" profile={race.profile} />];
   if (race.vitals?.available) {
     disclosureBlocks.push(<Registration key="registration" vitals={race.vitals} />);
     disclosureBlocks.push(<Ballot key="ballot" vitals={race.vitals} />);
   }
 
+  // MONEY reads its totals from state_funds on a General Assembly seat and from
+  // the federal fundraising summary on a congressional one; both are shaped alike.
+  const money = (
+    <MoneyBlock
+      key="money"
+      summary={moneyS}
+      candidates={race.candidates}
+    />
+  );
+
   return (
     <aside className="panel">
       <h2 className="panel-title">{race.title}</h2>
       <CandidateCards candidates={race.candidates} />
 
-      {isStateRace ? (
-        <>
-          {/* One disclaimer for every placeholder figure on a state race,
-              sitting directly above the blocks they qualify. */}
-          {(race.state_funds?.is_mock || race.vitals?.is_mock) && (
-            <p className="data-disclaimer" role="note">
-              Campaign money and voter figures below are placeholders, not NC SBOE records.
-            </p>
-          )}
-          <div className="metrics">
-            <CivitasPartisan partisan={race.partisan} />
-            <MetricBlock title="MONEY" emptyText="NO MONEY" summary={moneyS} />
-            {disclosureBlocks}
-          </div>
-          <DistrictNews articles={race.news} />
-        </>
-      ) : showFullPanel ? (
-        <div className="metrics">
+      {/* One stack for every chamber. News sits inside it rather than below it,
+          so the box above a story is the same width and aligned with the box
+          below it instead of floating under a section heading. */}
+      <div className="metrics">
+        {isStateRace && <CivitasPartisan partisan={race.partisan} />}
+        {!isStateRace && showFullPanel && (
           <MetricBlock title="POLLS" emptyText="NO POLLING" summary={polls} />
-          {marketBlocks}
-          <MetricBlock title="MONEY" emptyText="NO MONEY" summary={moneyS} />
-          {disclosureBlocks}
-        </div>
-      ) : (
-        <div className="metrics">
-          {marketBlocks}
-          {disclosureBlocks}
-        </div>
-      )}
-
-      {!isStateRace && <DistrictNews articles={race.news} />}
+        )}
+        {marketBlocks}
+        {money}
+        {disclosureBlocks}
+        <DistrictNews articles={race.news} />
+      </div>
     </aside>
   );
 }

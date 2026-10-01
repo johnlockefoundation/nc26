@@ -1,25 +1,28 @@
 // The disclosure box shared by every panel category that folds away its content
-// -- DEMOGRAPHICS, REGISTRATION and BALLOT.
+// -- DEMOGRAPHICS, REGISTRATION, BALLOT and MONEY.
 //
 // The point of extracting this is that all of them must be the same box. They
 // previously shared one component, which is what kept them aligned; splitting
-// them into siblings would have left three copies of the markup free to drift.
+// them into siblings would have left four copies of the markup free to drift.
 // One shell, one source of truth for the collapsed state.
 //
-// Collapsed it reads as a plain .metric: title hard left, disclosure caret
-// right, nothing else -- so a folded box is the same height as the POLLS, MONEY
-// and market blocks stacked above it and the stack does not step. Expanding
-// elongates the box in place.
+// Collapsed it reads as a plain .metric: title hard left, and the right-hand
+// slot holding either a value or a disclosure caret, so a folded box is the same
+// height as the POLLS and market blocks stacked above it and the stack does not
+// step. Expanding elongates the box in place.
 //
-// None of these three has a single party-advantage figure, so there is no value
-// to show while folded: a stand-in number would mean something different in
-// every chamber, and an empty right-hand side reads as "nothing here" rather
-// than "ask me". Everything lives behind the caret.
-export default function CollapsibleMetric({ title, children, source }) {
+// Which of the two the right-hand slot holds is the only difference between the
+// boxes, and it is a real difference rather than a styling choice. DEMOGRAPHICS,
+// REGISTRATION and BALLOT have no single party-advantage figure, and a stand-in
+// number would mean something different in every chamber -- so they show a caret
+// and everything lives behind it. MONEY does have a figure, so it shows that,
+// same as POLLS, with the caret after it.
+export default function CollapsibleMetric({ title, value, children, source }) {
   return (
     <details className="metric collapsible-metric">
       <summary className="collapsible-metric-head">
         <span className="metric-title">{title}</span>
+        {value}
         <span className="collapsible-caret" aria-hidden="true" />
       </summary>
       <div className="collapsible-metric-body">
