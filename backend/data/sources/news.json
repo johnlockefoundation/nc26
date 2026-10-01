@@ -75,18 +75,6 @@
       "in_funnel": 1
     },
     {
-      "article_id": "rss_WRAL_6",
-      "district_id": "NC-SEN",
-      "headline": "Roy Cooper campaigns in Charlotte in U.S. Senate race",
-      "outlet": "WRAL",
-      "published_at": "2026-09-19T15:43:21.000Z",
-      "url": "https://www.wral.com/news/state/roy-cooper-campaigns-charlotte-u-s-senate-race-september-2026/",
-      "summary": "Former NC Gov. Roy Cooper spoke with Charlotte residents Friday as he campaigns for the U.S. Senate, focusing on his proposals to lower the cost of everyday goods.",
-      "relevance_score": 0.7,
-      "topic": "race",
-      "in_funnel": 0
-    },
-    {
       "article_id": "cj_sd42_rematch_2026",
       "district_id": "SD-42",
       "headline": "SD-42 rematch: Bradley and McGinn duel for Charlotte's swing Senate seat",
@@ -95,18 +83,6 @@
       "url": "https://www.carolinajournal.com/sd42-rematch-bradley-mcginn",
       "summary": "The 2024 recount-margin rematch is among the most expensive Senate contests in the state this cycle.",
       "relevance_score": 0.93,
-      "topic": "race",
-      "in_funnel": 0
-    },
-    {
-      "article_id": "co_sd42_tv_2026",
-      "district_id": "SD-42",
-      "headline": "TV spending tops $2M in marquee Mecklenburg Senate rematch",
-      "outlet": "Charlotte Observer",
-      "published_at": "2026-09-15T11:00:00Z",
-      "url": "https://www.charlotteobserver.com/news/politics/sd42-tv-spending",
-      "summary": "Ad-tracking firm shows both parties blanketing Charlotte airwaves in the final stretch.",
-      "relevance_score": 0.9,
       "topic": "race",
       "in_funnel": 0
     },
@@ -123,18 +99,6 @@
       "in_funnel": 0
     },
     {
-      "article_id": "cl_hd98_transit_2026",
-      "district_id": "HD-98",
-      "headline": "HD-98 candidates clash over transit funding in new ad blitz",
-      "outlet": "The Charlotte Ledger",
-      "published_at": "2026-09-13T15:00:00Z",
-      "url": "https://charlotteledger.substack.com/hd98-transit-ads",
-      "summary": "A Charlotte House seat that flipped last cycle is drawing heavy outside cash.",
-      "relevance_score": 0.89,
-      "topic": "race",
-      "in_funnel": 0
-    },
-    {
       "article_id": "cj_hd105_2026",
       "district_id": "HD-105",
       "headline": "Outside spending swells in HD-105 as Cotham faces a rematch challenge",
@@ -142,54 +106,6 @@
       "published_at": "2026-09-12T10:00:00Z",
       "url": "https://www.carolinajournal.com/hd105-outside-spending",
       "summary": "Independent expenditures have already doubled the candidates' own ad budgets.",
-      "relevance_score": 0.88,
-      "topic": "race",
-      "in_funnel": 0
-    },
-    {
-      "article_id": "wral_sd18_2026",
-      "district_id": "SD-18",
-      "headline": "Wake Senate rematch: Fatmi looks to hold a GOP-trending SD-18",
-      "outlet": "WRAL",
-      "published_at": "2026-09-09T10:00:00Z",
-      "url": "https://www.wral.com/sd18-wake-senate-rematch",
-      "summary": "A district Democrats swept in 2024 is now among their toughest state Senate holds.",
-      "relevance_score": 0.9,
-      "topic": "race",
-      "in_funnel": 0
-    },
-    {
-      "article_id": "co_meck2026",
-      "district_id": "SD-42",
-      "headline": "2026 elections: Key North Carolina legislature, state races",
-      "outlet": "Charlotte Observer",
-      "published_at": "2026-08-12T11:00:00Z",
-      "url": "https://www.charlotteobserver.com/news/politics-government/election/article316832679.html",
-      "summary": "Rematches in Senate District 42 and House District 105 could have razor-thin margins; fundraising is flowing in Charlotte-area battlegrounds.",
-      "relevance_score": 0.9,
-      "topic": "race",
-      "in_funnel": 0
-    },
-    {
-      "article_id": "co_meck2026_hd98",
-      "district_id": "HD-98",
-      "headline": "2026 elections: Key North Carolina legislature, state races",
-      "outlet": "Charlotte Observer",
-      "published_at": "2026-08-12T11:00:00Z",
-      "url": "https://www.charlotteobserver.com/news/politics-government/election/article316832679.html",
-      "summary": "Democratic Rep. Beth Helfrich seeks a second term against Republican John Rhodes in a district rated a D+1 toss-up by the CPI.",
-      "relevance_score": 0.85,
-      "topic": "race",
-      "in_funnel": 0
-    },
-    {
-      "article_id": "co_meck2026_hd105",
-      "district_id": "HD-105",
-      "headline": "2026 elections: Key North Carolina legislature, state races",
-      "outlet": "Charlotte Observer",
-      "published_at": "2026-08-12T11:00:00Z",
-      "url": "https://www.charlotteobserver.com/news/politics-government/election/article316832679.html",
-      "summary": "Tricia Cotham faces Democrat Ken McCool in a recounted-margin rematch; the CPI rates the district an R+0 toss-up.",
       "relevance_score": 0.88,
       "topic": "race",
       "in_funnel": 0

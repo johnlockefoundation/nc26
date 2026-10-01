@@ -7,7 +7,7 @@ import { readFileSync, existsSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { db, nowIso } from '../db.js';
-import { CYCLE } from './config.js';
+import { CYCLE, ALLOWED_NEWS_OUTLETS } from './config.js';
 import { slugify } from './util.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -119,15 +119,26 @@ export function ingestNewsFromSource(cycle = CYCLE) {
     (article_id, district_id, election_cycle, headline, outlet, published_at, url, summary, relevance_score, topic, in_funnel)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`);
   let n = 0;
+  let skipped = 0;
   for (const a of data.news || []) {
     // Rows are dropped rather than defaulted to 'NC': the per-district list
     // queries on district_id, so an untagged row would never surface there.
     if (!a.district_id) continue;
+    // The site carries John Locke and Carolina Journal coverage only. The drop
+    // is a hand-curated file, so an outside outlet in it is a curation mistake
+    // rather than a new source, and the ticker and the per-seat list both print
+    // the outlet verbatim. Skipping here keeps a stray row from reaching the UI
+    // even if the drop is edited without the feed list being touched.
+    if (!ALLOWED_NEWS_OUTLETS.has(a.outlet)) {
+      skipped++;
+      continue;
+    }
     ins.run(a.article_id ?? `${a.district_id}_${cycle}_${slugify(a.headline)}`,
       a.district_id, cycle, a.headline, a.outlet, a.published_at, a.url || '', a.summary || '',
       a.relevance_score ?? 0.5, a.topic || 'race', a.in_funnel ? 1 : 0);
     n++;
   }
+  if (skipped) console.log(`[news] skipped ${skipped} rows from outside the allowed outlets`);
   console.log(`[news] ingested ${n} articles`);
   return { source: data.source || 'news', count: n };
 }

@@ -4,6 +4,13 @@
 
 export const CYCLE = '2026';
 
+// The only outlets whose coverage this site carries. The ticker and the
+// per-seat news list both print the outlet verbatim, so anything else that
+// reaches the news table is visible third-party coverage. Kept here so the
+// fetcher's feed list and the ingest's allowlist cannot drift apart.
+export const NEWS_OUTLETS = ['John Locke Foundation', 'Carolina Journal'];
+export const ALLOWED_NEWS_OUTLETS = new Set(NEWS_OUTLETS);
+
 // National U.S. House outlook used for the race-signal "odometer" gauge.
 export const HOUSE_OUTLOOK = {
   dem: 205,

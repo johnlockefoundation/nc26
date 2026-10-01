@@ -8,6 +8,7 @@
 import { mkdirSync, writeFileSync, readFileSync } from 'node:fs';
 import { join, dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { ALLOWED_NEWS_OUTLETS } from '../src/ingest/config.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const BACKEND = resolve(__dirname, '..');
@@ -20,14 +21,15 @@ const SEED = join(BACKEND, 'data', 'seed');
 //            it came from.
 //   race   - outlets that cover specific NC seats, which feed the per-district
 //            list under CPI Info. They do not drive the ticker.
+//
+// Only the two in-house outlets are fetched. The earlier list also pulled WRAL,
+// the Observer, Carolina Public Press, Our State and Indy Week, which put
+// third-party coverage on a site that carries John Locke and Carolina Journal
+// work only. The names here are checked against ALLOWED_NEWS_OUTLETS on write,
+// so adding a feed is not enough to publish it.
 const FEEDS = [
   { outlet: 'John Locke Foundation', url: 'https://www.johnlocke.org/feed/', funnel: true },
   { outlet: 'Carolina Journal', url: 'https://www.carolinajournal.com/feed/?post_type=article', funnel: true },
-  { outlet: 'WRAL', url: 'https://www.wral.com/news/rss/35/' },   // Political
-  { outlet: 'WRAL', url: 'https://www.wral.com/news/rss/74/' },   // NC news
-  { outlet: 'Carolina Public Press', url: 'https://carolinapublicpress.org/feed/' },
-  { outlet: 'Our State', url: 'https://www.ourstate.com/feed' },
-  { outlet: 'indyweek', url: 'https://indyweek.com/feed/' },
 ];
 
 // Outlets that may appear in the top ticker.
@@ -275,6 +277,18 @@ const curated = curatedRaceStories()
     in_funnel: 0,
   }));
 news = news.concat(curated).sort((a, b) => Date.parse(b.published_at) - Date.parse(a.published_at));
+
+// Last gate before the drop is written. The curated set below is hand-assembled
+// and has carried outside outlets before, and the ingest's allowlist would
+// silently drop them later -- which reads as stories going missing rather than
+// as a curation error. Filtering here keeps the drop itself truthful about what
+// this site publishes.
+const disallowed = news.filter((n) => !ALLOWED_NEWS_OUTLETS.has(n.outlet));
+if (disallowed.length) {
+  console.log(`Dropping ${disallowed.length} stories from outside the allowed outlets:`);
+  for (const n of disallowed) console.log(`  - ${n.outlet}: ${n.headline.slice(0, 70)}`);
+  news = news.filter((n) => ALLOWED_NEWS_OUTLETS.has(n.outlet));
+}
 
 mkdirSync(join(BACKEND, 'data', 'sources'), { recursive: true });
 writeFileSync(OUT, JSON.stringify({ source: 'RSS + curated', updated_at: new Date().toISOString(), news }, null, 2));
