@@ -1,8 +1,7 @@
 import MetricBlock from './MetricBlock.jsx';
-import DistrictProfile from './DistrictProfile.jsx';
 import CivitasPartisan from './CivitasPartisan.jsx';
+import Demographics from './Demographics.jsx';
 import DistrictNews from './DistrictNews.jsx';
-import VoterVelocity from './VoterVelocity.jsx';
 
 function initials(name) {
   return name.split(/\s+/).filter(Boolean).slice(0, 2).map((w) => w[0].toUpperCase()).join('');
@@ -81,8 +80,8 @@ export default function RacePanel({ race, loading }) {
           )}
           <div className="metrics">
             <MetricBlock title="MONEY" emptyText="NO MONEY" summary={moneyS} />
+            <Demographics profile={race.profile} vitals={race.vitals} />
           </div>
-          <VoterVelocity vitals={race.vitals} />
           <DistrictNews articles={race.news} />
         </>
       ) : showFullPanel ? (
@@ -90,12 +89,15 @@ export default function RacePanel({ race, loading }) {
           <MetricBlock title="POLLS" emptyText="NO POLLING" summary={polls} />
           {marketBlocks}
           <MetricBlock title="MONEY" emptyText="NO MONEY" summary={moneyS} />
+          <Demographics profile={race.profile} vitals={race.vitals} />
         </div>
       ) : (
-        <div className="metrics">{marketBlocks}</div>
+        <div className="metrics">
+          {marketBlocks}
+          <Demographics profile={race.profile} vitals={race.vitals} />
+        </div>
       )}
 
-      {!isStateRace && <DistrictProfile profile={race.profile} />}
       {!isStateRace && <DistrictNews articles={race.news} />}
     </aside>
   );

@@ -291,6 +291,28 @@
 .metric-arrow.move-r { color: #f87171; }
 @keyframes arrow-live { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.35; transform: scale(0.92); } }
 
+/* DEMOGRAPHICS. Carries the .metric box so it is indistinguishable from MONEY,
+   POLLS and the market quotes while folded: same border, radius and padding,
+   title hard left. The only difference is that the right-hand slot holds a
+   disclosure caret instead of a value, because there is no party-advantage
+   figure to show and a stand-in number would mean something different in every
+   chamber. .metric is a flex row, so the box drops to block layout and the
+   summary becomes the row; the body then elongates the box in place rather
+   than pushing a new section in below it. */
+.collapsible-metric { display: block; padding: 0; }
+.collapsible-metric > summary {
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  padding: 12px 14px; cursor: pointer; list-style: none;
+}
+.collapsible-metric > summary::-webkit-details-marker { display: none; }
+.collapsible-metric > summary:focus-visible { outline: 1px solid var(--accent); outline-offset: -2px; border-radius: 12px; }
+.collapsible-metric > summary:hover .metric-title { color: var(--accent); }
+.collapsible-metric-body { padding: 2px 14px 14px; }
+/* The first section label in a body sits directly under the summary, so it
+   drops its own top margin. Whichever dataset the seat has is the first child:
+   the stat row for a federal profile, the velocity label for a GA seat. */
+.collapsible-metric-body > .profile-label:first-child { margin-top: 0; }
+
 /* Civitas partisan index (state races without poll/market coverage) */
 .partisan-rating { display: inline-block; margin-left: 10px; font-size: 13px; font-weight: 700; letter-spacing: 0.1em; color: var(--muted); vertical-align: 2px; }
 .partisan-inplay { display: inline-block; margin-left: 10px; font-size: 11px; font-weight: 800; letter-spacing: 0.14em; color: #fbbf24; vertical-align: 3px; }
