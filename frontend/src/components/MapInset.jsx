@@ -50,7 +50,7 @@ export const INSETS = [
     id: 'triad',
     label: 'TRIAD',
     sub: 'GREENSBORO',
-    window: [-80.38, 35.89, -79.70, 36.18],
+    window: [-80.42, 35.87, -79.66, 36.20],
     raceTypes: ['state_house'],
   },
 ];
