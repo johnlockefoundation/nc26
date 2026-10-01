@@ -6,6 +6,14 @@ import {
   BASEMAP_URL, BASEMAP_ATTR, MAP_MIN_ZOOM, MAP_MAX_ZOOM, MAP_BOUNDS, MAP_VIEW,
 } from '../lib/map.js';
 
+// The shared district border, and the colour that means "this one" while a
+// reader is pointing at it or has it selected. Amber is the one hue in the
+// palette that reads against near-white, against the D blue and against the R
+// red, so hover and selection stay obvious on every district without having to
+// change the fill -- which is load-bearing, because the fill is the lean.
+const DISTRICT_BORDER = '#f8fafc';
+const DISTRICT_FOCUS = '#fbbf24';
+
 function shortLabel(districtId) {
   const [state, rest] = districtId.split('-');
   return rest === 'SEN' ? state : rest;
@@ -45,11 +53,24 @@ function leanFor(f, race) {
   return leanOf(f);
 }
 
+// Every district is outlined in the same near-white, whatever it leans and
+// whatever its competitiveness. The border is the map's grid, and a grid that
+// changes weight or colour with the data stops being a grid: on a dark basemap
+// the dark borders used to disappear into the districts they were supposed to
+// separate, so at state-house zoom -- 120 seats -- the eye had nothing to trace
+// and every click was a guess. One weight, one colour, everywhere, in all four
+// chambers, and the districts read as districts first and as races second.
+//
+// That is also why the border is a fixed width regardless of zoom rather than
+// something that thins as you zoom out: a hairline at state zoom vanishes.
 function styleFor(f, race) {
   const inPlay = Boolean(f.competitive && race);
   return {
-    color: inPlay ? '#0b1220' : '#1e2a3a',
-    weight: inPlay ? 0.8 : 0.6,
+    color: DISTRICT_BORDER,
+    weight: 1.3,
+    // Slightly transparent so the border reads as a seam between two fills
+    // rather than as a drawn line sitting on top of them.
+    opacity: 0.9,
     fillColor: fillFor(leanFor(f, race), inPlay),
     fillOpacity: inPlay ? 0.85 : SAFE_FILL_OPACITY,
   };
@@ -290,7 +311,7 @@ export default function NCMap({ features, outline, races, selectedId, onSelect, 
           layer.on('click', () => onSelectRef.current(f.district_id));
           layer.on('mouseover', () => {
             if (f.district_id !== selectedRef.current) {
-              layer.setStyle({ ...style, weight: 1.8, color: '#f1f5f9' });
+              layer.setStyle({ ...style, weight: 1.9, color: DISTRICT_FOCUS });
             }
           });
           layer.on('mouseout', () => {
@@ -365,9 +386,10 @@ export default function NCMap({ features, outline, races, selectedId, onSelect, 
 
   function selectedStyle(districtId) {
     const base = styleFor(featuresById.current.get(districtId), raceById.current.get(districtId));
-    // Selection is a heavier outline, not a different fill: changing the colour
-    // on hover would misreport the seat's lean.
-    return { ...base, color: '#f8fafc', weight: 2.6, fillOpacity: 0.95 };
+    // Only the outline changes, never the fill: the fill is the lean, and
+    // recolouring it to mark the current seat would have the map misreport a
+    // race on every click.
+    return { ...base, color: DISTRICT_FOCUS, weight: 2.8, opacity: 1, fillOpacity: 0.95 };
   }
 
   // Every tab is North Carolina, so the outline is the fit target for all of them.
