@@ -1,37 +1,38 @@
-// Map colouring: a district's hue comes from whichever way the seat leans, and
-// competitiveness is a second, lighter tone of that same hue. Two fills per
-// party, one rule, every chamber.
+// Map coloring is two tones per party: which way the seat leans, and whether it
+// is in play. Nothing else. A district's hue comes from whichever signal knows
+// the race best, and its brightness comes only from the cycle's competitive flag.
 //
-// The lean decides the hue and the competitive flag decides the strength of it.
-// A settled seat is a solid block in the full party colour; a seat that is in
-// play is the same hue washed out to a light tint. Because both come from the
-// same hue, a reader never has to learn a second colour to read the map -- and
-// because the in-play tint is lighter rather than brighter, a genuinely toss-up
-// seat stops shouting over the rest of the state, which is what it did when
-// brightness was the competitiveness signal.
+// A district's fill depends on exactly two things: which way it leans, and
+// whether the seat is in play. Those are independent facts we already know --
+// the lean from the race signal or the NCGA index, the in-play flag from the
+// cycle -- and pairing them gives four fills. Every chamber reads the same way,
+// so a North Carolina House seat and a U.S. House seat are comparable at a
+// glance without translating between them.
 //
-// There is deliberately no third axis. Sizing the tint by margin or price made
-// 20 cents look like a certainty and 90 cents indistinguishable from it, and that
-// comparison is a reader's to make from the panel, not the map's to encode.
-
-// Two tones per party: the settled block, and the light wash for a seat in play.
-export const PARTY_FILL = {
-  D: { settled: '#1d4ed8', inPlay: '#7dd3fc' },
-  R: { settled: '#b91c1c', inPlay: '#f472b6' },
+// Brightness is reserved for competitiveness. An in-play seat gets the vivid
+// tone; a settled one gets the same hue muted, which is what makes the map read
+// as the whole state rather than a few hot districts floating in nothing. There
+// is deliberately no third axis: sizing the saturation by margin or price made
+// 20 cents look like a certainty and 90 cents indistinguishable from it, and
+// that comparison is a reader's to make from the panel, not the map's to encode.
+const PARTY_FILL = {
+  D: { live: '#1d4ed8', dull: '#1e3a5f' },
+  R: { live: '#b91c1c', dull: '#5c1e1e' },
 };
 
 // Neutral for a seat with no lean recorded at all, so "unrated" stays visibly
-// distinct from "rated" rather than borrowing either party's hue. The light
-// variant is the same slate washed out, so an unrated in-play district still
-// reads as in play without claiming a party.
-export const NO_LEAN_FILL = { settled: '#475569', inPlay: '#94a3b8' };
+// distinct from "rated and settled" rather than borrowing either party's hue.
+const NO_LEAN = '#475569';
 
 // Fill for one district. `lean` is { party } or null; `inPlay` is the cycle's
 // competitive flag.
 export function fillFor(lean, inPlay) {
-  const tone = lean && lean.party ? PARTY_FILL[lean.party] : NO_LEAN_FILL;
-  return inPlay ? tone.inPlay : tone.settled;
+  const tone = lean && lean.party ? PARTY_FILL[lean.party] : null;
+  if (!tone) return NO_LEAN;
+  return inPlay ? tone.live : tone.dull;
 }
+
+export const SAFE_FILL_OPACITY = 1;
 
 // How a district is labelled when it carries no race signal of its own. The
 // Civitas bucket is the honest word for it -- calling a Likely R+9 "SAFE"
@@ -45,8 +46,8 @@ export function leanLabel(lean) {
 
 // Which way a seat leans, from whichever signal knows the race best: markets,
 // then polling, then money, then the NCGA index. Only the party is ever read
-// off it -- the magnitude stays in the panel, and competitiveness is carried by
-// the hatch rather than by the colour.
+// off it -- the magnitude stays in the panel, and the map's brightness comes
+// from the competitive flag instead.
 export function primarySignal(race) {
   if (race?.markets?.available) return { metric: 'MARKETS', advantage: race.markets.advantage, value: race.markets.advantage?.value ?? null };
   if (race?.polls?.available) return { metric: 'POLLS', advantage: race.polls.advantage, value: race.polls.margin };

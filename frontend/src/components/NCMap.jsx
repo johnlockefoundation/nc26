@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { fillFor, primarySignal, leanLabel } from '../lib/colors.js';
+import { fillFor, primarySignal, leanLabel, SAFE_FILL_OPACITY } from '../lib/colors.js';
 import {
   BASEMAP_URL, BASEMAP_ATTR, MAP_MIN_ZOOM, MAP_MAX_ZOOM, MAP_BOUNDS, MAP_VIEW,
 } from '../lib/map.js';
@@ -28,9 +28,9 @@ function leanOf(f) {
 }
 
 // One style function, because there is one rule: the hue comes from the lean and
-// the strength comes from the competitive flag. A seat reads the same in all four
-// chambers, and an in-play seat is the lighter wash of its party colour whether
-// that colour came from the live race signal or from the NCGA index.
+// the brightness from the competitive flag. A seat reads the same in all four
+// chambers, and an in-play seat is brighter than a settled one in both the hue
+// the signal gives it and the hue the NCGA index gives it.
 //
 // The live race signal wins when there is one, so a seat that picks up polling
 // or a fresh price is coloured by it. The feature's own lean is the fallback,
@@ -51,9 +51,7 @@ function styleFor(f, race) {
     color: inPlay ? '#0b1220' : '#1e2a3a',
     weight: inPlay ? 0.8 : 0.6,
     fillColor: fillFor(leanFor(f, race), inPlay),
-    // Both tones are painted solid, so there is no opacity to tune: the
-    // difference between a settled seat and an in-play one is the colour itself.
-    fillOpacity: 1,
+    fillOpacity: inPlay ? 0.85 : SAFE_FILL_OPACITY,
   };
 }
 
