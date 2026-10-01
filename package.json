@@ -11,6 +11,7 @@
     "dev": "concurrently -n api,web -c blue,green \"npm run dev -w backend\" \"npm run dev -w frontend\"",
     "seed": "npm run seed -w backend",
     "ingest": "npm run ingest -w backend",
+    "export:reference": "node backend/scripts/export-reference.mjs",
     "build": "npm run build -w frontend",
     "fetch": "npm run fetch-kalshi -w backend && npm run fetch-news -w backend && npm run fetch-fec -w backend && npm run fetch-photos -w backend",
     "fetch:kalshi": "npm run fetch-kalshi -w backend",

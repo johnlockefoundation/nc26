@@ -10,6 +10,10 @@ backend/data/raw/
 *.sqlite-wal
 *.sqlite-shm
 frontend/public/demo-data/
+# Generated reference layer: candidate names, Civitas leans, in-play flags and
+# district geometry. Rebuilt by `npm run build:plugin`, which runs the exporter
+# first so a plugin can never be zipped with stale or missing data.
+frontend/public/data/
 backend/data/sources/fec-key.txt
 .worktree/
 backend/data/sources/kalshi-key.txt
