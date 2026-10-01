@@ -1,55 +1,37 @@
 // Map colouring: a district's hue comes from whichever way the seat leans, and
-// whether it is in play is a separate question answered by texture rather than
-// colour. Two fills, one rule, every chamber.
+// competitiveness is a second, lighter tone of that same hue. Two fills per
+// party, one rule, every chamber.
 //
-// The hue is the same at every level of competitiveness. A settled seat and a
-// genuinely toss-up seat are both drawn at full strength in their party's
-// colour, because brightness used to be the competitiveness signal and that made
-// the map lie twice: a Safe R+35 looked like a certainty, and a narrow Lean seat
-// that happened to be rated competitive got painted the same vivid tone as a
-// true tie. Neither is what the rating says.
+// The lean decides the hue and the competitive flag decides the strength of it.
+// A settled seat is a solid block in the full party colour; a seat that is in
+// play is the same hue washed out to a light tint. Because both come from the
+// same hue, a reader never has to learn a second colour to read the map -- and
+// because the in-play tint is lighter rather than brighter, a genuinely toss-up
+// seat stops shouting over the rest of the state, which is what it did when
+// brightness was the competitiveness signal.
 //
-// So competitiveness is not a colour at all. An in-play seat is unfilled and
-// hatched with slanted lines in its own party hue, which is why the lines are
-// tinted rather than neutral: a reader scanning the map should still be able to
-// see which way a hot seat leans without hovering it. A settled seat is a solid
-// block in the same hue. The two are told apart by texture -- open versus solid
-// -- rather than by one looking stronger than the other.
-//
-// There is deliberately no third axis. Sizing saturation by margin or price made
+// There is deliberately no third axis. Sizing the tint by margin or price made
 // 20 cents look like a certainty and 90 cents indistinguishable from it, and that
 // comparison is a reader's to make from the panel, not the map's to encode.
 
-// One colour per party, used at full strength whether or not the seat is in
-// play. These are the vivid tones that used to be reserved for competitive
-// seats.
-export const PARTY_COLOR = {
-  D: '#1d4ed8',
-  R: '#b91c1c',
+// Two tones per party: the settled block, and the light wash for a seat in play.
+export const PARTY_FILL = {
+  D: { settled: '#1d4ed8', inPlay: '#7dd3fc' },
+  R: { settled: '#b91c1c', inPlay: '#f472b6' },
 };
 
 // Neutral for a seat with no lean recorded at all, so "unrated" stays visibly
-// distinct from "rated and settled" rather than borrowing either party's hue.
-export const NO_LEAN_COLOR = '#475569';
-
-// The ids of the SVG hatch patterns NCMap injects into the map. They have to
-// match the defs built there, which is why they live here rather than being
-// written inline at the call site.
-export const HATCH_ID = {
-  D: 'jce-hatch-d',
-  R: 'jce-hatch-r',
-  NONE: 'jce-hatch-n',
-};
+// distinct from "rated" rather than borrowing either party's hue. The light
+// variant is the same slate washed out, so an unrated in-play district still
+// reads as in play without claiming a party.
+export const NO_LEAN_FILL = { settled: '#475569', inPlay: '#94a3b8' };
 
 // Fill for one district. `lean` is { party } or null; `inPlay` is the cycle's
-// competitive flag. A settled seat gets a solid block; an in-play one gets the
-// matching hatch, which is drawn in the same hue and carries the party with it.
+// competitive flag.
 export function fillFor(lean, inPlay) {
-  const party = lean && lean.party ? lean.party : null;
-  if (!inPlay) return party ? PARTY_COLOR[party] : NO_LEAN_COLOR;
-  return `url(#${party ? HATCH_ID[party] : HATCH_ID.NONE})`;
+  const tone = lean && lean.party ? PARTY_FILL[lean.party] : NO_LEAN_FILL;
+  return inPlay ? tone.inPlay : tone.settled;
 }
-
 
 // How a district is labelled when it carries no race signal of its own. The
 // Civitas bucket is the honest word for it -- calling a Likely R+9 "SAFE"
