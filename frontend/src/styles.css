@@ -219,6 +219,44 @@
 @keyframes arrow-live { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.35; transform: scale(0.94); } }
 @keyframes arrow-live-r { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.35; transform: scale(0.94); } }
 
+/* County close-ups, bottom-left over the map.
+   Sits above the tiles but below the reset button, and is inset from the corner
+   so it never sits on top of the districts a reader is most likely to be
+   looking at. The panel is opaque rather than translucent: an inset floating
+   over the map with the map showing through reads as a rendering glitch. */
+.map-insets {
+  position: absolute; left: 12px; bottom: 12px; z-index: 500;
+  display: flex; gap: 10px; align-items: flex-end;
+}
+.map-inset {
+  margin: 0; width: 132px;
+  background: var(--card); border: 1px solid var(--line); border-radius: 10px;
+  overflow: hidden; box-shadow: var(--shadow);
+}
+.map-inset-svg { display: block; width: 100%; height: 96px; }
+.map-inset-bg { fill: #091322; }
+.map-inset-district {
+  stroke: #f8fafc; stroke-width: 0.4; stroke-opacity: 0.9;
+  cursor: pointer; transition: filter 0.12s ease;
+}
+.map-inset-district:hover { filter: brightness(1.45); }
+.map-inset-district:focus-visible { outline: none; stroke: #fbbf24; stroke-width: 0.9; }
+/* The selected district carries the same amber the main map uses, so the two
+   views never disagree about which seat is open. */
+.map-inset-district.is-selected { stroke: #fbbf24; stroke-width: 0.9; }
+.map-inset-cap {
+  display: flex; align-items: baseline; gap: 5px;
+  padding: 4px 7px 5px; border-top: 1px solid var(--line);
+  font-family: var(--font-display);
+}
+.map-inset-name { font-size: 9.5px; font-weight: 700; letter-spacing: 0.09em; color: var(--ink); }
+.map-inset-sub { font-size: 8.5px; letter-spacing: 0.08em; color: var(--muted); }
+@media (max-width: 720px) {
+  /* Two 132px insets plus a gap do not fit beside anything on a phone. */
+  .map-inset { width: 96px; }
+  .map-inset-svg { height: 70px; }
+}
+
 .map-reset {
   position: absolute; top: 12px; right: 12px; z-index: 500; width: 34px; height: 34px;
   border: 1px solid var(--line); border-radius: 8px; background: var(--card); color: var(--ink);

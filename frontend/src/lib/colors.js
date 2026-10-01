@@ -64,3 +64,43 @@ export function advantageText(metric, summary) {
   }
   return summary.advantage.label;
 }
+
+// ---------------------------------------------------------------------------
+// Lean resolution
+//
+// A district's hue is decided in one place, because the main map and the county
+// insets have to agree: if they resolved the lean separately, an inset district
+// could come out a different colour from the same district on the state map,
+// which would be worse than having no inset at all.
+
+// The lean for a district, and the bucket to label it with. NCGA features carry
+// the Civitas value, so the label can be honest -- "LIKELY R+9" rather than
+// calling a Likely seat Safe. Congressional features carry a bare party with no
+// magnitude, so they get no lean label; the panel is where their numbers live.
+export function leanOf(f) {
+  if (!f.cpi) return f.lean_party ? { party: f.lean_party } : null;
+  const m = /^([DR])\+(\d+(?:\.\d+)?)$/.exec(String(f.cpi).trim());
+  if (!m) return null;
+  return { party: m[1], value: +m[2], bucket: f.partisan_lean };
+}
+
+// Which way a seat leans, from whichever signal knows the race best. The live
+// race signal wins when there is one, so a seat that picks up polling or a fresh
+// price is coloured by it. The feature's own lean is the fallback, which is what
+// lets the map be fully coloured with no network at all.
+export function leanFor(f, race) {
+  if (f.competitive && race) {
+    const s = primarySignal(race);
+    if (s.advantage && s.advantage.party && s.advantage.party !== 'EVEN') {
+      return { party: s.advantage.party };
+    }
+  }
+  return leanOf(f);
+}
+
+// The complete fill decision for one district, so the map and the insets cannot
+// drift apart: lean for the hue, competitive flag for the tone.
+export function fillForFeature(f, race) {
+  const inPlay = Boolean(f.competitive && race);
+  return { inPlay, fill: fillFor(leanFor(f, race), inPlay) };
+}

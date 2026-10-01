@@ -1,7 +1,8 @@
 import { useEffect, useRef } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { fillFor, primarySignal, leanLabel, SAFE_FILL_OPACITY } from '../lib/colors.js';
+import { fillFor, primarySignal, leanLabel, SAFE_FILL_OPACITY, leanOf, leanFor } from '../lib/colors.js';
+import MapInset, { INSETS } from './MapInset.jsx';
 import {
   BASEMAP_URL, BASEMAP_ATTR, MAP_MIN_ZOOM, MAP_MAX_ZOOM, MAP_BOUNDS, MAP_VIEW,
 } from '../lib/map.js';
@@ -22,35 +23,6 @@ function shortLabel(districtId) {
 function matchupText(candidates) {
   if (!candidates || candidates.length === 0) return null;
   return candidates.map((c) => c.name.split(/\s+/).pop()).join(' v ');
-}
-
-// The lean for a district, and the bucket to label it with. NCGA features carry
-// the Civitas value, so the label can be honest -- "LIKELY R+9" rather than
-// calling a Likely seat Safe. Congressional features carry a bare party with no
-// magnitude, so they get no lean label; the panel is where their numbers live.
-function leanOf(f) {
-  if (!f.cpi) return f.lean_party ? { party: f.lean_party } : null;
-  const m = /^([DR])\+(\d+(?:\.\d+)?)$/.exec(String(f.cpi).trim());
-  if (!m) return null;
-  return { party: m[1], value: +m[2], bucket: f.partisan_lean };
-}
-
-// One style function, because there is one rule: the hue comes from the lean and
-// the brightness from the competitive flag. A seat reads the same in all four
-// chambers, and an in-play seat is brighter than a settled one in both the hue
-// the signal gives it and the hue the NCGA index gives it.
-//
-// The live race signal wins when there is one, so a seat that picks up polling
-// or a fresh price is coloured by it. The feature's own lean is the fallback,
-// which is what lets the map be fully coloured with no network at all.
-function leanFor(f, race) {
-  if (f.competitive && race) {
-    const s = primarySignal(race);
-    if (s.advantage && s.advantage.party && s.advantage.party !== 'EVEN') {
-      return { party: s.advantage.party };
-    }
-  }
-  return leanOf(f);
 }
 
 // Every district is outlined in the same near-white, whatever it leans and
@@ -405,10 +377,30 @@ export default function NCMap({ features, outline, races, selectedId, onSelect, 
     map.setView(MAP_VIEW.center, MAP_VIEW.zoom);
   }
 
+  // Mecklenburg and Wake only, and only on the General Assembly maps. On the
+  // federal maps every seat is already in play and the whole state is fourteen
+  // districts, so there is nothing to zoom in on -- the close-ups would be two
+  // large versions of what is already on screen.
+  const showInsets = raceType === 'state_house' || raceType === 'state_senate';
+
   return (
     <div className="map-wrap">
       <div ref={containerRef} className="map-container" aria-label="Competitive election map" />
       <button className="map-reset" onClick={() => fitToState(mapRef.current)} title="Zoom to view">⤢</button>
+      {showInsets && (
+        <div className="map-insets">
+          {INSETS.map((inset) => (
+            <MapInset
+              key={inset.id}
+              inset={inset}
+              features={features}
+              races={races}
+              selectedId={selectedId}
+              onSelect={onSelectRef.current}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 }
