@@ -2,6 +2,7 @@ import MetricBlock from './MetricBlock.jsx';
 import CivitasPartisan from './CivitasPartisan.jsx';
 import Demographics from './Demographics.jsx';
 import MoneyBlock from './MoneyBlock.jsx';
+import PollBlock from './PollBlock.jsx';
 import { Registration, Ballot } from './VoterVelocity.jsx';
 import DistrictNews from './DistrictNews.jsx';
 import { initials } from '../lib/candidateName.js';
@@ -45,12 +46,10 @@ export default function RacePanel({ race, loading }) {
   const marketList = race.market_list || (markets.available ? [markets] : []);
   const isStateRace = race.race_type === 'state_senate' || race.race_type === 'state_house';
 
-  // Whether a race carries anything beyond a market quote. A seat with only a
-  // price would otherwise render four empty blocks, which says more about the
-  // pipeline than about the race. This reads the payload rather than hardcoding
-  // a district, so a seat that later picks up polling or money fills in on its
-  // own.
-  const hasSubstance = Boolean(polls.available || moneyS.available);
+  // One block per provider. A seat with no market gets none, rather than a box
+  // reading NO MARKET, for the same reason PollBlock stays silent when there is
+  // no polling: the blocks that carry a figure should not be buried under the
+  // ones that do not.
   const marketBlocks = marketList.map((m) => (
     <MetricBlock
       key={m.provider}
@@ -60,7 +59,6 @@ export default function RacePanel({ race, loading }) {
       delta={m.delta}
     />
   ));
-  const showFullPanel = !isStateRace && hasSubstance;
 
   // Three independent disclosures, in one list, so a reader can open any of them
   // without the others. Which of them a seat gets is decided by the payload
@@ -95,9 +93,12 @@ export default function RacePanel({ race, loading }) {
           below it instead of floating under a section heading. */}
       <div className="metrics">
         {isStateRace && <CivitasPartisan partisan={race.partisan} />}
-        {!isStateRace && showFullPanel && (
-          <MetricBlock title="POLLS" emptyText="NO POLLING" summary={polls} />
-        )}
+        {/* Not gated on the chamber and not gated on hasSubstance: PollBlock
+            decides for itself, and returns null when the seat has no polling.
+            A hardcoded chamber test here would silently swallow a state-legislative
+            poll the day someone seeded one, which is the opposite of what the
+            rest of this file does -- every block reads the payload. */}
+        <PollBlock polls={polls} />
         {marketBlocks}
         {money}
         {disclosureBlocks}

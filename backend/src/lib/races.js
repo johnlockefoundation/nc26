@@ -27,34 +27,70 @@ function candidateList(districtId, cycle) {
     ORDER BY CASE party WHEN 'D' THEN 0 WHEN 'R' THEN 1 ELSE 2 END`).all(districtId, cycle);
 }
 
-function marginDelta(latestMargin, prevMargin) {
-  if (latestMargin == null || prevMargin == null) return null;
-  const d = latestMargin - prevMargin;
-  if (Math.abs(d) < 0.05) return { party: 'EVEN', points: 0 };
-  const party = d > 0 ? 'D' : 'R';
-  return { party, points: +Math.abs(d).toFixed(1) };
+// A single poll, shaped like the average that sits beside it so the two can be
+// rendered as one widget. Only ever used for a poll we can attribute by name,
+// which is why it is a function rather than a query the summary runs twice.
+function pollDetail(row) {
+  if (!row) return null;
+  return {
+    pollster: row.pollster,
+    start_date: row.start_date,
+    end_date: row.end_date,
+    sample_size: row.sample_size ?? null,
+    population: row.population ?? null,
+    dem_share: row.dem_share,
+    rep_share: row.rep_share,
+    margin: row.margin,
+    advantage: formatPollAdvantage(row.margin),
+    source_url: row.source_url || null,
+  };
 }
 
+// The site's polling contract: an average, plus the latest Carolina Journal
+// poll when we hold one. Deliberately two figures and not one.
+//
+// The average is a cross-pollster mean, so it has no single source and carries
+// no link -- an average of four toplines does not belong to any of them. The CJ
+// poll is one poll from one pollster, and is linked to the release it came from
+// so a reader can check it. Collapsing them would lose the distinction that
+// matters: the average says where the race sits, the CJ poll says what one
+// newsroom measured, and only the second is attributable.
+//
+// The match is on the pollster string rather than a source column because
+// polls.json records the house that fielded the questions
+// ("Carolina Journal / Harper Polling"), and the drop's top-level `source` names
+// the drop, not an outlet. Seed rows are excluded: a placeholder average should
+// not be able to put a fake poll next to a real one.
 function pollSummary(districtId, cycle) {
   const avg = db.prepare(`SELECT dem_average, rep_average, margin, n_polls, updated_at
     FROM polling_averages WHERE district_id = ? AND election_cycle = ?`).get(districtId, cycle);
-  const latest = db.prepare(`SELECT source_url FROM polls
-    WHERE district_id = ? AND election_cycle = ?
-    ORDER BY end_date DESC LIMIT 1`).get(districtId, cycle);
-  const recent = db.prepare(`SELECT margin FROM polls
-    WHERE district_id = ? AND election_cycle = ?
-    ORDER BY end_date DESC, poll_id DESC LIMIT 2`).all(districtId, cycle);
+  // Counted and dated from the rows themselves rather than read off the averages
+  // row, so the number of polls and the dates they were fielded always describe
+  // the same set. An average that does not say how old it is reads as a live
+  // reading, which is the one thing an average of hand-entered toplines is not.
+  const span = db.prepare(`SELECT count(*) AS n, min(start_date) AS span_start, max(end_date) AS span_end
+    FROM polls
+    WHERE district_id = ? AND election_cycle = ? AND is_seed = 0`).get(districtId, cycle);
+  const cj = db.prepare(`SELECT pollster, start_date, end_date, sample_size, population,
+      dem_share, rep_share, margin, source_url
+    FROM polls
+    WHERE district_id = ? AND election_cycle = ? AND is_seed = 0
+      AND lower(pollster) like '%carolina journal%'
+    ORDER BY end_date desc, poll_id desc LIMIT 1`).get(districtId, cycle);
   const hasPolls = avg && avg.dem_average != null && avg.rep_average != null;
   return {
     available: Boolean(hasPolls),
-    dem_average: hasPolls ? avg.dem_average : null,
-    rep_average: hasPolls ? avg.rep_average : null,
+    // Named for the share rather than the average column, so this payload and
+    // the Supabase RPC that replaces it on the plugin read the same keys.
+    dem_share: hasPolls ? avg.dem_average : null,
+    rep_share: hasPolls ? avg.rep_average : null,
     margin: hasPolls ? avg.margin : null,
-    n_polls: avg ? avg.n_polls : 0,
+    n_polls: hasPolls ? span.n : 0,
+    span_start: hasPolls ? span.span_start : null,
+    span_end: hasPolls ? span.span_end : null,
     advantage: hasPolls ? formatPollAdvantage(avg.margin) : null,
-    delta: recent.length >= 2 ? marginDelta(recent[0].margin, recent[1].margin) : null,
-    updated_at: avg ? avg.updated_at : null,
-    source_url: latest ? latest.source_url : null,
+    updated_at: hasPolls ? avg.updated_at : null,
+    cj_poll: pollDetail(cj),
   };
 }
 
@@ -383,11 +419,11 @@ export function getRace(districtId, cycle = CYCLE) {
   const row = districtRow(districtId, cycle);
   if (!row) return null;
   const race = getRaceSummary(row, cycle);
-  const polls = db.prepare(`SELECT poll_id, pollster, start_date, end_date, sample_size, population,
-      dem_share, rep_share, margin, source_url, source, is_seed
-    FROM polls WHERE district_id = ? AND election_cycle = ?
-    ORDER BY end_date DESC`).all(districtId, cycle);
-  race.poll_detail = polls;
+  // No raw poll list here. It used to ride along as `poll_detail`, read by
+  // nothing: every row in it is either folded into race.polls' average or, if
+  // it is the CJ release, already selected as race.polls.cj_poll. Two shapes for
+  // one dataset is two things to keep in step, and only one of them was on
+  // screen. The table is still there for anyone who wants to query it.
   race.news = districtNews(districtId, cycle);
   race.profile = profileFor(districtId, cycle, row.race_type);
   // State-legislature only. Federal races keep the party-aggregate money

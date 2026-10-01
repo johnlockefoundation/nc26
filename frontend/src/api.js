@@ -268,13 +268,34 @@ export function getMap(raceType) {
 
 export function getRace(districtId) {
   if (BUNDLED) {
-    // Reference-only for now. Per-seat volatile reads (polls, money, news) have
-    // no Supabase endpoint defined yet, so the bundled invariant record is the
-    // whole payload rather than a fallback -- the panel renders its unavailable
-    // states and the seat is still fully readable.
-    return wpReference(`race/${districtId}.json`).catch(() => {
-      throw new Error(`race ${districtId} not in the bundled reference layer`);
-    });
+    return wpReference(`race/${districtId}.json`)
+      .catch(() => {
+        throw new Error(`race ${districtId} not in the bundled reference layer`);
+      })
+      .then((base) => {
+        // Polling is overlaid from Supabase on the plugin only, and the two
+        // bundled targets are treated differently on purpose.
+        //
+        // The plugin's reference layer omits polls entirely (see
+        // VOLATILE_RACE_KEYS in export-reference.mjs): they are hand-entered, so
+        // freezing one into a versioned file would give it no timestamp and it
+        // would render as a live reading for as long as the plugin was
+        // installed. It reads them live instead.
+        //
+        // The Pages demo-data is the opposite case. It is regenerated from the
+        // same drop on every deploy, so it is current by construction rather
+        // than frozen, and overlaying it would be a downgrade: an empty live
+        // read would blank a real average the build already holds. So it is
+        // left alone.
+        //
+        // The payload shape is identical either way, so PollBlock is written
+        // once against the contract and does not know which target it is on.
+        if (!LIVE || !PLUGIN) return base;
+        return overlayVolatile(base, awaitQuietly(
+          `polls:${districtId}`,
+          () => rpc('poll_summary', { p_race_id: districtId, p_cycle: CYCLE }),
+        ));
+      });
   }
   return getJson(`${API_BASE}/races/${districtId}`);
 }
