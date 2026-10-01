@@ -1,38 +1,31 @@
-// One DEMOGRAPHICS block for every chamber, in the same collapsed state as
-// MONEY, POLLS and the market quotes: a .metric box, title hard left, nothing
-// but a disclosure caret on the right. Expanding elongates the box in place.
+// DEMOGRAPHICS: the Census profile of a district -- who lives there, how old,
+// how much they earn, and how the place voted in 2024.
 //
-// Demographics is the one panel category with no single party-advantage figure,
-// so there is no value to show while folded -- an empty right-hand side reads
-// as "nothing here" rather than "ask me", and a stand-in number would be a
-// different kind of claim in every chamber. Everything lives behind the caret.
+// This is a sibling of REGISTRATION and BALLOT, not their parent. Registration
+// and ballot velocity are about who is turning out and in which party; a census
+// profile is about the electorate's composition. Different questions, different
+// snapshots, different sources, and they are only ever rendered side by side by
+// accident of which datasets a seat happens to carry. Each is its own collapsible
+// so a reader can open one without opening the others.
 //
-// The two datasets are deliberately disjoint. Federal seats carry a Census
-// profile (age, income, education, race, 2024 margin); General Assembly seats
-// carry registration and ballot velocity. No seat has both. The body renders
-// whichever the seat actually has, so the block is one category across all four
-// chambers even though what fills it differs.
+// Federal seats carry this profile; General Assembly seats carry registration and
+// ballot velocity instead. No seat has both, so at most one of the three blocks
+// renders per race -- but the panel treats them as three independent categories
+// rather than one category with three bodies, because that is what they are.
 //
-// Placeholder figures. is_mock comes from the API on both datasets, so nothing
-// downstream can read these as NCSBE or Census filings; the panel carries a
-// single disclaimer rather than a notice per section.
+// Placeholder figures. is_mock comes from the API, so nothing downstream can
+// read these as NCSBE or Census filings; the panel carries a single disclaimer
+// rather than a notice per section.
 
-function sign(v) {
-  if (v == null) return '—';
-  return v > 0 ? `+${v.toLocaleString('en-US')}` : v.toLocaleString('en-US');
-}
-
-function shortDate(iso) {
-  if (!iso) return '';
-  const d = new Date(`${iso}T00:00:00Z`);
-  if (Number.isNaN(d.getTime())) return iso;
-  return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', timeZone: 'UTC' });
-}
+import CollapsibleMetric from './CollapsibleMetric.jsx';
 
 function fmtIncome(v) {
   return v == null ? '—' : `$${(v / 1000).toFixed(1)}k`;
 }
 
+// The 2024 presidential lean as a marker on a two-sided track, so the district's
+// own baseline leans and the Civitas rating for the current cycle can be read
+// against each other rather than as two unrelated numbers.
 function parseLean(m) {
   const mm = /^([DR])\+([\d.]+)$/.exec(m || '');
   return mm ? { party: mm[1], value: parseFloat(mm[2]) } : null;
@@ -42,31 +35,6 @@ function leanMarkerPos(margin) {
   const dir = margin.party === 'R' ? 1 : -1;
   const pct = Math.min(margin.value, 45) / 45 * 50;
   return { left: `${50 + dir * pct}%` };
-}
-
-const PARTIES = [
-  { key: 'dem', label: 'Democrat', cls: 'reg-d' },
-  { key: 'rep', label: 'Republican', cls: 'reg-r' },
-  { key: 'unaff', label: 'Unaffiliated', cls: 'reg-u' },
-];
-
-// change rows, scaled so the largest mover fills the bar
-function PartyChanges({ change }) {
-  const rows = PARTIES.map((p) => ({ ...p, value: change?.[p.key] }));
-  const peak = Math.max(...rows.map((r) => Math.abs(r.value || 0)), 1);
-  return (
-    <div className="vel-bars">
-      {rows.map((r) => (
-        <div key={r.key} className="vel-bar-row">
-          <span className="vel-bar-name">{r.label}</span>
-          <div className="vel-bar-track">
-            <i className={r.cls} style={{ width: `${(Math.abs(r.value || 0) / peak) * 100}%` }} />
-          </div>
-          <span className={`vel-bar-chg ${r.value > 0 ? 'up' : r.value < 0 ? 'down' : ''}`}>{sign(r.value)}</span>
-        </div>
-      ))}
-    </div>
-  );
 }
 
 function ProfileBody({ profile }) {
@@ -127,66 +95,15 @@ function ProfileBody({ profile }) {
   );
 }
 
-function VitalsBody({ vitals }) {
-  const { registration, ballot, from_date, to_date } = vitals;
-  return (
-    <>
-      <div className="profile-label">REGISTRATION VELOCITY</div>
-      <div className="vel-heads">
-        <div className="vel-head">
-          <span>NET NEW VOTERS</span>
-          <b className={registration.net > 0 ? 'up' : registration.net < 0 ? 'down' : ''}>
-            {sign(registration.net)}
-          </b>
-        </div>
-        <div className="vel-head">
-          <span>REGISTERED NOW</span>
-          <b>{registration.current != null ? registration.current.toLocaleString('en-US') : '—'}</b>
-        </div>
-      </div>
-      <PartyChanges change={registration.change} />
-
-      <div className="profile-label">BALLOT VELOCITY</div>
-      <div className="vel-heads">
-        <div className="vel-head">
-          <span>BALLOTS REQUESTED</span>
-          <b className={ballot.net > 0 ? 'up' : ballot.net < 0 ? 'down' : ''}>{sign(ballot.net)}</b>
-        </div>
-        <div className="vel-head">
-          <span>REQUESTS NOW</span>
-          <b>{ballot.current_total != null ? ballot.current_total.toLocaleString('en-US') : '—'}</b>
-        </div>
-      </div>
-      <div className="vel-window dim">
-        {`${shortDate(to_date)} ${vitals.to} v ${shortDate(from_date)} ${vitals.from}`}
-      </div>
-      <PartyChanges change={ballot.change} />
-    </>
-  );
-}
-
-export default function Demographics({ profile, vitals }) {
-  const hasProfile = Boolean(profile);
-  const hasVitals = Boolean(vitals?.available);
-
-  // A seat carrying neither would render a block that expands to nothing. Same
+export default function Demographics({ profile }) {
+  // A seat with no profile would render a box that expands to nothing. Same
   // reasoning as the metric blocks above it: an empty disclosure says more
   // about the pipeline than about the district.
-  if (!hasProfile && !hasVitals) return null;
-
-  const source = profile?.source || vitals?.source;
+  if (!profile) return null;
 
   return (
-    <details className="metric collapsible-metric">
-      <summary className="collapsible-metric-head">
-        <span className="metric-title">DEMOGRAPHICS</span>
-        <span className="collapsible-caret" aria-hidden="true" />
-      </summary>
-      <div className="collapsible-metric-body">
-        {hasProfile && <ProfileBody profile={profile} />}
-        {hasVitals && <VitalsBody vitals={vitals} />}
-        {source && <div className="profile-source dim">{source}</div>}
-      </div>
-    </details>
+    <CollapsibleMetric title="DEMOGRAPHICS" source={profile.source}>
+      <ProfileBody profile={profile} />
+    </CollapsibleMetric>
   );
 }

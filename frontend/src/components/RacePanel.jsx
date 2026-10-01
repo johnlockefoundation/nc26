@@ -1,6 +1,7 @@
 import MetricBlock from './MetricBlock.jsx';
 import CivitasPartisan from './CivitasPartisan.jsx';
 import Demographics from './Demographics.jsx';
+import { Registration, Ballot } from './VoterVelocity.jsx';
 import DistrictNews from './DistrictNews.jsx';
 
 function initials(name) {
@@ -63,6 +64,18 @@ export default function RacePanel({ race, loading }) {
   ));
   const showFullPanel = !isStateRace && hasSubstance;
 
+  // Three independent disclosures, in one list, so a reader can open any of them
+  // without the others. Which of them a seat gets is decided by the payload
+  // rather than hardcoded per district: federal seats carry the Census profile,
+  // General Assembly seats carry the two velocity blocks, and a seat that later
+  // picks up another dataset grows its own block. Each returns null on its own
+  // when its dataset is absent, so the list needs no filtering here.
+  const disclosureBlocks = [<Demographics key="demographics" profile={race.profile} />];
+  if (race.vitals?.available) {
+    disclosureBlocks.push(<Registration key="registration" vitals={race.vitals} />);
+    disclosureBlocks.push(<Ballot key="ballot" vitals={race.vitals} />);
+  }
+
   return (
     <aside className="panel">
       <h2 className="panel-title">{race.title}</h2>
@@ -80,7 +93,7 @@ export default function RacePanel({ race, loading }) {
           <div className="metrics">
             <CivitasPartisan partisan={race.partisan} />
             <MetricBlock title="MONEY" emptyText="NO MONEY" summary={moneyS} />
-            <Demographics profile={race.profile} vitals={race.vitals} />
+            {disclosureBlocks}
           </div>
           <DistrictNews articles={race.news} />
         </>
@@ -89,12 +102,12 @@ export default function RacePanel({ race, loading }) {
           <MetricBlock title="POLLS" emptyText="NO POLLING" summary={polls} />
           {marketBlocks}
           <MetricBlock title="MONEY" emptyText="NO MONEY" summary={moneyS} />
-          <Demographics profile={race.profile} vitals={race.vitals} />
+          {disclosureBlocks}
         </div>
       ) : (
         <div className="metrics">
           {marketBlocks}
-          <Demographics profile={race.profile} vitals={race.vitals} />
+          {disclosureBlocks}
         </div>
       )}
 
