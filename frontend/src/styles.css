@@ -317,18 +317,24 @@
 .partisan-rating { display: inline-block; margin-left: 10px; font-size: 13px; font-weight: 700; letter-spacing: 0.1em; color: var(--muted); vertical-align: 2px; }
 .partisan-inplay { display: inline-block; margin-left: 10px; font-size: 11px; font-weight: 800; letter-spacing: 0.14em; color: #fbbf24; vertical-align: 3px; }
 
+/* A .metric box holding more than a single figure: the value and, below it,
+   the lean bar. The row layout .metric uses would fight a full-width bar, so
+   the box goes column and stacks -- same border, radius, padding and title
+   treatment as every other metric, just taller. Never collapsed, because on a
+   General Assembly seat the index is the only signal the panel has. */
+.metric-elongated { flex-direction: column; align-items: stretch; gap: 10px; }
+.metric-elongated .metric-value { white-space: normal; }
+.metric-elongated .leanbar { margin-bottom: 0; }
+
 /* Sections */
 .panel-section { margin-top: 18px; }
 .panel-section h3 { font-family: var(--font-display); font-size: 11px; letter-spacing: 0.14em; color: var(--muted); margin: 0 0 8px; }
-.section-link { color: var(--muted); text-decoration: none; border-bottom: 1px dotted rgba(148, 163, 184, 0.5); }
-.section-link:hover { color: var(--accent); border-bottom-color: var(--accent); }
-
 
 /* Single disclaimer for every placeholder figure on a state race. Deliberately
-   quiet: it sits under the Civitas index and covers money and vitals alike,
+   quiet: it sits above the block stack and covers money and vitals alike,
    rather than repeating a banner over each widget. */
 .data-disclaimer {
-  margin: 2px 0 0; font-size: 10.5px; line-height: 1.45; color: #fbbf24; opacity: 0.85;
+  margin: 2px 0 10px; font-size: 10.5px; line-height: 1.45; color: #fbbf24; opacity: 0.85;
 }
 
 /* Voter velocity: registration and ballot movement between two snapshots */

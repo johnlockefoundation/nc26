@@ -4,13 +4,19 @@ function markerPos(party, value) {
   return { left: `${50 + dir * pct}%` };
 }
 
+// The Civitas index, in the same box as MONEY, POLLS and the market quotes --
+// and elongated rather than collapsed, because on a General Assembly seat it is
+// the only race signal there is. 170 of the 185 seats have no polling, no market
+// and no fundraising, so this is the headline for the chamber rather than
+// supporting detail, and folding it away would bury the one number the map is
+// coloured from.
 export default function CivitasPartisan({ partisan }) {
   if (!partisan || !partisan.available) {
     return (
-      <section className="panel-section">
-        <h3>CIVITAS PARTISAN INDEX</h3>
-        <div className="dim">Not yet available for this district.</div>
-      </section>
+      <div className="metric metric-empty metric-elongated">
+        <div className="metric-title">CIVITAS PARTISAN INDEX</div>
+        <div className="metric-value"><span className="metric-na">NOT YET AVAILABLE</span></div>
+      </div>
     );
   }
   const partyCls = partisan.party === 'D' ? 'val-d' : 'val-r';
@@ -18,14 +24,14 @@ export default function CivitasPartisan({ partisan }) {
     partisan.lean === 'Toss-up' ? 'TOSS-UP' : `${partisan.lean || ''} ${partisan.party}`.trim();
 
   return (
-    <section className="panel-section">
-      <h3>
+    <div className="metric metric-elongated">
+      <div className="metric-title">
         {partisan.source_url ? (
-          <a className="section-link" href={partisan.source_url} target="_blank" rel="noreferrer" title="Open 2026 Civitas Partisan Index">CIVITAS PARTISAN INDEX ↗</a>
+          <a className="metric-title-link" href={partisan.source_url} target="_blank" rel="noreferrer" title="Open 2026 Civitas Partisan Index">CIVITAS PARTISAN INDEX ↗</a>
         ) : (
           'CIVITAS PARTISAN INDEX'
         )}
-      </h3>
+      </div>
 
       <div className="metric-value">
         <span className={partyCls}>{partisan.label}</span>
@@ -46,6 +52,6 @@ export default function CivitasPartisan({ partisan }) {
           <span>REP</span>
         </div>
       </div>
-    </section>
+    </div>
   );
 }
