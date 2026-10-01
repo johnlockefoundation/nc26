@@ -160,14 +160,19 @@
 .mini-gauge:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
 .mini-gauge svg { display: block; }
 .mini-gauge-meta { display: flex; align-items: baseline; justify-content: space-between; gap: 6px; margin-top: 1px; width: 100%; }
-.gauge-name { font-family: var(--font-display); font-size: 9.5px; letter-spacing: 0.12em; font-weight: 700; color: var(--muted); white-space: nowrap; }
+.gauge-name { font-family: var(--font-display); font-size: 9.5px; letter-spacing: 0.12em; font-weight: 700; color: #fff; white-space: nowrap; }
 .gauge-lead { font-family: var(--font-display); font-size: 13px; font-weight: 700; letter-spacing: -0.01em; white-space: nowrap; }
 .gauge-lead.lead-r { color: var(--r); }
 .gauge-lead.lead-d { color: var(--d); }
 .gauge-outcome { display: block; width: 100%; margin-top: 3px; font-family: var(--font-display); font-size: 10.5px; font-weight: 800; letter-spacing: 0.09em; text-align: center; background: #0c1524; border: 1px solid var(--line); border-radius: 6px; padding: 2px 0; }
-.gauge-outcome.outcome-d { color: var(--d); border-color: rgba(59, 130, 246, 0.4); background: rgba(29, 78, 216, 0.12); }
-.gauge-outcome.outcome-r { color: var(--r); border-color: rgba(239, 68, 68, 0.4); background: rgba(185, 28, 28, 0.12); }
-.gauge-outcome.outcome-t { color: #cbd5e1; border-color: rgba(148, 163, 184, 0.35); background: rgba(51, 65, 85, 0.25); }
+/* The chip tints track the gauges' new arc hues (#2563eb / #dc2626, the map's
+   bright party tones). The chip's own text stays on the lighter --d / --r
+   tokens: at 10.5px the map hexes measure ~3.5:1 on this background, under the
+   4.5:1 AA threshold for normal text, against 7.2:1 and 6.6:1 here. The
+   neutral outcome was grey and is now white, which is the grey-text change. */
+.gauge-outcome.outcome-d { color: var(--d); border-color: rgba(37, 99, 235, 0.45); background: rgba(37, 99, 235, 0.14); }
+.gauge-outcome.outcome-r { color: var(--r); border-color: rgba(220, 38, 38, 0.45); background: rgba(220, 38, 38, 0.14); }
+.gauge-outcome.outcome-t { color: #fff; border-color: rgba(148, 163, 184, 0.35); background: rgba(51, 65, 85, 0.25); }
 @media (max-width: 640px) {
   .gauge-row { gap: 8px; }
   .mini-gauge { width: 115px; }

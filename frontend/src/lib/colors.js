@@ -20,6 +20,17 @@ const PARTY_FILL = {
   R: { live: '#dc2626', dull: '#5c1e1e' },
 };
 
+// The header gauges paint their arcs from these so the gauges and the map cannot
+// drift apart. Exported rather than restated in the stylesheet because a gauge
+// arc is SVG geometry and takes its colour as an attribute, not from CSS.
+//
+// Only the live tone is exported for that purpose. It is a fill colour: the arcs
+// are large areas, the same job it does on the map. It is not legible as small
+// text -- #2563eb on the header's dark chip measures 3.5:1, under the 4.5:1 AA
+// threshold -- so the gauge's coloured *text* keeps the lighter --d and --r
+// tokens at 7.2:1 and 6.6:1 instead.
+export const PARTY_TONES = PARTY_FILL;
+
 // Neutral for a seat with no lean recorded at all, so "unrated" stays visibly
 // distinct from "rated and settled" rather than borrowing either party's hue.
 const NO_LEAN = '#475569';
