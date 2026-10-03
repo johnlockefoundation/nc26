@@ -73,26 +73,30 @@ jobs:
           done
           echo "race files: $(ls frontend/dist/demo-data/race | wc -l)"
 
-      # The two placeholder widgets must stay flagged in the published export.
-      # If an NC SBOE extract replaces the mock seed, is_mock flips to 0 and
-      # this check will fail, which is the signal to remove the notice copy.
-      - name: Verify placeholder data is still flagged
+      # Guard against the class of bug this repo already shipped once: a mock
+      # dataset freezing into the published export. These keys are read live from
+      # Supabase, so if any of them reappears in a bundled file, something has
+      # put invented or stale figures back on the page.
+      - name: Verify no bundled live data
         run: |
           set -euo pipefail
           node -e '
-            const race = require("./frontend/dist/demo-data/race/HD-105.json");
-            const funds = race.state_funds;
-            const vitals = race.vitals;
-            if (funds?.is_mock !== true) throw new Error("state_funds lost its is_mock flag");
-            if (!funds.advantage) throw new Error("no money advantage in export");
-            if (funds.dem_amount == null || funds.rep_amount == null) throw new Error("money is not split by party");
-            if (race.demographics != null) throw new Error("demographics were removed but are still in the export");
-            if (vitals?.is_mock !== true) throw new Error("vitals lost its is_mock flag");
-            if (!vitals.registration || vitals.registration.net == null) throw new Error("no registration velocity in export");
-            if (vitals.ballot == null || vitals.ballot.net == null) throw new Error("no ballot velocity in export");
-            if (!vitals.from_date || !vitals.to_date) throw new Error("snapshots are not dated");
-            if (vitals.registration.per_month != null) throw new Error("per-month rate should have been removed");
-            console.log("placeholder flags intact, mock generation still active");
+            const fs = require("fs");
+            const dir = "./frontend/dist/demo-data/race";
+            const volatile = ["polls", "poll_detail", "markets", "market_list",
+                              "money", "state_funds", "vitals", "news", "coverage", "last_updated"];
+            const offenders = [];
+            for (const f of fs.readdirSync(dir)) {
+              const race = JSON.parse(fs.readFileSync(`${dir}/${f}`, "utf8"));
+              for (const k of volatile) {
+                if (race[k] != null) offenders.push(`${f}: ${k}`);
+              }
+              if (JSON.stringify(race).includes("is_mock")) offenders.push(`${f}: is_mock marker`);
+            }
+            if (offenders.length) {
+              throw new Error("live data must not be bundled:\n  " + offenders.slice(0, 20).join("\n  "));
+            }
+            console.log(`no live keys bundled across ${fs.readdirSync(dir).length} race files`);
           '
 
       - uses: actions/upload-pages-artifact@v3
