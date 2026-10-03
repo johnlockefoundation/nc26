@@ -53,7 +53,11 @@
    Sized by height against the topbar's own cap so it reads as a corner mark
    rather than a second banner competing with the brand logo in the centre. */
 .corner-logo {
-  position: absolute; top: 10px; right: 0;
+  /* right: 0 sits flush against .app's own 22px side padding, which is the
+     gutter every other edge in the layout lines up on. The extra 7px puts the
+     mark ~30% further from the screen edge than that, without reading as
+     detached from the gutter it belongs to. */
+  position: absolute; top: 10px; right: 7px;
   height: 26px; width: auto; max-width: 220px; display: block;
 }
 @media (max-width: 1100px) { .corner-logo { display: none; } }
