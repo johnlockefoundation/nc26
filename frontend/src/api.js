@@ -382,19 +382,21 @@ export function getRace(districtId) {
         // The payload shape is identical either way, so each block is written
         // once against the contract and does not know which target it is on.
         if (!LIVE) return base;
-        // Five independent reads, none of which can fail the page. Polling,
-        // prediction markets, General Assembly money and voter velocity are all
+        // Six independent reads, none of which can fail the page. Polling, prediction
+        // markets, federal and General Assembly money, and voter velocity are all
         // per-seat and all optional, so a seat with rows in one and not the
         // others must render the blocks it has rather than all or none. Each
         // resolves to null on failure and overlayVolatile skips nulls, so a seat
         // the database has nothing for is simply a seat without those blocks.
-        const [polls, markets, marketList, stateFunds, vitals] = await Promise.all([
+        const [polls, markets, marketList, money, stateFunds, vitals] = await Promise.all([
           awaitQuietly(`polls:${districtId}`,
             () => rpc('poll_summary', { p_race_id: districtId, p_cycle: CYCLE })),
           awaitQuietly(`markets:${districtId}`,
             () => rpc('markets_summary', { p_race_id: districtId, p_cycle: CYCLE })),
           awaitQuietly(`market_list:${districtId}`,
             () => rpc('market_list', { p_race_id: districtId, p_cycle: CYCLE })),
+          awaitQuietly(`money:${districtId}`,
+            () => rpc('money_summary', { p_race_id: districtId, p_cycle: CYCLE })),
           awaitQuietly(`state_funds:${districtId}`,
             () => rpc('state_funds_summary', { p_race_id: districtId, p_cycle: CYCLE })),
           awaitQuietly(`vitals:${districtId}`,
@@ -404,12 +406,19 @@ export function getRace(districtId) {
         // keys, not one. The panel reads `markets` for the single-quote row and
         // prefers market_list when it is non-empty, so both have to be present
         // for a venue list to appear if a second source is ever added.
+        //
+        // money and state_funds are two keys for one widget, not a choice
+        // between them: MoneyBlock reads state_funds || money, so a congressional
+        // seat gets its box from `money` and a General Assembly seat from
+        // `state_funds`. Both being absent is the only case that renders nothing.
         return overlayPortraits(
           overlayVolatile(
             overlayVolatile(
               overlayVolatile(
-                overlayVolatile(overlayVolatile(base, polls), markets),
-                marketList),
+                overlayVolatile(
+                  overlayVolatile(overlayVolatile(base, polls), markets),
+                  marketList),
+                money),
               stateFunds),
             vitals));
       });
