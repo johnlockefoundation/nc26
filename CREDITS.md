@@ -1,10 +1,25 @@
 # Photo Credits
 
-Portraits for **competitive seats only** are mirrored into the Supabase Storage
-bucket `headshots` so the plugin does not hotlink third-party hosts at render time.
-Non-competitive seats still reference `ncleg.gov` directly and are not listed here.
+Portraits for **competitive seats** are mirrored into the Supabase Storage bucket
+`headshots` so the plugin does not hotlink third-party hosts at render time. The
+remaining non-competitive seats still reference `ncleg.gov` directly and are not
+listed here, except where a portrait has been mirrored since that split.
 
-Coverage: 42 images (16 official NC General Assembly portraits, 23 public-domain, 3 Creative Commons).
+Coverage: 43 images (17 official NC General Assembly portraits, 23 public-domain, 3 Creative Commons).
+
+## Adding a portrait later
+
+The bucket is the live source, not a build artifact. Uploading `<candidate_id>.jpg`
+(or `.png`) into `headshots` puts a face on that seat for every site already running
+the plugin, with no re-upload and no redeploy — the same contract as polls and news.
+
+The filename stem must be exactly the candidate_id the plugin already knows (`HD-100_D_2026`,
+not `greenfield.jpg`). A file whose stem matches no known candidate is ignored and named in
+the browser console, so a mis-named upload is a visible mistake rather than a portrait that
+silently never appears. Images fetched at render time are subject to whatever the upstream
+host does next; a failed load falls back to initials.
+
+Anything added this way belongs in this file in the same change.
 
 ## Official portraits — North Carolina General Assembly
 
@@ -29,6 +44,7 @@ work; reproduced here under the State of North Carolina's use for official gover
 | Michael Lee (SD-07, R) | <https://www.ncleg.gov/Members/MemberImage/S/387/Low> |
 | Lisa Stone Barnes (SD-11, R) | <https://www.ncleg.gov/Members/MemberImage/S/427/Low> |
 | Danny Earl Britt, Jr. (SD-24, R) | <https://www.ncleg.gov/Members/MemberImage/S/399/Low> |
+| Julia Greenfield (HD-100, D) | [Rep. Julia Greenfield.jpg](https://commons.wikimedia.org/wiki/File%3ARep._Julia_Greenfield.jpg) |
 
 ## Public domain — U.S. federal official portraits
 

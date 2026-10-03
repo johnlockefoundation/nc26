@@ -67,10 +67,6 @@ const LIVE = Boolean(SUPABASE_URL && SUPABASE_KEY);
 // the backend API instead.
 const BUNDLED = PLUGIN || STATIC;
 
-export const isStatic = STATIC;
-export const isWordPress = PLUGIN;
-export const isBundled = BUNDLED;
-
 // Fetch with a one-shot fallback. `primary` is the live source, `fallback` the
 // bundled reference. A fallback failure is fatal; a primary failure is reported
 // once so the console says why the page is showing only bundled data.
@@ -178,7 +174,8 @@ export function assetUrl(rel) {
 // Attach geometry to a map payload, keyed by district_id.
 //
 // In the plugin, geometry ships beside the reference layer rather than inside
-// it, because it is 636 KB of the total and changes only at a redistricting.
+// it, because it is ~610 KB of the ~960 KB payload and changes only at a
+// redistricting.
 // The Pages build bakes geometry directly into each map file, so there the
 // bundled features already carry it and this is a no-op. Merging by
 // district_id rather than by position is what keeps a seat added on one side
@@ -223,6 +220,87 @@ function overlayMap(base, live) {
       return merged;
     }),
     races: base.races.map((r) => overlayVolatile(r, live.races?.find((x) => x.district_id === r.district_id))),
+  };
+}
+
+// --- portraits ---------------------------------------------------------------
+//
+// Portraits are enriched after the plugin is installed, the same way polls and
+// news are: the bucket is the live source and the bundled photo_url is the
+// floor. Dropping <candidate_id>.jpg into the headshots bucket puts a face on a
+// seat for every site already running this zip, with no re-upload.
+//
+// The filename is the whole contract, so it is matched against the candidate
+// list this page already holds rather than parsed. A file whose stem is not a
+// candidate_id we know about is ignored and named in the console -- a
+// mis-named upload should be a visible mistake, not a portrait that silently
+// never appears.
+//
+// Deliberately additive and per-candidate. Replacing the candidates array with
+// whatever the bucket says is the failure this file already had once: a live
+// read that was present but empty blanked every map label. A bucket that lists
+// nothing must leave the bundled record exactly as it found it.
+const HEADSHOTS_BUCKET = 'headshots';
+
+let portraitRead;
+
+// One list per page, not one per race. The promise is memoised rather than the
+// result so two callers racing each other still share a single request.
+function livePortraits(knownIds) {
+  if (!portraitRead) {
+    portraitRead = (async () => {
+      const url = new URL(`/storage/v1/object/list/${HEADSHOTS_BUCKET}`, SUPABASE_URL);
+      const res = await fetch(url.toString(), {
+        method: 'POST',
+        headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prefix: '', limit: 1000 }),
+      }).then((r) => {
+        if (!r.ok) throw new Error(`${r.status} storage list`);
+        return r.json();
+      });
+      const known = knownIds instanceof Set ? knownIds : new Set(knownIds || []);
+      const found = new Map();
+      const unknown = [];
+      for (const entry of res) {
+        // Folder placeholders come back from the list endpoint with a null id.
+        if (!entry || !entry.id || !entry.name) continue;
+        const dot = entry.name.lastIndexOf('.');
+        if (dot < 1) continue;
+        const id = entry.name.slice(0, dot);
+        if (!known.has(id)) { unknown.push(entry.name); continue; }
+        const publicUrl = `${SUPABASE_URL}/storage/v1/object/public/${HEADSHOTS_BUCKET}/${entry.name}`;
+        // Two files for one candidate is ambiguous; pick one deterministically
+        // rather than letting listing order decide.
+        if (found.has(id) && found.get(id) <= publicUrl) continue;
+        found.set(id, publicUrl);
+      }
+      if (unknown.length) {
+        console.warn(`[jce] ${unknown.length} file(s) in ${HEADSHOTS_BUCKET} do not match a candidate_id and were ignored: `
+          + unknown.slice(0, 8).join(', ') + (unknown.length > 8 ? ', …' : ''));
+      }
+      return found;
+    })().catch((err) => {
+      if (!warned.has('portraits')) {
+        warned.add('portraits');
+        console.warn(`[jce] portraits unavailable (${err.message}); using bundled photo_url`);
+      }
+      return null;
+    });
+  }
+  return portraitRead;
+}
+
+async function overlayPortraits(race) {
+  if (!LIVE || !race || !Array.isArray(race.candidates)) return race;
+  const known = race.candidates.map((c) => c.candidate_id);
+  const portraits = await livePortraits(known);
+  if (!portraits || portraits.size === 0) return race;
+  return {
+    ...race,
+    candidates: race.candidates.map((c) => {
+      const photo_url = portraits.get(c.candidate_id);
+      return photo_url ? { ...c, photo_url } : c;
+    }),
   };
 }
 
@@ -294,7 +372,7 @@ export function getRace(districtId) {
         return overlayVolatile(base, awaitQuietly(
           `polls:${districtId}`,
           () => rpc('poll_summary', { p_race_id: districtId, p_cycle: CYCLE }),
-        ));
+        )).then(overlayPortraits);
       });
   }
   return getJson(`${API_BASE}/races/${districtId}`);

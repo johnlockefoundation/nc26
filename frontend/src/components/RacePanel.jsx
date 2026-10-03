@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import MetricBlock from './MetricBlock.jsx';
 import CivitasPartisan from './CivitasPartisan.jsx';
 import Demographics from './Demographics.jsx';
@@ -8,14 +9,29 @@ import DistrictNews from './DistrictNews.jsx';
 import { initials } from '../lib/candidateName.js';
 
 function CandidateCards({ candidates }) {
+  // A portrait URL can now change under an installed plugin, so a URL that 404s
+  // is a normal outcome rather than a build error: fall back to initials. Keyed
+  // by URL, not candidate_id, so a later upload of the same seat is retried
+  // instead of being permanently marked broken.
+  const [broken, setBroken] = useState(() => new Set());
   if (!candidates || candidates.length === 0) return <div className="candidate-list dim">Candidates not yet available.</div>;
   return (
     <div className="candidate-list">
       {candidates.map((c) => (
         <div key={c.candidate_id} className="candidate-card">
           <div className="candidate-photo">
-            {c.photo_url ? (
-              <img src={c.photo_url} alt={`${c.name} (${c.party})`} loading="lazy" />
+            {c.photo_url && !broken.has(c.photo_url) ? (
+              <img
+                src={c.photo_url}
+                alt={`${c.name} (${c.party})`}
+                loading="lazy"
+                onError={() => setBroken((prev) => {
+                  if (prev.has(c.photo_url)) return prev;
+                  const next = new Set(prev);
+                  next.add(c.photo_url);
+                  return next;
+                })}
+              />
             ) : (
               <span className="candidate-initials">{initials(c.name)}</span>
             )}
