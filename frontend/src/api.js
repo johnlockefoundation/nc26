@@ -368,7 +368,7 @@ export function getRace(districtId) {
         //
         // The payload shape is identical either way, so PollBlock is written
         // once against the contract and does not know which target it is on.
-        if (!LIVE || !PLUGIN) return base;
+        if (!LIVE) return base;
         return overlayVolatile(base, awaitQuietly(
           `polls:${districtId}`,
           () => rpc('poll_summary', { p_race_id: districtId, p_cycle: CYCLE }),
@@ -380,12 +380,15 @@ export function getRace(districtId) {
 
 export function getTicker(limit = 12) {
   if (LIVE) {
-    // No bundled ticker: every story is by definition newer than the build that
-    // shipped it, so a frozen copy would be stale on arrival. With Supabase
-    // absent the ticker is simply absent, which is honest.
+    // No bundled ticker on the plugin: every story there is by definition newer
+    // than the build that shipped it, so a frozen copy would be stale on
+    // arrival. Pages does ship a small demo ticker, and that one is kept as the
+    // fallback rather than replaced by an empty list -- otherwise a single
+    // failed read empties a demo that had stories to show.
+    const stale = BUNDLED ? awaitQuietly('ticker:bundled', () => bundled('ticker.json'), () => null) : null;
     return withFallback('ticker',
       () => rpc('ticker', { p_limit: limit }).then((items) => ({ items })),
-      () => ({ items: [] }));
+      () => stale || { items: [] });
   }
   return getJson(`${API_BASE}/ticker?limit=${limit}`);
 }
