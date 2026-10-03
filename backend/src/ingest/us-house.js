@@ -12,11 +12,11 @@ const FILE = join(__dirname, '..', '..', 'data', 'seed', 'candidates-us-house.js
 export function ingestUsHouse(cycle = CYCLE) {
   const data = JSON.parse(readFileSync(FILE, 'utf8'));
   const insCand = db.prepare(`INSERT OR REPLACE INTO candidates
-    (candidate_id, district_id, election_cycle, name, party, incumbent, photo_url)
-    VALUES (?, ?, ?, ?, ?, ?, ?)`);
+    (candidate_id, district_id, election_cycle, name, party, incumbent, photo_url, photo_source)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?)`);
   let candidates = 0;
   for (const c of data.candidates) {
-    insCand.run(c.candidate_id, c.district_id, cycle, c.name, c.party, c.incumbent ? 1 : 0, c.photo_url || '');
+    insCand.run(c.candidate_id, c.district_id, cycle, c.name, c.party, c.incumbent ? 1 : 0, c.photo_url || '', c.photo_source || null);
     candidates++;
   }
   const upd = db.prepare(

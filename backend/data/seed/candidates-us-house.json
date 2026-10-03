@@ -8,7 +8,8 @@
    "name": "Don Davis",
    "party": "D",
    "incumbent": true,
-   "photo_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Portrait%20of%20Congressman%20Don%20Davis.jpg?width=400"
+   "photo_url": "https://xbpimnerxjpwqnicwpec.supabase.co/storage/v1/object/public/headshots/nc01_davis_2026-don-davis.jpg",
+   "photo_source": "Wikimedia Commons / Public domain"
   },
   {
    "candidate_id": "nc01_buckhout_2026",
@@ -16,7 +17,8 @@
    "name": "Laurie Buckhout",
    "party": "R",
    "incumbent": false,
-   "photo_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Laurie%20Buckhout%20(cropped).jpg?width=400"
+   "photo_url": "https://xbpimnerxjpwqnicwpec.supabase.co/storage/v1/object/public/headshots/nc01_buckhout_2026-laurie-buckhout.jpg",
+   "photo_source": "Wikimedia Commons / Public domain"
   },
   {
    "candidate_id": "nc02_ross_2026",
@@ -24,7 +26,8 @@
    "name": "Deborah Ross",
    "party": "D",
    "incumbent": true,
-   "photo_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Deborah_Ross_117th_U.S_Congress.jpg?width=400"
+   "photo_url": "https://xbpimnerxjpwqnicwpec.supabase.co/storage/v1/object/public/headshots/nc02_ross_2026-deborah-ross.jpg",
+   "photo_source": "Wikimedia Commons / Public domain"
   },
   {
    "candidate_id": "nc02_douglass_2026",
@@ -40,7 +43,8 @@
    "name": "Greg Murphy",
    "party": "R",
    "incumbent": true,
-   "photo_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Rep._Greg_Murphy_116th_Congress_Portrait.jpg?width=400"
+   "photo_url": "https://xbpimnerxjpwqnicwpec.supabase.co/storage/v1/object/public/headshots/nc03_murphy_2026-greg-murphy.jpg",
+   "photo_source": "Wikimedia Commons / Public domain"
   },
   {
    "candidate_id": "nc03_smith_2026",
@@ -48,7 +52,8 @@
    "name": "Raymond Smith Jr.",
    "party": "D",
    "incumbent": false,
-   "photo_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Rep._Raymond_E._Smith_Jr.jpg?width=400"
+   "photo_url": "https://xbpimnerxjpwqnicwpec.supabase.co/storage/v1/object/public/headshots/nc03_smith_2026-raymond-smith-jr.jpg",
+   "photo_source": "Wikimedia Commons / Public domain"
   },
   {
    "candidate_id": "nc04_foushee_2026",
@@ -56,7 +61,8 @@
    "name": "Valerie Foushee",
    "party": "D",
    "incumbent": true,
-   "photo_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Valerie_Foushee_118th_Congress_3.jpg?width=400"
+   "photo_url": "https://xbpimnerxjpwqnicwpec.supabase.co/storage/v1/object/public/headshots/nc04_foushee_2026-valerie-foushee.jpg",
+   "photo_source": "Wikimedia Commons / Public domain"
   },
   {
    "candidate_id": "nc04_ganorkar_2026",
@@ -72,7 +78,8 @@
    "name": "Virginia Foxx",
    "party": "R",
    "incumbent": true,
-   "photo_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Virginia_Foxx_official_photo_%28slight_crop%29.jpg?width=400"
+   "photo_url": "https://xbpimnerxjpwqnicwpec.supabase.co/storage/v1/object/public/headshots/nc05_foxx_2026-virginia-foxx.jpg",
+   "photo_source": "Wikimedia Commons / Public domain"
   },
   {
    "candidate_id": "nc05_hubbard_2026",
@@ -88,7 +95,8 @@
    "name": "Addison McDowell",
    "party": "R",
    "incumbent": true,
-   "photo_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Addison_McDowell_119th_congress.jpg?width=400"
+   "photo_url": "https://xbpimnerxjpwqnicwpec.supabase.co/storage/v1/object/public/headshots/nc06_mcdowell_2026-addison-mcdowell.jpg",
+   "photo_source": "Wikimedia Commons / Public domain"
   },
   {
    "candidate_id": "nc06_jefferson_2026",
@@ -104,7 +112,8 @@
    "name": "David Rouzer",
    "party": "R",
    "incumbent": true,
-   "photo_url": "https://commons.wikimedia.org/wiki/Special:FilePath/David_Rouzer_official_photo.jpg?width=400"
+   "photo_url": "https://xbpimnerxjpwqnicwpec.supabase.co/storage/v1/object/public/headshots/nc07_rouzer_2026-david-rouzer.jpg",
+   "photo_source": "Wikimedia Commons / Public domain"
   },
   {
    "candidate_id": "nc07_hardy_2026",
@@ -120,7 +129,8 @@
    "name": "Mark Harris",
    "party": "R",
    "incumbent": true,
-   "photo_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Harris_Mark_119th_Congress_%28crop2%29.jpg?width=400"
+   "photo_url": "https://xbpimnerxjpwqnicwpec.supabase.co/storage/v1/object/public/headshots/nc08_harris_2026-mark-harris.jpg",
+   "photo_source": "Wikimedia Commons / Public domain"
   },
   {
    "candidate_id": "nc08_watson_2026",
@@ -136,7 +146,8 @@
    "name": "Richard Hudson",
    "party": "R",
    "incumbent": true,
-   "photo_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Richard_Hudson%2C_official_portrait%2C_115th_Congress_%28cropped%29.jpg?width=400"
+   "photo_url": "https://xbpimnerxjpwqnicwpec.supabase.co/storage/v1/object/public/headshots/nc09_hudson_2026-richard-hudson.jpg",
+   "photo_source": "Wikimedia Commons / Public domain"
   },
   {
    "candidate_id": "nc09_ojeda_2026",
@@ -144,7 +155,9 @@
    "name": "Richard Ojeda",
    "party": "D",
    "incumbent": false,
-   "photo_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Richard_Ojeda_shirt.jpg?width=400"
+   "photo_url": "https://xbpimnerxjpwqnicwpec.supabase.co/storage/v1/object/public/headshots/nc09_ojeda_2026-richard-ojeda.jpg",
+   "photo_source": "Wikimedia Commons / CC BY-SA 4.0",
+   "photo_license": "https://creativecommons.org/licenses/by-sa/4.0"
   },
   {
    "candidate_id": "nc10_harrigan_2026",
@@ -152,7 +165,8 @@
    "name": "Pat Harrigan",
    "party": "R",
    "incumbent": true,
-   "photo_url": "https://commons.wikimedia.org/wiki/Special:FilePath/CongressmanPatHarriganPortrait.jpg?width=400"
+   "photo_url": "https://xbpimnerxjpwqnicwpec.supabase.co/storage/v1/object/public/headshots/nc10_harrigan_2026-pat-harrigan.jpg",
+   "photo_source": "Wikimedia Commons / Public domain"
   },
   {
    "candidate_id": "nc10_bell_2026",
@@ -176,7 +190,8 @@
    "name": "Jennifer Balkcom",
    "party": "R",
    "incumbent": false,
-   "photo_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Jennifer%20Balkcom%20(2025).png?width=400"
+   "photo_url": "https://xbpimnerxjpwqnicwpec.supabase.co/storage/v1/object/public/headshots/nc11_balkcom_2026-jennifer-balkcom.png",
+   "photo_source": "Wikimedia Commons / Public domain"
   },
   {
    "candidate_id": "nc12_adams_2026",
@@ -184,7 +199,8 @@
    "name": "Alma Adams",
    "party": "D",
    "incumbent": true,
-   "photo_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Alma_Adams_official_portrait_%283x4_cropped%29.jpg?width=400"
+   "photo_url": "https://xbpimnerxjpwqnicwpec.supabase.co/storage/v1/object/public/headshots/nc12_adams_2026-alma-adams.jpg",
+   "photo_source": "Wikimedia Commons / Public domain"
   },
   {
    "candidate_id": "nc12_codiga_2026",
@@ -200,7 +216,8 @@
    "name": "Brad Knott",
    "party": "R",
    "incumbent": true,
-   "photo_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Rep._Brad_Knott_official_photo%2C_119th_Congress.jpg?width=400"
+   "photo_url": "https://xbpimnerxjpwqnicwpec.supabase.co/storage/v1/object/public/headshots/nc13_knott_2026-brad-knott.jpg",
+   "photo_source": "Wikimedia Commons / Public domain"
   },
   {
    "candidate_id": "nc13_barringer_2026",
@@ -215,7 +232,8 @@
    "name": "Tim Moore",
    "party": "R",
    "incumbent": true,
-   "photo_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Moore_Tim_119th_Congress_%28cropped2%29.jpg?width=400"
+   "photo_url": "https://xbpimnerxjpwqnicwpec.supabase.co/storage/v1/object/public/headshots/nc14_moore_2026-tim-moore.jpg",
+   "photo_source": "Wikimedia Commons / Public domain"
   },
   {
    "candidate_id": "nc14_womack_2026",
@@ -225,5 +243,6 @@
    "incumbent": false,
    "photo_url": ""
   }
- ]
+ ],
+ "note": "photo_url points at the Supabase Storage `headshots` bucket for candidates whose portrait was mirrored; see CREDITS.md for provenance and licences."
 }

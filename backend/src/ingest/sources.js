@@ -13,6 +13,16 @@ import { slugify } from './util.js';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const SOURCES_DIR = join(__dirname, '..', '..', 'data', 'sources');
 
+// Portraits for competitive seats are mirrored into this Supabase Storage bucket
+// so the plugin never hotlinks a third-party host at render time. Treat a URL
+// pointing at the bucket as authoritative — see ingestPhotosFromSource.
+export const HEADSHOTS_BUCKET = 'headshots';
+const MIRRORED_PREFIX = `/storage/v1/object/public/${HEADSHOTS_BUCKET}/`;
+
+export function isMirroredPortrait(photoUrl) {
+  return typeof photoUrl === 'string' && photoUrl.includes(MIRRORED_PREFIX);
+}
+
 function loadDrop(type) {
   const file = join(SOURCES_DIR, `${type}.json`);
   if (!existsSync(file)) return null;
@@ -194,17 +204,28 @@ export function ingestStateGaMetrics(cycle = CYCLE) {
 // carries name/party/incumbent from the seed files, and re-writing the row
 // would discard fields this drop knows nothing about. Candidates the drop
 // omits keep whatever they already had (or the initials fallback).
+//
+// Portraits mirrored into the Supabase Storage `headshots` bucket outrank this
+// drop. Those URLs are deliberate and self-hosted, so re-pointing a row at
+// ncleg.gov on every ingest would silently undo the mirror. To replace a
+// mirrored portrait, clear photo_url for that candidate first.
 export function ingestPhotosFromSource(cycle = CYCLE) {
   const data = loadDrop('photos');
   if (!data) return null;
   const upd = db.prepare(`UPDATE candidates SET photo_url = ?, photo_source = ?
     WHERE candidate_id = ? AND election_cycle = ?`);
+  const current = db.prepare(`SELECT photo_url FROM candidates
+    WHERE candidate_id = ? AND election_cycle = ?`);
   let n = 0;
+  let mirrored = 0;
   for (const p of data.photos || []) {
     if (!p.photo_url) continue;
+    const row = current.get(p.candidate_id, cycle);
+    if (row && isMirroredPortrait(row.photo_url)) { mirrored++; continue; }
     const res = upd.run(p.photo_url, p.photo_source || data.source || null, p.candidate_id, cycle);
     if (res.changes) n++;
   }
-  console.log(`[photos] updated ${n} candidate portraits (${data.source || 'photos'})`);
-  return { source: data.source || 'photos', count: n };
+  console.log(`[photos] updated ${n} candidate portraits (${data.source || 'photos'})`
+    + (mirrored ? `, kept ${mirrored} mirrored to storage` : ''));
+  return { source: data.source || 'photos', count: n, mirrored };
 }
