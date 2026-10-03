@@ -5,6 +5,9 @@ build/
 .DS_Store
 backend/db/
 backend/data/raw/
+# Local `supabase link` state: project ref and cached connection details for one
+# developer's machine.
+supabase/.temp/
 .venv/
 *.sqlite
 *.sqlite-wal

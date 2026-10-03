@@ -18,8 +18,8 @@ export function ingestCivitas(cycle = CYCLE) {
   // photos drop (see scripts/fetch-photos.mjs), and replacing the row would
   // silently wipe a portrait on every re-ingest of this seed.
   const insCand = db.prepare(`INSERT INTO candidates
-    (candidate_id, district_id, election_cycle, name, party, incumbent, website)
-    VALUES (?, ?, ?, ?, ?, ?, '')
+    (candidate_id, district_id, election_cycle, name, party, incumbent)
+    VALUES (?, ?, ?, ?, ?, ?)
     ON CONFLICT(candidate_id) DO UPDATE SET
       district_id = excluded.district_id,
       election_cycle = excluded.election_cycle,

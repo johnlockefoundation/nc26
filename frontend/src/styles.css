@@ -183,7 +183,6 @@
 
 /* Map (Leaflet) */
 .map-wrap { position: relative; border-radius: 14px; overflow: hidden; border: 1px solid var(--line); }
-.map-loading { padding: 80px; text-align: center; color: var(--muted); }
 .map-container { width: 100%; height: 560px; background: #091322; }
 @media (max-width: 720px) { .map-container { height: 420px; } }
 
@@ -292,7 +291,6 @@
   border-radius: 16px; padding: 20px; box-shadow: var(--shadow);
 }
 .panel-title { font-family: var(--font-display); font-size: 21px; font-weight: 700; margin: 0 0 10px; letter-spacing: -0.01em; }
-.panel-candidates { font-family: var(--font-display); font-size: 15px; margin-bottom: 8px; }
 .cand-d { color: var(--d); font-weight: 700; }
 .cand-r { color: var(--r); font-weight: 700; }
 .vs { color: var(--muted); font-weight: 400; }
@@ -321,8 +319,6 @@
 .candidate-party.party-d { background: var(--d); }
 .candidate-party.party-r { background: var(--r); }
 .candidate-name { font-family: var(--font-display); font-size: 15px; font-weight: 700; letter-spacing: -0.01em; }
-.candidate-site { font-size: 11.5px; color: var(--accent); text-decoration: none; }
-.candidate-site:hover { text-decoration: underline; }
 
 /* Metrics: full-width horizontal rows so values never wrap */
 .metrics { display: flex; flex-direction: column; gap: 8px; }
@@ -383,7 +379,7 @@
 /* A folded box that does have a figure to show -- MONEY. The value is pushed
    hard right and the caret follows it, which is the arrangement .metric already
    uses, so a folded MONEY is laid out exactly like an unfolded one and the two
-   are indistinguishable from POLLS or a market quote. */
+   are indistinguishable from a market quote. */
 .collapsible-metric-value { margin-left: auto; }
 
 /* An elongated box: same border, radius and title row as .metric, body always
@@ -442,7 +438,6 @@
 .reg-d { background: var(--d); }
 .reg-r { background: var(--r); }
 .reg-u { background: #8b9cb0; }
-.reg-b { background: var(--accent); }
 .vel-bar-chg { width: 62px; flex: none; text-align: right; color: var(--ink); font-variant-numeric: tabular-nums; }
 .vel-bar-chg.up { color: #4ade80; }
 .vel-bar-chg.down { color: #f87171; }
@@ -482,15 +477,9 @@ a.money-row:hover { color: var(--accent); }
 .money-row-note { font-size: 10.5px; color: var(--muted); font-style: italic; flex: none; }
 .money-foot { font-size: 10.5px; letter-spacing: 0.04em; color: var(--muted); margin-top: 8px; }
 
-/* Collapsible section (district profile) */
-.collapsible > summary { display: flex; align-items: center; justify-content: space-between; gap: 10px; cursor: pointer; list-style: none; }
-.collapsible > summary::-webkit-details-marker { display: none; }
-.collapsible > summary:focus-visible { outline: 1px solid var(--accent); outline-offset: 3px; border-radius: 3px; }
-.collapsible-title { font-family: var(--font-display); font-size: 11px; letter-spacing: 0.14em; color: var(--muted); }
-.collapsible > summary:hover .collapsible-title { color: var(--accent); }
+/* The disclosure caret, shared by the folded metric boxes above. */
 .collapsible-caret { flex: none; width: 7px; height: 7px; color: var(--muted); border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; transform: rotate(-45deg); transition: transform 0.15s ease; }
-.collapsible[open] > summary .collapsible-caret { transform: rotate(45deg); }
-.collapsible-body { padding-top: 10px; }
+.collapsible-metric[open] > summary .collapsible-caret { transform: rotate(45deg); }
 
 /* District profile */
 .profile-stats { display: flex; gap: 18px; border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
@@ -519,7 +508,6 @@ a.money-row:hover { color: var(--accent); }
 
 .sources ul { margin: 0; padding-left: 16px; font-size: 12px; color: var(--muted); }
 .sources li { margin-bottom: 4px; }
-.panel-footer { margin-top: 18px; padding-top: 10px; border-top: 1px solid var(--line); font-size: 11px; }
 
 .panel-loading { padding: 60px 0; text-align: center; color: var(--muted); }
 .error-banner { background: rgba(153, 27, 27, 0.12); color: #fca5a5; border: 1px solid rgba(153, 27, 27, 0.4); border-radius: 10px; padding: 10px 14px; margin-bottom: 12px; font-size: 13px; }

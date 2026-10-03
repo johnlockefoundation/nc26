@@ -21,6 +21,14 @@ export function initSchema() {
   if (!cols.some((c) => c.name === 'photo_source')) {
     db.exec(`ALTER TABLE candidates ADD COLUMN photo_source TEXT`);
   }
+  // Candidate websites are out of product scope, so the column is dropped rather
+  // than left dormant: a schema.sql edit cannot remove it from a database that
+  // already exists, and CREATE TABLE IF NOT EXISTS would leave the old shape in
+  // place for every existing local db. Requires SQLite 3.35+ (node:sqlite ships
+  // far past that).
+  if (cols.some((c) => c.name === 'website')) {
+    db.exec(`ALTER TABLE candidates DROP COLUMN website`);
+  }
   // state_funds and district_demographics are new tables rather than altered
   // columns, so there is nothing to migrate for them; schema.sql creates both
   // with CREATE TABLE IF NOT EXISTS.

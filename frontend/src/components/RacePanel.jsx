@@ -22,9 +22,6 @@ function CandidateCards({ candidates }) {
             <span className={`candidate-party party-${String(c.party).toLowerCase()}`}>{c.party}</span>
           </div>
           <div className={`candidate-name cand-${String(c.party).toLowerCase()}`}>{c.name}</div>
-          {c.website && (
-            <a className="candidate-site" href={c.website} target="_blank" rel="noreferrer">website ↗</a>
-          )}
         </div>
       ))}
     </div>

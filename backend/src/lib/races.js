@@ -22,7 +22,7 @@ export function raceTitle(raceType, districtNumber, districtId) {
 }
 
 function candidateList(districtId, cycle) {
-  return db.prepare(`SELECT candidate_id, name, party, incumbent, website, photo_url
+  return db.prepare(`SELECT candidate_id, name, party, incumbent, photo_url
     FROM candidates WHERE district_id = ? AND election_cycle = ?
     ORDER BY CASE party WHEN 'D' THEN 0 WHEN 'R' THEN 1 ELSE 2 END`).all(districtId, cycle);
 }

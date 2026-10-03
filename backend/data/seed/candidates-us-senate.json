@@ -8,7 +8,6 @@
       "name": "Roy Cooper",
       "party": "D",
       "incumbent": false,
-      "website": "https://roycooper.com/",
       "photo_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Gov.%20Cooper%20Cropped.jpg?width=400"
     },
     {
@@ -17,7 +16,6 @@
       "name": "Michael Whatley",
       "party": "R",
       "incumbent": false,
-      "website": "https://www.whatleyfornc.com/",
       "photo_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Michael%20Whatley%20(53809322795)%20(cropped).jpg?width=400"
     }
   ]

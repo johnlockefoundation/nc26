@@ -8,7 +8,6 @@
    "name": "Don Davis",
    "party": "D",
    "incumbent": true,
-   "website": "https://www.dondavisforcongress.com/",
    "photo_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Portrait%20of%20Congressman%20Don%20Davis.jpg?width=400"
   },
   {
@@ -17,7 +16,6 @@
    "name": "Laurie Buckhout",
    "party": "R",
    "incumbent": false,
-   "website": "https://www.buckhoutforcongress.com/",
    "photo_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Laurie%20Buckhout%20(cropped).jpg?width=400"
   },
   {
@@ -26,7 +24,6 @@
    "name": "Deborah Ross",
    "party": "D",
    "incumbent": true,
-   "website": "",
    "photo_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Deborah_Ross_117th_U.S_Congress.jpg?width=400"
   },
   {
@@ -35,7 +32,6 @@
    "name": "Gene Douglass",
    "party": "R",
    "incumbent": false,
-   "website": "",
    "photo_url": ""
   },
   {
@@ -44,7 +40,6 @@
    "name": "Greg Murphy",
    "party": "R",
    "incumbent": true,
-   "website": "",
    "photo_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Rep._Greg_Murphy_116th_Congress_Portrait.jpg?width=400"
   },
   {
@@ -53,7 +48,6 @@
    "name": "Raymond Smith Jr.",
    "party": "D",
    "incumbent": false,
-   "website": "",
    "photo_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Rep._Raymond_E._Smith_Jr.jpg?width=400"
   },
   {
@@ -62,7 +56,6 @@
    "name": "Valerie Foushee",
    "party": "D",
    "incumbent": true,
-   "website": "",
    "photo_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Valerie_Foushee_118th_Congress_3.jpg?width=400"
   },
   {
@@ -71,7 +64,6 @@
    "name": "Max Ganorkar",
    "party": "R",
    "incumbent": false,
-   "website": "",
    "photo_url": ""
   },
   {
@@ -80,7 +72,6 @@
    "name": "Virginia Foxx",
    "party": "R",
    "incumbent": true,
-   "website": "",
    "photo_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Virginia_Foxx_official_photo_%28slight_crop%29.jpg?width=400"
   },
   {
@@ -89,7 +80,6 @@
    "name": "Chuck Hubbard",
    "party": "D",
    "incumbent": false,
-   "website": "",
    "photo_url": ""
   },
   {
@@ -98,7 +88,6 @@
    "name": "Addison McDowell",
    "party": "R",
    "incumbent": true,
-   "website": "",
    "photo_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Addison_McDowell_119th_congress.jpg?width=400"
   },
   {
@@ -107,7 +96,6 @@
    "name": "Cyril Jefferson",
    "party": "D",
    "incumbent": false,
-   "website": "",
    "photo_url": ""
   },
   {
@@ -116,7 +104,6 @@
    "name": "David Rouzer",
    "party": "R",
    "incumbent": true,
-   "website": "",
    "photo_url": "https://commons.wikimedia.org/wiki/Special:FilePath/David_Rouzer_official_photo.jpg?width=400"
   },
   {
@@ -125,7 +112,6 @@
    "name": "Kim Hardy",
    "party": "D",
    "incumbent": false,
-   "website": "",
    "photo_url": ""
   },
   {
@@ -134,7 +120,6 @@
    "name": "Mark Harris",
    "party": "R",
    "incumbent": true,
-   "website": "",
    "photo_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Harris_Mark_119th_Congress_%28crop2%29.jpg?width=400"
   },
   {
@@ -143,7 +128,6 @@
    "name": "Colby Watson",
    "party": "D",
    "incumbent": false,
-   "website": "",
    "photo_url": ""
   },
   {
@@ -152,7 +136,6 @@
    "name": "Richard Hudson",
    "party": "R",
    "incumbent": true,
-   "website": "",
    "photo_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Richard_Hudson%2C_official_portrait%2C_115th_Congress_%28cropped%29.jpg?width=400"
   },
   {
@@ -161,7 +144,6 @@
    "name": "Richard Ojeda",
    "party": "D",
    "incumbent": false,
-   "website": "",
    "photo_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Richard_Ojeda_shirt.jpg?width=400"
   },
   {
@@ -170,7 +152,6 @@
    "name": "Pat Harrigan",
    "party": "R",
    "incumbent": true,
-   "website": "",
    "photo_url": "https://commons.wikimedia.org/wiki/Special:FilePath/CongressmanPatHarriganPortrait.jpg?width=400"
   },
   {
@@ -179,7 +160,6 @@
    "name": "Ashley Bell",
    "party": "D",
    "incumbent": false,
-   "website": "",
    "photo_url": ""
   },
   {
@@ -188,7 +168,6 @@
    "name": "Jamie Ager",
    "party": "D",
    "incumbent": false,
-   "website": "",
    "photo_url": ""
   },
   {
@@ -197,7 +176,6 @@
    "name": "Jennifer Balkcom",
    "party": "R",
    "incumbent": false,
-   "website": "",
    "photo_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Jennifer%20Balkcom%20(2025).png?width=400"
   },
   {
@@ -206,7 +184,6 @@
    "name": "Alma Adams",
    "party": "D",
    "incumbent": true,
-   "website": "",
    "photo_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Alma_Adams_official_portrait_%283x4_cropped%29.jpg?width=400"
   },
   {
@@ -215,7 +192,6 @@
    "name": "Jack Codiga",
    "party": "R",
    "incumbent": false,
-   "website": "",
    "photo_url": ""
   },
   {
@@ -224,7 +200,6 @@
    "name": "Brad Knott",
    "party": "R",
    "incumbent": true,
-   "website": "",
    "photo_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Rep._Brad_Knott_official_photo%2C_119th_Congress.jpg?width=400"
   },
   {
@@ -232,8 +207,7 @@
    "district_id": "NC-13",
    "name": "Paul Barringer",
    "party": "D",
-   "incumbent": false,
-   "website": ""
+   "incumbent": false
   },
   {
    "candidate_id": "nc14_moore_2026",
@@ -241,7 +215,6 @@
    "name": "Tim Moore",
    "party": "R",
    "incumbent": true,
-   "website": "",
    "photo_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Moore_Tim_119th_Congress_%28cropped2%29.jpg?width=400"
   },
   {
@@ -250,7 +223,6 @@
    "name": "LaKesha Womack",
    "party": "D",
    "incumbent": false,
-   "website": "",
    "photo_url": ""
   }
  ]
