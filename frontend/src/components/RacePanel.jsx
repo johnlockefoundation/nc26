@@ -52,13 +52,23 @@ export default function RacePanel({ race, loading }) {
   if (!race) return null;
 
   const polls = race.polls || {};
-  const markets = race.markets || {};
-  // State races read their money from state_funds; federal races use the
-  // party-aggregate fundraising summary. Both are shaped the same way, so
-  // MoneyBlock renders either without knowing which it has.
-  const moneyS = race.state_funds || race.money || {};
-  const marketList = race.market_list || (markets.available ? [markets] : []);
+
+  // Money is picked by chamber, not by a `||` chain. Every read returns the full
+  // shape with available false, so `race.state_funds || race.money` always found
+  // a truthy object -- state_funds_summary's `{available: false}` on a
+  // congressional seat -- and never reached the federal summary that did have a
+  // figure. A General Assembly seat reads state_funds; a congressional one reads
+  // the party-aggregate fundraising summary. Both are shaped alike.
   const isStateRace = race.race_type === 'state_senate' || race.race_type === 'state_house';
+  const moneyS = isStateRace ? (race.state_funds || {}) : (race.money || {});
+
+  // A non-empty market_list wins, else the single markets summary, else nothing.
+  // Checked by length rather than `||` because an empty array is truthy in
+  // JavaScript and would shadow a populated `markets`.
+  const markets = race.markets || {};
+  const marketList = (Array.isArray(race.market_list) && race.market_list.length)
+    ? race.market_list
+    : (markets.available ? [markets] : []);
 
   // Two datasets are gated to federal seats rather than shown-when-present.
   //
@@ -118,9 +128,8 @@ export default function RacePanel({ race, loading }) {
     disclosureBlocks.unshift(<Demographics key="demographics" profile={race.profile} />);
   }
 
-  // MONEY reads its totals from state_funds on a General Assembly seat and from
-  // the federal fundraising summary on a congressional one; both are shaped alike,
-  // and both are expected for every seat. State senate money in particular is
+  // Both money sources are expected for their own chamber and absent means
+  // pending rather than inapplicable. State senate money in particular is
   // intended to be loaded, so an absent row there is pending rather than
   // inapplicable and gets the notice.
   const money = moneyS?.available

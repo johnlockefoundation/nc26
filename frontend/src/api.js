@@ -407,20 +407,26 @@ export function getRace(districtId) {
         // prefers market_list when it is non-empty, so both have to be present
         // for a venue list to appear if a second source is ever added.
         //
-        // money and state_funds are two keys for one widget, not a choice
-        // between them: MoneyBlock reads state_funds || money, so a congressional
-        // seat gets its box from `money` and a General Assembly seat from
-        // `state_funds`. Both being absent is the only case that renders nothing.
-        return overlayPortraits(
-          overlayVolatile(
-            overlayVolatile(
-              overlayVolatile(
-                overlayVolatile(
-                  overlayVolatile(overlayVolatile(base, polls), markets),
-                  marketList),
-                money),
-              stateFunds),
-            vitals));
+        // All six go in ONE call, wrapped in an object keyed by field name.
+        // overlayVolatile merges the live object's own keys onto the record, so
+        // passing a bare summary merged it flat: markets_summary's `available`,
+        // `advantage` and `delta` landed at the top level of the race and
+        // `race.markets` stayed undefined. Every widget then read an empty
+        // summary and rendered its pending notice with a perfectly good figure
+        // sitting in the record under the wrong name. That silently discarded
+        // polling, markets and money alike, since 7230618.
+        //
+        // One call rather than six chained ones so the nesting is visible at the
+        // call site. A null result is skipped by overlayVolatile, so a failed
+        // read leaves the bundled record untouched.
+        return overlayPortraits(overlayVolatile(base, {
+          polls,
+          markets,
+          market_list: marketList,
+          money,
+          state_funds: stateFunds,
+          vitals,
+        }));
       });
   }
   return getJson(`${API_BASE}/races/${districtId}`);
