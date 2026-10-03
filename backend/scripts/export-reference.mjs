@@ -53,15 +53,23 @@ const RACE_TYPES = ['us_house', 'us_senate', 'state_senate', 'state_house'];
 // hand-entered in Supabase (`money` for federal races, `state_funds` for
 // General Assembly ones); markets keep their live fetch.
 //
-// `profile` and `vitals` are deliberately NOT here. They look volatile because
-// they sit beside the signal blocks in the panel, but they are fixed for the
-// cycle: the profile is a Census ACS 2024 5-year extract plus fixed 2024
-// results, and the vitals are the delta between two dated NCSBE snapshots.
-// Bundling them is what lets the plugin's DEMOGRAPHICS block render with no
-// network at all, and it is the whole reason demographics is a category across
+// `vitals` joined this list for a different reason than the others. It was
+// treated as fixed for the cycle -- the delta between two dated NCSBE
+// snapshots -- and bundled on that basis. The rows it was bundling were
+// invented placeholders (backend/scripts/generate-mock-ga.mjs, every row
+// is_mock = 1), so "fixed for the cycle" turned out to mean "frozen fiction
+// that shipped to every site". Real extracts get loaded into Supabase and read
+// through vitals_summary() like every other panel figure.
+//
+// `profile` is deliberately still absent from this list. It is a genuine Census
+// ACS 2024 5-year extract plus fixed 2024 results, so it is really fixed for
+// the cycle, and bundling it is what lets the plugin's DEMOGRAPHICS block render
+// with no network at all -- the whole reason demographics is a category across
 // all four chambers rather than only on the seats Supabase happens to cover.
+// The distinction the list now draws is verified-against-a-real-extract versus
+// not, not how volatile the number looks.
 const VOLATILE_RACE_KEYS = [
-  'polls', 'poll_detail', 'markets', 'market_list', 'money', 'state_funds',
+  'polls', 'poll_detail', 'markets', 'market_list', 'money', 'state_funds', 'vitals',
   'news', 'coverage', 'last_updated',
 ];
 

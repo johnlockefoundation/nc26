@@ -13,9 +13,11 @@
 // renders per race -- but the panel treats them as three independent categories
 // rather than one category with three bodies, because that is what they are.
 //
-// Placeholder figures. is_mock comes from the API, so nothing downstream can
-// read these as NCSBE or Census filings; the panel carries a single disclaimer
-// rather than a notice per section.
+// Real figures, and deliberately bundled rather than read live. The profile is a
+// Census ACS 2024 5-year extract plus fixed 2024 results, so it is genuinely
+// fixed for the cycle; shipping it in the plugin is what lets this block render
+// with no network at all, and is why demographics is a category on all four
+// chambers rather than only on the seats Supabase happens to cover.
 
 import CollapsibleMetric from './CollapsibleMetric.jsx';
 

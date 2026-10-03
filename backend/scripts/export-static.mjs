@@ -23,6 +23,27 @@ initSchema();
 
 const RACE_TYPES = ['us_house', 'us_senate', 'state_senate', 'state_house'];
 
+// The same list the plugin export strips, and for the same reason. The demo is
+// static, so anything left in here is what the demo shows forever -- which is
+// how the mock state_funds and vitals reached the public site even after the
+// plugin export had stopped carrying them. Every key below is read live from
+// Supabase by api.js, and a seat with no live row simply renders without the
+// block. `profile` is deliberately kept: it is a real Census extract, fixed for
+// the cycle, not a placeholder.
+const VOLATILE_RACE_KEYS = [
+  'polls', 'markets', 'market_list', 'money', 'state_funds', 'vitals',
+  'news', 'coverage', 'last_updated',
+];
+
+function stripVolatile(race) {
+  const out = {};
+  for (const [k, v] of Object.entries(race)) {
+    if (VOLATILE_RACE_KEYS.includes(k)) continue;
+    out[k] = v;
+  }
+  return out;
+}
+
 function writeJson(rel, data) {
   const abs = join(OUT, rel);
   mkdirSync(dirname(abs), { recursive: true });
@@ -64,7 +85,7 @@ const exported = new Set();
 for (const { district_id } of districts) {
   const race = races.getRace(district_id, CYCLE);
   if (!race) continue;
-  writeJson(`race/${district_id}.json`, race);
+  writeJson(`race/${district_id}.json`, stripVolatile(race));
   exported.add(district_id);
 }
 

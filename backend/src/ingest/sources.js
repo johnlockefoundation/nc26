@@ -153,53 +153,6 @@ export function ingestNewsFromSource(cycle = CYCLE) {
   return { source: data.source || 'news', count: n };
 }
 
-// State legislative money. Reads from the seed folder rather than a live drop,
-// and carries is_mock = 1: the figures are placeholders until an NC SBOE
-// extract replaces them. is_mock is written through to the API so the UI can
-// label them and nothing downstream can mistake them for reported totals.
-export function ingestStateGaMetrics(cycle = CYCLE) {
-  const fundsFile = join(SOURCES_DIR, '..', 'seed', 'state-funds-mock.json');
-  const vitalsFile = join(SOURCES_DIR, '..', 'seed', 'district-vitals-mock.json');
-  if (!existsSync(fundsFile)) return null;
-  const funds = JSON.parse(readFileSync(fundsFile, 'utf8'));
-
-  db.prepare(`DELETE FROM state_funds WHERE election_cycle = ?`).run(cycle);
-  const ins = db.prepare(`INSERT OR REPLACE INTO state_funds
-    (district_id, candidate_id, election_cycle, candidate_name, party, total_raised, total_spent,
-     cash_on_hand, contributions, small_donors, reporting_period, source_url, is_mock, updated_at)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`);
-  const t = nowIso();
-  let fundRows = 0;
-  for (const r of funds.rows || []) {
-    if (r.election_cycle && r.election_cycle !== cycle) continue;
-    ins.run(r.district_id, r.candidate_id, cycle, r.candidate_name, r.party, r.total_raised, r.total_spent,
-      r.cash_on_hand, r.contributions, r.small_donors, r.reporting_period || '', r.source_url || '',
-      r.is_mock ? 1 : 0, t);
-    fundRows++;
-  }
-
-  let vitalRows = 0;
-  if (existsSync(vitalsFile)) {
-    const vitals = JSON.parse(readFileSync(vitalsFile, 'utf8'));
-    db.prepare(`DELETE FROM district_vitals WHERE election_cycle = ?`).run(cycle);
-    const insV = db.prepare(`INSERT OR REPLACE INTO district_vitals
-      (district_id, snapshot, snapshot_date, election_cycle, registered_total, registered_dem, registered_rep,
-       registered_unaff, ballots_req_dem, ballots_req_rep, ballots_req_unaff, is_mock, source, updated_at)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`);
-    for (const r of vitals.rows || []) {
-      if (r.election_cycle && r.election_cycle !== cycle) continue;
-      insV.run(r.district_id, r.snapshot, r.snapshot_date, cycle, r.registered_total, r.registered_dem,
-        r.registered_rep, r.registered_unaff, r.ballots_req_dem, r.ballots_req_rep, r.ballots_req_unaff,
-        r.is_mock ? 1 : 0, r.source || '', t);
-      vitalRows++;
-    }
-  }
-
-  const mock = fundRows || vitalRows;
-  console.log(`[ga-metrics] ${fundRows} candidate money rows, ${vitalRows} voter-vital rows${mock ? ' (PLACEHOLDER data)' : ''}`);
-  return { source: 'ga-metrics', funds: fundRows, vitals: vitalRows, is_mock: mock > 0 };
-}
-
 // Candidate portraits are an UPDATE, never a replace: a candidate row also
 // carries name/party/incumbent from the seed files, and re-writing the row
 // would discard fields this drop knows nothing about. Candidates the drop

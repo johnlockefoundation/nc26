@@ -350,15 +350,18 @@ export function getRace(districtId) {
       .catch(() => {
         throw new Error(`race ${districtId} not in the bundled reference layer`);
       })
-      .then((base) => {
-        // Polling is overlaid from Supabase on the plugin only, and the two
-        // bundled targets are treated differently on purpose.
+      .then(async (base) => {
+        // The four overlays below are read from Supabase rather than bundled,
+        // and the two bundled targets are treated differently on purpose.
         //
-        // The plugin's reference layer omits polls entirely (see
-        // VOLATILE_RACE_KEYS in export-reference.mjs): they are hand-entered, so
-        // freezing one into a versioned file would give it no timestamp and it
-        // would render as a live reading for as long as the plugin was
-        // installed. It reads them live instead.
+        // The plugin's reference layer omits all of them (see VOLATILE_RACE_KEYS
+        // in export-reference.mjs). Polls are hand-entered, so freezing one into
+        // a versioned file would give it no timestamp and it would render as a
+        // live reading for as long as the plugin was installed. General Assembly
+        // money and voter velocity were bundled too, and that was worse than a
+        // stale figure: the rows were invented placeholders, and a mock baked
+        // into a shipped JSON file is indistinguishable from a real one once it
+        // reaches a site. All of them read live instead.
         //
         // The Pages demo-data is the opposite case. It is regenerated from the
         // same drop on every deploy, so it is current by construction rather
@@ -366,13 +369,25 @@ export function getRace(districtId) {
         // read would blank a real average the build already holds. So it is
         // left alone.
         //
-        // The payload shape is identical either way, so PollBlock is written
+        // The payload shape is identical either way, so each block is written
         // once against the contract and does not know which target it is on.
         if (!LIVE) return base;
-        return overlayVolatile(base, awaitQuietly(
-          `polls:${districtId}`,
-          () => rpc('poll_summary', { p_race_id: districtId, p_cycle: CYCLE }),
-        )).then(overlayPortraits);
+        // Four independent reads, none of which can fail the page. Polling,
+        // General Assembly money and voter velocity are all per-seat and all
+        // optional, so a seat with rows in one and not the others must render
+        // the blocks it has rather than all three or none. Each resolves to null
+        // on failure and overlayVolatile skips nulls, so a seat the database has
+        // nothing for is simply a seat without those blocks.
+        const [polls, stateFunds, vitals] = await Promise.all([
+          awaitQuietly(`polls:${districtId}`,
+            () => rpc('poll_summary', { p_race_id: districtId, p_cycle: CYCLE })),
+          awaitQuietly(`state_funds:${districtId}`,
+            () => rpc('state_funds_summary', { p_race_id: districtId, p_cycle: CYCLE })),
+          awaitQuietly(`vitals:${districtId}`,
+            () => rpc('vitals_summary', { p_race_id: districtId, p_cycle: CYCLE })),
+        ]);
+        return overlayPortraits(
+          overlayVolatile(overlayVolatile(overlayVolatile(base, polls), stateFunds), vitals));
       });
   }
   return getJson(`${API_BASE}/races/${districtId}`);

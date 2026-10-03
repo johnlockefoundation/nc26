@@ -18,9 +18,13 @@
 // carries a Census profile, so a race renders either these two blocks or a
 // DEMOGRAPHICS block, never a mix.
 //
-// Placeholder figures. is_mock comes from the API, so nothing downstream can read
-// these as NCSBE records; the panel carries a single disclaimer rather than a
-// notice per block.
+// Read live from Supabase via vitals_summary(), one seat at a time, and nothing
+// is bundled. These blocks used to ship inside the plugin as placeholder
+// figures that were invented from the partisan index -- which meant a fabricated
+// registration count on every installed site, indistinguishable from a real one.
+// The tables behind them are empty and stay that way until a real per-district
+// extract exists, so today these blocks simply do not appear. A missing block is
+// honest; an invented one is not.
 
 import CollapsibleMetric from './CollapsibleMetric.jsx';
 

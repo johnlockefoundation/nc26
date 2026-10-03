@@ -184,7 +184,10 @@ CREATE TABLE IF NOT EXISTS district_profiles (
 -- per committee, so the raw rows are kept at that grain and summed by party
 -- when the API assembles a race. The panel shows one advantage figure for a
 -- state race, exactly as it does for a federal one.
--- is_mock = 1 means placeholder figures pending an NC SBOE extract.
+-- is_mock is a load-time guard, not a label. Nothing sets it any more: the
+-- placeholder generator that used to fill this table is deleted, and the read
+-- path (state_funds_summary) filters `not is_mock`, so a half-finished or
+-- fabricated extract loaded by mistake is dropped rather than published.
 CREATE TABLE IF NOT EXISTS state_funds (
   district_id     TEXT NOT NULL,
   candidate_id    TEXT NOT NULL,
@@ -210,8 +213,10 @@ CREATE TABLE IF NOT EXISTS state_funds (
 -- carries the actual date because the day matters, not just the year.
 -- NCSBE publishes these by COUNTY; legislative districts are built from
 -- county parts, so real per-district figures need an apportionment step that
--- does not exist as a published dataset. Rows are currently placeholders.
--- is_mock = 1 means invented figures.
+-- does not exist as a published dataset. That is why the table is empty: a
+-- district-level number cannot honestly be built from county totals, so the
+-- REGISTRATIONS and BALLOTS blocks render nothing until it can.
+-- is_mock is a load-time guard here too; vitals_summary() filters on it.
 CREATE TABLE IF NOT EXISTS district_vitals (
   district_id          TEXT NOT NULL,
   snapshot             TEXT NOT NULL,      -- '2024' | '2026'
