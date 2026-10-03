@@ -3,6 +3,7 @@ import MetricBlock from './MetricBlock.jsx';
 import CivitasPartisan from './CivitasPartisan.jsx';
 import Demographics from './Demographics.jsx';
 import MoneyBlock from './MoneyBlock.jsx';
+import PendingMetric from './PendingMetric.jsx';
 import PollBlock from './PollBlock.jsx';
 import { Registration, Ballot } from './VoterVelocity.jsx';
 import DistrictNews from './DistrictNews.jsx';
@@ -59,11 +60,24 @@ export default function RacePanel({ race, loading }) {
   const marketList = race.market_list || (markets.available ? [markets] : []);
   const isStateRace = race.race_type === 'state_senate' || race.race_type === 'state_house';
 
-  // One block per provider. A seat with no market gets none, rather than a box
-  // reading NO MARKET, for the same reason PollBlock stays silent when there is
-  // no polling: the blocks that carry a figure should not be buried under the
+  // Two datasets are gated to federal seats rather than shown-when-present.
+  //
+  // Markets: Kalshi lists no North Carolina state-legislative market, so there
+  // is no such thing as a pending one. Rendering an empty box on 170 state seats
+  // would assert a pipeline that does not exist.
+  //
+  // Polls: no state-legislative poll has been entered and none is expected before
+  // the primaries. Same reasoning, and the comment that used to sit on the
+  // PollBlock call -- warning that a hardcoded chamber test would swallow a poll
+  // the day someone seeded one -- is now the decision itself: state races are
+  // federal-only by product decision, not by accident.
+  const isFederal = !isStateRace;
+
+  // One block per provider. A federal seat with no market gets none rather than a
+  // box reading NO MARKET, for the same reason PollBlock stays silent when there
+  // is no polling: the blocks that carry a figure should not be buried under the
   // ones that do not.
-  const marketBlocks = marketList.map((m) => (
+  const marketBlocks = isFederal ? marketList.map((m) => (
     <MetricBlock
       key={m.provider}
       title={(m.provider || 'MARKET').toUpperCase()}
@@ -71,7 +85,7 @@ export default function RacePanel({ race, loading }) {
       summary={m}
       delta={m.delta}
     />
-  ));
+  )) : [];
 
   // Three independent disclosures, in one list, so a reader can open any of them
   // without the others. Which of them a seat gets is decided by the payload
@@ -80,21 +94,38 @@ export default function RacePanel({ race, loading }) {
   // picks up another dataset grows its own block. Each returns null on its own
   // when its dataset is absent, so the list needs no filtering here. MONEY sits
   // with them because it folds the same way; only the right-hand slot differs.
-  const disclosureBlocks = [<Demographics key="demographics" profile={race.profile} />];
-  if (race.vitals?.available) {
-    disclosureBlocks.push(<Registration key="registration" vitals={race.vitals} />);
-    disclosureBlocks.push(<Ballot key="ballot" vitals={race.vitals} />);
+  // Voter velocity is a General Assembly dataset: registration and ballot-request
+  // figures come from the state, and no congressional analogue is collected. A
+  // federal seat therefore does not get a pending line for them -- there is
+  // nothing pending -- it simply has no such blocks.
+  const disclosureBlocks = [];
+  if (isStateRace) {
+    if (race.vitals?.available) {
+      disclosureBlocks.push(<Registration key="registration" vitals={race.vitals} />);
+      disclosureBlocks.push(<Ballot key="ballot" vitals={race.vitals} />);
+    } else {
+      // Expected for this seat and absent, which is the one case the notice is
+      // for. These were the mock figures removed in c4c22e7; real NCSBE extracts
+      // are the intended replacement.
+      disclosureBlocks.push(<PendingMetric key="registration-pending" title="REGISTRATIONS" />);
+      disclosureBlocks.push(<PendingMetric key="ballot-pending" title="BALLOTS" />);
+    }
+  }
+  // The Census profile is a per-district extract keyed to congressional
+  // boundaries, so it stays federal-only for the same reason velocity is
+  // state-only. Only 15 seats have one and no other seat ever will.
+  if (race.profile) {
+    disclosureBlocks.unshift(<Demographics key="demographics" profile={race.profile} />);
   }
 
   // MONEY reads its totals from state_funds on a General Assembly seat and from
-  // the federal fundraising summary on a congressional one; both are shaped alike.
-  const money = (
-    <MoneyBlock
-      key="money"
-      summary={moneyS}
-      candidates={race.candidates}
-    />
-  );
+  // the federal fundraising summary on a congressional one; both are shaped alike,
+  // and both are expected for every seat. State senate money in particular is
+  // intended to be loaded, so an absent row there is pending rather than
+  // inapplicable and gets the notice.
+  const money = moneyS?.available
+    ? <MoneyBlock key="money" summary={moneyS} candidates={race.candidates} />
+    : <PendingMetric key="money-pending" title="MONEY" />;
 
   return (
     <aside className="panel">
@@ -106,12 +137,12 @@ export default function RacePanel({ race, loading }) {
           below it instead of floating under a section heading. */}
       <div className="metrics">
         {isStateRace && <CivitasPartisan partisan={race.partisan} />}
-        {/* Not gated on the chamber and not gated on hasSubstance: PollBlock
-            decides for itself, and returns null when the seat has no polling.
-            A hardcoded chamber test here would silently swallow a state-legislative
-            poll the day someone seeded one, which is the opposite of what the
-            rest of this file does -- every block reads the payload. */}
-        <PollBlock polls={polls} />
+        {/* Federal-only, unlike every other block here. See the isFederal note
+            above: there is no state-legislature poll and no state market, so on
+            a state seat these are not missing data, they are inapplicable ones,
+            and the pending notice would be a false claim about a pipeline that
+            does not exist. */}
+        {isFederal && <PollBlock polls={polls} />}
         {marketBlocks}
         {money}
         {disclosureBlocks}

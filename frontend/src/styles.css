@@ -337,6 +337,13 @@
   border: 1px solid var(--line); border-radius: 12px; padding: var(--metric-pad-y) 14px; background: #0c1524;
 }
 .metric-empty { background: #0a111f; }
+
+/* A dataset that is expected for this seat but has no rows yet. Typeset as an
+   aside, not as a metric: it deliberately does not take --metric-row, so a
+   pending line is shorter than a real figure and cannot be mistaken for one at
+   a glance. Kept out of .metric-value for the same reason. */
+.metric-pending { background: #0a111f; align-items: baseline; }
+.metric-pending-text { font-size: 10.5px; line-height: 1.5; font-weight: 500; }
 .metric-title { font-family: var(--font-display); font-size: 10.5px; letter-spacing: 0.14em; font-weight: 700; color: var(--muted); flex: none; }
 .metric-title-link { color: var(--muted); text-decoration: none; border-bottom: 1px dotted rgba(148, 163, 184, 0.5); }
 .metric-title-link:hover { color: var(--accent); border-bottom-color: var(--accent); }
