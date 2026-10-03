@@ -242,13 +242,20 @@ function overlayMap(base, live) {
 // nothing must leave the bundled record exactly as it found it.
 const HEADSHOTS_BUCKET = 'headshots';
 
-let portraitRead;
+let portraitListing;
 
 // One list per page, not one per race. The promise is memoised rather than the
 // result so two callers racing each other still share a single request.
+//
+// What is memoised is the RAW listing, not a candidate-filtered map. Filtering
+// used to happen once inside this promise against whichever knownIds happened to
+// arrive first, so the first seat a reader opened decided which candidates the
+// whole page could ever see a portrait for: a live portrait for any other seat
+// was already listed by the bucket and still never rendered. The filter is
+// per-call and cheap, because it is a Set lookup against rows already in memory.
 function livePortraits(knownIds) {
-  if (!portraitRead) {
-    portraitRead = (async () => {
+  if (!portraitListing) {
+    portraitListing = (async () => {
       const url = new URL(`/storage/v1/object/list/${HEADSHOTS_BUCKET}`, SUPABASE_URL);
       const res = await fetch(url.toString(), {
         method: 'POST',
@@ -258,27 +265,7 @@ function livePortraits(knownIds) {
         if (!r.ok) throw new Error(`${r.status} storage list`);
         return r.json();
       });
-      const known = knownIds instanceof Set ? knownIds : new Set(knownIds || []);
-      const found = new Map();
-      const unknown = [];
-      for (const entry of res) {
-        // Folder placeholders come back from the list endpoint with a null id.
-        if (!entry || !entry.id || !entry.name) continue;
-        const dot = entry.name.lastIndexOf('.');
-        if (dot < 1) continue;
-        const id = entry.name.slice(0, dot);
-        if (!known.has(id)) { unknown.push(entry.name); continue; }
-        const publicUrl = `${SUPABASE_URL}/storage/v1/object/public/${HEADSHOTS_BUCKET}/${entry.name}`;
-        // Two files for one candidate is ambiguous; pick one deterministically
-        // rather than letting listing order decide.
-        if (found.has(id) && found.get(id) <= publicUrl) continue;
-        found.set(id, publicUrl);
-      }
-      if (unknown.length) {
-        console.warn(`[jce] ${unknown.length} file(s) in ${HEADSHOTS_BUCKET} do not match a candidate_id and were ignored: `
-          + unknown.slice(0, 8).join(', ') + (unknown.length > 8 ? ', …' : ''));
-      }
-      return found;
+      return res;
     })().catch((err) => {
       if (!warned.has('portraits')) {
         warned.add('portraits');
@@ -287,7 +274,30 @@ function livePortraits(knownIds) {
       return null;
     });
   }
-  return portraitRead;
+  return portraitListing.then((entries) => {
+    if (!entries) return null;
+    const known = knownIds instanceof Set ? knownIds : new Set(knownIds || []);
+    const found = new Map();
+    const unknown = [];
+    for (const entry of entries) {
+      // Folder placeholders come back from the list endpoint with a null id.
+      if (!entry || !entry.id || !entry.name) continue;
+      const dot = entry.name.lastIndexOf('.');
+      if (dot < 1) continue;
+      const id = entry.name.slice(0, dot);
+      if (!known.has(id)) { unknown.push(entry.name); continue; }
+      const publicUrl = `${SUPABASE_URL}/storage/v1/object/public/${HEADSHOTS_BUCKET}/${entry.name}`;
+      // Two files for one candidate is ambiguous; pick one deterministically
+      // rather than letting listing order decide.
+      if (found.has(id) && found.get(id) <= publicUrl) continue;
+      found.set(id, publicUrl);
+    }
+    if (unknown.length) {
+      console.warn(`[jce] ${unknown.length} file(s) in ${HEADSHOTS_BUCKET} do not match a candidate_id and were ignored: `
+        + unknown.slice(0, 8).join(', ') + (unknown.length > 8 ? ', …' : ''));
+    }
+    return found;
+  });
 }
 
 async function overlayPortraits(race) {

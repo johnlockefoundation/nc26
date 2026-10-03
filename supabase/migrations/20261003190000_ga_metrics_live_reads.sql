@@ -226,18 +226,16 @@ market_rows as (
 money_rows as (
   select * from public.fundraising where cycle = p_cycle and not is_seed
 ),
-candidate_rows as (
-  select race_id,
-         jsonb_agg(jsonb_build_object(
-           'candidate_id', candidate_id,
-           'name',         name,
-           'party',        party,
-           'incumbent',    incumbent,
-           'photo_url',    photo_url,
-           'photo_source', photo_source
-         ) order by party desc, name) as candidates
-  from public.candidates where cycle = p_cycle group by race_id
-),
+-- candidate_rows is deliberately absent, and that is inherited rather than
+-- forgotten. 20261003140000_map_payload_drops_candidates.sql removed it for a
+-- reason: public.candidates is intentionally never populated, so every seat came
+-- back with candidates: [], overlayVolatile() copies every key Supabase returns
+-- and skips only null, so that empty array counted as a real value and overwrote
+-- the bundled candidate list -- blanking all 120 state House matchup labels.
+--
+-- This migration replaces map_payload wholesale, so it had to carry that removal
+-- across or applying it would have quietly reintroduced the bug. Candidate names
+-- stay bundled; portraits reach the panel through the headshots bucket instead.
 news_rows as (
   select race_id,
          coalesce(jsonb_agg(jsonb_build_object(
@@ -261,11 +259,10 @@ built as (
     (select public.vitals_summary(r.id, p_cycle)) as vitals,
     m.dem_price, m.rep_price, m.provider, m.updated_at as market_updated_at, m.source_url,
     f.dem_amount, f.rep_amount, f.reporting_period,
-    c.candidates, n.news
+    n.news
   from race_rows r
   left join market_rows m  on m.race_id  = r.id
   left join money_rows  f  on f.race_id  = r.id
-  left join candidate_rows c on c.race_id = r.id
   left join news_rows      n on n.race_id = r.id
 ),
 races_json as (
@@ -278,7 +275,9 @@ races_json as (
     'competitive',         competitive,
     'competitive_source',  competitive_source,
     'competitive_reason',  competitive_reason,
-    'candidates',          coalesce(candidates, '[]'::jsonb),
+    -- No 'candidates' key at all. Absent, not empty: see the note on
+    -- candidate_rows above. An empty array is a value, and it would overwrite
+    -- the bundled list.
     'news',                coalesce(news, '[]'::jsonb),
     'partisan', jsonb_build_object(
       'available', cpi_value is not null,
