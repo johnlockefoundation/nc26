@@ -4,7 +4,6 @@ import RaceTypeToggle from './components/RaceTypeToggle.jsx';
 import RaceTicker from './components/RaceTicker.jsx';
 import NCMap from './components/NCMap.jsx';
 import MiniGauge from './components/MiniGauge.jsx';
-import Countdown from './components/Countdown.jsx';
 import RacePanel from './components/RacePanel.jsx';
 
 export default function App() {
@@ -86,7 +85,13 @@ export default function App() {
       </header>
 
       <RaceTicker items={ticker} />
-      <Countdown />
+      <img
+        className="corner-logo"
+        src={assetUrl('assets/locke-logo-white.png')}
+        alt="John Locke Foundation"
+        width="1200"
+        height="346"
+      />
 
       {error && <div className="error-banner">Could not load data: {error}</div>}
 

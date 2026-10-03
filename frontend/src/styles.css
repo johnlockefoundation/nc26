@@ -49,17 +49,14 @@
 .app a { color: var(--accent); }
 .dim { color: var(--muted); }
 
-/* Countdown (top-right) */
-.countdown {
-  position: absolute; top: 4px; right: 0;
-  display: flex; flex-direction: column; gap: 2px; text-align: right;
-  font-size: 10px; line-height: 1.4; color: var(--muted); font-weight: 500;
-  letter-spacing: 0.02em;
+/* John Locke wordmark (top-right), replacing the days-to-voting countdown.
+   Sized by height against the topbar's own cap so it reads as a corner mark
+   rather than a second banner competing with the brand logo in the centre. */
+.corner-logo {
+  position: absolute; top: 10px; right: 0;
+  height: 26px; width: auto; max-width: 220px; display: block;
 }
-.countdown .cd-line b {
-  font-family: var(--font-display); font-weight: 700; color: var(--ink);
-}
-@media (max-width: 1100px) { .countdown { display: none; } }
+@media (max-width: 1100px) { .corner-logo { display: none; } }
 
 /* Topbar */
 .topbar {
