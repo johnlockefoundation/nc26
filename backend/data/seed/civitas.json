@@ -91,7 +91,7 @@
       "candidates": [
         {
           "party": "D",
-          "name": "Kandie D. Smith",
+          "name": "Kandie Smith",
           "incumbent": true
         },
         {
@@ -207,7 +207,7 @@
       "candidates": [
         {
           "party": "D",
-          "name": "James D. Gailliard",
+          "name": "James Gailliard",
           "incumbent": false
         },
         {
@@ -272,7 +272,7 @@
         },
         {
           "party": "R",
-          "name": "Angela B. McCarty",
+          "name": "Angela McCarty",
           "incumbent": false
         }
       ],
@@ -287,7 +287,7 @@
       "candidates": [
         {
           "party": "D",
-          "name": "Jay J. Chaudhuri",
+          "name": "Jay Chaudhuri",
           "incumbent": true
         },
         {
@@ -327,7 +327,7 @@
       "candidates": [
         {
           "party": "D",
-          "name": "Mrs. Sydney Batch",
+          "name": "Sydney Batch",
           "incumbent": true
         },
         {
@@ -387,7 +387,7 @@
       "candidates": [
         {
           "party": "D",
-          "name": "Natalie S. Murdock",
+          "name": "Natalie Murdock",
           "incumbent": true
         },
         null
@@ -428,7 +428,7 @@
         },
         {
           "party": "R",
-          "name": "LaKeshia M. Alston",
+          "name": "LaKeshia Alston",
           "incumbent": false
         }
       ],
@@ -468,7 +468,7 @@
         },
         {
           "party": "R",
-          "name": "Danny Earl Britt, Jr.",
+          "name": "Danny Britt",
           "incumbent": true
         }
       ],
@@ -523,7 +523,7 @@
       "candidates": [
         {
           "party": "D",
-          "name": "Michael K. Garrett",
+          "name": "Michael Garrett",
           "incumbent": true
         },
         null
@@ -539,7 +539,7 @@
       "candidates": [
         {
           "party": "D",
-          "name": "Gladys A. Robinson",
+          "name": "Gladys Robinson",
           "incumbent": true
         },
         null
@@ -575,7 +575,7 @@
       "candidates": [
         {
           "party": "D",
-          "name": "Pamela D. McAfee",
+          "name": "Pamela McAfee",
           "incumbent": false
         },
         {
@@ -615,7 +615,7 @@
       "candidates": [
         {
           "party": "D",
-          "name": "Paul Lowe, Jr.",
+          "name": "Paul Lowe",
           "incumbent": true
         },
         {
@@ -635,7 +635,7 @@
       "candidates": [
         {
           "party": "D",
-          "name": "Gary R. Weart",
+          "name": "Gary Weart",
           "incumbent": false
         },
         {
@@ -675,7 +675,7 @@
       "candidates": [
         {
           "party": "D",
-          "name": "Christine E. Winward",
+          "name": "Christine Winward",
           "incumbent": false
         },
         {
@@ -715,7 +715,7 @@
       "candidates": [
         {
           "party": "D",
-          "name": "Raygan J. Angel",
+          "name": "Raygan Angel",
           "incumbent": false
         },
         {
@@ -735,7 +735,7 @@
       "candidates": [
         {
           "party": "D",
-          "name": "Mujtaba A. Mohammed",
+          "name": "Mujtaba Mohammed",
           "incumbent": true
         },
         null
@@ -807,7 +807,7 @@
       "candidates": [
         {
           "party": "D",
-          "name": "Mrs. Woodson Bradley",
+          "name": "Woodson Bradley",
           "incumbent": true
         },
         {
@@ -907,7 +907,7 @@
       "candidates": [
         {
           "party": "D",
-          "name": "Frank Patton Hughes III",
+          "name": "Frank Hughes",
           "incumbent": false
         },
         {
@@ -927,7 +927,7 @@
       "candidates": [
         {
           "party": "D",
-          "name": "Doyle G. Brown, Jr.",
+          "name": "Doyle Brown",
           "incumbent": false
         },
         {
@@ -994,7 +994,7 @@
         },
         {
           "party": "R",
-          "name": "Edward C. Goodwinl",
+          "name": "Edward Goodwinl",
           "incumbent": true
         }
       ],
@@ -1065,7 +1065,7 @@
       "candidates": [
         {
           "party": "D",
-          "name": "Sam Davis III",
+          "name": "Sam Davis",
           "incumbent": false
         },
         {
@@ -1185,7 +1185,7 @@
       "candidates": [
         {
           "party": "D",
-          "name": "Allison A. Dahle",
+          "name": "Allison Dahle",
           "incumbent": true
         },
         null
@@ -1297,7 +1297,7 @@
       "candidates": [
         {
           "party": "D",
-          "name": "Dennis A. Breen",
+          "name": "Dennis Breen",
           "incumbent": false
         },
         {
@@ -1453,7 +1453,7 @@
       "candidates": [
         {
           "party": "D",
-          "name": "Lorenza M. Wilkins",
+          "name": "Lorenza Wilkins",
           "incumbent": false
         },
         {
@@ -1493,7 +1493,7 @@
       "candidates": [
         {
           "party": "D",
-          "name": "Rodney D. Pierce",
+          "name": "Rodney Pierce",
           "incumbent": true
         },
         {
@@ -1513,12 +1513,12 @@
       "candidates": [
         {
           "party": "D",
-          "name": "D. Matthew Bailey",
+          "name": "Matthew Bailey",
           "incumbent": false
         },
         {
           "party": "R",
-          "name": "Larry C. Strickland",
+          "name": "Larry Strickland",
           "incumbent": true
         }
       ],
@@ -1637,7 +1637,7 @@
       "candidates": [
         {
           "party": "D",
-          "name": "Evonne S. Hopkins",
+          "name": "Evonne Hopkins",
           "incumbent": false
         },
         {
@@ -1713,7 +1713,7 @@
       "candidates": [
         {
           "party": "D",
-          "name": "James A. Roberson",
+          "name": "James Roberson",
           "incumbent": true
         },
         {
@@ -1842,7 +1842,7 @@
         },
         {
           "party": "R",
-          "name": "Brenden H. Jones",
+          "name": "Brenden Jones",
           "incumbent": true
         }
       ],
@@ -1862,7 +1862,7 @@
         },
         {
           "party": "R",
-          "name": "John L. Lowery",
+          "name": "John Lowery",
           "incumbent": true
         }
       ],
@@ -1877,7 +1877,7 @@
       "candidates": [
         {
           "party": "D",
-          "name": "Garland E. Pierce",
+          "name": "Garland Pierce",
           "incumbent": true
         },
         {
@@ -1917,7 +1917,7 @@
       "candidates": [
         {
           "party": "D",
-          "name": "Renee A. Price",
+          "name": "Renee Price",
           "incumbent": true
         },
         null
@@ -1934,7 +1934,7 @@
         null,
         {
           "party": "R",
-          "name": "Charles M. Taylor",
+          "name": "Charles Taylor",
           "incumbent": false
         }
       ],
@@ -1969,12 +1969,12 @@
       "candidates": [
         {
           "party": "D",
-          "name": "Kevin G. Thurman",
+          "name": "Kevin Thurman",
           "incumbent": false
         },
         {
           "party": "R",
-          "name": "Howard L. Penny, Jr.",
+          "name": "Howard Penny",
           "incumbent": true
         }
       ],
@@ -1989,7 +1989,7 @@
       "candidates": [
         {
           "party": "D",
-          "name": "Robert T. Reives II",
+          "name": "Robert Reives",
           "incumbent": true
         },
         null
@@ -2005,7 +2005,7 @@
       "candidates": [
         {
           "party": "D",
-          "name": "John J. Kirkpatrick IV",
+          "name": "John Kirkpatrick",
           "incumbent": false
         },
         {
@@ -2134,7 +2134,7 @@
         },
         {
           "party": "R",
-          "name": "John M. Blust",
+          "name": "John Blust",
           "incumbent": true
         }
       ],
@@ -2321,7 +2321,7 @@
       "candidates": [
         {
           "party": "D",
-          "name": "Amber M. Baker",
+          "name": "Amber Baker",
           "incumbent": true
         },
         null
@@ -2337,7 +2337,7 @@
       "candidates": [
         {
           "party": "D",
-          "name": "Thomas J. Monks",
+          "name": "Thomas Monks",
           "incumbent": false
         },
         {
@@ -2382,7 +2382,7 @@
         },
         {
           "party": "R",
-          "name": "Donny C. Lambeth",
+          "name": "Donny Lambeth",
           "incumbent": true
         }
       ],
@@ -2493,7 +2493,7 @@
       "candidates": [
         {
           "party": "D",
-          "name": "Dylan R. Tucker",
+          "name": "Dylan Tucker",
           "incumbent": false
         },
         {
@@ -2554,7 +2554,7 @@
         null,
         {
           "party": "R",
-          "name": "Jeffrey C. McNeely",
+          "name": "Jeffrey McNeely",
           "incumbent": true
         }
       ],
@@ -2589,7 +2589,7 @@
       "candidates": [
         {
           "party": "D",
-          "name": "Wesley E. Hendrix",
+          "name": "Wesley Hendrix",
           "incumbent": false
         },
         {
@@ -2845,7 +2845,7 @@
       "candidates": [
         {
           "party": "D",
-          "name": "Veleria M. Levy",
+          "name": "Veleria Levy",
           "incumbent": false
         },
         null
@@ -2877,7 +2877,7 @@
       "candidates": [
         {
           "party": "D",
-          "name": "Carolyn G. Logan",
+          "name": "Carolyn Logan",
           "incumbent": true
         },
         null
@@ -2981,7 +2981,7 @@
       "candidates": [
         {
           "party": "D",
-          "name": "Aisha O. Dew",
+          "name": "Aisha Dew",
           "incumbent": true
         },
         null
@@ -3002,7 +3002,7 @@
         },
         {
           "party": "R",
-          "name": "John A. Torbett",
+          "name": "John Torbett",
           "incumbent": true
         }
       ],
@@ -3017,7 +3017,7 @@
       "candidates": [
         {
           "party": "D",
-          "name": "Mark D. Carver",
+          "name": "Mark Carver",
           "incumbent": false
         },
         {
@@ -3134,7 +3134,7 @@
         },
         {
           "party": "R",
-          "name": "Anthony J. Penland",
+          "name": "Anthony Penland",
           "incumbent": false
         }
       ],
@@ -3185,12 +3185,12 @@
       "candidates": [
         {
           "party": "D",
-          "name": "Danny E. Davis",
+          "name": "Danny Davis",
           "incumbent": false
         },
         {
           "party": "R",
-          "name": "James M. Rogers",
+          "name": "James Rogers",
           "incumbent": false
         }
       ],
