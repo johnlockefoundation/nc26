@@ -14,11 +14,10 @@
 // means this case is the original row rather than a copy of it that can drift.
 // The seat looks the way it did before the pair existed.
 //
-// The average is linked to the seat's RealClearPolitics page. That is an
-// aggregator rather than a pollster, so it is not where any one topline was
-// published -- it is where an average of many is maintained, which is the thing
-// the figure on screen actually is. The CJ poll keeps its own link to its own
-// release, because that one is attributable to a single outlet.
+// The average links to the seat's own page on the New York Times polling index,
+// which is where an average of many is maintained -- the thing the figure on
+// screen actually is. The CJ poll keeps its own link to its own release, because
+// that one is attributable to a single outlet.
 //
 // Renders nothing when the seat has no polling at all. A permanently open box
 // reading NO POLLING on the 180-odd seats that have never been polled would be a
@@ -32,30 +31,38 @@
 // any of it back is a matter of adding a row rather than re-deriving it.
 import MetricBlock from './MetricBlock.jsx';
 
-// Where the average can be checked.
+// Where the average can be checked: the seat's own page on the New York Times'
+// polling index, which carries the toplines the average is computed from.
 //
-// RealClearPolitics was the previous target and is gone. RCP has no free API and
-// no usable licence for redistribution; PollResults.org does, and it is the
-// replacement -- CC BY 4.0, sourced from the New York Times polling summary.
+// Two URL families, not one. A House race carries its district number and no
+// "-election-": north-carolina-us-house-9-polls-2026.html. A Senate race has one
+// seat per state, so there is no number and the slug spells out the office:
+// texas-us-senate-election-polls-2026.html. Both shapes were taken from pages
+// that exist rather than inferred, because the two are not interchangeable and
+// guessing wrong sends a reader to a 404.
 //
-// The link points at the NYT summary itself rather than at PollResults.org. The
-// average on screen is computed from toplines JLF verified, so the thing a reader
-// wants is a neutral published aggregate they can compare it against, and the NYT
-// page is that. PollResults.org is the machine-readable route to the same data.
-//
-// One summary URL for every seat, not a per-race deep link. The NYT 403s every
-// request from this machine, so a race-specific URL pattern could not be verified
-// the way the RCP one could not be either -- and an unverified deep link that 404s
-// in front of a reader is worse than an honest link to the index. If someone
-// confirms the per-race pattern, this is the one function to change.
-//
-// Federal only, which is all this widget renders -- RacePanel gates polls to
-// congressional seats.
-export const AGGREGATE_POLL_URL =
-  'https://www.nytimes.com/interactive/polls/latest-polls.html';
+// The article itself returns 403 to anything that is not a browser, so existence
+// cannot be checked at build time. What stands in for it is poll_summary: the New
+// Times indexes a race once it is polled, so a seat with no polls almost
+// certainly has no page. Passing `hasAny` therefore keeps the link off the seats
+// that would 404, which is the only existence signal available here.
+export function aggregatePollUrl(race, hasAny) {
+  if (!hasAny || !race) return null;
+  const n = Number(race.district_number);
+  const base = 'https://www.nytimes.com/interactive/polls/north-carolina';
 
-export function aggregatePollUrl() {
-  return AGGREGATE_POLL_URL;
+  if (race.race_type === 'us_house') {
+    return Number.isInteger(n) && n > 0
+      ? `${base}-us-house-${n}-polls-2026.html`
+      : null;
+  }
+  if (race.race_type === 'us_senate') {
+    // No district segment for a statewide seat. Kept off anything else: the
+    // General Assembly maps never reach this block, and a link to a
+    // state-legislature race that does not exist is worse than none.
+    return `${base}-us-senate-election-polls-2026.html`;
+  }
+  return null;
 }
 
 function PollFigure({ label, figure, link }) {
@@ -80,7 +87,7 @@ export default function PollBlock({ polls, race }) {
   const cj = summary.cj_poll || null;
   const hasAverage = Boolean(summary.available && summary.advantage);
   if (!hasAverage && !cj) return null;
-  const aggregateUrl = aggregatePollUrl();
+  const aggregateUrl = aggregatePollUrl(race, hasAverage || Boolean(cj));
 
   // No CJ poll, so the average is the whole of what we know and the panel gets
   // the single POLLS row it has always shown. The hasAverage guard above means
