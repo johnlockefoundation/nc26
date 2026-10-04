@@ -1,11 +1,15 @@
-// The 7-day Kalshi move, drawn in three places: the arrow beside the figure in
-// the panel, the arrow pulsing over a district on the map, and the line in the
-// district tooltip. Each used to derive its own glyph from the same delta and
-// drift, which is what put a slanted arrow on the map and a straight one in the
-// panel for one and the same move.
+// The 7-day Kalshi move, drawn on the map: the arrow pulsing over a district,
+// and the line in the district tooltip that explains it. Both read the glyph
+// from here, so the arrow and its own explanation cannot disagree.
 //
-// One helper owns all three, so they cannot drift again. A caller with a delta
-// asks here; a caller that gets null shows nothing.
+// This is deliberately the only place the move is drawn. It used to appear in
+// the panel's Kalshi box as well, and that was the problem: the box states who
+// is ahead in the figure and in its colour, so a slanted arrow beside it
+// pointing the other way -- which is the normal case, not a rare one, since a
+// seat's lean and its weekly move disagree regularly -- read as a second,
+// contradictory verdict rather than as a trend.
+//
+// A caller with a delta asks here; a caller that gets null shows nothing.
 //
 // The glyph is slanted, up-left toward the Democrats and up-right toward the
 // Republicans, in both renderings. Left and right are the standing advantage,

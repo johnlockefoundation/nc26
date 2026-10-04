@@ -96,7 +96,6 @@ export default function RacePanel({ race, loading }) {
       title={(m.provider || 'MARKET').toUpperCase()}
       emptyText="NO MARKET"
       summary={m}
-      delta={m.delta}
     />
   )) : [];
 
