@@ -16,8 +16,8 @@ export const MAP_BOUNDS = [[32.7, -87.0], [37.7, -74.0]];
 // Initial view before fitToState() runs; it immediately fits to the outline.
 export const MAP_VIEW = { center: [35.6, -79.5], zoom: 6 };
 
-// Zoom for a ZIP lookup. Close enough to place the reader in their own ZIP on
-// the county and district outlines around them -- at 6 the whole state is the
-// view and at 11+ a single ZIP fills the frame with nothing to compare against.
-// One step short of MAP_MAX_ZOOM so a lookup can still be panned back out.
-export const ZIP_ZOOM = 10;
+// Zoom for a ZIP lookup: all the way in, to the same level a reader can reach by
+// hand. A ZIP is a specific place and the reader has named it, so the map goes
+// there rather than hovering above it. Referenced rather than restated so the
+// two cannot drift apart.
+export const ZIP_ZOOM = MAP_MAX_ZOOM;
