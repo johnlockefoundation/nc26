@@ -110,7 +110,10 @@ export default function RacePanel({ race, loading }) {
   const disclosureBlocks = [];
   if (isStateRace && trackerHref) {
     disclosureBlocks.push(
-      <div key="ballots" className="metric metric-static">
+      /* A plain .metric row, not .metric-static: this is a title and one value
+         on one line like every other box in the panel, so the link belongs
+         hard right rather than stacked under the label. */
+      <div key="ballots" className="metric">
         <div className="metric-title">BALLOTS</div>
         <div className="metric-value">
           <a className="ballots-link" href={trackerHref} target="_blank" rel="noreferrer">
