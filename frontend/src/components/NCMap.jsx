@@ -52,8 +52,15 @@ function styleFor(f, race) {
 function tooltipFor(race) {
   const matchup = matchupText(race.candidates);
   const party = (race?.advantage?.party || primarySignal(race)?.advantage?.party || 'EVEN').toLowerCase();
-  const html = matchup ? `${race.district_id}: ${matchup}` : primarySignal(race)?.advantage?.label || race.district_id;
-  return { html, className: `tip-adv tip-${party}` };
+  const head = matchup ? `${race.district_id}: ${matchup}` : primarySignal(race)?.advantage?.label || race.district_id;
+  // The arrow is a glyph with no label of its own, so the district tooltip is
+  // where it gets explained. Same wording as the panel's arrow title, so the
+  // two read as one fact rather than two.
+  const delta = race?.markets?.delta;
+  const move = delta && delta.party && delta.party !== 'EVEN'
+    ? `<div class="tip-move tip-move-${delta.party.toLowerCase()}">${Math.round(delta.points)}\u00a2 toward ${delta.party} on Kalshi over the past week</div>`
+    : '';
+  return { html: head + move, className: `tip-adv tip-${party}` };
 }
 
 function geometryFeature(f) {
@@ -332,7 +339,7 @@ export default function NCMap({ features, outline, races, selectedId, onSelect, 
               className: 'district-arrow-marker',
               html: `<span class="map-arrow ${dirCls}${isSenate ? ' map-arrow-senate' : ''}">${glyph}</span>`,
               iconSize: [size, size],
-              iconAnchor: [size / 2, size / 2],
+              iconAnchor: [size / 2, size],
             }),
           });
           labelsRef.current.addLayer(arrowMark);

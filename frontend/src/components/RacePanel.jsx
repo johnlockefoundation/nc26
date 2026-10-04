@@ -5,7 +5,6 @@ import Demographics from './Demographics.jsx';
 import MoneyBlock from './MoneyBlock.jsx';
 import PendingMetric from './PendingMetric.jsx';
 import PollBlock from './PollBlock.jsx';
-import { Registration, Ballot } from './VoterVelocity.jsx';
 import DistrictNews from './DistrictNews.jsx';
 import { initials } from '../lib/candidateName.js';
 import { trackerUrl } from '../lib/tracker.js';
@@ -101,35 +100,25 @@ export default function RacePanel({ race, loading }) {
     />
   )) : [];
 
-  // Three independent disclosures, in one list, so a reader can open any of them
-  // without the others. Which of them a seat gets is decided by the payload
-  // rather than hardcoded per district: federal seats carry the Census profile,
-  // General Assembly seats carry the two velocity blocks, and a seat that later
-  // picks up another dataset grows its own block. Each returns null on its own
-  // when its dataset is absent, so the list needs no filtering here. MONEY sits
-  // with them because it folds the same way; only the right-hand slot differs.
-  // Voter velocity is a General Assembly dataset: registration and ballot-request
-  // figures come from the state, and no congressional analogue is collected. A
-  // federal seat therefore does not get a pending line for them -- there is
-  // nothing pending -- it simply has no such blocks.
+  // Voter velocity is a General Assembly dataset, and unlike MONEY nothing on
+  // this page renders it: the figures come from the state and the panel does not
+  // try to stand in for them. REGISTRATIONS is gone rather than pending, and
+  // BALLOTS is a link out to the tracker, which is where that data actually
+  // lives. Both had been carrying a "we are processing this" notice for as long
+  // as race_vitals was empty, and that notice described the pipeline rather than
+  // the race.
   const disclosureBlocks = [];
-  if (isStateRace) {
-    if (race.vitals?.available) {
-      disclosureBlocks.push(<Registration key="registration" vitals={race.vitals} sourceHref={trackerHref} />);
-      disclosureBlocks.push(<Ballot key="ballot" vitals={race.vitals} sourceHref={trackerHref} />);
-    } else {
-      // Expected for this seat and absent, which is the one case the notice is
-      // for. These were the mock figures removed in c4c22e7; real NCSBE extracts
-      // are the intended replacement.
-      disclosureBlocks.push(<PendingMetric key="registration-pending" title="REGISTRATIONS" />);
-      disclosureBlocks.push(<PendingMetric key="ballot-pending" title="BALLOTS" />);
-    }
-  }
-  // The Census profile is a per-district extract keyed to congressional
-  // boundaries, so it stays federal-only for the same reason velocity is
-  // state-only. Only 15 seats have one and no other seat ever will.
-  if (race.profile) {
-    disclosureBlocks.unshift(<Demographics key="demographics" profile={race.profile} />);
+  if (isStateRace && trackerHref) {
+    disclosureBlocks.push(
+      <div key="ballots" className="metric metric-static">
+        <div className="metric-title">BALLOTS</div>
+        <div className="metric-value">
+          <a className="ballots-link" href={trackerHref} target="_blank" rel="noreferrer">
+            View in the tracker ↗
+          </a>
+        </div>
+      </div>,
+    );
   }
 
   // Both money sources are expected for their own chamber and absent means
