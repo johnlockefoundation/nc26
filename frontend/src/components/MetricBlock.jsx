@@ -11,7 +11,12 @@ export default function MetricBlock({ title, emptyText, summary, delta, link }) 
   const href = available ? (link ?? summary?.source_url) : null;
   const move = moveArrow(delta);
   const arrow = available && move
-    ? <span className={`metric-arrow ${move.cls}`} title={move.text}>{move.glyph}</span>
+    ? (
+      <span className={`metric-arrow ${move.cls}`} title={move.text}>
+        <span className="arrow-glyph">{move.glyph}</span>
+        <span className="arrow-tag">{move.tag}</span>
+      </span>
+    )
     : null;
   return (
     <div className={`metric ${available ? '' : 'metric-empty'}`}>

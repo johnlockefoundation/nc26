@@ -23,6 +23,12 @@ export function moveArrow(delta) {
     // drawing it as a climb invites reading it as a trend line.
     glyph: towardD ? '←' : '→',
     cls: towardD ? 'move-d' : 'move-r',
+    // The arrow answers a different question from the figure beside it -- who
+    // gained this week, not who is ahead -- so it carries a visible window.
+    // The colour alone cannot do this job: on a Democratic seat that drifted
+    // Republican, a red right-arrow sits next to a blue "D +20" and reads as a
+    // contradiction unless something states that they measure different things.
+    tag: '7D',
     // One sentence, used verbatim by all three renderings. The panel arrow
     // keeps it as a title attribute, the tooltip shows it as text.
     text: `${POINTS.format(delta.points)}¢ toward ${delta.party} on Kalshi over the past week`,
