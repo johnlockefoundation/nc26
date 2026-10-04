@@ -20,8 +20,9 @@
 //     hand-entered number would carry no timestamp and read as live.
 //
 // Geometry is stripped from the map features and shipped separately by
-// prepare-geometry, because it is 636 KB of the payload and the client already
-// merges it in by district_id (see api.js).
+// prepare-geometry, because it is ~610 KB of the ~960 KB plugin payload and the
+// client already merges it in by district_id (see api.js). The total the export
+// prints on its last line is the source of truth; it moves as the race set does.
 //
 // The export deliberately reuses getMapFeatures/getRace rather than reshaping
 // the payload by hand, so the reference layer cannot drift from the shape the
@@ -53,6 +54,14 @@ const RACE_TYPES = ['us_house', 'us_senate', 'state_senate', 'state_house'];
 // hand-entered in Supabase (`money` for federal races, `state_funds` for
 // General Assembly ones); markets keep their live fetch.
 //
+// Every key here is read live per-seat by getRace in api.js: polls from
+// poll_summary, markets and market_list from markets_summary and market_list,
+// money from money_summary, state_funds from state_funds_summary, vitals from
+// vitals_summary, news from district_news. All seven were stripped before any of
+// those reads existed, which is why a key here without a matching function is a
+// bug rather than a to-do: markets and money sat stripped for a month and their
+// widgets rendered nothing.
+//
 // `vitals` joined this list for a different reason than the others. It was
 // treated as fixed for the cycle -- the delta between two dated NCSBE
 // snapshots -- and bundled on that basis. The rows it was bundling were
@@ -69,7 +78,7 @@ const RACE_TYPES = ['us_house', 'us_senate', 'state_senate', 'state_house'];
 // The distinction the list now draws is verified-against-a-real-extract versus
 // not, not how volatile the number looks.
 const VOLATILE_RACE_KEYS = [
-  'polls', 'poll_detail', 'markets', 'market_list', 'money', 'state_funds', 'vitals',
+  'polls', 'markets', 'market_list', 'money', 'state_funds', 'vitals',
   'news', 'coverage', 'last_updated',
 ];
 
@@ -178,7 +187,10 @@ for (const raceType of RACE_TYPES) {
   const src = join(GEO_DIR, `${raceType}.json`);
   if (!existsSync(src)) {
     console.error(`\nERROR: missing geometry for ${raceType}: ${src}`);
-    console.error('Run the geometry prepare scripts before exporting.');
+    console.error('Run the matching script under backend/scripts/ first:');
+    console.error('  node backend/scripts/fetch-us-house-geometry.mjs   (us_house)');
+    console.error('  node backend/scripts/prepare-senate-geometry.mjs  (us_senate)');
+    console.error('  node backend/scripts/prepare-geometry.mjs         (state_house, state_senate)');
     process.exit(1);
   }
   const geo = JSON.parse(readFileSync(src, 'utf8'));
@@ -263,7 +275,7 @@ bytes += writeJson('meta.json', {
     markets: 'supabase',
     money: 'supabase',
     news: 'supabase',
-    note: 'Absent from this export by design. The page renders these as unavailable until a Supabase read succeeds.',
+    note: 'Absent from this export by design, so no hand-entered number is frozen into a shipped plugin file. Each has a live read on the panel: polls (poll_summary), markets and market_list (markets_summary, market_list), money (money_summary), state_funds (state_funds_summary), vitals (vitals_summary), news (district_news). A seat with no rows reads available:false and the block renders as pending rather than showing a bundled figure.',
   },
 });
 
