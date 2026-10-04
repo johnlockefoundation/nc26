@@ -1,16 +1,17 @@
 // The 7-day Kalshi move, drawn in three places: the arrow beside the figure in
 // the panel, the arrow pulsing over a district on the map, and the line in the
-// district tooltip. Each used to derive its own glyph, colour class and wording
-// from the same delta, and drifted -- the map ended up on diagonal glyphs and a
-// second keyframe, so one fact read two ways depending on where you looked.
+// district tooltip. Each used to derive its own glyph from the same delta and
+// drift, which is what put a slanted arrow on the map and a straight one in the
+// panel for one and the same move.
 //
 // One helper owns all three, so they cannot drift again. A caller with a delta
 // asks here; a caller that gets null shows nothing.
 //
-// Horizontal is deliberate. A diagonal placed over a map of North Carolina
-// districts is a compass bearing: the north-west glyph beside a seat reads as
-// "north-west" to someone with no reason to know it means "toward the
-// Democrats". Left and right survives being drawn over geography.
+// The glyph is slanted, up-left toward the Democrats and up-right toward the
+// Republicans, in both renderings. Left and right are the standing advantage,
+// which is what the figure beside the arrow already says; the slant is the
+// weekly move, and giving it its own shape keeps the two from being read as the
+// same fact twice.
 
 const POINTS = new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 });
 
@@ -18,17 +19,8 @@ export function moveArrow(delta) {
   if (!delta || !delta.party || delta.party === 'EVEN') return null;
   const towardD = delta.party === 'D';
   return {
-    // Left means the race moved toward the Democrats, as in most election
-    // coverage. Never "up": a rise in one side is a fall in the other, and
-    // drawing it as a climb invites reading it as a trend line.
-    glyph: towardD ? '←' : '→',
+    glyph: towardD ? '↖' : '↗',
     cls: towardD ? 'move-d' : 'move-r',
-    // The arrow answers a different question from the figure beside it -- who
-    // gained this week, not who is ahead -- so it carries a visible window.
-    // The colour alone cannot do this job: on a Democratic seat that drifted
-    // Republican, a red right-arrow sits next to a blue "D +20" and reads as a
-    // contradiction unless something states that they measure different things.
-    tag: '7D',
     // One sentence, used verbatim by all three renderings. The panel arrow
     // keeps it as a title attribute, the tooltip shows it as text.
     text: `${POINTS.format(delta.points)}¢ toward ${delta.party} on Kalshi over the past week`,

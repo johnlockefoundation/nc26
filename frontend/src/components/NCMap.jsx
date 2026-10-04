@@ -334,9 +334,7 @@ export default function NCMap({ features, outline, races, selectedId, onSelect, 
             interactive: false,
             icon: L.divIcon({
               className: 'district-arrow-marker',
-              html: `<span class="map-arrow ${move.cls}${isSenate ? ' map-arrow-senate' : ''}">`
-                + `<span class="arrow-glyph">${move.glyph}</span>`
-                + `<span class="arrow-tag">${move.tag}</span></span>`,
+              html: `<span class="map-arrow ${move.cls}${isSenate ? ' map-arrow-senate' : ''}">${move.glyph}</span>`,
               iconSize: [size, size],
               iconAnchor: [size / 2, size],
             }),

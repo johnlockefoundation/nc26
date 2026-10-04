@@ -257,13 +257,11 @@
 .district-arrow-marker { background: transparent; border: none; }
 .tip-move { margin-top: 3px; font-family: var(--font-body); font-size: 10.5px; letter-spacing: 0.01em; }
 .map-arrow {
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  gap: 1px; width: 100%; height: 100%; text-shadow: 0 1px 3px rgba(15, 23, 42, 0.95);
+  display: flex; align-items: center; justify-content: center;
+  width: 100%; height: 100%; font-size: 46px; line-height: 1; font-weight: 700;
+  text-shadow: 0 1px 3px rgba(15, 23, 42, 0.95);
 }
-.map-arrow .arrow-glyph { font-size: 32px; line-height: 1; font-weight: 700; }
-.map-arrow .arrow-tag { font-size: 9px; }
-.map-arrow.map-arrow-senate .arrow-glyph { font-size: 45px; }
-.map-arrow.map-arrow-senate .arrow-tag { font-size: 11px; }
+.map-arrow.map-arrow-senate { font-size: 64px; }
 .map-arrow { animation: arrow-live 1.6s ease-in-out infinite; }
 
 /* One colour per party, shared by the panel arrow, the map arrow and the map
@@ -273,12 +271,6 @@
 .move-d { color: #60a5fa; }
 .move-r { color: #f87171; }
 
-/* The 7-day window, on every arrow. It is not decoration: the arrow and the
-   figure beside it answer different questions, and on a seat where the leader
-   and the mover disagree -- a Democratic seat drifting Republican -- the two
-   colours alone read as a contradiction. Naming the window says which fact is
-   which. */
-.arrow-tag { line-height: 1.2; letter-spacing: 0.08em; font-weight: 700; opacity: 0.8; }
 
 /* County close-ups, bottom-left over the map.
    Sits above the tiles but below the reset button, and is inset from the corner
@@ -427,14 +419,9 @@
 .metric-na { font-family: var(--font-display); font-size: 15px; color: #64748b; font-weight: 700; letter-spacing: 0.02em; }
 
 .metric-arrow {
-  display: inline-flex; flex-direction: column; align-items: center;
-  /* middle, not a hand-picked offset: the stack is taller than the 26px value
-     it sits beside, and centring is what keeps the glyph optically level with
-     the figure while the tag hangs below it. */
-  margin-left: 7px; vertical-align: middle; animation: arrow-live 1.6s ease-in-out infinite;
+  display: inline-block; margin-left: 7px; font-size: 20px;
+  vertical-align: -1px; animation: arrow-live 1.6s ease-in-out infinite;
 }
-.metric-arrow .arrow-glyph { font-size: 18px; line-height: 1; }
-.metric-arrow .arrow-tag { font-size: 8px; }
 @keyframes arrow-live { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.35; transform: scale(0.92); } }
 
 /* DEMOGRAPHICS. Carries the .metric box so it is indistinguishable from MONEY,
