@@ -22,6 +22,20 @@ This is a standing decision, not a temporary one. It was made explicitly. If a
 task appears to require touching ingestion, that is a signal the task is
 misframed — raise it rather than working around it.
 
+Two loaders are exceptions, in scope only for reading and repair rather than for
+being extended into a pipeline. Both exist to remove hand-seeding and both write
+to Supabase, not SQLite:
+
+- `backend/scripts/fetch-kalshi.mjs` — see the Kalshi note below.
+- `backend/scripts/load-polls.mjs` — fills `public.polls` from PollResults.org,
+  which carries NYT polling data under CC BY 4.0 and replaced RealClearPolitics,
+  a source with neither a free API nor a licence permitting redistribution. Run
+  with `--apply` to push through `supabase db query --linked`, so no
+  `service_role` key and no cron are involved. Two rules exist to protect data
+  quality: a hand-verified topline is never loaded a second time, and nothing
+  older than a recency floor enters the table, because `poll_summary` averages
+  unweighted and unwindowed — volume alone would move the figure.
+
 Concretely: **do not treat the local SQLite database as a source of truth, and do
 not go looking for a data source to fix a number.** If a figure looks wrong, the
 answer is not "seed it locally" and not "write a fetcher." The answer is that the
