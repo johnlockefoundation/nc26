@@ -256,14 +256,16 @@
 }
 .district-arrow-marker { background: transparent; border: none; }
 .tip-move { margin-top: 3px; font-family: var(--font-body); font-size: 10.5px; letter-spacing: 0.01em; }
-.tip-move-d { color: #93c5fd; }
-.tip-move-r { color: #fca5a5; }
 .map-arrow { display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; font-size: 46px; line-height: 1; font-weight: 700; text-shadow: 0 1px 3px rgba(15, 23, 42, 0.95); }
 .map-arrow.map-arrow-senate { font-size: 64px; }
-.map-arrow.arrow-d { color: #60a5fa; animation: arrow-live 1.6s ease-in-out infinite; }
-.map-arrow.arrow-r { color: #f87171; animation: arrow-live-r 1.6s ease-in-out infinite; }
-@keyframes arrow-live { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.35; transform: scale(0.94); } }
-@keyframes arrow-live-r { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.35; transform: scale(0.94); } }
+.map-arrow { animation: arrow-live 1.6s ease-in-out infinite; }
+
+/* One colour per party, shared by the panel arrow, the map arrow and the map
+   tooltip's move line. These were once .move-*, .arrow-* and .tip-move-* --
+   three vocabularies for the same two colours, which is how the map ended up
+   pulsing on its own keyframe while the panel did not. */
+.move-d { color: #60a5fa; }
+.move-r { color: #f87171; }
 
 /* County close-ups, bottom-left over the map.
    Sits above the tiles but below the reset button, and is inset from the corner
@@ -412,8 +414,6 @@
 .metric-na { font-family: var(--font-display); font-size: 15px; color: #64748b; font-weight: 700; letter-spacing: 0.02em; }
 
 .metric-arrow { display: inline-block; margin-left: 7px; font-size: 20px; vertical-align: -1px; animation: arrow-live 1.6s ease-in-out infinite; }
-.metric-arrow.move-d { color: #60a5fa; }
-.metric-arrow.move-r { color: #f87171; }
 @keyframes arrow-live { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.35; transform: scale(0.92); } }
 
 /* DEMOGRAPHICS. Carries the .metric box so it is indistinguishable from MONEY,

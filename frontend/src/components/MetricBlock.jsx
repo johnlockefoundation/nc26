@@ -1,3 +1,5 @@
+import { moveArrow } from '../lib/moveArrow.js';
+
 // `link` overrides summary.source_url, which is the default. It exists because a
 // metric's source is not always a field on its summary: the POLLS average is a
 // computed mean of several outlets and carries no source_url of its own, but a
@@ -7,10 +9,9 @@ export default function MetricBlock({ title, emptyText, summary, delta, link }) 
   const party = summary?.advantage?.party;
   const cls = available ? (party === 'D' ? 'val-d' : party === 'R' ? 'val-r' : '') : '';
   const href = available ? (link ?? summary?.source_url) : null;
-  const arrow = available && delta && delta.party !== 'EVEN'
-    ? (delta.party === 'D'
-        ? <span className="metric-arrow move-d" title={`${delta.points.toFixed(0)}¢ toward D on Kalshi over the past week`}>←</span>
-        : <span className="metric-arrow move-r" title={`${delta.points.toFixed(0)}¢ toward R on Kalshi over the past week`}>→</span>)
+  const move = moveArrow(delta);
+  const arrow = available && move
+    ? <span className={`metric-arrow ${move.cls}`} title={move.text}>{move.glyph}</span>
     : null;
   return (
     <div className={`metric ${available ? '' : 'metric-empty'}`}>
