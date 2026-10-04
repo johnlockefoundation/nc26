@@ -17,7 +17,7 @@
 // number would mean something different in every chamber -- so they show a caret
 // and everything lives behind it. MONEY does have a figure, so it shows that
 // with the caret after it, the same as a value-bearing row would read.
-export default function CollapsibleMetric({ title, value, children, source }) {
+export default function CollapsibleMetric({ title, value, children, source, sourceHref }) {
   return (
     <details className="metric collapsible-metric">
       <summary>
@@ -27,7 +27,16 @@ export default function CollapsibleMetric({ title, value, children, source }) {
       </summary>
       <div className="collapsible-metric-body">
         {children}
-        {source && <div className="profile-source dim">{source}</div>}
+        {/* sourceHref turns the attribution line into a link. It is separate from
+            source rather than a node, because source is a plain string everywhere
+            else and callers should not have to know it can hold markup. */}
+        {(source || sourceHref) && (
+          <div className="profile-source dim">
+            {sourceHref
+              ? <a href={sourceHref} target="_blank" rel="noreferrer">{source}</a>
+              : source}
+          </div>
+        )}
       </div>
     </details>
   );

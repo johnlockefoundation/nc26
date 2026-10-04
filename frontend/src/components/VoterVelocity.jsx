@@ -27,6 +27,7 @@
 // honest; an invented one is not.
 
 import CollapsibleMetric from './CollapsibleMetric.jsx';
+import { TRACKER_LINK_TEXT } from '../lib/tracker.js';
 
 function sign(v) {
   if (v == null) return '—';
@@ -86,7 +87,7 @@ function Headline({ label, value, className }) {
   );
 }
 
-export function Registration({ vitals }) {
+export function Registration({ vitals, sourceHref }) {
   const { registration } = vitals || {};
   // A seat carrying no registration figures would render a box that expands to
   // nothing. Same reasoning as the metric blocks above: an empty disclosure says
@@ -94,7 +95,7 @@ export function Registration({ vitals }) {
   if (!registration) return null;
 
   return (
-    <CollapsibleMetric title="REGISTRATIONS" source={vitals.source}>
+    <CollapsibleMetric title="REGISTRATIONS" source={TRACKER_LINK_TEXT} sourceHref={sourceHref}>
       <div className="vel-heads">
         <Headline
           label="NET NEW VOTERS"
@@ -112,12 +113,12 @@ export function Registration({ vitals }) {
   );
 }
 
-export function Ballot({ vitals }) {
+export function Ballot({ vitals, sourceHref }) {
   const { ballot } = vitals || {};
   if (!ballot) return null;
 
   return (
-    <CollapsibleMetric title="BALLOTS" source={vitals.source}>
+    <CollapsibleMetric title="BALLOTS" source={TRACKER_LINK_TEXT} sourceHref={sourceHref}>
       <div className="vel-heads">
         <Headline
           label="BALLOTS REQUESTED"

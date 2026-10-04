@@ -79,6 +79,16 @@
      carries width/height attributes so the box is reserved before it loads. */
   height: 68px; width: auto; max-width: 100%; display: block;
 }
+.brand-link {
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+  text-decoration: none; color: inherit;
+}
+/* A hairline that appears on hover or keyboard focus only, so the attribution
+   reads as interactive without adding a permanent box around the wordmark. */
+.brand-link:hover .brand-logo, .brand-link:focus-visible .brand-logo { opacity: 0.82; }
+.brand-link:hover .brand-byline, .brand-link:focus-visible .brand-byline { color: var(--accent); }
+.brand-link:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 6px; }
+
 .brand-byline {
   /* The logo already carries a Locke mark, so the attribution is a quiet line
      under it rather than part of the wordmark. */
@@ -553,6 +563,8 @@ a.money-row:hover { color: var(--accent); }
 .leanbar-labels { display: flex; justify-content: space-between; font-family: var(--font-display); font-size: 10px; letter-spacing: 0.1em; color: var(--muted); margin-top: 3px; }
 .profile-line { font-size: 12px; color: var(--ink); }
 .profile-source { font-size: 10.5px; margin-top: 10px; line-height: 1.4; }
+.profile-source a { color: var(--accent); text-decoration: none; border-bottom: 1px dotted rgba(148, 163, 184, 0.45); }
+.profile-source a:hover { border-bottom-color: var(--accent); }
 
 .sources ul { margin: 0; padding-left: 16px; font-size: 12px; color: var(--muted); }
 .sources li { margin-bottom: 4px; }

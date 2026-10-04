@@ -8,6 +8,7 @@ import PollBlock from './PollBlock.jsx';
 import { Registration, Ballot } from './VoterVelocity.jsx';
 import DistrictNews from './DistrictNews.jsx';
 import { initials } from '../lib/candidateName.js';
+import { trackerUrl } from '../lib/tracker.js';
 
 function CandidateCards({ candidates }) {
   // A portrait URL can now change under an installed plugin, so a URL that 404s
@@ -60,6 +61,9 @@ export default function RacePanel({ race, loading }) {
   // figure. A General Assembly seat reads state_funds; a congressional one reads
   // the party-aggregate fundraising summary. Both are shaped alike.
   const isStateRace = race.race_type === 'state_senate' || race.race_type === 'state_house';
+  // Resolved once here because both velocity blocks point at the same place, and
+  // the panel is the only layer that knows the seat's type and number.
+  const trackerHref = trackerUrl(race);
   const moneyS = isStateRace ? (race.state_funds || {}) : (race.money || {});
 
   // A non-empty market_list wins, else the single markets summary, else nothing.
@@ -111,8 +115,8 @@ export default function RacePanel({ race, loading }) {
   const disclosureBlocks = [];
   if (isStateRace) {
     if (race.vitals?.available) {
-      disclosureBlocks.push(<Registration key="registration" vitals={race.vitals} />);
-      disclosureBlocks.push(<Ballot key="ballot" vitals={race.vitals} />);
+      disclosureBlocks.push(<Registration key="registration" vitals={race.vitals} sourceHref={trackerHref} />);
+      disclosureBlocks.push(<Ballot key="ballot" vitals={race.vitals} sourceHref={trackerHref} />);
     } else {
       // Expected for this seat and absent, which is the one case the notice is
       // for. These were the mock figures removed in c4c22e7; real NCSBE extracts

@@ -69,14 +69,26 @@ export default function App() {
           </div>
         </div>
         <h1 className="brand-title">
-          <img
-            className="brand-logo"
-            src={assetUrl('assets/carolina-election-map.png')}
-            alt="Carolina Election Map"
-            width="777"
-            height="339"
-          />
-          <span className="brand-byline"><em>from</em> the John Locke Foundation</span>
+          {/* One anchor over the wordmark and the byline, so the whole block is
+              the click target rather than a logo with an invisible hit area. The
+              site is published by the John Locke Foundation and the tracker runs
+              on its support, so the attribution doubles as the way to fund it. */}
+          <a
+            className="brand-link"
+            href="https://www.johnlocke.org/donate/"
+            target="_blank"
+            rel="noreferrer"
+            title="Support the John Locke Foundation"
+          >
+            <img
+              className="brand-logo"
+              src={assetUrl('assets/carolina-election-map.png')}
+              alt="Carolina Election Map"
+              width="777"
+              height="339"
+            />
+            <span className="brand-byline"><em>from</em> the John Locke Foundation</span>
+          </a>
         </h1>
         <div className="gauge-cluster gauge-right">
           <div className="gauge-row">
