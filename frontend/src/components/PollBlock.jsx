@@ -32,26 +32,30 @@
 // any of it back is a matter of adding a row rather than re-deriving it.
 import MetricBlock from './MetricBlock.jsx';
 
-// RealClearPolitics keeps one page per race, and it is the closest thing to a
-// home for the average. Built here rather than stored on the poll rows because
-// it describes a seat, not any poll: no single topline was published there.
+// Where the average can be checked.
 //
-// Federal only, which is all this widget ever renders -- RacePanel gates polls to
-// congressional seats. RCP has no state-legislature section for North Carolina.
+// RealClearPolitics was the previous target and is gone. RCP has no free API and
+// no usable licence for redistribution; PollResults.org does, and it is the
+// replacement -- CC BY 4.0, sourced from the New York Times polling summary.
 //
-// UNVERIFIED: every request to realclearpolitics.com from this machine returns
-// 403, so the path convention below is written from the site's known structure
-// and has not been confirmed against a live page. It is one function on purpose:
-// if a link 404s, correct it here and every seat follows.
-export function aggregatePollUrl(race, cycle = '2026') {
-  if (!race?.district_id || !cycle) return null;
-  const base = 'https://www.realclearpolitics.com/epolls';
-  if (race.race_type === 'us_house') {
-    const n = String(race.district_number ?? '').padStart(2, '0');
-    return n ? `${base}/${cycle}/house/NC-${n}/` : null;
-  }
-  if (race.race_type === 'us_senate') return `${base}/${cycle}/senate/NC-senate/`;
-  return null;
+// The link points at the NYT summary itself rather than at PollResults.org. The
+// average on screen is computed from toplines JLF verified, so the thing a reader
+// wants is a neutral published aggregate they can compare it against, and the NYT
+// page is that. PollResults.org is the machine-readable route to the same data.
+//
+// One summary URL for every seat, not a per-race deep link. The NYT 403s every
+// request from this machine, so a race-specific URL pattern could not be verified
+// the way the RCP one could not be either -- and an unverified deep link that 404s
+// in front of a reader is worse than an honest link to the index. If someone
+// confirms the per-race pattern, this is the one function to change.
+//
+// Federal only, which is all this widget renders -- RacePanel gates polls to
+// congressional seats.
+export const AGGREGATE_POLL_URL =
+  'https://www.nytimes.com/interactive/polls/latest-polls.html';
+
+export function aggregatePollUrl() {
+  return AGGREGATE_POLL_URL;
 }
 
 function PollFigure({ label, figure, link }) {
@@ -76,7 +80,7 @@ export default function PollBlock({ polls, race }) {
   const cj = summary.cj_poll || null;
   const hasAverage = Boolean(summary.available && summary.advantage);
   if (!hasAverage && !cj) return null;
-  const aggregateUrl = aggregatePollUrl(race);
+  const aggregateUrl = aggregatePollUrl();
 
   // No CJ poll, so the average is the whole of what we know and the panel gets
   // the single POLLS row it has always shown. The hasAverage guard above means
