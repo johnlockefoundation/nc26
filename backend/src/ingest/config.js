@@ -74,6 +74,13 @@ export const CIVITAS_SOURCE_URL =
 // US House is outside the GA-only CPI; every district is tracked for the
 // cycle regardless of margin, which keeps the map and panels complete even
 // where polling/markets are sparse (they report honestly as unavailable).
+//
+// This table is a *reason* table, not a competitive set. Every district is listed
+// because the panel shows a reason for each one, and the wording is what the
+// reader sees. Only the entries rated other than Safe are in play, and
+// US_HOUSE_COMPETITIVE below is what decides that -- previously it mapped the
+// whole table, so "Safe R — Rouzer (R) incumbent." marked NC-07 competitive and
+// the map had one brightness for all fourteen districts.
 const HOUSE_RATED = {
   'NC-01': 'Lean R — district redrawn GOP-friendlier for 2026; Davis (D) vs. Buckhout (R).',
   'NC-02': 'Safe D — Ross (D) incumbent.',
@@ -81,20 +88,27 @@ const HOUSE_RATED = {
   'NC-04': 'Safe D — Foushee (D) incumbent.',
   'NC-05': 'Safe R — Foxx (R) incumbent.',
   'NC-06': 'Safe R — McDowell (R) incumbent.',
-  'NC-07': 'Safe R — Rouzer (R) incumbent.',
+  'NC-07': 'In play — Rouzer (R) incumbent vs. Kim Hardy (D); published polling within single digits (PPP, Aug 2026).',
   'NC-08': 'Safe R — Harris (R) incumbent.',
-  'NC-09': 'Safe R — Hudson (R) incumbent.',
+  'NC-09': 'In play — Hudson (R) incumbent vs. Ojeda (D); closest published House polling in the state (Lake Research Partners, Sep 2026).',
   'NC-10': 'Safe R — Harrigan (R) incumbent.',
   'NC-11': 'Lean R — open seat; Edwards (R) withdrew, Balkcom (R) selected by convention. DCCC Red to Blue target.',
   'NC-12': 'Safe D — Adams (D) incumbent.',
   'NC-13': 'Safe R — Knott (R) incumbent.',
   'NC-14': 'Safe R — Moore (R) incumbent.',
 };
-export const US_HOUSE_COMPETITIVE = Object.entries(HOUSE_RATED).map(([id, reason]) => ({
-  id,
-  source: 'jlf_nc26_tracker',
-  reason,
-}));
+// In play means rated anything other than Safe, which is the same vocabulary the
+// table already speaks and the same distinction the GA rule draws. Reading it off
+// the wording rather than a second hand-maintained list means the reason a reader
+// sees and the brightness the map draws cannot drift apart: a seat cannot be
+// labelled "In play" and still render dull, or the reverse.
+export const US_HOUSE_COMPETITIVE = Object.entries(HOUSE_RATED)
+  .filter(([, reason]) => !/^Safe\b/.test(reason))
+  .map(([id, reason]) => ({
+    id,
+    source: 'jlf_nc26_tracker',
+    reason,
+  }));
 
 // The U.S. Senate race this tracker follows. North Carolina is the only state
 // covered: Cooper (D) vs. Whatley (R) in the seat Tillis (R) is vacating, the

@@ -2,7 +2,7 @@
 -- Run in the Supabase SQL editor. Idempotent: re-run whenever you want fresh prices.
 --
 -- Prices load for all 15 federal races. Snapshots load for three of them only
--- (NC-SEN, NC-01, NC-11), because the weekly-move arrow is wanted only there.
+-- (NC-SEN, NC-01, NC-07, NC-09, NC-11), because the arrow is wanted only there.
 -- A snapshot for any other seat would grow an arrow nobody asked for.
 -- Generated 2026-10-03 by backend/scripts/fetch-kalshi.mjs.
 begin;
@@ -34,6 +34,8 @@ insert into public.market_snapshots
   (race_id, cycle, provider, as_of, dem_price, rep_price, dem_bid_price, rep_bid_price) values
   ('NC-SEN', '2026', 'Kalshi', '2026-10-03', 0.95, 0.05, 0.949, 0.049),
   ('NC-01', '2026', 'Kalshi', '2026-10-03', 0.61, 0.41, 0.6, 0.4),
+  ('NC-07', '2026', 'Kalshi', '2026-10-03', 0.16, 0.83, 0.15, 0.82),
+  ('NC-09', '2026', 'Kalshi', '2026-10-03', 0.19, 0.76, 0.19, 0.77),
   ('NC-11', '2026', 'Kalshi', '2026-10-03', 0.68, 0.31, 0.68, 0.31)
 on conflict (race_id, cycle, provider, as_of) do update set
   dem_price = excluded.dem_price, rep_price = excluded.rep_price,
