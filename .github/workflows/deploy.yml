@@ -82,21 +82,34 @@ jobs:
           set -euo pipefail
           node -e '
             const fs = require("fs");
-            const dir = "./frontend/dist/demo-data/race";
             const volatile = ["polls", "poll_detail", "markets", "market_list",
                               "money", "state_funds", "vitals", "news", "coverage", "last_updated"];
             const offenders = [];
-            for (const f of fs.readdirSync(dir)) {
-              const race = JSON.parse(fs.readFileSync(`${dir}/${f}`, "utf8"));
-              for (const k of volatile) {
-                if (race[k] != null) offenders.push(`${f}: ${k}`);
+            let checked = 0;
+            // The map files carry a races array too, and they need checking for
+            // the same reason the per-seat files do: getMapFeatures() returns a
+            // volatile block per race, and the demo exporter shipped the map
+            // unstripped for a while, which published a market_weekly_move delta
+            // computed from the local database. Scanning only race/ meant the
+            // guard passed while the map contradicted Supabase.
+            for (const dir of ["./frontend/dist/demo-data/race", "./frontend/dist/demo-data/map"]) {
+              for (const f of fs.readdirSync(dir)) {
+                const doc = JSON.parse(fs.readFileSync(`${dir}/${f}`, "utf8"));
+                const records = Array.isArray(doc.races) ? doc.races : [doc];
+                for (const [i, race] of records.entries()) {
+                  checked++;
+                  const where = `${dir.replace("./frontend/dist/", "")}/${f}${records.length > 1 ? `#${i}` : ""}`;
+                  for (const k of volatile) {
+                    if (race[k] != null) offenders.push(`${where}: ${k}`);
+                  }
+                  if (JSON.stringify(race).includes("is_mock")) offenders.push(`${where}: is_mock marker`);
+                }
               }
-              if (JSON.stringify(race).includes("is_mock")) offenders.push(`${f}: is_mock marker`);
             }
             if (offenders.length) {
               throw new Error("live data must not be bundled:\n  " + offenders.slice(0, 20).join("\n  "));
             }
-            console.log(`no live keys bundled across ${fs.readdirSync(dir).length} race files`);
+            console.log(`no live keys bundled across ${checked} bundled records`);
           '
 
       - uses: actions/upload-pages-artifact@v3

@@ -77,7 +77,26 @@ meta.race_types = counts;
 writeJson('meta.json', meta);
 
 for (const raceType of RACE_TYPES) {
-  writeJson(`map/${raceType}.json`, races.getMapFeatures({ cycle: CYCLE, raceType }));
+  // The map carries a races array for the same reason the plugin export keeps
+  // one: App.jsx reads mapData.races for the district matchup labels, which come
+  // from the candidate names. Those names are invariant and stay.
+  //
+  // Everything volatile in that array has to go, exactly as it does for the
+  // per-seat files below and for the plugin's map export. It used not to: this
+  // line wrote getMapFeatures() straight through, so every demo-data/map/*.json
+  // shipped a baked markets block -- including a market_weekly_move delta
+  // computed from the local SQLite database, which is not where any of that
+  // data comes from. The deployed demo was carrying NC-01 "D +1", NC-07 "R +1"
+  // and NC-11 "D +6" as if they were published figures, and NC-09 with no
+  // delta at all, so the map drew four arrows of which only one happened to
+  // agree with Supabase.
+  //
+  // The reason that survived to the public site is that the deploy guard scans
+  // demo-data/race/ and never demo-data/map/. A fabricated delta in a versioned
+  // JSON is indistinguishable from a real one, which is the whole reason the
+  // guard exists.
+  const payload = races.getMapFeatures({ cycle: CYCLE, raceType });
+  writeJson(`map/${raceType}.json`, { ...payload, races: (payload.races || []).map(stripVolatile) });
 }
 
 const districts = db.prepare(`SELECT district_id FROM districts WHERE election_cycle = ?`).all(CYCLE);
