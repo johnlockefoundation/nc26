@@ -5,7 +5,7 @@ import { fillFor, primarySignal, leanLabel, SAFE_FILL_OPACITY, leanOf, leanFor }
 import { surname } from '../lib/candidateName.js';
 import MapInset, { INSETS } from './MapInset.jsx';
 import {
-  BASEMAP_URL, BASEMAP_ATTR, MAP_MIN_ZOOM, MAP_MAX_ZOOM, MAP_BOUNDS, MAP_VIEW,
+  BASEMAP_URL, BASEMAP_ATTR, MAP_MIN_ZOOM, MAP_MAX_ZOOM, MAP_BOUNDS, MAP_VIEW, ZIP_ZOOM,
 } from '../lib/map.js';
 
 // The shared district border, and the colour that means "this one" while a
@@ -218,7 +218,7 @@ function anchorFor(f) {
   return poleOfInaccessibility(polygons);
 }
 
-export default function NCMap({ features, outline, races, selectedId, onSelect, raceType }) {
+export default function NCMap({ features, outline, races, selectedId, onSelect, raceType, zipFocus }) {
   const containerRef = useRef(null);
   const mapRef = useRef(null);
   const layerRef = useRef(null);
@@ -342,6 +342,20 @@ export default function NCMap({ features, outline, races, selectedId, onSelect, 
 
     fitToState(map);
   }, [features, races, outline, raceType]);
+
+  // Zoom to a ZIP. Only the view moves -- no layer is selected and onSelect is
+  // never called, because a ZIP is a place and not an answer about a race. The
+  // effect above refits to the state outline whenever raceType changes, so
+  // switching chamber resets the zoom without this having to.
+  //
+  // The point is clamped inside MAP_BOUNDS by Leaflet's maxBounds, so a stray
+  // coordinate cannot drag the map off North Carolina and strand the reader on
+  // an empty ocean with no way back except the reset button.
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !zipFocus) return;
+    map.setView([zipFocus.lat, zipFocus.lng], ZIP_ZOOM, { animate: true });
+  }, [zipFocus]);
 
   // Highlight the selected district without rebuilding everything.
   useEffect(() => {

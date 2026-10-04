@@ -3,6 +3,7 @@ import { getMap, getMeta, getRace, getTicker, getOutline, assetUrl } from './api
 import RaceTypeToggle from './components/RaceTypeToggle.jsx';
 import RaceTicker from './components/RaceTicker.jsx';
 import NCMap from './components/NCMap.jsx';
+import ZipSearch from './components/ZipSearch.jsx';
 import MiniGauge from './components/MiniGauge.jsx';
 import RacePanel from './components/RacePanel.jsx';
 
@@ -13,6 +14,7 @@ export default function App() {
   const [meta, setMeta] = useState(null);
   const [ticker, setTicker] = useState([]);
   const [selectedId, setSelectedId] = useState(null);
+  const [zipFocus, setZipFocus] = useState(null);
   const [detail, setDetail] = useState(null);
   const [loadingDetail, setLoadingDetail] = useState(false);
   const [error, setError] = useState(null);
@@ -99,6 +101,7 @@ export default function App() {
         <section className="map-column">
           <div className="map-toolbar">
             <RaceTypeToggle value={raceType} onChange={setRaceType} />
+            <ZipSearch raceType={raceType} onLocate={setZipFocus} />
           </div>
           <NCMap
             raceType={raceType}
@@ -107,6 +110,7 @@ export default function App() {
             outline={outline}
             selectedId={selectedId}
             onSelect={setSelectedId}
+            zipFocus={zipFocus}
           />
         </section>
 
