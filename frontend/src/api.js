@@ -344,11 +344,22 @@ export function getMeta() {
 
 export function getMap(raceType) {
   if (LIVE) {
-    return bundled(`map/${raceType}.json`).then((base) =>
+    // The await on the overlay read is load-bearing, and its absence went
+    // unnoticed for a long time because the failure mode is invisible:
+    // awaitQuietly is async, so passing it straight into overlayMap hands that
+    // function a Promise. A Promise has no `races` and no `features`, so every
+    // lookup inside overlayMap misses, the overlay copies nothing at all, and
+    // no error is raised anywhere -- getMap resolves successfully with the
+    // bundled map. The map then drew whatever the bundle happened to carry,
+    // which is why the arrows on it disagreed with Supabase and why seats the
+    // export had no baked delta for showed no arrow at all. getRace gets this
+    // right, which is what made the map look like a data problem rather than a
+    // Promise one.
+    return bundled(`map/${raceType}.json`).then(async (base) =>
       withGeometry(overlayMap(base,
-        // A failed read is normal, not exceptional: it resolves to the bundled
-        // map so the page is still readable.
-        awaitQuietly(`map:${raceType}`, () => rpc('map_payload', { p_race_type: raceType, p_cycle: CYCLE })),
+        // A failed read is normal, not exceptional: it resolves to null and
+        // overlayMap returns the bundled map unchanged.
+        await awaitQuietly(`map:${raceType}`, () => rpc('map_payload', { p_race_type: raceType, p_cycle: CYCLE })),
       ), raceType));
   }
   return getJson(`${API_BASE}/map?race_type=${raceType}`);
@@ -442,10 +453,13 @@ export function getTicker(limit = 12) {
     // arrival. Pages does ship a small demo ticker, and that one is kept as the
     // fallback rather than replaced by an empty list -- otherwise a single
     // failed read empties a demo that had stories to show.
-    const stale = BUNDLED ? awaitQuietly('ticker:bundled', () => bundled('ticker.json'), () => null) : null;
+    // Read eagerly and awaited: `stale` is consumed as a value by the fallback
+    // below, and an un-awaited awaitQuietly would put a truthy Promise there,
+    // so the fallback would hand callers a Promise on every failed live read.
+    const stalePromise = BUNDLED ? awaitQuietly('ticker:bundled', () => bundled('ticker.json'), () => null) : null;
     return withFallback('ticker',
       () => rpc('ticker', { p_limit: limit }).then((items) => ({ items })),
-      () => stale || { items: [] });
+      async () => (stalePromise ? await stalePromise : { items: [] }));
   }
   return getJson(`${API_BASE}/ticker?limit=${limit}`);
 }
