@@ -388,7 +388,7 @@ export function getRace(districtId) {
         // others must render the blocks it has rather than all or none. Each
         // resolves to null on failure and overlayVolatile skips nulls, so a seat
         // the database has nothing for is simply a seat without those blocks.
-        const [polls, markets, marketList, money, stateFunds, vitals] = await Promise.all([
+        const [polls, markets, marketList, money, stateFunds, vitals, news] = await Promise.all([
           awaitQuietly(`polls:${districtId}`,
             () => rpc('poll_summary', { p_race_id: districtId, p_cycle: CYCLE })),
           awaitQuietly(`markets:${districtId}`,
@@ -401,13 +401,15 @@ export function getRace(districtId) {
             () => rpc('state_funds_summary', { p_race_id: districtId, p_cycle: CYCLE })),
           awaitQuietly(`vitals:${districtId}`,
             () => rpc('vitals_summary', { p_race_id: districtId, p_cycle: CYCLE })),
+          awaitQuietly(`news:${districtId}`,
+            () => rpc('district_news', { p_race_id: districtId, p_cycle: CYCLE, p_limit: 6 })),
         ]);
         // markets and market_list are overlaid separately because they are two
         // keys, not one. The panel reads `markets` for the single-quote row and
         // prefers market_list when it is non-empty, so both have to be present
         // for a venue list to appear if a second source is ever added.
         //
-        // All six go in ONE call, wrapped in an object keyed by field name.
+        // All seven go in ONE call, wrapped in an object keyed by field name.
         // overlayVolatile merges the live object's own keys onto the record, so
         // passing a bare summary merged it flat: markets_summary's `available`,
         // `advantage` and `delta` landed at the top level of the race and
@@ -426,6 +428,7 @@ export function getRace(districtId) {
           money,
           state_funds: stateFunds,
           vitals,
+          news,
         }));
       });
   }
