@@ -46,7 +46,7 @@ export default function ZipSearch({ raceType, onLocate }) {
   return (
     <form className="zip-search" onSubmit={submit} role="search">
       <label className="zip-search-label" htmlFor="zip-search-input">
-        Find a ZIP
+        Zoom in to a specific zip code
       </label>
       <div className="zip-search-row">
         <input
@@ -69,10 +69,12 @@ export default function ZipSearch({ raceType, onLocate }) {
           Go
         </button>
       </div>
+      {/* Kept in the DOM even when empty: aria-live has to be present before a
+          message arrives for it to be announced. It now carries only what a
+          reader cannot work out -- why it is disabled, or why the ZIP was not
+          found. What the control does is the label's job. */}
       <div className="zip-search-help" id="zip-search-help" aria-live="polite">
-        {disabled
-          ? 'One seat covers the state.'
-          : error || 'Zooms the map. Does not change the selected race.'}
+        {disabled ? 'One seat covers the state.' : error || ''}
       </div>
     </form>
   );
