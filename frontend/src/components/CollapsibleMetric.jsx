@@ -8,19 +8,19 @@
 //
 // Collapsed it reads as a plain .metric: title hard left, and the right-hand
 // slot holding either a value or a disclosure caret, so a folded box is the same
-// height as the POLLS and market blocks stacked above it and the stack does not
-// step. Expanding elongates the box in place.
+// height as the market and average-only POLLS rows stacked above it and the
+// stack does not step. Expanding elongates the box in place.
 //
 // Which of the two the right-hand slot holds is the only difference between the
 // boxes, and it is a real difference rather than a styling choice. DEMOGRAPHICS,
 // REGISTRATIONS and BALLOTS have no single party-advantage figure, and a stand-in
 // number would mean something different in every chamber -- so they show a caret
-// and everything lives behind it. MONEY does have a figure, so it shows that,
-// same as POLLS, with the caret after it.
+// and everything lives behind it. MONEY does have a figure, so it shows that
+// with the caret after it, the same as a value-bearing row would read.
 export default function CollapsibleMetric({ title, value, children, source }) {
   return (
     <details className="metric collapsible-metric">
-      <summary className="collapsible-metric-head">
+      <summary>
         <span className="metric-title">{title}</span>
         {value}
         <span className="collapsible-caret" aria-hidden="true" />

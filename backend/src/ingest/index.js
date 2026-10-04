@@ -5,11 +5,16 @@
 //   node src/ingest/index.js us-house       -> federal candidates + competitiveness
 //   node src/ingest/index.js us-senate      -> NC Senate race + candidates
 //   node src/ingest/index.js metrics        -> baseline metrics (polls/markets/money/news)
+//   node src/ingest/index.js profiles       -> per-district Census profile extract
 //   node src/ingest/index.js polls          -> live polls from ./data/sources/polls.json
 //   node src/ingest/index.js kalshi         -> live Kalshi markets from ./data/sources/markets-kalshi.json
 //   node src/ingest/index.js fundraising    -> live fundraising from ./data/sources/fundraising.json
 //   node src/ingest/index.js news           -> live news from ./data/sources/news.json
 //   node src/ingest/index.js photos         -> candidate portraits from ./data/sources/photos.json
+//
+// `all` runs every target above in the order listed in JOB below, which is the
+// order the later ones read from. An unknown target exits non-zero rather than
+// silently succeeding, so a typo in a CI or deploy step cannot pass quietly.
 import { db, initSchema, nowIso } from '../db.js';
 import { CYCLE } from './config.js';
 import { ingestDistricts } from './districts.js';

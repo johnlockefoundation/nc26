@@ -22,6 +22,13 @@ const SEED = join(BACKEND, 'data', 'seed');
 //   race   - outlets that cover specific NC seats, which feed the per-district
 //            list under CPI Info. They do not drive the ticker.
 //
+// Both remaining feeds are `funnel: true`, so the race tier is currently empty.
+// The flag is kept because it is what decides ticker eligibility, and the site
+// reads a story with in_funnel=0 into the per-district list and not the ticker --
+// a distinction that is worth being able to express even while every outlet we
+// carry happens to qualify for both. Adding a `funnel: false` feed is the whole
+// change needed to use the second tier again.
+//
 // Only the two in-house outlets are fetched. The earlier list also pulled WRAL,
 // the Observer, Carolina Public Press, Our State and Indy Week, which put
 // third-party coverage on a site that carries John Locke and Carolina Journal
