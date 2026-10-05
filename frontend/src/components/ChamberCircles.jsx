@@ -38,25 +38,30 @@ import { holderOf, projectLean, seatShift, signedCpi } from '../lib/vulnerabilit
 // where Edwards withdrew -- and the chart does not claim to know which is which.
 const NO_HOLDER = '#475569';
 
-// Angular sector the rows span. Just under a full half-turn: at exactly 180 the
-// outermost seats sit almost level with the front row and the arc reads as a
-// rectangle with curved ends.
-const SPAN_DEG = 168;
+// Angular sector the rows span. Just shy of a full half-turn: at exactly 180 the
+// outermost seats sit level with the front row and the arc reads as a rectangle
+// with curved ends. A wider span also pulls the outer arcs in, which is the
+// single biggest lever on how tightly the chart packs.
+const SPAN_DEG = 176;
 const SPAN_RAD = (SPAN_DEG * Math.PI) / 180;
 
-// Minimum arc length per seat, which sets how far out each row has to sit for its
-// circles not to touch. Radius is derived from seat count rather than fixed, so a
-// 40-seat row and an 8-seat row are spaced correctly without tuning by eye.
-// Slightly more than the circle diameter, so neighbouring seats read as separate
-// marks rather than a dotted line.
-const SEAT_SPACING = 19;
+// Minimum arc length per seat, which sets how far out each row must sit for its
+// circles not to overlap. Radius is derived from seat count rather than fixed, so
+// a 40-seat arc and an 8-seat arc space correctly without tuning by eye.
+//
+// Just over the circle diameter: any more and the chart spreads out faster than
+// the seats need, because a 120-seat chamber is dominated by its outermost arc
+// and that arc's radius grows with the spacing. 120 seats at 17px of spacing
+// needed a 496px-wide chart; at 15.5px it needs 404, which is the difference
+// between a diagram and a scatter.
+const SEAT_SPACING = 15.5;
 const R_MIN = 44;
 // Minimum gap between consecutive arcs. Without it a small chamber collapses:
 // the 14-seat House needs 2, 4 and 8 seats on its three arcs, and the first two
 // both fall below the spacing their seat count implies, so both clamp to R_MIN
 // and the two rows land on the same circle.
-const ROW_GAP = 26;
-const CIRCLE_R = 8.5;
+const ROW_GAP = 17;
+const CIRCLE_R = 7;
 
 // Rows scale with chamber size: a 120-seat chamber needs more arcs than a 14-seat
 // one or the inner rows collapse to a single seat.
