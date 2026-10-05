@@ -23,7 +23,22 @@ export function moveArrow(delta) {
   if (!delta || !delta.party || delta.party === 'EVEN') return null;
   const towardD = delta.party === 'D';
   return {
-    glyph: towardD ? '↖' : '↗',
+    // Drawn, not typed. The two Unicode arrow codepoints do not resolve to the
+    // same face: on the inherited stack U+2196 measures 42.1 wide with no descent
+    // while U+2197 measures 46 with 3.6 below the baseline, so the same arrow
+    // renders at two different weights depending on which way it points. Naming a
+    // symbol font does not fix it either -- Apple Symbols and Arial Unicode MS
+    // give consistent metrics, and neither exists on every platform this ships to.
+    //
+    // One path, mirrored. A horizontal flip cannot change stroke weight, so the
+    // two directions are the same mark by construction rather than by luck.
+    svg: `<svg class="arrow-glyph" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <g fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"${towardD ? ' transform="translate(24 0) scale(-1 1)"' : ''}>
+        <path d="M4.5 19.5 19 5"/>
+        <path d="M19 5h-6.5"/>
+        <path d="M19 5v6.5"/>
+      </g>
+    </svg>`,
     cls: towardD ? 'move-d' : 'move-r',
     // One sentence, used verbatim by all three renderings. The panel arrow
     // keeps it as a title attribute, the tooltip shows it as text.

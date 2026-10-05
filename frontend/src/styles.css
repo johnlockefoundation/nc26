@@ -256,13 +256,23 @@
 }
 .district-arrow-marker { background: transparent; border: none; }
 .tip-move { margin-top: 3px; font-family: var(--font-body); font-size: 10.5px; letter-spacing: 0.01em; }
+/* An inline SVG, not a glyph. The two arrow codepoints do not resolve to the
+   same face -- under the inherited stack U+2196 measures 42.1 wide with no descent
+   while U+2197 measures 46 with 3.6 below the baseline -- so one direction of the
+   move rendered visibly thinner than the other. The stroke is `currentColor`, so
+   .move-d and .move-r still set the colour and the two directions are one path
+   mirrored, which cannot change stroke weight. */
 .map-arrow {
   display: flex; align-items: center; justify-content: center;
-  width: 100%; height: 100%; font-size: 46px; line-height: 1; font-weight: 700;
-  text-shadow: 0 1px 3px rgba(15, 23, 42, 0.95);
+  width: 100%; height: 100%;
+  filter: drop-shadow(0 1px 3px rgba(15, 23, 42, 0.95));
+  animation: arrow-live 1.6s ease-in-out infinite;
 }
-.map-arrow.map-arrow-senate { font-size: 64px; }
-.map-arrow { animation: arrow-live 1.6s ease-in-out infinite; }
+.map-arrow .arrow-glyph { width: 100%; height: 100%; display: block; }
+/* The senate arrow fills more of its box; the house arrow is inset so a 46px box
+   does not read as a 46px arrow. */
+.map-arrow:not(.map-arrow-senate) .arrow-glyph { width: 78%; height: 78%; }
+.map-arrow.map-arrow-senate .arrow-glyph { width: 92%; height: 92%; }
 
 /* One colour per party, shared by the panel arrow, the map arrow and the map
    tooltip's move line. These were once .move-*, .arrow-* and .tip-move-* --
