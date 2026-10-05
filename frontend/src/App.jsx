@@ -47,12 +47,21 @@ export default function App() {
 
   const races = useMemo(() => mapData?.races || [], [mapData]);
 
-  // The waffle and the slider only exist for the General Assembly, because both
-  // are built on the Civitas per-district index and neither federal chamber has
-  // one. Showing an empty grid of 14 or 1 circles would be worse than showing
-  // nothing.
+  // The two controls need different amounts of the data, and gating them
+  // together hid both of them.
+  //
+  // The waffle only needs to know who holds each seat, which comes from the
+  // incumbent flag and is on every chamber except U.S. Senate -- where the flag
+  // is wrong (Whatley holds the seat and is recorded as a challenger) and where
+  // one circle is not a chamber anyway.
+  //
+  // The slider needs the Civitas per-district index, which only the General
+  // Assembly has. Neither federal chamber has one, so there is nothing for it to
+  // move against.
   const isGaChamber = raceType === 'state_house' || raceType === 'state_senate';
-  const demoView = DEMO_ONLY && isGaChamber;
+  const canWaffle = raceType !== 'us_senate';
+  const sliderView = DEMO_ONLY && isGaChamber;
+  const waffleView = DEMO_ONLY && canWaffle;
 
   // A generic ballot of zero belongs to the chamber it was reasoned about, so
   // both controls reset on a chamber switch rather than carrying a number that
@@ -133,7 +142,7 @@ export default function App() {
 
       <main className="layout">
         <section className="map-column">
-          {demoView && (
+          {sliderView && (
             <div className="map-toolbar">
               <GenericBallotSlider
                 races={races}
@@ -145,10 +154,10 @@ export default function App() {
           )}
           <div className="map-toolbar">
             <RaceTypeToggle value={raceType} onChange={setRaceType} />
-            {demoView && <MapViewToggle value={view} onChange={setView} />}
+            {waffleView && <MapViewToggle value={view} onChange={setView} />}
             <ZipSearch raceType={raceType} onLocate={setZipFocus} />
           </div>
-          {demoView && view === 'circles' ? (
+          {waffleView && view === 'circles' ? (
             <ChamberCircles
               races={races}
               generic={generic}

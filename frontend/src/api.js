@@ -203,24 +203,31 @@ async function withGeometry(payload, raceType) {
 // additive: only keys Supabase actually returned are copied, so an absent or
 // partial payload leaves the bundled invariant fields intact rather than
 // replacing the record with nulls.
-// Keys that travel together with `partisan` because they are derived from it.
-const UNRATED_PAIRED_KEYS = new Set(['partisan', 'competitive', 'competitive_reason', 'competitive_source']);
+// Never taken from a live read, because the live side has no opinion to give.
+//
+// `competitive` and its two provenance fields are the cycle's published
+// designation, derived from real extracts: the Civitas xlsx for the General
+// Assembly, the John Locke rated table for the U.S. House. That makes them
+// reference-layer facts of the same kind as `profile`, which VOLATILE_RACE_KEYS
+// deliberately keeps for the same reason -- verified against a real extract and
+// fixed for the cycle.
+//
+// Supabase currently holds a designation for none of the seats: zero of the 170
+// General Assembly and zero of the 15 federal races come back competitive. So
+// every live read returned `competitive: false`, which the null test cannot see
+// because false is not null, and it silently overwrote the bundled flag. The
+// slider then compared itself against zero and the waffle ringed nothing.
+//
+// Keying this off `partisan` instead does not work, because partisanSummary()
+// returns available:false for every non-General-Assembly race -- the federal
+// chambers have no per-district index at all -- so there is no signal there to
+// condition on. The designation has to be reference-only outright.
+const REFERENCE_ONLY_KEYS = new Set([
+  'competitive', 'competitive_reason', 'competitive_source',
+]);
 
 function overlayVolatile(base, live) {
   if (!live) return base;
-  // The Civitas index and the competitive flag are one fact from one source:
-  // the cycle's designation is derived from the index. So when the live side
-  // reports no index for a seat it has no basis for a competitive verdict
-  // either, and neither half of the pair may overwrite a bundled one. Without
-  // this, `competitive` arrives from Supabase as a plain `false` -- which the
-  // null test above cannot see, because false is not null -- and quietly undid
-  // the designation for all 170 General Assembly seats, leaving the slider
-  // comparing itself against zero.
-  const isUnratedPair = live.partisan && typeof live.partisan === 'object'
-    && live.partisan.available === false
-    && base.partisan && typeof base.partisan === 'object'
-    && base.partisan.available === true;
-
   const out = { ...base };
   for (const [k, v] of Object.entries(live)) {
     if (v == null) continue;
@@ -243,7 +250,7 @@ function overlayVolatile(base, live) {
     // usual, and an empty live block is simply skipped. Where the bundle has
     // nothing either -- polls and markets, which are live-only by design -- the
     // empty block still lands and the seat correctly reads as unavailable.
-    if (isUnratedPair && UNRATED_PAIRED_KEYS.has(k)) continue;
+    if (REFERENCE_ONLY_KEYS.has(k)) continue;
     if (v && typeof v === 'object' && v.available === false
         && base[k] && typeof base[k] === 'object' && base[k].available === true) continue;
     out[k] = v;

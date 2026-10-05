@@ -53,13 +53,30 @@ export default function ChamberCircles({
           const cpi = signedCpi(race.partisan);
           const shift = seatShift(cpi, generic);
           const lean = projectLean(shift);
-          const vulnerable = shift != null && Math.abs(shift) <= margin;
+          // Two chambers, two honest answers to "is this seat in play".
+          //
+          // A General Assembly seat has a Civitas index, so the ring is the
+          // slider's arithmetic at the current generic ballot: a reader who has
+          // moved the slider sees the waffle answer to it.
+          //
+          // A U.S. House seat has no per-district index, so there is nothing for
+          // the slider to move against and the ring falls back to the cycle's
+          // published competitive designation. That is a real designation rather
+          // than arithmetic, which is the only reason it is used -- without it
+          // the chamber renders fourteen identical circles and says nothing.
+          const vulnerable = cpi == null
+            ? Boolean(race.competitive)
+            : shift != null && Math.abs(shift) <= margin;
           const tone = holder ? PARTY_TONES[holder].live : NO_HOLDER;
           const selected = race.district_id === selectedId;
 
-          const title = vulnerable
-            ? `${race.district_id}: in play at ${lean ? lean.label : 'EVEN'}`
-            : `${race.district_id}: ${lean ? lean.label : 'unrated'}`;
+          // A seat with no index has no projected lean to print, so it is
+          // labelled by what is actually known about it instead.
+          const title = cpi == null
+            ? `${race.district_id}: ${race.competitive ? 'designated competitive' : 'not competitive'}`
+            : `${race.district_id}: ${vulnerable
+              ? `in play at ${lean ? lean.label : 'EVEN'}`
+              : lean ? lean.label : 'unrated'}`;
 
           return (
             <button
