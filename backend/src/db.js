@@ -29,6 +29,18 @@ export function initSchema() {
   if (cols.some((c) => c.name === 'website')) {
     db.exec(`ALTER TABLE candidates DROP COLUMN website`);
   }
+  // Same reason as the candidate photo columns above: schema.sql only runs its
+  // CREATE TABLE IF NOT EXISTS, which leaves an existing local db on the old
+  // shape. holder_party/holder_name answer "who holds this seat", which the
+  // candidate rows cannot express when the sitting member is retiring or was
+  // appointed and is not a candidate.
+  const districtCols = db.prepare(`PRAGMA table_info(districts)`).all();
+  if (!districtCols.some((c) => c.name === 'holder_party')) {
+    db.exec(`ALTER TABLE districts ADD COLUMN holder_party TEXT`);
+  }
+  if (!districtCols.some((c) => c.name === 'holder_name')) {
+    db.exec(`ALTER TABLE districts ADD COLUMN holder_name TEXT`);
+  }
   // state_funds and district_demographics are new tables rather than altered
   // columns, so there is nothing to migrate for them; schema.sql creates both
   // with CREATE TABLE IF NOT EXISTS.

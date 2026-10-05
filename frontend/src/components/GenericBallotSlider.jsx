@@ -53,6 +53,9 @@ export default function GenericBallotSlider({ races, generic, onChange, margin }
         <span className="gb-tally-break">
           <span className="gb-chip gb-chip-d">{tally.heldD} held by D</span>
           <span className="gb-chip gb-chip-r">{tally.heldR} held by R</span>
+          {tally.heldU > 0 && (
+            <span className="gb-chip gb-chip-u">{tally.heldU} unaffiliated</span>
+          )}
         </span>
       </div>
     </div>

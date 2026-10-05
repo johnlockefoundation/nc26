@@ -57,7 +57,7 @@ built as (
   select
     r.id, r.race_type, r.district_number, r.title, r.competitive,
     r.competitive_source, r.competitive_reason,
-    r.cpi_value, r.partisan_lean, r.partisan_party,
+    r.cpi_value, r.partisan_lean, r.partisan_party, r.holder_party, r.holder_name,
     (select public.poll_summary(r.id, p_cycle)) as polls,
     (select public.state_funds_summary(r.id, p_cycle)) as state_funds,
     (select public.vitals_summary(r.id, p_cycle)) as vitals,
@@ -89,7 +89,11 @@ races_json as (
       'value', case when cpi_value ~ '^[DR]\+' then
                        substr(cpi_value, 3)::numeric else null end,
       'lean', partisan_lean,
-      'competitive', competitive),
+      'competitive', competitive,
+      -- Who holds the seat, which the candidate rows cannot express when the
+      -- sitting member is retiring or was appointed and is not a candidate.
+      'holder_party', holder_party,
+      'holder_name', holder_name),
     'polls', polls,
     'markets', jsonb_build_object(
       'available', dem_price is not null,

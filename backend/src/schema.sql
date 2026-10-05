@@ -18,6 +18,14 @@ CREATE TABLE IF NOT EXISTS districts (
   cpi_value          TEXT,                   -- e.g. D+2 / R+0 (signed party lean magnitude)
   partisan_lean      TEXT,                   -- Civitas rating bucket: Safe | Likely | Lean | Toss-up
   partisan_party     TEXT,                   -- Civitas lean party: D | R
+  -- Who holds the seat right now, from the NCGA roster. Distinct from the
+  -- candidates' `incumbent` flag on purpose: a sitting member who is retiring or
+  -- was appointed and is not a candidate still holds the seat, and no candidate
+  -- row can say so. Party is D | R | U -- U is a real case, two 2025-26 House
+  -- seats are held by unaffiliated members, and neither party colour would be
+  -- honest for them.
+  holder_party       TEXT,
+  holder_name        TEXT,
   PRIMARY KEY (district_id, election_cycle)
 );
 

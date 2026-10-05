@@ -726,3 +726,7 @@ a.money-row:hover { color: var(--accent); }
 }
 .seats-link:hover { color: var(--ink); border-color: var(--accent); }
 .seats-link:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+/* Unaffiliated holders: the same lighter-token treatment the party chips use,
+   because these are small marks on a dark chip and the map's party fills measure
+   under 4.5:1 as text. */
+.gb-chip-u { color: #c4b5fd; border-color: rgba(196, 181, 253, 0.35); }

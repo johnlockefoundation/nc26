@@ -30,13 +30,17 @@ import { holderOf, projectLean, seatShift, signedCpi } from '../lib/vulnerabilit
 // readable channels. A filled circle would make a vulnerable Republican-held seat
 // read as a Democratic one.
 
-// A seat where neither candidate is flagged incumbent. This is deliberately NOT
-// labelled "open": the seed carries incumbent: false for 23 General Assembly
-// seats whose members are in fact sitting, so the flag is unreliable there and
-// rendering grey as "nobody holds this" would assert something the data does not
-// support. It means the holder is not recorded. One seat really is open -- NC-11,
-// where Edwards withdrew -- and the chart does not claim to know which is which.
+// Held by an unaffiliated member. Two 2025-26 House seats are, and neither
+// party colour would be honest for them: they are not Democratic seats and they
+// are not Republican ones, and a third hue is the only truthful option left once
+// the two party fills are taken.
+const UNAFFILIATED = '#a78bfa';
+// No holder recorded at all. Unreachable from the General Assembly data now that
+// every seat carries holder_party, kept so a seat that somehow lacks one reads as
+// "not recorded" rather than being silently coloured as a party.
 const NO_HOLDER = '#475569';
+
+const HOLDER_TONE = { D: PARTY_TONES.D.live, R: PARTY_TONES.R.live, U: UNAFFILIATED };
 
 // Angular sector the rows span. Just shy of a full half-turn: at exactly 180 the
 // outermost seats sit level with the front row and the arc reads as a rectangle
@@ -103,6 +107,9 @@ export default function ChamberCircles({
     return {
       race,
       cpi,
+      // Every General Assembly seat carries a Civitas index, so the sort is by CPI
+      // and the holder never decides it. The holder fallback exists only so a seat
+      // with no index cannot land at an arbitrary end of the chart.
       key: cpi != null ? cpi : holder === 'D' ? -1 : holder === 'R' ? 1 : 0,
     };
   }).sort((a, b) => a.key - b.key);
@@ -159,7 +166,8 @@ export default function ChamberCircles({
 
   const heldD = keyed.filter((s) => holderOf(s.race) === 'D').length;
   const heldR = keyed.filter((s) => holderOf(s.race) === 'R').length;
-  const unrecorded = n - heldD - heldR;
+  const heldU = keyed.filter((s) => holderOf(s.race) === 'U').length;
+  const unrecorded = n - heldD - heldR - heldU;
 
   return (
     <div className="circles-wrap">
@@ -168,6 +176,9 @@ export default function ChamberCircles({
       <ul className="hemicycle-key">
         <li><span className="key-dot" style={{ background: PARTY_TONES.D.live }} />{heldD} held by D</li>
         <li><span className="key-dot" style={{ background: PARTY_TONES.R.live }} />{heldR} held by R</li>
+        {heldU > 0 && (
+          <li><span className="key-dot" style={{ background: UNAFFILIATED }} />{heldU} unaffiliated</li>
+        )}
         {unrecorded > 0 && (
           <li><span className="key-dot" style={{ background: NO_HOLDER }} />{unrecorded} holder not recorded</li>
         )}
@@ -190,11 +201,14 @@ export default function ChamberCircles({
           // Assembly only, which is also the only place an index exists -- so
           // there is no second answer to give and no fallback to invent.
           const vulnerable = shift != null && Math.abs(shift) <= margin;
-          const tone = holder ? PARTY_TONES[holder].live : NO_HOLDER;
+          const tone = HOLDER_TONE[holder] || NO_HOLDER;
           const selected = race.district_id === selectedId;
           // The holder is named in the tooltip as well as the lean, because the
           // fill is the holder and a reader deserves to know whose seat this is.
-          const who = holder === 'D' ? 'held by D' : holder === 'R' ? 'held by R' : 'holder not recorded';
+          const name = race.partisan?.holder_name;
+          const who = holder === 'U'
+            ? `held by ${name || 'an unaffiliated member'}`
+            : holder ? `held by ${name || holder}` : 'holder not recorded';
           const inPlay = vulnerable
             ? `in play at ${lean ? lean.label : 'EVEN'}`
             : lean ? lean.label : 'unrated';

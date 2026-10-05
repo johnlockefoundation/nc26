@@ -329,6 +329,14 @@ function partisanSummary(row) {
     label: lean ? `${lean.party} +${lean.value}` : null,
     lean: row.partisan_lean || null,
     competitive: Boolean(row.competitive),
+    // Who holds the seat, which is a different question from which way it leans
+    // and is not answerable from the candidate rows: a sitting member who is
+    // retiring or was appointed and is not on the ballot holds the seat, and no
+    // candidate can be flagged for it. `U` is a real value -- two 2025-26 House
+    // seats are held by unaffiliated members -- so it is passed through rather
+    // than coerced to a party or to null.
+    holder_party: row.holder_party || null,
+    holder_name: row.holder_name || null,
     source_url: CIVITAS_SOURCE_URL,
   };
 }
