@@ -47,21 +47,18 @@ export default function App() {
 
   const races = useMemo(() => mapData?.races || [], [mapData]);
 
-  // The two controls need different amounts of the data, and gating them
-  // together hid both of them.
+  // Both controls are General Assembly only.
   //
-  // The waffle only needs to know who holds each seat, which comes from the
-  // incumbent flag and is on every chamber except U.S. Senate -- where the flag
-  // is wrong (Whatley holds the seat and is recorded as a challenger) and where
-  // one circle is not a chamber anyway.
-  //
-  // The slider needs the Civitas per-district index, which only the General
-  // Assembly has. Neither federal chamber has one, so there is nothing for it to
-  // move against.
+  // The slider needs the Civitas per-district index and neither federal chamber
+  // has one, so there is nothing for it to move against. The waffle does not need
+  // that, and was briefly extended to the U.S. House on the grounds that incumbency
+  // was available there -- but a federal hemicycle is not what this is for. It is a
+  // state-legislature panel: 120 seats and 50 seats where the count is the story,
+  // against 14 and 1 where it is not. Keeping it off the federal chambers also
+  // keeps it away from the two seats whose incumbent flags are least trustworthy,
+  // NC-11 and NC-SEN.
   const isGaChamber = raceType === 'state_house' || raceType === 'state_senate';
-  const canWaffle = raceType !== 'us_senate';
-  const sliderView = DEMO_ONLY && isGaChamber;
-  const waffleView = DEMO_ONLY && canWaffle;
+  const demoView = DEMO_ONLY && isGaChamber;
 
   // A generic ballot of zero belongs to the chamber it was reasoned about, so
   // both controls reset on a chamber switch rather than carrying a number that
@@ -145,7 +142,7 @@ export default function App() {
           {/* Only in the seats view. It moves the number the hemicycle's rings
               are drawn from, so on the map it would change something nobody can
               see. */}
-          {sliderView && waffleView && view === 'circles' && (
+          {demoView && view === 'circles' && (
             <div className="map-toolbar">
               <GenericBallotSlider
                 races={races}
@@ -157,10 +154,10 @@ export default function App() {
           )}
           <div className="map-toolbar">
             <RaceTypeToggle value={raceType} onChange={setRaceType} />
-            {waffleView && <MapViewToggle value={view} onChange={setView} />}
+            {demoView && <MapViewToggle value={view} onChange={setView} />}
             <ZipSearch raceType={raceType} onLocate={setZipFocus} />
           </div>
-          {waffleView && view === 'circles' ? (
+          {demoView && view === 'circles' ? (
             <ChamberCircles
               races={races}
               generic={generic}

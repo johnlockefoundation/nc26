@@ -185,24 +185,19 @@ export default function ChamberCircles({
           const holder = holderOf(race);
           const shift = seatShift(cpi, generic);
           const lean = projectLean(shift);
-          // Two chambers, two honest answers to "is this seat in play". A General
-          // Assembly seat has an index, so the ring is the slider's arithmetic at
-          // the current generic ballot. A federal seat has no per-district index, so
-          // there is nothing to move and the ring is the cycle's published
-          // designation instead -- a real designation rather than arithmetic, and
-          // the only reason it is used: without it the chamber renders fourteen
-          // identical circles and says nothing at all.
-          const vulnerable = cpi == null
-            ? Boolean(race.competitive)
-            : shift != null && Math.abs(shift) <= margin;
+          // The ring is the slider's arithmetic at the current generic ballot.
+          // Every seat drawn here has a Civitas index -- the chart is General
+          // Assembly only, which is also the only place an index exists -- so
+          // there is no second answer to give and no fallback to invent.
+          const vulnerable = shift != null && Math.abs(shift) <= margin;
           const tone = holder ? PARTY_TONES[holder].live : NO_HOLDER;
           const selected = race.district_id === selectedId;
           // The holder is named in the tooltip as well as the lean, because the
           // fill is the holder and a reader deserves to know whose seat this is.
           const who = holder === 'D' ? 'held by D' : holder === 'R' ? 'held by R' : 'holder not recorded';
-          const inPlay = cpi == null
-            ? (race.competitive ? 'designated competitive' : 'not competitive')
-            : vulnerable ? `in play at ${lean ? lean.label : 'EVEN'}` : lean ? lean.label : 'unrated';
+          const inPlay = vulnerable
+            ? `in play at ${lean ? lean.label : 'EVEN'}`
+            : lean ? lean.label : 'unrated';
           const label = `${race.district_id}: ${who}, ${inPlay}`;
 
           return (
