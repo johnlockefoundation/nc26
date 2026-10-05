@@ -561,3 +561,168 @@ a.money-row:hover { color: var(--accent); }
 
 .panel-loading { padding: 60px 0; text-align: center; color: var(--muted); }
 .error-banner { background: rgba(153, 27, 27, 0.12); color: #fca5a5; border: 1px solid rgba(153, 27, 27, 0.4); border-radius: 10px; padding: 10px 14px; margin-bottom: 12px; font-size: 13px; }
+
+/* --- Demo-only: chamber waffle and generic ballot slider --------------------
+   Both are whole-chamber analytics rather than a reading of one race, and both
+   are gated to the Pages build (DEMO_ONLY in api.js). Nothing here is shared
+   with the map's district styling on purpose: the waffle encodes who holds a
+   seat, which is a different fact from which way it leans, and reusing the map's
+   lean fills here would quietly assert the wrong thing. */
+
+/* Hemicycle. Fixed-size circles on concentric arcs, blue-left and red-right by
+   lean, laid out from the apex outward so the in-play band is a contiguous wedge
+   at the top that visibly widens as the slider moves. Sized in viewBox units
+   rather than CSS pixels so the chart scales with its column and the arcs never
+   have to be recalculated. */
+.circles-wrap {
+  display: flex; align-items: flex-end; justify-content: center;
+  padding: 22px 16px 10px;
+  background: #0a111f; border: 1px solid var(--line); border-radius: 14px;
+  overflow: hidden;
+}
+.hemicycle { display: block; width: 100%; height: auto; max-height: 460px; }
+.seat-circle {
+  cursor: pointer;
+  /* Ringed rather than filled, so "who holds it" and "is it in play" stay two
+     channels. A fill would make a vulnerable Republican-held seat on the
+     left-hand side read as a Democratic one. */
+  stroke: rgba(148, 163, 184, 0.22); stroke-width: 1;
+  transition: r 0.12s ease, stroke 0.12s ease;
+}
+.seat-circle:hover { r: 10.5; }
+.seat-circle:focus-visible { outline: none; stroke: var(--accent); stroke-width: 2.5; }
+.seat-circle.is-vulnerable { stroke: var(--accent); stroke-width: 2; }
+.seat-circle.is-selected { stroke: #e2e8f0; stroke-width: 3; }
+
+/* Generic ballot slider. */
+.gb {
+  flex: 1; min-width: 0;
+  background: #0a111f; border: 1px solid var(--line); border-radius: 12px;
+  padding: 11px 14px 12px;
+}
+.gb-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.gb-label {
+  font-family: var(--font-display); font-size: 10.5px; letter-spacing: 0.14em;
+  font-weight: 700; color: var(--muted);
+}
+.gb-value {
+  font-family: var(--font-display); font-size: 20px; font-weight: 700;
+  letter-spacing: 0; font-variant-numeric: tabular-nums; color: var(--ink);
+}
+.gb-range { width: 100%; margin: 8px 0 2px; accent-color: var(--accent); cursor: pointer; }
+.gb-scale {
+  display: flex; justify-content: space-between;
+  font-size: 9.5px; letter-spacing: 0.06em; color: #64748b;
+}
+.gb-tally {
+  display: flex; align-items: baseline; flex-wrap: wrap; gap: 6px 14px;
+  margin-top: 9px; padding-top: 9px; border-top: 1px solid var(--line);
+  font-size: 12px; color: var(--ink);
+}
+.gb-tally-lead strong { font-family: var(--font-display); font-size: 17px; font-variant-numeric: tabular-nums; }
+.gb-tally-break { display: inline-flex; gap: 7px; flex-wrap: wrap; }
+/* Chips use the lighter party tokens rather than PARTY_TONES: these are small
+   marks on a dark chip and the map's fills measure under 4.5:1 as text. */
+.gb-chip {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.02em;
+  padding: 2px 7px; border-radius: 999px; border: 1px solid transparent;
+}
+.gb-chip-d { color: #93c5fd; border-color: rgba(147, 197, 253, 0.35); }
+.gb-chip-r { color: #fca5a5; border-color: rgba(252, 165, 165, 0.35); }
+.gb-chip-open { color: #cbd5e1; border-color: rgba(203, 213, 225, 0.3); }
+.gb-tally-base { font-size: 10.5px; color: var(--muted); }
+/* The delta is the honest bit: this arithmetic is symmetric and the published
+   designation is not, so at a generic ballot of zero the two disagree and the
+   reader is told rather than left to wonder. */
+.gb-delta { color: var(--accent); font-weight: 700; }
+.gb-caption {
+  margin: 7px 0 0; font-size: 10px; line-height: 1.45; font-weight: 500;
+  letter-spacing: 0.01em; color: #64748b; max-width: 62ch;
+}
+
+/* Two-way view switch, styled like the chamber tabs beside it. */
+.view-toggle { display: inline-flex; gap: 4px; }
+.view-toggle-btn {
+  appearance: none; cursor: pointer;
+  font-family: var(--font-display); font-size: 10.5px; letter-spacing: 0.12em; font-weight: 700;
+  color: var(--muted); background: #0c1524;
+  border: 1px solid var(--line); border-radius: 999px; padding: 7px 13px;
+}
+.view-toggle-btn:hover { color: var(--ink); }
+.view-toggle-btn.active { color: var(--ink); border-color: var(--accent); background: #111d31; }
+.view-toggle-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+@media (max-width: 900px) {
+  .circles-grid { gap: 6px; }
+  .circles-wrap { min-height: 300px; padding: 16px 12px; }
+}
+
+/* Hemicycle key. Swatches and counts only -- no prose, because the counts that
+   change with the slider live on the slider itself. */
+.hemicycle-key {
+  display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 18px;
+  margin: 0 0 10px; padding: 0; list-style: none;
+  font-size: 10.5px; font-weight: 600; letter-spacing: 0.02em; color: var(--muted);
+}
+.hemicycle-key li { display: inline-flex; align-items: center; gap: 6px; }
+.key-dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; flex: none; }
+
+/* --- Seats page ------------------------------------------------------------
+   A standalone document rather than a view inside the map page. It borrows the
+   map page's own tokens -- the party fills, the accent, the dark chips -- so the
+   two pages read as one site, but nothing here leaks into the map's layout and
+   the map's toolbar says nothing about seats. */
+.seats-app { display: flex; flex-direction: column; min-height: 100vh; }
+.seats-topbar {
+  display: flex; align-items: baseline; gap: 22px; flex-wrap: wrap;
+  padding: 20px 26px 14px; border-bottom: 1px solid var(--line);
+}
+.seats-back {
+  font-family: var(--font-body); font-size: 11.5px; font-weight: 700;
+  letter-spacing: 0.06em; color: var(--muted); text-decoration: none;
+  border-bottom: 1px dotted rgba(148, 163, 184, 0.5); white-space: nowrap;
+}
+.seats-back:hover { color: var(--accent); border-bottom-color: var(--accent); }
+.seats-title {
+  margin: 0; font-family: var(--font-display); font-size: 26px; font-weight: 800;
+  letter-spacing: 0.01em; color: var(--ink); display: flex; flex-direction: column; gap: 4px;
+}
+/* The one sentence explaining the encoding. This chart has three colours and a
+   ring, and without a line of prose a reader has to guess which is which. */
+.seats-sub {
+  font-family: var(--font-body); font-size: 12px; font-weight: 500;
+  letter-spacing: 0.01em; color: var(--muted); max-width: 68ch;
+}
+.seats-controls {
+  display: flex; align-items: flex-start; gap: 18px; flex-wrap: wrap;
+  padding: 16px 26px 4px;
+}
+.seats-controls .gb { flex: 1 1 320px; max-width: 520px; }
+.seats-main { flex: 1; display: flex; align-items: center; justify-content: center; padding: 10px 26px 4px; }
+.seats-main .circles-wrap { width: 100%; }
+/* The hemicycle is the point of the page, so it is allowed the height the map
+   column would otherwise own. */
+.seats-main .hemicycle { max-height: min(62vh, 620px); }
+.seats-foot {
+  padding: 10px 26px 22px; font-size: 11px; font-weight: 500;
+  color: var(--muted); letter-spacing: 0.01em;
+}
+.seats-foot-source { color: #64748b; }
+
+@media (max-width: 720px) {
+  .seats-topbar { padding: 16px 16px 12px; gap: 10px; }
+  .seats-title { font-size: 21px; }
+  .seats-controls, .seats-main, .seats-foot { padding-left: 16px; padding-right: 16px; }
+}
+
+/* Link from the map page to the seats page. Styled as a third control in the
+   toolbar rather than a nav item, because it is one click away from the chamber
+   tabs and belongs beside them. */
+.seats-link {
+  font-family: var(--font-display); font-size: 10.5px; letter-spacing: 0.12em;
+  font-weight: 700; color: var(--muted); text-decoration: none;
+  border: 1px solid var(--line); border-radius: 999px; padding: 7px 13px;
+  background: #0c1524; white-space: nowrap;
+}
+.seats-link:hover { color: var(--ink); border-color: var(--accent); }
+.seats-link:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }

@@ -62,6 +62,7 @@ jobs:
         run: |
           set -euo pipefail
           test -f frontend/dist/index.html
+          test -f frontend/dist/seats.html
           test -f frontend/dist/demo-data/meta.json
           test -f frontend/dist/demo-data/ticker.json
           test -f frontend/dist/demo-data/outline.json
