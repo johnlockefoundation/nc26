@@ -77,6 +77,38 @@ const RACE_TYPES = ['us_house', 'us_senate', 'state_senate', 'state_house'];
 // all four chambers rather than only on the seats Supabase happens to cover.
 // The distinction the list now draws is verified-against-a-real-extract versus
 // not, not how volatile the number looks.
+// Keys that only the Pages demo reads, stripped from the plugin's reference
+// layer and kept in the demo export.
+//
+// This list exists because the two exports share the payload builders
+// (getMapFeatures / getRaceSummary) so they cannot drift apart in shape. That
+// sharing has a cost: anything added to a race lands in both targets, so a field
+// added for a Pages-only view ships to every WordPress install unless it is
+// named here. holder_party and holder_name are read by exactly one component --
+// the General Assembly hemicycle on /seats.html, which is a Pages route and is not
+// part of the plugin at all -- and nothing in the plugin's bundle references
+// either name, so shipping them was 170 seats' worth of payload describing a
+// chart that does not exist there.
+//
+// The check that this is true is in tools/build.sh, which fails the package if
+// any of these keys reaches the zip.
+const PAGES_ONLY_RACE_KEYS = ['holder_party', 'holder_name'];
+
+// The same list applied one level deeper. holder_party and holder_name are not
+// top-level race keys -- they live inside the nested `partisan` block that
+// getRaceSummary builds -- so the top-level filter above silently does nothing
+// to them, which is exactly what happened the first time this was wired up. The
+// package check caught it.
+function stripPartisanKeys(race) {
+  if (!race.partisan || typeof race.partisan !== 'object') return race;
+  const partisan = { ...race.partisan };
+  let changed = false;
+  for (const k of PAGES_ONLY_RACE_KEYS) {
+    if (k in partisan) { delete partisan[k]; changed = true; }
+  }
+  return changed ? { ...race, partisan } : race;
+}
+
 const VOLATILE_RACE_KEYS = [
   'polls', 'markets', 'market_list', 'money', 'state_funds', 'vitals',
   'news', 'coverage', 'last_updated',
@@ -124,9 +156,10 @@ for (const raceType of RACE_TYPES) {
       const out = {};
       for (const [k, v] of Object.entries(r)) {
         if (VOLATILE_RACE_KEYS.includes(k)) continue;
+        if (PAGES_ONLY_RACE_KEYS.includes(k)) continue;
         out[k] = v;
       }
-      return out;
+      return stripPartisanKeys(out);
     }),
     features: payload.features.map(stripMetrics),
   };
@@ -151,9 +184,10 @@ for (const { district_id } of districts) {
   const stripped = {};
   for (const [k, v] of Object.entries(race)) {
     if (VOLATILE_RACE_KEYS.includes(k)) continue;
+    if (PAGES_ONLY_RACE_KEYS.includes(k)) continue;
     stripped[k] = v;
   }
-  bytes += writeJson(`race/${district_id}.json`, stripped);
+  bytes += writeJson(`race/${district_id}.json`, stripPartisanKeys(stripped));
   exported.add(district_id);
 }
 
