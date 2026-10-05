@@ -1,11 +1,15 @@
 import { useEffect, useMemo, useState } from 'react';
-import { getMap, getMeta, getRace, getTicker, getOutline, assetUrl } from './api.js';
+import { getMap, getMeta, getRace, getTicker, getOutline, assetUrl, DEMO_ONLY } from './api.js';
 import RaceTypeToggle from './components/RaceTypeToggle.jsx';
 import RaceTicker from './components/RaceTicker.jsx';
 import NCMap from './components/NCMap.jsx';
 import ZipSearch from './components/ZipSearch.jsx';
 import MiniGauge from './components/MiniGauge.jsx';
 import RacePanel from './components/RacePanel.jsx';
+import MapViewToggle from './components/MapViewToggle.jsx';
+import ChamberCircles from './components/ChamberCircles.jsx';
+import GenericBallotSlider from './components/GenericBallotSlider.jsx';
+import { GA_MARGIN } from './lib/vulnerability.js';
 
 export default function App() {
   const [raceType, setRaceType] = useState('us_house');
@@ -18,6 +22,9 @@ export default function App() {
   const [detail, setDetail] = useState(null);
   const [loadingDetail, setLoadingDetail] = useState(false);
   const [error, setError] = useState(null);
+  // Demo-only. See DEMO_ONLY in api.js for why these two are gated.
+  const [view, setView] = useState('map');
+  const [generic, setGeneric] = useState(0);
 
   useEffect(() => {
     getOutline().then(setOutline).catch((e) => setError(String(e)));
@@ -39,6 +46,21 @@ export default function App() {
   }, [raceType]);
 
   const races = useMemo(() => mapData?.races || [], [mapData]);
+
+  // The waffle and the slider only exist for the General Assembly, because both
+  // are built on the Civitas per-district index and neither federal chamber has
+  // one. Showing an empty grid of 14 or 1 circles would be worse than showing
+  // nothing.
+  const isGaChamber = raceType === 'state_house' || raceType === 'state_senate';
+  const demoView = DEMO_ONLY && isGaChamber;
+
+  // A generic ballot of zero belongs to the chamber it was reasoned about, so
+  // both controls reset on a chamber switch rather than carrying a number that
+  // was chosen while looking at a different map.
+  useEffect(() => {
+    setGeneric(0);
+    setView('map');
+  }, [raceType]);
 
   // Keep a valid selection for the current race type: on first load (or when the
   // type changes) open the leading competitive race so the panel is never empty.
@@ -111,19 +133,40 @@ export default function App() {
 
       <main className="layout">
         <section className="map-column">
+          {demoView && (
+            <div className="map-toolbar">
+              <GenericBallotSlider
+                races={races}
+                generic={generic}
+                onChange={setGeneric}
+                margin={GA_MARGIN}
+              />
+            </div>
+          )}
           <div className="map-toolbar">
             <RaceTypeToggle value={raceType} onChange={setRaceType} />
+            {demoView && <MapViewToggle value={view} onChange={setView} />}
             <ZipSearch raceType={raceType} onLocate={setZipFocus} />
           </div>
-          <NCMap
-            raceType={raceType}
-            features={mapData?.features || []}
-            races={races}
-            outline={outline}
-            selectedId={selectedId}
-            onSelect={setSelectedId}
-            zipFocus={zipFocus}
-          />
+          {demoView && view === 'circles' ? (
+            <ChamberCircles
+              races={races}
+              generic={generic}
+              margin={GA_MARGIN}
+              selectedId={selectedId}
+              onSelect={setSelectedId}
+            />
+          ) : (
+            <NCMap
+              raceType={raceType}
+              features={mapData?.features || []}
+              races={races}
+              outline={outline}
+              selectedId={selectedId}
+              onSelect={setSelectedId}
+              zipFocus={zipFocus}
+            />
+          )}
         </section>
 
         <RacePanel race={detail} loading={loadingDetail} />

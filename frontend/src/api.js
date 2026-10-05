@@ -63,6 +63,15 @@ const SUPABASE_KEY = WP?.supabaseAnonKey || import.meta.env.VITE_SUPABASE_ANON_K
 // Supabase is a live overlay on the bundled layer, so it is used whenever it is
 // configured. Without an endpoint the app still renders from bundled data.
 const LIVE = Boolean(SUPABASE_URL && SUPABASE_KEY);
+
+// Demo-only affordances. Some views are worth building for the Pages demo and
+// not worth carrying in the plugin: the waffle of seats and the generic ballot
+// slider are both analytics over the whole chamber rather than a reading of one
+// race, and neither is what somebody installs the plugin to look at. Gating on
+// the build target keeps the shipped zip to the product instead of shipping a
+// feature no page links to. The code still compiles into both builds, so this is
+// a rendering switch rather than a bundler exclude.
+export const DEMO_ONLY = TARGET === 'pages' || import.meta.env.VITE_STATIC === '1';
 // Only the plugin and Pages ship a reference layer; dev has none and talks to
 // the backend API instead.
 const BUNDLED = PLUGIN || STATIC;
@@ -194,11 +203,49 @@ async function withGeometry(payload, raceType) {
 // additive: only keys Supabase actually returned are copied, so an absent or
 // partial payload leaves the bundled invariant fields intact rather than
 // replacing the record with nulls.
+// Keys that travel together with `partisan` because they are derived from it.
+const UNRATED_PAIRED_KEYS = new Set(['partisan', 'competitive', 'competitive_reason', 'competitive_source']);
+
 function overlayVolatile(base, live) {
   if (!live) return base;
+  // The Civitas index and the competitive flag are one fact from one source:
+  // the cycle's designation is derived from the index. So when the live side
+  // reports no index for a seat it has no basis for a competitive verdict
+  // either, and neither half of the pair may overwrite a bundled one. Without
+  // this, `competitive` arrives from Supabase as a plain `false` -- which the
+  // null test above cannot see, because false is not null -- and quietly undid
+  // the designation for all 170 General Assembly seats, leaving the slider
+  // comparing itself against zero.
+  const isUnratedPair = live.partisan && typeof live.partisan === 'object'
+    && live.partisan.available === false
+    && base.partisan && typeof base.partisan === 'object'
+    && base.partisan.available === true;
+
   const out = { ...base };
   for (const [k, v] of Object.entries(live)) {
     if (v == null) continue;
+    // A live block that reports itself unavailable must not replace a bundled
+    // block that does have the data. The `v == null` test above cannot catch
+    // this, because an empty block is a present object rather than an absent
+    // one: PostgREST returns `{available: false, ...}` for a seat the live
+    // tables have nothing for, and that object was being written straight over
+    // the bundle.
+    //
+    // That is how Supabase erased the Civitas index for all 170 General Assembly
+    // seats. The index is a real extract and it is bundled, but Supabase has no
+    // rows for those seats, so every live read of one returned an empty
+    // `partisan` and the panel's index went blank while the bundled number sat
+    // right there underneath. It fires in the other direction too, where a seat
+    // is genuinely absent from Supabase and the reader is shown nothing at all
+    // rather than the figure that was actually known.
+    //
+    // Only one direction is blocked: a live block replaces a bundled one as
+    // usual, and an empty live block is simply skipped. Where the bundle has
+    // nothing either -- polls and markets, which are live-only by design -- the
+    // empty block still lands and the seat correctly reads as unavailable.
+    if (isUnratedPair && UNRATED_PAIRED_KEYS.has(k)) continue;
+    if (v && typeof v === 'object' && v.available === false
+        && base[k] && typeof base[k] === 'object' && base[k].available === true) continue;
     out[k] = v;
   }
   return out;
