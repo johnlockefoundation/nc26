@@ -117,24 +117,52 @@ jobs:
       # newer one, and the symptom is a page that still renders but silently
       # loses a feature: 20261003190000 also defines map_payload, at a revision
       # with no markets delta, so applying it after 20261003240000 removed every
-      # arrow from the map with nothing failing. This asks the database which
-      # map_payload is actually deployed, not which file is newest on disk.
+      # arrow from the map with nothing failing. Nothing in this workflow applies
+      # migrations, so this asks the deployed endpoint what it actually returns.
+      #
+      # Deliberately not pg_get_functiondef: that needs a Postgres client this
+      # job does not have, and asserting on the returned payload catches the same
+      # bug for the same reason -- a stale map_payload returns no delta at all.
       - name: Verify the deployed read functions
         run: |
           set -euo pipefail
-          supabase db query --linked "
-            select
-              case when position('market_weekly_move' in pg_get_functiondef(p.oid)) > 0
-                then 'ok' else 'MISSING: map_payload has no markets delta'
-              end as arrow_delta,
-              case when position('holder_party' in pg_get_functiondef(p.oid)) > 0
-                then 'ok' else 'MISSING: map_payload has no holder_party'
-              end as seat_holder
-            from pg_proc p join pg_namespace n on n.oid = p.pronamespace
-            where n.nspname = 'public' and p.proname = 'map_payload'
-          " | tee /tmp/jce-fn-check
-          grep -q 'MISSING' /tmp/jce-fn-check && { echo "::error::a deployed read function is stale"; exit 1; } || true
-          echo "deployed read functions carry the delta and the seat holder"
+          if [ -z "${VITE_SUPABASE_URL:-}" ] || [ -z "${VITE_SUPABASE_ANON_KEY:-}" ]; then
+            echo "supabase not configured; skipping the deployed-read check"
+            exit 0
+          fi
+          body=$(curl -sS --fail \
+            "$VITE_SUPABASE_URL/rest/v1/rpc/map_payload?p_race_type=us_house&p_cycle=2026" \
+            -H "apikey: $VITE_SUPABASE_ANON_KEY" \
+            -H "Authorization: Bearer $VITE_SUPABASE_ANON_KEY")
+          echo "$body" > /tmp/jce-map-payload.json
+          node -e '
+            const d = JSON.parse(require("fs").readFileSync("/tmp/jce-map-payload.json", "utf8"));
+            const races = d.races || [];
+            const withMarket = races.filter((r) => (r.markets || {}).available);
+            const withDelta = races.filter((r) => (r.markets || {}).delta);
+            const holder = races.filter((r) => r.partisan && "holder_party" in r.partisan);
+            const fail = [];
+            // At least one seat must carry a weekly move. NOT every seat with a
+            // market: only four U.S. House seats have the two snapshots a week
+            // apart that market_weekly_move needs, and the other ten correctly
+            // show no arrow. Asserting one-per-market failed on live data for
+            // exactly that reason. What the stale revision did was return no
+            // delta anywhere, so zero is the number that means broken.
+            if (!withDelta.length && withMarket.length) {
+              fail.push(`no seat carries a markets delta, so the map has no arrows (${withMarket.length} seats have markets)`);
+            }
+            for (const r of withDelta) {
+              const p = r.markets.delta.party;
+              if (p !== "D" && p !== "R") fail.push(`${r.district_id}: delta party is ${JSON.stringify(p)}`);
+            }
+            // The seat holder is a bundled reference fact, so its absence here
+            // means the deployed map_payload predates the column.
+            if (!holder.length) fail.push("map_payload has no holder_party on any seat");
+            if (fail.length) {
+              throw new Error("deployed read functions are stale:\n  " + fail.join("\n  "));
+            }
+            console.log(`map_payload ok: ${withDelta.length} seats carry a delta, holder_party present on ${holder.length}`);
+          '
 
           '
 
