@@ -113,6 +113,31 @@ jobs:
             console.log(`no live keys bundled across ${checked} bundled records`);
           '
 
+      # A read function can be reverted by re-running an older migration over a
+      # newer one, and the symptom is a page that still renders but silently
+      # loses a feature: 20261003190000 also defines map_payload, at a revision
+      # with no markets delta, so applying it after 20261003240000 removed every
+      # arrow from the map with nothing failing. This asks the database which
+      # map_payload is actually deployed, not which file is newest on disk.
+      - name: Verify the deployed read functions
+        run: |
+          set -euo pipefail
+          supabase db query --linked "
+            select
+              case when position('market_weekly_move' in pg_get_functiondef(p.oid)) > 0
+                then 'ok' else 'MISSING: map_payload has no markets delta'
+              end as arrow_delta,
+              case when position('holder_party' in pg_get_functiondef(p.oid)) > 0
+                then 'ok' else 'MISSING: map_payload has no holder_party'
+              end as seat_holder
+            from pg_proc p join pg_namespace n on n.oid = p.pronamespace
+            where n.nspname = 'public' and p.proname = 'map_payload'
+          " | tee /tmp/jce-fn-check
+          grep -q 'MISSING' /tmp/jce-fn-check && { echo "::error::a deployed read function is stale"; exit 1; } || true
+          echo "deployed read functions carry the delta and the seat holder"
+
+          '
+
       - uses: actions/upload-pages-artifact@v3
         with:
           path: frontend/dist

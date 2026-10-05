@@ -13,6 +13,13 @@
 -- column carries the value through instead of coercing it to null or to the
 -- nearest party.
 --
+-- NOTE ON ORDER. 20261003190000_ga_metrics_live_reads.sql also defines
+-- map_payload, at an earlier revision. Re-running it after this file will revert
+-- map_payload to that revision and drop the markets delta, which silently removes
+-- every map arrow. Apply this file and 20261003240000 in version order, and if
+-- arrows go missing after touching the read functions, check which map_payload is
+-- actually deployed with pg_get_functiondef rather than trusting the file on disk.
+--
 -- This is reference data for the same reason `competitive` is: it comes from a
 -- real published roster and is a fact about who holds the seat, not a live
 -- reading. Like the designation it is bundled rather than overlaid, so the client
