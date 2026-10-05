@@ -8,6 +8,15 @@ Instructions for coding agents working in this repository.
 Supabase API. Work on the frontend, the plugin build, the migrations that define
 the API's read functions, and the packaged artifact.**
 
+**The WordPress plugin lives in this repository, not beside it.** `plugin/` is
+the WordPress half and `frontend/` the Pages half; the plugin consumes the
+frontend's built output rather than reshaping it, so the two cannot drift in
+shape. `bash plugin/tools/build.sh` writes the installable zip to `dist/` and
+verifies the extracted artifact, not the source tree. A separate public repo and
+release page existed briefly and was folded back in: the payload is the
+frontend's own output, so the two halves in one repository is what keeps them
+honest.
+
 **Non-API data ingestion is explicitly out of scope.** Do not read, fix,
 refactor, extend, debug, or comment on any of the following, and do not offer to:
 
@@ -199,6 +208,8 @@ browser cannot. Say which one you did.
 | `backend/src/lib/races.js` | Payload builders for the SQLite/demo path. Supabase RPCs mirror these shapes exactly. |
 | `supabase/migrations/` | Postgres schema, RLS, and the read functions the client calls |
 | `backend/src/schema.sql` | SQLite schema (local/demo only) |
+| `plugin/` | The WordPress half: PHP wrapper, templates, tests, and `tools/build.sh` |
+| `dist/carolina-election-map.zip` | The installable plugin, built by `bash plugin/tools/build.sh` |
 | `.github/workflows/deploy.yml` | Pages deploy, including the no-bundled-live-data guard |
 
 ## Build and verify

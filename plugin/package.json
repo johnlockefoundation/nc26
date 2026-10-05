@@ -1,0 +1,11 @@
+{
+  "name": "carolina-election-map",
+  "version": "1.0.4",
+  "private": true,
+  "description": "WordPress packaging for the Carolina Election Map. The plugin ships no JavaScript dependencies; the bundle is built from nc26 and verified by tools/build.sh.",
+  "scripts": {
+    "build": "bash tools/build.sh",
+    "verify": "bash tools/build.sh",
+    "test": "php tests/render-smoke.php"
+  }
+}
