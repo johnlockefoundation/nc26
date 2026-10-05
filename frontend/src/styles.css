@@ -569,50 +569,30 @@ a.money-row:hover { color: var(--accent); }
    seat, which is a different fact from which way it leans, and reusing the map's
    lean fills here would quietly assert the wrong thing. */
 
-/* Waffle. A fixed grid of equal marks, one per seat, so seat count is legible
-   as area -- the thing a map of North Carolina cannot show. */
+/* Hemicycle. Fixed-size circles on concentric arcs, blue-left and red-right by
+   lean, laid out from the apex outward so the in-play band is a contiguous wedge
+   at the top that visibly widens as the slider moves. Sized in viewBox units
+   rather than CSS pixels so the chart scales with its column and the arcs never
+   have to be recalculated. */
 .circles-wrap {
-  display: flex; align-items: center; justify-content: center;
-  min-height: 420px; padding: 26px 20px;
+  display: flex; align-items: flex-end; justify-content: center;
+  padding: 22px 16px 10px;
   background: #0a111f; border: 1px solid var(--line); border-radius: 14px;
-  overflow: auto;
+  overflow: hidden;
 }
-.circles-grid {
-  display: grid;
-  grid-template-columns: repeat(var(--circle-cols, 12), 1fr);
-  gap: 8px;
-  /* Width-driven rather than fixed: 120 seats want a wider cell than 50, and a
-     fixed cell would leave the smaller chamber stranded in the corner. */
-  width: min(100%, calc(var(--circle-cols, 12) * 34px));
-}
+.hemicycle { display: block; width: 100%; height: auto; max-height: 460px; }
 .seat-circle {
-  appearance: none; border: 0; padding: 0; margin: 0;
-  aspect-ratio: 1; border-radius: 50%;
-  background: transparent; cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  /* The ring is a separate element from the fill so that "who holds it" and
-     "is it in play" are two channels. Filling the circle for vulnerability
-     would make a vulnerable Republican-held seat read as a Democratic one. */
-  box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.22);
-  transition: transform 0.12s ease, box-shadow 0.12s ease;
+  cursor: pointer;
+  /* Ringed rather than filled, so "who holds it" and "is it in play" stay two
+     channels. A fill would make a vulnerable Republican-held seat on the
+     left-hand side read as a Democratic one. */
+  stroke: rgba(148, 163, 184, 0.22); stroke-width: 1;
+  transition: r 0.12s ease, stroke 0.12s ease;
 }
-.seat-circle-fill {
-  display: block; width: 74%; height: 74%; border-radius: 50%;
-  background: var(--seat-tone, #475569);
-}
-.seat-circle:hover { transform: scale(1.14); }
-.seat-circle:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-.seat-circle.is-vulnerable {
-  box-shadow:
-    inset 0 0 0 1px rgba(148, 163, 184, 0.22),
-    0 0 0 2px var(--accent);
-}
-.seat-circle.is-selected {
-  box-shadow:
-    inset 0 0 0 1px rgba(148, 163, 184, 0.22),
-    0 0 0 2px var(--accent),
-    0 0 0 4px rgba(148, 163, 184, 0.5);
-}
+.seat-circle:hover { r: 10.5; }
+.seat-circle:focus-visible { outline: none; stroke: var(--accent); stroke-width: 2.5; }
+.seat-circle.is-vulnerable { stroke: var(--accent); stroke-width: 2; }
+.seat-circle.is-selected { stroke: #e2e8f0; stroke-width: 3; }
 
 /* Generic ballot slider. */
 .gb {
@@ -676,3 +656,13 @@ a.money-row:hover { color: var(--accent); }
   .circles-grid { gap: 6px; }
   .circles-wrap { min-height: 300px; padding: 16px 12px; }
 }
+
+/* Hemicycle key. Swatches and counts only -- no prose, because the counts that
+   change with the slider live on the slider itself. */
+.hemicycle-key {
+  display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 18px;
+  margin: 0 0 10px; padding: 0; list-style: none;
+  font-size: 10.5px; font-weight: 600; letter-spacing: 0.02em; color: var(--muted);
+}
+.hemicycle-key li { display: inline-flex; align-items: center; gap: 6px; }
+.key-dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; flex: none; }

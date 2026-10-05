@@ -142,7 +142,10 @@ export default function App() {
 
       <main className="layout">
         <section className="map-column">
-          {sliderView && (
+          {/* Only in the seats view. It moves the number the hemicycle's rings
+              are drawn from, so on the map it would change something nobody can
+              see. */}
+          {sliderView && waffleView && view === 'circles' && (
             <div className="map-toolbar">
               <GenericBallotSlider
                 races={races}
