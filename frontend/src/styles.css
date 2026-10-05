@@ -666,3 +666,63 @@ a.money-row:hover { color: var(--accent); }
 }
 .hemicycle-key li { display: inline-flex; align-items: center; gap: 6px; }
 .key-dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; flex: none; }
+
+/* --- Seats page ------------------------------------------------------------
+   A standalone document rather than a view inside the map page. It borrows the
+   map page's own tokens -- the party fills, the accent, the dark chips -- so the
+   two pages read as one site, but nothing here leaks into the map's layout and
+   the map's toolbar says nothing about seats. */
+.seats-app { display: flex; flex-direction: column; min-height: 100vh; }
+.seats-topbar {
+  display: flex; align-items: baseline; gap: 22px; flex-wrap: wrap;
+  padding: 20px 26px 14px; border-bottom: 1px solid var(--line);
+}
+.seats-back {
+  font-family: var(--font-body); font-size: 11.5px; font-weight: 700;
+  letter-spacing: 0.06em; color: var(--muted); text-decoration: none;
+  border-bottom: 1px dotted rgba(148, 163, 184, 0.5); white-space: nowrap;
+}
+.seats-back:hover { color: var(--accent); border-bottom-color: var(--accent); }
+.seats-title {
+  margin: 0; font-family: var(--font-display); font-size: 26px; font-weight: 800;
+  letter-spacing: 0.01em; color: var(--ink); display: flex; flex-direction: column; gap: 4px;
+}
+/* The one sentence explaining the encoding. This chart has three colours and a
+   ring, and without a line of prose a reader has to guess which is which. */
+.seats-sub {
+  font-family: var(--font-body); font-size: 12px; font-weight: 500;
+  letter-spacing: 0.01em; color: var(--muted); max-width: 68ch;
+}
+.seats-controls {
+  display: flex; align-items: flex-start; gap: 18px; flex-wrap: wrap;
+  padding: 16px 26px 4px;
+}
+.seats-controls .gb { flex: 1 1 320px; max-width: 520px; }
+.seats-main { flex: 1; display: flex; align-items: center; justify-content: center; padding: 10px 26px 4px; }
+.seats-main .circles-wrap { width: 100%; }
+/* The hemicycle is the point of the page, so it is allowed the height the map
+   column would otherwise own. */
+.seats-main .hemicycle { max-height: min(62vh, 620px); }
+.seats-foot {
+  padding: 10px 26px 22px; font-size: 11px; font-weight: 500;
+  color: var(--muted); letter-spacing: 0.01em;
+}
+.seats-foot-source { color: #64748b; }
+
+@media (max-width: 720px) {
+  .seats-topbar { padding: 16px 16px 12px; gap: 10px; }
+  .seats-title { font-size: 21px; }
+  .seats-controls, .seats-main, .seats-foot { padding-left: 16px; padding-right: 16px; }
+}
+
+/* Link from the map page to the seats page. Styled as a third control in the
+   toolbar rather than a nav item, because it is one click away from the chamber
+   tabs and belongs beside them. */
+.seats-link {
+  font-family: var(--font-display); font-size: 10.5px; letter-spacing: 0.12em;
+  font-weight: 700; color: var(--muted); text-decoration: none;
+  border: 1px solid var(--line); border-radius: 999px; padding: 7px 13px;
+  background: #0c1524; white-space: nowrap;
+}
+.seats-link:hover { color: var(--ink); border-color: var(--accent); }
+.seats-link:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }

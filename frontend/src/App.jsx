@@ -6,10 +6,6 @@ import NCMap from './components/NCMap.jsx';
 import ZipSearch from './components/ZipSearch.jsx';
 import MiniGauge from './components/MiniGauge.jsx';
 import RacePanel from './components/RacePanel.jsx';
-import MapViewToggle from './components/MapViewToggle.jsx';
-import ChamberCircles from './components/ChamberCircles.jsx';
-import GenericBallotSlider from './components/GenericBallotSlider.jsx';
-import { GA_MARGIN } from './lib/vulnerability.js';
 
 export default function App() {
   const [raceType, setRaceType] = useState('us_house');
@@ -22,9 +18,6 @@ export default function App() {
   const [detail, setDetail] = useState(null);
   const [loadingDetail, setLoadingDetail] = useState(false);
   const [error, setError] = useState(null);
-  // Demo-only. See DEMO_ONLY in api.js for why these two are gated.
-  const [view, setView] = useState('map');
-  const [generic, setGeneric] = useState(0);
 
   useEffect(() => {
     getOutline().then(setOutline).catch((e) => setError(String(e)));
@@ -46,27 +39,6 @@ export default function App() {
   }, [raceType]);
 
   const races = useMemo(() => mapData?.races || [], [mapData]);
-
-  // Both controls are General Assembly only.
-  //
-  // The slider needs the Civitas per-district index and neither federal chamber
-  // has one, so there is nothing for it to move against. The waffle does not need
-  // that, and was briefly extended to the U.S. House on the grounds that incumbency
-  // was available there -- but a federal hemicycle is not what this is for. It is a
-  // state-legislature panel: 120 seats and 50 seats where the count is the story,
-  // against 14 and 1 where it is not. Keeping it off the federal chambers also
-  // keeps it away from the two seats whose incumbent flags are least trustworthy,
-  // NC-11 and NC-SEN.
-  const isGaChamber = raceType === 'state_house' || raceType === 'state_senate';
-  const demoView = DEMO_ONLY && isGaChamber;
-
-  // A generic ballot of zero belongs to the chamber it was reasoned about, so
-  // both controls reset on a chamber switch rather than carrying a number that
-  // was chosen while looking at a different map.
-  useEffect(() => {
-    setGeneric(0);
-    setView('map');
-  }, [raceType]);
 
   // Keep a valid selection for the current race type: on first load (or when the
   // type changes) open the leading competitive race so the panel is never empty.
@@ -139,33 +111,19 @@ export default function App() {
 
       <main className="layout">
         <section className="map-column">
-          {/* Only in the seats view. It moves the number the hemicycle's rings
-              are drawn from, so on the map it would change something nobody can
-              see. */}
-          {demoView && view === 'circles' && (
-            <div className="map-toolbar">
-              <GenericBallotSlider
-                races={races}
-                generic={generic}
-                onChange={setGeneric}
-                margin={GA_MARGIN}
-              />
-            </div>
-          )}
           <div className="map-toolbar">
             <RaceTypeToggle value={raceType} onChange={setRaceType} />
-            {demoView && <MapViewToggle value={view} onChange={setView} />}
+            {/* The hemicycle is its own page, so it needs a way in. DEMO_ONLY
+                because that page is built for Pages only and the plugin has no
+                seats.html to link to. */}
+            {DEMO_ONLY && (
+              <a className="seats-link" href={`${import.meta.env.BASE_URL}seats.html`}>
+                GA SEATS
+              </a>
+            )}
             <ZipSearch raceType={raceType} onLocate={setZipFocus} />
           </div>
-          {demoView && view === 'circles' ? (
-            <ChamberCircles
-              races={races}
-              generic={generic}
-              margin={GA_MARGIN}
-              selectedId={selectedId}
-              onSelect={setSelectedId}
-            />
-          ) : (
+          {
             <NCMap
               raceType={raceType}
               features={mapData?.features || []}
@@ -175,7 +133,7 @@ export default function App() {
               onSelect={setSelectedId}
               zipFocus={zipFocus}
             />
-          )}
+          }
         </section>
 
         <RacePanel race={detail} loading={loadingDetail} />
