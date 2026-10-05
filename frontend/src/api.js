@@ -207,8 +207,9 @@ async function withGeometry(payload, raceType) {
 // Supabase currently holds a designation for none of the seats: zero of the 170
 // General Assembly and zero of the 15 federal races come back competitive. So
 // every live read returned `competitive: false`, which the null test cannot see
-// because false is not null, and it silently overwrote the bundled flag. The
-// slider then compared itself against zero and the waffle ringed nothing.
+// because false is not null, and it silently overwrote the bundled flag -- which
+// is how the Civitas panel came to render blank on every General Assembly seat
+// while the bundled number sat underneath it.
 //
 // Keying this off `partisan` instead does not work, because partisanSummary()
 // returns available:false for every non-General-Assembly race -- the federal
