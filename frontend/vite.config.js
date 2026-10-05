@@ -1,8 +1,4 @@
 import { defineConfig } from 'vite';
-import { resolve, dirname } from 'node:path';
-import { fileURLToPath } from 'node:url';
-
-const __dirname = dirname(fileURLToPath(import.meta.url));
 import react from '@vitejs/plugin-react';
 
 // `npm run build:pages` produces the GitHub Pages demo: data baked in as JSON,
@@ -40,24 +36,10 @@ export default defineConfig(({ mode }) => ({
           },
           cssCodeSplit: false,
         }
-      // Two entries on Pages: the map, and the General Assembly hemicycle. The
-      // seats page is a separate document rather than a route inside the map,
-      // because it has its own URL worth linking to and it competes with the map
-      // for the same screen. Named explicitly so the emitted filenames do not
-      // drift with the order of the glob.
-      : {
-          rollupOptions: {
-            input: {
-              main: resolve(__dirname, 'index.html'),
-              seats: resolve(__dirname, 'seats.html'),
-            },
-            output: {
-              entryFileNames: 'assets/[name]-[hash].js',
-              chunkFileNames: 'assets/[name]-[hash].js',
-              assetFileNames: 'assets/[name]-[hash].[ext]',
-            },
-          },
-        }),
+      // One entry on Pages. The fixed asset filenames are only pinned for the
+      // plugin, whose enqueue calls must stay stable; Pages takes Vite's hashed
+      // defaults so its own filenames can change freely.
+      : {}),
   },
   server: {
     port: 5173,

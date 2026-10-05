@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { getMap, getMeta, getRace, getTicker, getOutline, assetUrl, DEMO_ONLY } from './api.js';
+import { getMap, getMeta, getRace, getTicker, getOutline, assetUrl } from './api.js';
 import RaceTypeToggle from './components/RaceTypeToggle.jsx';
 import RaceTicker from './components/RaceTicker.jsx';
 import NCMap from './components/NCMap.jsx';
@@ -113,14 +113,6 @@ export default function App() {
         <section className="map-column">
           <div className="map-toolbar">
             <RaceTypeToggle value={raceType} onChange={setRaceType} />
-            {/* The hemicycle is its own page, so it needs a way in. DEMO_ONLY
-                because that page is built for Pages only and the plugin has no
-                seats.html to link to. */}
-            {DEMO_ONLY && (
-              <a className="seats-link" href={`${import.meta.env.BASE_URL}seats.html`}>
-                GA SEATS
-              </a>
-            )}
             <ZipSearch raceType={raceType} onLocate={setZipFocus} />
           </div>
           {

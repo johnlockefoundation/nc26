@@ -62,10 +62,6 @@ jobs:
         run: |
           set -euo pipefail
           test -f frontend/dist/index.html
-          # The second entry: the General Assembly hemicycle. Checked alongside
-          # index.html because the two are linked to each other, and a missing one
-          # is a 404 that only shows up as a dead link in the other's header.
-          test -f frontend/dist/seats.html
           test -f frontend/dist/demo-data/meta.json
           test -f frontend/dist/demo-data/ticker.json
           test -f frontend/dist/demo-data/outline.json

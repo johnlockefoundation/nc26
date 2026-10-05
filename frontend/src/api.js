@@ -64,14 +64,6 @@ const SUPABASE_KEY = WP?.supabaseAnonKey || import.meta.env.VITE_SUPABASE_ANON_K
 // configured. Without an endpoint the app still renders from bundled data.
 const LIVE = Boolean(SUPABASE_URL && SUPABASE_KEY);
 
-// Demo-only affordances. Some views are worth building for the Pages demo and
-// not worth carrying in the plugin: the waffle of seats and the generic ballot
-// slider are both analytics over the whole chamber rather than a reading of one
-// race, and neither is what somebody installs the plugin to look at. Gating on
-// the build target keeps the shipped zip to the product instead of shipping a
-// feature no page links to. The code still compiles into both builds, so this is
-// a rendering switch rather than a bundler exclude.
-export const DEMO_ONLY = TARGET === 'pages' || import.meta.env.VITE_STATIC === '1';
 // Only the plugin and Pages ship a reference layer; dev has none and talks to
 // the backend API instead.
 const BUNDLED = PLUGIN || STATIC;
