@@ -6,12 +6,11 @@ import NCMap from './components/NCMap.jsx';
 import ZipSearch from './components/ZipSearch.jsx';
 import MiniGauge from './components/MiniGauge.jsx';
 import RacePanel from './components/RacePanel.jsx';
-import ChamberCircles from './components/ChamberCircles.jsx';
-import { GA_MARGIN } from './lib/vulnerability.js';
+import SeatBuckets from './components/SeatBuckets.jsx';
 
-// The chambers the Legislature view applies to. The chamber semicircles are General
-// Assembly only: the Civitas index they arrange by exists for no federal seat,
-// and a chamber of 14 or 1 is not a chamber.
+// The chambers the Legislature view applies to. The three-bucket split is
+// General Assembly only: the Civitas index it is cut from exists for no federal
+// seat, and a chamber of 14 or 1 is not a chamber.
 const STATE_RACES = new Set(['state_house', 'state_senate']);
 
 export default function App() {
@@ -190,13 +189,7 @@ export default function App() {
             </div>
           </div>
           {isState && view === 'legislature' ? (
-            <ChamberCircles
-              races={races}
-              generic={0}
-              margin={GA_MARGIN}
-              selectedId={selectedId}
-              onSelect={setSelectedId}
-            />
+            <SeatBuckets races={races} />
           ) : (
             <NCMap
               raceType={raceType}

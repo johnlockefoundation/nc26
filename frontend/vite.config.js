@@ -40,7 +40,7 @@ export default defineConfig(({ mode }) => ({
           },
           cssCodeSplit: false,
         }
-      // Two entries on Pages: the map, and the General Assembly hemicycle. The
+      // Two entries on Pages: the map, and the General Assembly split. The
       // seats page is a separate document rather than a route inside the map,
       // because it has its own URL worth linking to and it competes with the map
       // for the same screen. Named explicitly so the emitted filenames do not
