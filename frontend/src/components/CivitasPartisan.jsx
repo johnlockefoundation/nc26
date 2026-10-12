@@ -19,7 +19,12 @@ export default function CivitasPartisan({ partisan }) {
       </div>
     );
   }
-  const partyCls = partisan.party === 'D' ? 'val-d' : 'val-r';
+  // The party colour rides the .metric-value element itself, not the inner
+  // span: the rule is the compound .metric-value.val-d / .val-r, so the class
+  // has to sit beside metric-value to match -- the same place MetricBlock and
+  // MoneyBlock put theirs. On a child span it matched nothing and the label
+  // stayed the default ink on every seat.
+  const partyCls = partisan.party === 'D' ? 'val-d' : partisan.party === 'R' ? 'val-r' : '';
   // The Civitas bucket -- "Safe", "Likely", "Lean" -- is dropped, because every
   // one of those chips spells the party a second time and the party is already
   // the margin sitting beside it ("LIKELY R" next to "R +8"). A toss-up is the
@@ -38,8 +43,8 @@ export default function CivitasPartisan({ partisan }) {
         )}
       </div>
 
-      <div className="metric-value">
-        <span className={partyCls}>{partisan.label}</span>
+      <div className={`metric-value ${partyCls}`}>
+        <span>{partisan.label}</span>
         {isTossUp && <span className="partisan-rating">TOSS-UP</span>}
         {partisan.competitive && <span className="partisan-inplay">IN PLAY</span>}
       </div>
