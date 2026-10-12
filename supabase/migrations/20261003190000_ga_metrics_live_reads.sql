@@ -56,9 +56,9 @@ $function$;
 -- state_funds_summary() returns the federal moneySummary() shape rather than a
 -- GA-specific one, so MoneyBlock is written once against a single contract
 -- across all four chambers. by_party carries the amounts so a reader can check
--- either total, but deliberately carries no source_url: these rows point at the
--- NCSBE portal rather than at a per-candidate filing, and linking a reader to a
--- portal is worse than showing no link. Filling those in is a data change.
+-- either total. source_url starts null here; 20261003270000 redefines this
+-- function to pass each party's filing URL through, once state_funds rows
+-- carried one (they now point at the portal's per-filing report-sections page).
 create or replace function public.state_funds_summary(p_race_id text, p_cycle text default '2026')
  returns jsonb
  language sql

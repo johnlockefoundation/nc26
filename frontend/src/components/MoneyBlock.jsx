@@ -12,21 +12,23 @@
 // the total they raised, and a link to their own FEC page. A reader who doubts
 // D +$22.7M can read both totals and open both filings.
 //
-// State legislative races render the same two rows, with the same totals, and
-// with no link. There is no per-candidate filing behind them yet -- the figures
-// are placeholders and the state_funds rows point at an NCSBE portal rather than
-// at a filing -- so a link would invite a reader to verify something that is not
-// there. The rows render as plain text instead, and picking that up later is a
-// data change rather than a rendering one.
+// State legislative races render the same two rows, with the same totals, and a
+// link to each candidate's filing on the NCSBE portal -- the report-sections page
+// for the exact report the figure came from. That URL is the report id, carried
+// in state_funds.source_url and passed through per party by
+// state_funds_summary(). A row whose source_url is empty still renders as plain
+// text rather than a dead link, which is what the bundled reference did for
+// every state seat before the NCSBE summaries were loaded.
 
 import CollapsibleMetric from './CollapsibleMetric.jsx';
 import { money as fmtMoney } from '../lib/format.js';
 
 const PARTY_LABEL = { D: 'DEM', R: 'REP' };
 
-// One candidate's row. `href` is the candidate's own filing page; a row without
-// one is rendered as a <div> rather than an <a>, so it is visibly not a link
-// instead of being a dead one.
+// One candidate's row. `href` is the candidate's own filing page -- their FEC
+// committee page on a federal seat, their NCSBE report-sections page on a state
+// one; a row without one is rendered as a <div> rather than an <a>, so it is
+// visibly not a link instead of being a dead one.
 function MoneyRow({ candidate, party, figure }) {
   const name = candidate?.name || PARTY_LABEL[party] || party;
   const amount = figure?.amount != null ? fmtMoney(figure.amount) : '—';
@@ -43,7 +45,7 @@ function MoneyRow({ candidate, party, figure }) {
   return href
     ? (
       <a className="money-row" href={href} target="_blank" rel="noreferrer"
-        title={`Open ${name}'s FEC filing`}>
+        title={`Open ${name}'s filing`}>
         {inner}
       </a>
     )

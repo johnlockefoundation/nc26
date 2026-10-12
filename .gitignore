@@ -26,3 +26,6 @@ backend/data/sources/kalshi-private.pem
 backend/data/sources/polls-load.sql
 # Stray empty SQLite file, not the real database at backend/db/nc28.sqlite.
 backend/data.db
+
+# Python bytecode caches (fundraising/ is a stdlib-only Python tool).
+__pycache__/
