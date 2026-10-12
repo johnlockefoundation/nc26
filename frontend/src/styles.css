@@ -488,7 +488,6 @@
 .poll-row-link:hover { color: var(--accent); border-bottom-color: var(--accent); }
 
 /* Civitas partisan index (state races without poll/market coverage) */
-.partisan-rating { display: inline-block; margin-left: 10px; font-size: 13px; font-weight: 700; letter-spacing: 0.1em; color: var(--muted); vertical-align: 2px; }
 .partisan-inplay { display: inline-block; margin-left: 10px; font-size: 11px; font-weight: 800; letter-spacing: 0.14em; color: #fbbf24; vertical-align: 3px; }
 
 /* A .metric box holding more than a single figure: the value and, below it,

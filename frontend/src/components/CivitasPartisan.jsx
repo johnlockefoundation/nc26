@@ -25,13 +25,12 @@ export default function CivitasPartisan({ partisan }) {
   // MoneyBlock put theirs. On a child span it matched nothing and the label
   // stayed the default ink on every seat.
   const partyCls = partisan.party === 'D' ? 'val-d' : partisan.party === 'R' ? 'val-r' : '';
-  // The Civitas bucket -- "Safe", "Likely", "Lean" -- is dropped, because every
-  // one of those chips spells the party a second time and the party is already
-  // the margin sitting beside it ("LIKELY R" next to "R +8"). A toss-up is the
-  // one kept: it names no party, and it is what separates a seat Civitas rates
-  // as undetermined from one that merely rounds to zero -- "D +1" alone reads
-  // as settled when it means the opposite.
-  const isTossUp = partisan.lean === 'Toss-up';
+  // The Civitas bucket -- "Safe", "Likely", "Lean", "Toss-up" -- is dropped.
+  // The first three merely spell the party a second time, and the party is
+  // already the margin sitting beside it ("LIKELY R" next to "R +8"). "Toss-up"
+  // is not carried either: every seat Civitas rates a toss-up is also in play,
+  // so it only ever appeared beside IN PLAY and said the same thing. IN PLAY is
+  // the signal that survives.
 
   return (
     <div className="metric metric-elongated">
@@ -45,7 +44,6 @@ export default function CivitasPartisan({ partisan }) {
 
       <div className={`metric-value ${partyCls}`}>
         <span>{partisan.label}</span>
-        {isTossUp && <span className="partisan-rating">TOSS-UP</span>}
         {partisan.competitive && <span className="partisan-inplay">IN PLAY</span>}
       </div>
 
