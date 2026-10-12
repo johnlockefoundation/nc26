@@ -189,7 +189,11 @@ export default function App() {
             </div>
           </div>
           {isState && view === 'legislature' ? (
-            <SeatBuckets races={races} />
+            <SeatBuckets
+              races={races}
+              selectedId={selectedId}
+              onSelect={setSelectedId}
+            />
           ) : (
             <NCMap
               raceType={raceType}

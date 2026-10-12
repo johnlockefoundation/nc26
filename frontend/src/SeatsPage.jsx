@@ -23,6 +23,7 @@ export default function SeatsPage() {
   const [raceType, setRaceType] = useState('state_house');
   const [mapData, setMapData] = useState(null);
   const [meta, setMeta] = useState(null);
+  const [selectedId, setSelectedId] = useState(null);
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -40,6 +41,11 @@ export default function SeatsPage() {
 
   const races = useMemo(() => mapData?.races || [], [mapData]);
 
+  // A selection belongs to the chamber it was made in, so it clears on a switch.
+  useEffect(() => {
+    setSelectedId(null);
+  }, [raceType]);
+
   return (
     <div className="app seats-app">
       <header className="seats-topbar">
@@ -47,8 +53,9 @@ export default function SeatsPage() {
         <h1 className="seats-title">
           North Carolina General Assembly
           <span className="seats-sub">
-            Every seat split three ways by its Civitas partisan lean: safe for a
-            party, or within four points of even and therefore competitive.
+            Every seat, one circle each, grouped by Civitas partisan lean -- safe
+            for a party or within four points of even -- and coloured by who holds
+            it. Select any seat to open its race.
           </span>
         </h1>
       </header>
@@ -72,11 +79,17 @@ export default function SeatsPage() {
       </div>
 
       <main className="seats-main">
-        <SeatBuckets races={races} />
+        <SeatBuckets
+          races={races}
+          selectedId={selectedId}
+          onSelect={setSelectedId}
+        />
       </main>
 
       <footer className="seats-foot">
-        A competitive seat is within four points of even on the Civitas index.
+        {selectedId
+          ? `${selectedId} selected. Open it on the map for the full race.`
+          : 'Select a seat to highlight it.'}
         {meta?.nc_house_outlook && (
           <span className="seats-foot-source">
             {' '}Seat projections from {meta.nc_house_outlook.source}.

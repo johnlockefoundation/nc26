@@ -588,21 +588,38 @@ a.money-row:hover { color: var(--ink); text-decoration: underline; }
 /* --- Legislature split: safe D, competitive, safe R -------------------------
    A whole-chamber read rather than a reading of one race, so it is gated to the
    General Assembly: the Civitas index the three groups are cut from exists for
-   no federal seat. One seat is one dot, grouped into three filled rectangles --
-   the grouping carries the meaning, so the dots are packed rather than spread
-   along an arc. Fills are each party's own map tone plus an amber for the
-   competitive band; the counts sit in each group's head, not on the dots. */
+   no federal seat. One seat is one circle, grouped into three filled rectangles
+   by lean -- the grouping carries the lean, and the fill carries the holder,
+   which is deliberately a different fact. Every circle is a button opening its
+   race card. */
 .buckets {
   width: 100%;
   background: #0a111f; border: 1px solid var(--line); border-radius: 14px;
-  padding: 26px 22px 22px;
+  padding: 22px 22px 22px;
+}
+/* Key. Names what the fill encodes -- the holder, not the lean -- because the
+   two are different facts and the blocks are laid out by the lean. */
+.buckets-key { display: flex; flex-direction: column; gap: 6px; margin-bottom: 20px; }
+.buckets-key-title {
+  font-family: var(--font-display); font-size: 10px; letter-spacing: 0.16em;
+  font-weight: 700; text-transform: uppercase; color: var(--muted);
+}
+.buckets-key-items {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 6px 18px;
+  margin: 0; padding: 0; list-style: none;
+  font-size: 11px; font-weight: 600; letter-spacing: 0.02em; color: var(--muted);
+}
+.buckets-key-items li { display: inline-flex; align-items: center; gap: 6px; }
+.key-dot { width: 11px; height: 11px; border-radius: 50%; display: inline-block; flex: none; }
+.key-ring {
+  width: 11px; height: 11px; border-radius: 50%; display: inline-block; flex: none;
+  border: 2px solid var(--accent);
 }
 .buckets-groups {
   display: flex; flex-wrap: wrap; align-items: flex-start; gap: 28px 40px;
 }
 .bucket { display: flex; flex-direction: column; gap: 12px; }
 .bucket-head { display: flex; align-items: baseline; gap: 9px; }
-.bucket-dot-sample { width: 10px; height: 10px; border-radius: 50%; flex: none; align-self: center; }
 .bucket-label {
   font-family: var(--font-display); font-size: 10.5px; letter-spacing: 0.1em;
   font-weight: 700; color: var(--muted);
@@ -612,7 +629,22 @@ a.money-row:hover { color: var(--ink); text-decoration: underline; }
 /* The rectangle of seats. --dot-size is the one lever: every column is a track
    of that width and every dot fills it, so the grid stays square at any zoom. */
 .bucket-grid { --dot-size: 13px; display: grid; gap: 4px; width: max-content; }
-.bucket-dot { width: var(--dot-size); height: var(--dot-size); border-radius: 50%; background: transparent; }
+.seat-gap { width: var(--dot-size); height: var(--dot-size); }
+/* One seat. Ringed rather than filled for "in play", so who holds it and whether
+   it is close stay two channels: a fill would make a vulnerable Republican-held
+   seat inside the Democratic block read as a Democratic seat. */
+.seat-dot {
+  width: var(--dot-size); height: var(--dot-size);
+  padding: 0; border: 0; border-radius: 50%; appearance: none; cursor: pointer;
+  box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.25);
+  transition: box-shadow 0.12s ease;
+}
+.seat-dot:hover { box-shadow: 0 0 0 2px rgba(226, 232, 240, 0.55); }
+.seat-dot:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--accent); }
+.seat-dot.is-vulnerable { box-shadow: 0 0 0 2px var(--accent); }
+/* The selected seat keeps its holder fill and takes an amber outline, matching
+   the colour the map uses for the seat it has open. */
+.seat-dot.is-selected { box-shadow: 0 0 0 3px #fbbf24; }
 .buckets-note { margin: 16px 0 0; font-size: 11px; line-height: 1.45; color: #64748b; }
 
 /* Two-way view switch, styled like the chamber tabs beside it. */
