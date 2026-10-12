@@ -6,12 +6,12 @@ first; this file only adds the local boundary.
 
 ## What this is, and what it is not
 
-This directory downloads, for each candidate the product already flags as
-competitive, the **Detailed Summary** (form CRO-1100 — the section the portal's
+This directory downloads, for every North Carolina General Assembly candidate,
+the **Detailed Summary** (form CRO-1100 — the section the portal's
 report-sections page calls "Detailed Summary", served by the export as
 `TP=SUM`) of that committee's most recent **Second Quarter** disclosure report.
 It exists because the only other way to get those figures is to click through
-`cf.ncsbe.gov` roughly sixty times.
+`cf.ncsbe.gov` a few hundred times.
 
 It is **not** part of the plugin or the Pages demo. Nothing in the shipped
 artifact reads anything here:
@@ -29,7 +29,7 @@ the NCSBE portal is an ASP.NET/Kendo app whose only machine-readable surface is
 the report-export endpoint the browser itself calls. Keep it a side tool. If a
 change here would make the product depend on it, stop and raise it.
 
-## The competitive list is not hard-coded
+## The roster is not hard-coded
 
 `ncsbe_summaries.py` reads the roster from the parent repo's generated
 reference layer — the same invariant data the plugin bundles:
@@ -39,10 +39,10 @@ reference layer — the same invariant data the plugin bundles:
 ../frontend/public/data/reference/map/state_house.json
 ```
 
-It filters `competitive == true` and takes each race's candidates. As of the
-2026 cycle that is 29 seats and 58 candidates (7 Senate, 22 House). Federal
-races are absent on purpose: they file with the FEC, not the NCSBE, and their
-money already loads through `supabase/migrations/` federal reads.
+It takes every race's candidates, competitive or not. As of the 2026 cycle that
+is all 170 districts and 298 candidates (94 Senate, 204 House). Federal races
+are absent on purpose: they file with the FEC, not the NCSBE, and their money
+already loads through `supabase/migrations/` federal reads.
 
 That reference tree is generated, not committed. Regenerate it from the repo
 root before the first run (or after the Civitas competitiveness data changes):
@@ -56,7 +56,7 @@ The tool exits with an instruction if the reference files are missing.
 ## Running it
 
 ```bash
-python3 fundraising/ncsbe_summaries.py                 # all competitive candidates
+python3 fundraising/ncsbe_summaries.py                 # every GA candidate (all 170 districts)
 python3 fundraising/ncsbe_summaries.py --dry-run        # resolve matches, download nothing
 python3 fundraising/ncsbe_summaries.py --only SD-42_D_2026 --only SD-04_R_2026
 ```
@@ -90,9 +90,10 @@ summaries/
 One file per candidate: the most recent **Second Quarter** Detailed Summary.
 A seat whose committee filed no Second Quarter report lands in
 `review_needed.csv` rather than falling back to another period — an older year
-is a different basis, not a substitute. As of the 2026 cycle that is 54 files
-across 54 candidates; four have none (three paper filings with no `DataLink`,
-one with only a First Quarter report).
+is a different basis, not a substitute. As of the 2026 cycle that is 246 files
+across 246 candidates; 52 have none — most filed no Second Quarter report at
+all, a few are paper filings with no `DataLink`, and one has only a First
+Quarter report.
 
 Files are the portal's export **verbatim**. Each carries a `Period` and a
 `Cycle` column; the product's chosen basis is **cycle-to-date** (the `Cycle`
@@ -164,7 +165,7 @@ python3 fundraising/ncsbe_summaries.py --sql     # writes ../state-funds-load.sq
 ```
 
 `--sql` also writes a review workbook, `state-funds.xlsx`, beside it — the same
-54 rows as a one-per-candidate sheet plus a `review_needed` sheet, for the
+246 rows as a one-per-candidate sheet plus a `review_needed` sheet, for the
 human-readable pass. It is a second view of one records list, so the two cannot
 drift; `--xlsx` on its own emits just the workbook. The workbook is written with
 the standard library (`zipfile` + XML), keeping the tool dependency-free.
@@ -187,8 +188,8 @@ Rules the emitter applies, and why:
   Detailed Summary, Detailed Receipts and Detailed Expenditures), so a reader can
   open the exact filing a figure came from. `rid` alone resolves it. The
   `state_funds_summary()` read passes each party's `source_url` through to the
-  MONEY block; without a row the block shows the pending notice rather than a
-  dead link.
+  MONEY block and keys `by_party` only by the parties that actually filed, so an
+  uncontested seat shows its one filing rather than a fabricated `$0` opponent.
 
 `state_funds.csv` was a staging file from the first manual pass. It is
 superseded by `state-funds-load.sql` and kept only as the historical record of
