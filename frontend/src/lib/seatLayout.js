@@ -2,20 +2,22 @@
 // tapered along a semicircle.
 //
 // Every seat sits on the same lattice: rows at a fixed vertical pitch, and
-// within a row a fixed horizontal pitch. A row's length is the chord of a
-// semicircle at that row's height -- sqrt(radius² - y²) cells wide on each
-// side -- so the bottom row is the longest, rows shrink toward the top, and
-// the outer edges of the drawn rows trace the arc. Because spacing never
-// changes, no row ever has to "reach" a boundary it can't, and a side with
-// fewer seats simply stops short of the arc at the far end of its rows; every
-// gap between drawn circles is identical, which is the one thing a chamber
-// chart must not fake.
+// within a row a fixed horizontal pitch. The grid spans the whole semicircle:
+// the bottom row is the full diameter and rows shrink toward the top, each
+// row's length the chord of the arc at its height -- sqrt(radius² - y²) cells
+// wide on each side -- so the outer edges of the drawn rows trace the arc.
+// Because spacing never changes, no row ever has to "reach" a boundary it
+// can't, and a side with fewer seats simply stops short of the arc at the far
+// end of its rows; every gap between drawn circles is identical, which is the
+// one thing a chamber chart must not fake.
 //
 // Democratic seats fill each row from the centre column outward on the left,
 // Republicans from the centre outward on the right, and a tie sits on the
-// centre column itself. So the closest races of each party stack down the
-// middle and the safest sit at the row ends -- competitive seats central, the
-// same ordering promise the map makes.
+// centre column itself, nearest the apex. Seats are shared across rows by
+// filling the base rows to the arc first, so the dome is a solid, smoothly
+// stepping staircase whatever the party counts; the closest races of each
+// party stack down the middle and the safest sit at the row ends --
+// competitive seats central, the same ordering promise the map makes.
 //
 // The chamber is sized from its real fixed roster (120 House seats, 50 Senate)
 // by choosing a radius big enough that every side fits; nothing else is solved.
@@ -56,52 +58,46 @@ function compareId(a, b) {
 
 // ----- The semicircle sheet ---------------------------------------------------
 
-// Rows per chamber. Eight for the House, six for the Senate -- neither so tall
-// that the apex releases into a point, nor so low that the sweep reads as a
-// rectangle. A tiny fixture scales the row count down with its size.
-function rowsFor(rated) {
-  if (rated > 100) return 8;
-  if (rated > 20) return 6;
-  return Math.max(1, Math.ceil(rated / 6));
-}
-
 // How many cells one side of a row holds: the chord of the semicircle radius K
-// at that row's height above the baseline. Row t (0 = apex) is d = rows-1-t
-// above the bottom row, so its half-width is floor(sqrt(K² - d²)) cells.
+// at y units above the base, floor'd so a seat cell never hangs off the arc.
+// Row t (0 = apex, the narrow top) sits y = rows-1-t above the base, so the
+// base row is the full diameter and the top row is the last place the arc
+// still reaches.
 function halfWidths(rows, radius) {
   return Array.from({ length: rows }, (_, t) => {
-    const d = rows - 1 - t;
-    return Math.floor(Math.sqrt(radius * radius - d * d));
+    const y = rows - 1 - t;
+    return Math.max(0, Math.floor(Math.sqrt(radius * radius - y * y)));
   });
 }
 
-// Smallest radius whose per-side capacity fits the larger party. The real
-// chambers resolve to K=11 (House) and K=7 (Senate) and never change.
-function findRadius(rows, need) {
-  for (let K = Math.max(1, rows); K <= rows + 12; K++) {
-    if (halfWidths(rows, K).reduce((a, b) => a + b, 0) >= need) return K;
+// The chamber grid spans the whole semicircle: rows = radius, one row per unit
+// of height, so the base row is the diameter and the rows taper up to the
+// arc's last cell. That full span -- not a band taken from the middle of the
+// circle -- is what makes the silhouette read as a dome; a handful of rows all
+// at similar chord lengths reads as a rectangle. The radius is the smallest
+// one whose per-side capacity fits the larger party (K=10 for the House, K=7
+// for the Senate, and never changes).
+function sheetFor(need) {
+  for (let radius = 1; radius <= need + 1; radius++) {
+    const h = halfWidths(radius, radius);
+    if (h.reduce((a, b) => a + b, 0) >= need) return { rows: radius, radius, h };
   }
-  return rows + 12;
+  const radius = need + 1;
+  return { rows: radius, radius, h: halfWidths(radius, radius) };
 }
 
-// Distribute a side's total across the rows in proportion to each row's
-// half-width, largest remainder, so the silhouette of a side keeps the arc's
-// proportions no matter how many of its seats are real.
-function allocateProportional(total, h) {
-  const sizes = new Array(h.length).fill(0);
-  if (total <= 0) return sizes;
-  const sum = h.reduce((a, b) => a + b, 0) || 1;
-  const frac = [];
-  let assigned = 0;
-  for (let i = 0; i < h.length; i++) {
-    const raw = (total * h[i]) / sum;
-    sizes[i] = Math.floor(raw);
-    frac.push([raw - sizes[i], i]);
-    assigned += sizes[i];
+// Share a side's total across the rows by filling the base rows to the arc
+// first, so the dome's lower storeys are solid and the silhouette tapers
+// smoothly instead of waving with the party's exact count. A side with fewer
+// seats simply stops partway up the dome.
+function allocateStairs(total, h) {
+  const out = new Array(h.length).fill(0);
+  let left = total;
+  for (let t = h.length - 1; t >= 0 && left > 0; t--) {
+    out[t] = Math.min(h[t], left);
+    left -= out[t];
   }
-  frac.sort((a, b) => b[0] - a[0] || a[1] - b[1]);
-  for (let k = 0; k < total - assigned; k++) sizes[frac[k % frac.length][1]] += 1;
-  return sizes;
+  return out;
 }
 
 // Lay a chamber out. Returns absolute coordinates in a viewBox that always
@@ -119,14 +115,11 @@ export function layoutChamber(races) {
   const ties = list.filter((s) => s.value === 0).sort(compareId);
   const unrated = list.filter((s) => s.value == null).sort(compareId);
 
-  const rated = dem.length + rep.length + ties.length;
-  const rows = rowsFor(rated);
-  const radius = findRadius(rows, Math.max(dem.length, rep.length));
-  const h = halfWidths(rows, radius);
+  const { rows, radius, h } = sheetFor(Math.max(dem.length, rep.length));
   // Centre column at K: cells run 0..2K, ties occupy K, D take K-1 downward
   // and R take K+1 upward, so the seam is one fixed gutter down the middle.
-  const demRows = allocateProportional(dem.length, h);
-  const repRows = allocateProportional(rep.length, h);
+  const demRows = allocateStairs(dem.length, h);
+  const repRows = allocateStairs(rep.length, h);
 
   // Slots are ordered by distance from the centre seam, then by row, so the
   // most competitive seats stack down the column next to the middle and the
