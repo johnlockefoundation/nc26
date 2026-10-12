@@ -28,24 +28,25 @@ export const METRIC_LABEL = 'partisan lean';
 const HALF_RAD = (89 * Math.PI) / 180;
 // A gap kept clear at the apex for the tie column, before the adaptive per-row
 // clearance below widens it for tightly-packed rows.
-const MIN_GAP_RAD = (4 * Math.PI) / 180;
+const MIN_GAP_RAD = (3 * Math.PI) / 180;
 
-// Minimum arc length per seat, so two neighbours on an arc do not overlap. This
-// is the same number the original single-arc chart used; a 120-seat chamber is
-// dominated by its outermost arc and that arc's radius grows with the spacing.
-const SEAT_SPACING = 15.5;
-const R_MIN = 44;
-const ROW_GAP = 17;
+// Minimum arc length per seat. This is the circle diameter plus a hair, so the
+// seats in a row sit edge to edge rather than spread into a scatter: the chart
+// wants to read as a packed chamber, and any more than this opens visible gaps
+// between the circles.
+const SEAT_SPACING = 14.6;
+const R_MIN = 34;
+// Minimum gap between consecutive arcs, held to the same near-touching number so
+// the rows themselves are edge to edge.
+const ROW_GAP = 14.6;
 const CIRCLE_R = 7;
-// Padding around the drawn circles: enough for the hover enlargement and the
-// selection stroke to stay inside the viewBox at every edge.
-const PAD = CIRCLE_R + 6;
-// Extra headroom on top for the "more competitive" label above the apex.
-const PAD_TOP = CIRCLE_R + 24;
+// Padding around the drawn circles: enough for the selection stroke to stay
+// inside the viewBox at every edge.
+const PAD = CIRCLE_R + 4;
 // The minimum distance the centreline must keep from the nearest rated seat, so
 // a tie at the apex never touches the innermost Democrat or Republican. Two
 // radii plus a hair.
-const CLEAR = 2 * CIRCLE_R + 2;
+const CLEAR = 2 * CIRCLE_R + 0.6;
 
 // The signed index for a seat, or null when it carries none.
 export function normalizeMetric(race) {
@@ -225,7 +226,7 @@ export function layoutChamber(races) {
   const ys = seats.map((s) => s.y);
   const minX = (xs.length ? Math.min(...xs) : 0) - PAD;
   const maxX = (xs.length ? Math.max(...xs) : 0) + PAD;
-  const minY = (ys.length ? Math.min(...ys) : 0) - PAD_TOP;
+  const minY = (ys.length ? Math.min(...ys) : 0) - PAD;
   const maxY = (ys.length ? Math.max(...ys) : 0) + PAD;
   const width = Math.max(1, maxX - minX);
   const height = Math.max(1, maxY - minY);

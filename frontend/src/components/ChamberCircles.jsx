@@ -50,8 +50,6 @@ export default function ChamberCircles({
   margin,
   selectedId,
   onSelect,
-  onHover,
-  onHoverEnd,
 }) {
   const layout = useMemo(() => layoutChamber(races), [races]);
   if (!layout.seats.length) return null;
@@ -86,12 +84,6 @@ export default function ChamberCircles({
         role="group"
         aria-label={`Chamber by seat, arranged by ${METRIC_LABEL} and coloured by who holds the seat`}
       >
-        {/* The band the arrangement puts the most competitive seats in is the
-            column nearest the vertical centreline, so the label sits above the
-            apex rather than along an edge the ordering does not use. */}
-        <text className="hemicycle-band" x={layout.width / 2} y={13} textAnchor="middle">
-          More competitive
-        </text>
         {layout.seats.map((seat) => {
           const { race, value } = seat;
           const holder = holderOf(race);
@@ -125,9 +117,6 @@ export default function ChamberCircles({
               aria-pressed={selected}
               data-district={race.district_id}
               onClick={() => onSelect?.(race.district_id)}
-              onFocus={() => onSelect?.(race.district_id)}
-              onMouseEnter={onHover ? () => onHover(race.district_id) : undefined}
-              onMouseLeave={onHoverEnd}
               onKeyDown={(e) => {
                 if (e.key === 'Enter' || e.key === ' ') {
                   e.preventDefault();

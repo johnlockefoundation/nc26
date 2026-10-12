@@ -610,9 +610,12 @@ a.money-row:hover { color: var(--ink); text-decoration: underline; }
      channels. A fill would make a vulnerable Republican-held seat on the
      left-hand side read as a Democratic one. */
   stroke: rgba(148, 163, 184, 0.22); stroke-width: 1;
-  transition: r 0.12s ease, stroke 0.12s ease;
+  transition: stroke 0.12s ease;
 }
-.seat-circle:hover { r: 10.5; }
+/* Seats sit edge to edge, so hover changes the stroke rather than the radius --
+   a bigger circle would grow over its neighbours. The panel itself opens on
+   click, not hover, so this is only a guiding cue. */
+.seat-circle:hover { stroke: rgba(226, 232, 240, 0.55); }
 .seat-circle:focus-visible { outline: none; stroke: var(--accent); stroke-width: 2.5; }
 .seat-circle.is-vulnerable { stroke: var(--accent); stroke-width: 2; }
 /* The selected seat keeps its holder fill and takes an amber outline, matching
@@ -702,13 +705,8 @@ a.money-row:hover { color: var(--ink); text-decoration: underline; }
 .hemicycle-key-items li { display: inline-flex; align-items: center; gap: 6px; }
 .key-dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; flex: none; }
 
-/* The band label and the one sentence that says what the arrangement is by.
-   Without the caption a reader has to guess whether the position means
-   something. */
-.hemicycle-band {
-  fill: var(--muted); font-family: var(--font-display); font-size: 11px;
-  font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
-}
+/* The one sentence that says what the arrangement is by. Without the caption a
+   reader has to guess whether the position means something. */
 .hemicycle-caption {
   margin: 8px 0 0; text-align: center; font-size: 10px; line-height: 1.45;
   font-weight: 500; letter-spacing: 0.01em; color: #64748b;

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { getMap, getMeta, getRace, getTicker, getOutline, assetUrl } from './api.js';
 import RaceTypeToggle from './components/RaceTypeToggle.jsx';
 import RaceTicker from './components/RaceTicker.jsx';
@@ -14,11 +14,6 @@ import { GA_MARGIN } from './lib/vulnerability.js';
 // and a chamber of 14 or 1 is not a chamber.
 const STATE_RACES = new Set(['state_house', 'state_senate']);
 
-// How long the pointer must rest on a seat before its race opens. Long enough
-// that sweeping across the chamber to reach the panel does not flash a dozen
-// races, short enough that a deliberate hover feels immediate.
-const HOVER_MS = 120;
-
 export default function App() {
   const [raceType, setRaceType] = useState('us_house');
   // 'map' or 'legislature'. Only meaningful for the two state chambers; a
@@ -33,7 +28,6 @@ export default function App() {
   const [detail, setDetail] = useState(null);
   const [loadingDetail, setLoadingDetail] = useState(false);
   const [error, setError] = useState(null);
-  const hoverTimer = useRef(null);
 
   const isState = STATE_RACES.has(raceType);
 
@@ -89,34 +83,9 @@ export default function App() {
     return () => { alive = false; };
   }, [selectedId]);
 
-  // Once a seat has opened, leaving it keeps the panel where it is -- the pointer
-  // has to travel to the panel to read it. Leaving only cancels an activation
-  // that has not happened yet.
-  function clearHover() {
-    if (hoverTimer.current) {
-      clearTimeout(hoverTimer.current);
-      hoverTimer.current = null;
-    }
-  }
-  useEffect(() => clearHover, []);
-
-  function hoverSeat(districtId) {
-    clearHover();
-    hoverTimer.current = setTimeout(() => {
-      hoverTimer.current = null;
-      setSelectedId(districtId);
-    }, HOVER_MS);
-  }
-
-  function selectSeat(districtId) {
-    clearHover();
-    setSelectedId(districtId);
-  }
-
-  // The panel is only ever shown for the seat that is actually selected. On a
-  // hover-driven change the previous race's detail is still in state for a
-  // moment; without this gate it would render under the new selection and name
-  // the wrong race.
+  // A seat opens only when it is clicked (or activated by keyboard), never on
+  // hover: passing the pointer across a chamber to reach the map should not
+  // reshuffle the panel underneath it.
   const shownDetail = detail && selectedId && detail.district_id === selectedId ? detail : null;
   const panelLoading = loadingDetail || Boolean(selectedId && !shownDetail);
 
@@ -226,9 +195,7 @@ export default function App() {
               generic={0}
               margin={GA_MARGIN}
               selectedId={selectedId}
-              onSelect={selectSeat}
-              onHover={hoverSeat}
-              onHoverEnd={clearHover}
+              onSelect={setSelectedId}
             />
           ) : (
             <NCMap

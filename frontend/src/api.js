@@ -415,13 +415,13 @@ export function getMap(raceType) {
 // A short-lived, in-memory cache for one race's detail, shared by every caller
 // on the page.
 //
-// The Legislature view opens a race on hover, so sweeping the pointer across a
-// chamber can ask for the same seat twice in a second and ask for a new one
-// every 120ms. Re-reading Supabase for each of those would put a dozen round
-// trips in the path of a gesture. The cache is deliberately tiny and short:
-// 60 seconds, one process, never written to disk. It is not the reference layer
-// and it does not make a volatile figure static -- abandoning it re-reads live,
-// which is the correct behaviour, not a downgrade.
+// The Legislature view opens a race on click, and a reader will often click a
+// seat, read it, click back to one they saw a moment ago -- the same seat twice
+// in a few seconds. Re-reading Supabase for each of those would put a round trip
+// in the path of a gesture that should feel instant. The cache is deliberately
+// tiny and short: 60 seconds, one process, never written to disk. It is not the
+// reference layer and it does not make a volatile figure static -- abandoning it
+// re-reads live, which is the correct behaviour, not a downgrade.
 const RACE_CACHE_TTL = 60_000;
 const raceCache = new Map();
 
