@@ -3,21 +3,30 @@ import { PARTY_TONES } from '../lib/colors.js';
 import { holderOf, seatShift } from '../lib/vulnerability.js';
 import { METRIC_LABEL, layoutChamber, metricLabel } from '../lib/seatLayout.js';
 
-// The chambers as semicircles: evenly spaced rows of circles by partisan lean.
+// The chambers as seated tiers, not maps. The seat positions come from the
+// fixed per-chamber template in lib/chamberTemplates.js -- concentric curved
+// rows facing an open floor, a rounded outer arch and a common baseline, 120
+// stalwart House positions and 50 Senate ones generated once and committed.
+// The runtime only assigns districts to those existing slots; it never solves
+// or moves them.
 //
-// A chamber is a fixed lattice tapered along a semicircle -- one seat per cell,
-// the same pitch in both axes, the row's length the chord of the arc at its
-// height -- so circles never sit at irregular distances and nothing in the page
-// has to decide where a seat goes. Democratic seats fill each row from the
-// centre column outward on the left, Republicans on the right, and a tie sits
-// on the centre line. "Where" is the whole point: the closest races of each
-// party stack down the middle and the safest seats sit at the row ends, so the
-// chart answers "how competitive" even before a detail is opened.
+// "Where" is the whole point: the closest races of each party sit nearest the
+// vertical centreline, ties on the centre itself, and the safest seats at the
+// row ends, so the chart answers "how competitive" even before a detail is
+// opened. Democratic-leaning seats prefer the left side of the midline,
+// Republican-leaning the right, and a surplus from unequal counts spills into
+// the outer slots rather than changing the silhouette.
 //
 // The arrangement is computed in lib/seatLayout.js, which knows nothing about
 // colour or the DOM, so the placement rule is testable without a browser. This
 // component is only the presentation: which holder colour, what the tooltip
 // says.
+//
+// The actual browser rendering is checked separately: the seats page is served
+// and photographed, because the geometry only ever failed visually. The svg
+// keeps preserveAspectRatio="xMidYMid meet" and a display width capped per
+// chamber, so a narrow window or the height clamp scales the whole silhouette
+// proportionally instead of flattening it.
 //
 // The metric is the Civitas Partisan Index -- a lean, not a forecast. There is
 // no district-level forecast margin in the payload, and the only per-district
@@ -55,12 +64,17 @@ const SEAT_DIAMETER_PX = 26;
 
 export default function ChamberCircles({
   races,
+  chamber,
   generic,
   margin,
   selectedId,
   onSelect,
+  neutral = false,
 }) {
-  const layout = useMemo(() => layoutChamber(races), [races]);
+  const layout = useMemo(
+    () => layoutChamber(races, chamber),
+    [races, chamber],
+  );
   if (!layout.seats.length) return null;
 
   const list = races || [];
@@ -71,41 +85,85 @@ export default function ChamberCircles({
 
   return (
     <div className="circles-wrap">
-      {/* Three colours and no key is a chart nobody can read. The heading names
-          what the fill means -- who holds the seat, not which way it leans --
-          because the two are deliberately different facts. */}
-      <div className="hemicycle-key">
-        <span className="hemicycle-key-title">Currently held by</span>
-        <ul className="hemicycle-key-items">
-          <li><span className="key-dot" style={{ background: PARTY_TONES.D.live }} />D {heldD}</li>
-          <li><span className="key-dot" style={{ background: PARTY_TONES.R.live }} />R {heldR}</li>
-          {heldU > 0 && (
-            <li><span className="key-dot" style={{ background: UNAFFILIATED }} />Un&#8203;affiliated {heldU}</li>
-          )}
-          {unrecorded > 0 && (
-            <li><span className="key-dot" style={{ background: NO_HOLDER }} />Not recorded {unrecorded}</li>
-          )}
-        </ul>
-      </div>
+      {neutral ? (
+        /* A seating template is checked before any race data connects to it:
+           every position in one neutral colour, so a person inspecting the
+           silhouette is looking at geometry, not reading red and blue around
+           it. Enabled by the demo-only ?template=1 query. */
+        <div className="hemicycle-key">
+          <span className="hemicycle-key-title">Seating template</span>
+          <ul className="hemicycle-key-items">
+            <li><span className="key-dot" style={{ background: NO_HOLDER }} />Position only · {list.length} seats</li>
+          </ul>
+        </div>
+      ) : (
+        /* Three colours and no key is a chart nobody can read. The heading names
+            what the fill means -- who holds the seat, not which way it leans --
+            because the two are deliberately different facts. */
+        <div className="hemicycle-key">
+          <span className="hemicycle-key-title">Currently held by</span>
+          <ul className="hemicycle-key-items">
+            <li><span className="key-dot" style={{ background: PARTY_TONES.D.live }} />D {heldD}</li>
+            <li><span className="key-dot" style={{ background: PARTY_TONES.R.live }} />R {heldR}</li>
+            {heldU > 0 && (
+              <li><span className="key-dot" style={{ background: UNAFFILIATED }} />Un&#8203;affiliated {heldU}</li>
+            )}
+            {unrecorded > 0 && (
+              <li><span className="key-dot" style={{ background: NO_HOLDER }} />Not recorded {unrecorded}</li>
+            )}
+          </ul>
+        </div>
+      )}
       {/* Seat circles are drawn at 14 viewBox units across. Capping the display
           width per chamber keeps every circle the same pixel size in the Senate
           as in the House, so a chamber with more seats grows wider rather than
-          blowing its circles up to fill the column the map's width set. */}
+          blowing its circles up to fill the column the map's width set. The
+          height then follows the viewBox exactly. */}
       <svg
         className="hemicycle"
         viewBox={`0 0 ${layout.width} ${layout.height}`}
+        preserveAspectRatio="xMidYMid meet"
         style={{ maxWidth: `${(layout.width * SEAT_DIAMETER_PX) / 14}px` }}
         role="group"
-        aria-label={`Chamber by seat, arranged by ${METRIC_LABEL} and coloured by who holds the seat`}
+        aria-label={`Chamber by seat, arranged by ${METRIC_LABEL}`}
       >
         {layout.seats.map((seat) => {
-          const { race, value } = seat;
+          const { race, value, x, y } = seat;
+          const selected = race.district_id === selectedId;
+          const name = race.partisan?.holder_name;
+
+          if (neutral) {
+            const label = `${race.district_id} · position only`;
+            return (
+              <circle
+                key={race.district_id}
+                className={['seat-circle', selected ? 'is-selected' : ''].filter(Boolean).join(' ')}
+                cx={x}
+                cy={y}
+                r={7}
+                fill={NO_HOLDER}
+                role="button"
+                tabIndex={0}
+                aria-label={label}
+                aria-pressed={selected}
+                data-district={race.district_id}
+                onClick={() => onSelect?.(race.district_id)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    onSelect?.(race.district_id);
+                  }
+                }}
+              >
+                <title>{label}</title>
+              </circle>
+            );
+          }
+
           const holder = holderOf(race);
           const shift = seatShift(value, generic);
           const vulnerable = shift != null && Math.abs(shift) <= margin;
           const tone = HOLDER_TONE[holder] || NO_HOLDER;
-          const selected = race.district_id === selectedId;
-          const name = race.partisan?.holder_name;
           const held = holder === 'U'
             ? `Held by ${name || 'an unaffiliated member'}`
             : holder ? `Held by ${holder}` : 'Holder not recorded';
@@ -121,8 +179,8 @@ export default function ChamberCircles({
                 vulnerable ? 'is-vulnerable' : '',
                 selected ? 'is-selected' : '',
               ].filter(Boolean).join(' ')}
-              cx={seat.x}
-              cy={seat.y}
+              cx={x}
+              cy={y}
               r={7}
               fill={tone}
               role="button"

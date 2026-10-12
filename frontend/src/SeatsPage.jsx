@@ -65,6 +65,14 @@ export default function SeatsPage() {
 
   const chamber = CHAMBERS.find((c) => c.key === raceType);
 
+  // Demo-only: ?template=1 renders the chamber with every position in one
+  // neutral colour and no lean data, the state the silhouette is verified in
+  // before any race figures are connected.
+  const neutralTemplate = useMemo(
+    () => typeof window !== 'undefined' && new URLSearchParams(window.location.search).has('template'),
+    [],
+  );
+
   return (
     <div className="app seats-app">
       <header className="seats-topbar">
@@ -105,10 +113,12 @@ export default function SeatsPage() {
       <main className="seats-main">
         <ChamberCircles
           races={races}
+          chamber={raceType}
           generic={generic}
           margin={GA_MARGIN}
           selectedId={selectedId}
           onSelect={setSelectedId}
+          neutral={neutralTemplate}
         />
       </main>
 
