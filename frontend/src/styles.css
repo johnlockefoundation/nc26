@@ -587,36 +587,33 @@ a.money-row:hover { color: var(--ink); text-decoration: underline; }
 
 /* --- Legislature split: safe D, competitive, safe R -------------------------
    A whole-chamber read rather than a reading of one race, so it is gated to the
-   General Assembly: the Civitas index the three buckets are cut from exists for
-   no federal seat. The rectangle fills are each party's own map tone plus one
-   amber for the competitive band. The rectangles deliberately carry no text --
-   three different fills cannot hold one label style at an accessible contrast --
-   so the counts live in the legend beneath them, on the card, in one colour. */
+   General Assembly: the Civitas index the three groups are cut from exists for
+   no federal seat. One seat is one dot, grouped into three filled rectangles --
+   the grouping carries the meaning, so the dots are packed rather than spread
+   along an arc. Fills are each party's own map tone plus an amber for the
+   competitive band; the counts sit in each group's head, not on the dots. */
 .buckets {
   width: 100%;
   background: #0a111f; border: 1px solid var(--line); border-radius: 14px;
-  padding: 26px 22px 20px;
+  padding: 26px 22px 22px;
 }
-.buckets-bar {
-  display: flex; gap: 3px;
-  height: clamp(76px, 17vh, 140px);
-  border-radius: 8px; overflow: hidden;
+.buckets-groups {
+  display: flex; flex-wrap: wrap; align-items: flex-start; gap: 28px 40px;
 }
-/* flex-grow is the seat count, so the three widths are the three shares. */
-.buckets-seg { min-width: 0; }
-.buckets-legend {
-  display: flex; flex-wrap: wrap; gap: 10px 30px;
-  margin: 18px 0 0; padding: 0; list-style: none;
-}
-.buckets-legend li { display: inline-flex; align-items: baseline; gap: 8px; }
-.buckets-dot { width: 11px; height: 11px; border-radius: 3px; display: inline-block; flex: none; }
-.buckets-label {
+.bucket { display: flex; flex-direction: column; gap: 12px; }
+.bucket-head { display: flex; align-items: baseline; gap: 9px; }
+.bucket-dot-sample { width: 10px; height: 10px; border-radius: 50%; flex: none; align-self: center; }
+.bucket-label {
   font-family: var(--font-display); font-size: 10.5px; letter-spacing: 0.1em;
   font-weight: 700; color: var(--muted);
 }
-.buckets-count { font-family: var(--font-display); font-size: 22px; font-weight: 800; font-variant-numeric: tabular-nums; color: var(--ink); }
-.buckets-pct { font-size: 11px; color: #64748b; }
-.buckets-note { margin: 14px 0 0; font-size: 11px; line-height: 1.45; color: #64748b; }
+.bucket-count { font-family: var(--font-display); font-size: 20px; font-weight: 800; font-variant-numeric: tabular-nums; color: var(--ink); }
+.bucket-pct { font-size: 11px; font-weight: 600; color: #64748b; }
+/* The rectangle of seats. --dot-size is the one lever: every column is a track
+   of that width and every dot fills it, so the grid stays square at any zoom. */
+.bucket-grid { --dot-size: 13px; display: grid; gap: 4px; width: max-content; }
+.bucket-dot { width: var(--dot-size); height: var(--dot-size); border-radius: 50%; background: transparent; }
+.buckets-note { margin: 16px 0 0; font-size: 11px; line-height: 1.45; color: #64748b; }
 
 /* Two-way view switch, styled like the chamber tabs beside it. */
 .view-toggle { display: inline-flex; gap: 4px; }
