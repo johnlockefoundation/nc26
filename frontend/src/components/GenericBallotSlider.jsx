@@ -8,9 +8,9 @@ import {
 // The generic ballot control, and the tally that goes with it.
 //
 // The control is only shown in the seats view, because it is meaningless
-// anywhere else: it moves the Civitas index that the hemicycle's rings are drawn
-// from, and on the map those rings are not shown at all. A slider that changes a
-// number you cannot see is worse than no slider.
+// anywhere else: it moves the Civitas index that the chamber semicircle's in-play
+// rings are drawn from, and on the map those rings are not shown at all. A
+// slider that changes a number you cannot see is worse than no slider.
 //
 // The tally carries the two numbers that answer the question the control asks --
 // how many seats are in play, and how many of those are held by each party. It

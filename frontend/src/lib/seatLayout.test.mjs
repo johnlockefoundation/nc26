@@ -76,28 +76,33 @@ test('the two real chambers place their full rosters', () => {
   }
 });
 
-test('safer seats are pushed outward on each side', () => {
+test('competitive seats sit closest to the centre seam', () => {
   const races = makeRaces(120, { ties: 3 });
   const { seats } = layoutChamber(races);
   for (const side of ['D', 'R']) {
     const onSide = seats
       .filter((s) => s.side === side)
-      .sort((a, b) => a.angle * (side === 'D' ? -1 : 1) - b.angle * (side === 'D' ? -1 : 1));
+      .sort((a, b) => a.dist - b.dist || a.row - b.row);
     for (let i = 1; i < onSide.length; i++) {
       assert.ok(
         Math.abs(onSide[i].value) >= Math.abs(onSide[i - 1].value) - 1e-9,
-        `${side}: margin stays monotonic outward`,
+        `${side}: margin stays monotonic away from the seam`,
       );
     }
   }
 });
 
-test('exact ties run down the centreline, unrated off to a separate group', () => {
+test('exact ties share the centre column, unrated off to a separate group', () => {
   const races = makeRaces(40, { ties: 4, unrated: 5 });
   const { seats, counts } = layoutChamber(races);
   const ties = seats.filter((s) => s.side === 'T');
   assert.equal(ties.length, 4);
-  for (const t of ties) assert.equal(t.angle, 0);
+  const tieX = ties[0].x;
+  const partyXs = new Set(seats.filter((s) => s.side === 'D' || s.side === 'R').map((s) => s.x));
+  for (const t of ties) {
+    assert.equal(t.x, tieX, `${t.district_id} in the centre column`);
+    assert.ok(!partyXs.has(t.x), `no party seat shares the centre column`);
+  }
   const unrated = seats.filter((s) => s.side === 'U');
   assert.equal(unrated.length, 5);
   for (const u of unrated) assert.equal(u.value, null);
@@ -150,15 +155,12 @@ test('an empty or one-seat chamber does not throw', () => {
   assert.equal(layoutChamber([race('HD-1', 2, 'R')]).seats.length, 1);
 });
 
-// --- Hemicycle silhouette rules ---------------------------------------------
-// The layout constants these assert against live in seatLayout.js: MIN_DIST
-// (17 draw units, the distance two circles keep so the 3-unit selection and
-// vulnerability strokes cannot touch) and HALF_RAD (89 degrees, the arc every
-// row's end reaches). Keeping them here as literals means a drift in the
-// geometry shows up as a failing test that names the promise.
+// --- The fixed-grid rules ----------------------------------------------------
+// The chamber is an even lattice (CELL = 20 units apart in both axes), which is
+// what makes the gaps uniform. Kept here as a literal so a drift shows up as a
+// failing test that names the promise.
 
-const MIN_DIST = 17;
-const HALF_DEG = 89;
+const CELL = 20;
 
 function realRaces(file) {
   const path = resolve(here, '../../public/data/reference/map', `${file}.json`);
@@ -166,82 +168,62 @@ function realRaces(file) {
   return JSON.parse(readFileSync(path, 'utf8')).races;
 }
 
-test('no two seats come within the drawn-stroke clearance', () => {
+test('every row is evenly spaced, in both axes', () => {
   for (const file of ['state_house', 'state_senate']) {
     const races = realRaces(file);
     if (!races) continue;
     const { seats } = layoutChamber(races);
-    for (let i = 0; i < seats.length; i++) {
-      for (let j = i + 1; j < seats.length; j++) {
-        const d = Math.hypot(seats[i].x - seats[j].x, seats[i].y - seats[j].y);
-        assert.ok(
-          d >= MIN_DIST - 0.05,
-          `${file}: ${seats[i].district_id} and ${seats[j].district_id} only ${d.toFixed(2)} apart`,
-        );
+    const party = seats.filter((s) => s.side !== 'U');
+    const xs = new Set(party.map((s) => Math.round(s.x * 100)));
+    const ys = new Set(party.map((s) => Math.round(s.y * 100)));
+    const xsSorted = [...xs].sort((a, b) => a - b);
+    const ysSorted = [...ys].sort((a, b) => a - b);
+    for (let i = 1; i < xsSorted.length; i++) assert.equal(xsSorted[i] - xsSorted[i - 1], CELL * 100, `${file} columns at fixed pitch`);
+    for (let i = 1; i < ysSorted.length; i++) assert.equal(ysSorted[i] - ysSorted[i - 1], CELL * 100, `${file} rows at fixed pitch`);
+    // A party block's own seats step exactly one cell. Across the centre seam
+    // the gap is a full empty column wider, which is uniform, not random.
+    const byRow = new Map();
+    for (const s of party) {
+      if (!byRow.has(s.row)) byRow.set(s.row, []);
+      byRow.get(s.row).push(s);
+    }
+    for (const [row, rowSeats] of byRow) {
+      for (const side of ['D', 'R']) {
+        const block = rowSeats.filter((s) => s.side === side).map((s) => s.x).sort((a, b) => a - b);
+        for (let i = 1; i < block.length; i++) {
+          assert.ok(Math.abs(block[i] - block[i - 1] - CELL) < 1e-6,
+            `${file} row ${row} ${side} block gaps are exactly one cell`);
+        }
       }
     }
   }
 });
 
-test('both sides reach the same baseline, completing the semicircle', () => {
-  for (const file of ['state_house', 'state_senate']) {
+test('the two real chambers clear the drawn strokes and hold the full roster', () => {
+  for (const [file, total] of [['state_house', 120], ['state_senate', 50]]) {
     const races = realRaces(file);
     if (!races) continue;
     const { seats } = layoutChamber(races);
-    for (const side of ['D', 'R']) {
-      const outer = Math.max(...seats.filter((s) => s.side === side).map((s) => Math.abs(s.angle)));
-      const deg = (outer * 180) / Math.PI;
-      assert.ok(deg >= HALF_DEG - 1.5, `${file} ${side} outer reaches ${deg.toFixed(1)}deg of the baseline`);
-      assert.ok(deg <= HALF_DEG + 0.5, `${file} ${side} outer ${deg.toFixed(1)}deg does not overshoot`);
+    assert.equal(seats.length, total, `${file} total`);
+    for (let i = 0; i < seats.length; i++) {
+      for (let j = i + 1; j < seats.length; j++) {
+        const d = Math.hypot(seats[i].x - seats[j].x, seats[i].y - seats[j].y);
+        assert.ok(d >= 17 - 0.05, `${file}: ${seats[i].district_id} and ${seats[j].district_id} only ${d.toFixed(2)} apart`);
+      }
     }
   }
 });
 
-test('the innermost rows are arcs, not one seat per side', () => {
-  for (const file of ['state_house', 'state_senate']) {
-    const races = realRaces(file);
-    if (!races) continue;
-    const { seats } = layoutChamber(races);
-    const inner = Math.min(...seats.filter((s) => s.side !== 'U').map((s) => s.radius));
-    const onRow = seats.filter((s) => s.radius === inner && s.side !== 'U');
-    assert.ok(onRow.length >= 8, `${file} innermost row holds ${onRow.length} seats`);
-    assert.ok(onRow.some((s) => s.side === 'D') && onRow.some((s) => s.side === 'R'),
-      `${file} innermost row has both sides`);
-  }
-});
-
-test('ties ride the central band through the normal row structure', () => {
+test('ties sit in the centre seam of both real chambers', () => {
   for (const file of ['state_house', 'state_senate']) {
     const races = realRaces(file);
     if (!races) continue;
     const { seats } = layoutChamber(races);
     const ties = seats.filter((s) => s.side === 'T');
-    const rowRadii = new Set(seats.filter((s) => s.side !== 'U').map((s) => s.radius));
-    for (const t of ties) {
-      assert.equal(t.angle, 0, `${file} ${t.district_id} sits on the centreline`);
-      assert.ok(rowRadii.has(t.radius), `${file} ${t.district_id} is on a real row, not dangling between rows`);
-    }
-    // Ties take the innermost rows precisely: the set of their radii is the
-    // first `ties.length` distinct row radii, so the competitive band stays
-    // central and no tie is stranded out among the safer seats.
-    const distinctRows = [...rowRadii].sort((a, b) => a - b);
-    const tieRadii = [...new Set(ties.map((t) => t.radius))].sort((a, b) => a - b);
-    assert.deepEqual(tieRadii, distinctRows.slice(0, ties.length),
-      `${file} ties occupy the innermost rows, keeping the competitive band central`);
+    assert.ok(ties.length >= 2, `${file} has the fixture's ties`);
+    const tieX = ties[0].x;
+    for (const t of ties) assert.equal(t.x, tieX, `${file} ${t.district_id} shares the centre column`);
+    const partyXs = new Set(seats.filter((s) => s.side === 'D' || s.side === 'R').map((s) => s.x));
+    assert.ok(!partyXs.has(tieX), `${file} nothing else occupies the seam column`);
   }
-});
-
-test('seat row widths track usable arc length, not row index', () => {
-  // Two equal 50-vote fixtures, one chamber with all 120 votes fresh... use
-  // synthetic sizes: a fixture whose scalar weights ignore radius would give a
-  // different, sparser inner ring than the arc-length model does.
-  const races = makeRaces(120, { ties: 0, unrated: 0 });
-  const { seats } = layoutChamber(races);
-  const rows = {};
-  for (const s of seats.filter((x) => x.side !== 'U')) {
-    (rows[s.radius] ||= { D: 0, R: 0 });
-    rows[s.radius][s.side] += 1;
-  }
-  const innerRow = rows[Math.min(...Object.keys(rows).map(Number))];
-  assert.ok(innerRow.D + innerRow.R >= 12, `innermost row spans ${innerRow.D + innerRow.R} seats, not one each side`);
 });

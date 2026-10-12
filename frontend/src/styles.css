@@ -585,18 +585,19 @@ a.money-row:hover { color: var(--ink); text-decoration: underline; }
 .panel-loading { padding: 60px 0; text-align: center; color: var(--muted); }
 .error-banner { background: rgba(153, 27, 27, 0.12); color: #fca5a5; border: 1px solid rgba(153, 27, 27, 0.4); border-radius: 10px; padding: 10px 14px; margin-bottom: 12px; font-size: 13px; }
 
-/* --- Demo-only: chamber waffle and generic ballot slider --------------------
+/* --- Demo-only: chamber semicircles and generic ballot slider -----------------
    Both are whole-chamber analytics rather than a reading of one race, and both
    are gated to the Pages build (DEMO_ONLY in api.js). Nothing here is shared
-   with the map's district styling on purpose: the waffle encodes who holds a
-   seat, which is a different fact from which way it leans, and reusing the map's
-   lean fills here would quietly assert the wrong thing. */
+   with the map's district styling on purpose: the semicircle encodes who holds
+   a seat, which is a different fact from which way it leans, and reusing the
+   map's lean fills here would quietly assert the wrong thing. */
 
-/* Hemicycle. Fixed-size circles on concentric arcs, blue-left and red-right by
-   lean, laid out from the apex outward so the in-play band is a contiguous wedge
-   at the top that visibly widens as the slider moves. Sized in viewBox units
-   rather than CSS pixels so the chart scales with its column and the arcs never
-   have to be recalculated. */
+/* Chamber semicircle. Fixed-size circles on one even lattice -- a row of the
+   semicircle per dial step -- blue-left and red-right by lean, the closest
+   races stacked down the centre column so the in-play band is a contiguous
+   vertical wedge that visibly widens as the slider moves. Sized in viewBox
+   units rather than CSS pixels so the chart scales with its column and the
+   pitch never has to change. */
 .circles-wrap {
   display: flex; flex-direction: column; align-items: center;
   padding: 22px 16px 10px;

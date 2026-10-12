@@ -4,7 +4,7 @@ import ChamberCircles from './components/ChamberCircles.jsx';
 import GenericBallotSlider from './components/GenericBallotSlider.jsx';
 import { GA_MARGIN } from './lib/vulnerability.js';
 
-// The General Assembly hemicycle, on its own page.
+// The General Assembly chambers, on their own page.
 //
 // This was a MAP/SEATS toggle inside the map page, which turned out to be the
 // wrong shape twice over. It was invisible on arrival because the map page opens
@@ -18,7 +18,7 @@ import { GA_MARGIN } from './lib/vulnerability.js';
 //
 // Only the General Assembly, deliberately. The slider moves the Civitas
 // per-district index and neither federal chamber has one, so there is nothing
-// for it to move against; and a hemicycle of 14 or 1 seats is not a chamber.
+// for it to move against; and a 14- or 1-seat chamber is not a chamber.
 
 const CHAMBERS = [
   { key: 'state_house', label: 'NC House', total: 120 },

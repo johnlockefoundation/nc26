@@ -9,8 +9,8 @@ import RacePanel from './components/RacePanel.jsx';
 import ChamberCircles from './components/ChamberCircles.jsx';
 import { GA_MARGIN } from './lib/vulnerability.js';
 
-// The chambers the Legislature view applies to. The hemicycle is General
-// Assembly only: the Civitas index it arranges by exists for no federal seat,
+// The chambers the Legislature view applies to. The chamber semicircles are General
+// Assembly only: the Civitas index they arrange by exists for no federal seat,
 // and a chamber of 14 or 1 is not a chamber.
 const STATE_RACES = new Set(['state_house', 'state_senate']);
 

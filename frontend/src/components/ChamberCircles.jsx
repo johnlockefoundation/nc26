@@ -3,17 +3,21 @@ import { PARTY_TONES } from '../lib/colors.js';
 import { holderOf, seatShift } from '../lib/vulnerability.js';
 import { METRIC_LABEL, layoutChamber, metricLabel } from '../lib/seatLayout.js';
 
-// The chamber as a hemicycle: the semicircle of seats every election night uses.
+// The chambers as semicircles: evenly spaced rows of circles by partisan lean.
 //
-// A waffle answers "how many". A hemicycle answers "how many, and where" -- and
-// "where" is the whole point, because the seats are laid out by partisan lean
-// rather than by district number. Blue collects on the left, red on the right,
-// and the seats nearest a tie sit at the apex.
+// A chamber is a fixed lattice tapered along a semicircle -- one seat per cell,
+// the same pitch in both axes, the row's length the chord of the arc at its
+// height -- so circles never sit at irregular distances and nothing in the page
+// has to decide where a seat goes. Democratic seats fill each row from the
+// centre column outward on the left, Republicans on the right, and a tie sits
+// on the centre line. "Where" is the whole point: the closest races of each
+// party stack down the middle and the safest seats sit at the row ends, so the
+// chart answers "how competitive" even before a detail is opened.
 //
 // The arrangement is computed in lib/seatLayout.js, which knows nothing about
 // colour or the DOM, so the placement rule is testable without a browser. This
-// component is only the presentation: which holder colour, which ring, what the
-// tooltip says.
+// component is only the presentation: which holder colour, what the tooltip
+// says.
 //
 // The metric is the Civitas Partisan Index -- a lean, not a forecast. There is
 // no district-level forecast margin in the payload, and the only per-district
