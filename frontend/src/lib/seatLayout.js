@@ -22,34 +22,28 @@ import { signedCpi } from './vulnerability.js';
 // cannot be mistaken for a geographic one.
 export const METRIC_LABEL = 'partisan lean';
 
-// Angular half-width each side spans, just shy of a right angle. At exactly 90
-// the outermost seats sit level with the baseline and the arc reads as a
-// rectangle with rounded ends.
+// Angular half-width each side spans. The two party arcs run from the
+// centreline out toward this limit and both reach it, so every row ends on the
+// same baseline and the chamber reads as a semicircle rather than two sloping
+// blocks -- a full right angle would plant the outermost seats exactly on the
+// baseline, and a hair under keeps them just above it.
 const HALF_RAD = (89 * Math.PI) / 180;
-// A gap kept clear at the apex for the tie column, before the adaptive per-row
-// clearance below widens it for tightly-packed rows.
-const MIN_GAP_RAD = (3 * Math.PI) / 180;
 
-// Minimum arc length per seat. This is the circle diameter plus a hair, so the
-// seats in a row sit edge to edge rather than spread into a scatter: the chart
-// wants to read as a packed chamber, and any more than this opens visible gaps
-// between the circles.
-const SEAT_SPACING = 14.6;
-// The innermost arc's radius. A little breathing room for the apex gap and the
-// tie column; a smaller radius would crowd the most competitive seats together
-// at a steeper angle.
-const R_MIN = 48;
-// Minimum gap between consecutive arcs, a diameter plus a hair so the rows sit
-// edge to edge.
-const ROW_GAP = 15;
 const CIRCLE_R = 7;
-// Padding around the drawn circles: enough for the selection stroke to stay
-// inside the viewBox at every edge.
-const PAD = CIRCLE_R + 4;
-// The minimum distance the centreline must keep from the nearest rated seat, so
-// a tie at the apex never touches the innermost Democrat or Republican. Two
-// radii plus a hair.
-const CLEAR = 2 * CIRCLE_R + 0.6;
+
+// The minimum distance between two seat centres, chord length not arc length.
+// Seats are 14 SVG units across, and the emphasis rings drawn over a selected
+// or vulnerable seat are centered on the circle edge and reach 1.5 units past
+// it (stroke-width 3 selection outline), so two seats whose centres are 17
+// units apart just keep their outlines from touching: 2 * (7 + 1.5).
+const MIN_DIST = 17;
+
+// Headroom around the drawn circles so a selection stroke is never clipped.
+const PAD = 9;
+
+// A chamber's innermost row must hold at least this many seats per side, so the
+// apex is an arc of members rather than one stranded dot on each flank.
+const MIN_INNER = 4;
 
 // The signed index for a seat, or null when it carries none.
 export function normalizeMetric(race) {
@@ -72,50 +66,114 @@ function compareId(a, b) {
   return x < y ? -1 : x > y ? 1 : 0;
 }
 
-// Seat counts per arc, growing outward because the outer arcs are longer, but
-// growing slowly -- one or two seats per row. The count difference between
-// consecutive arcs is what sets their radius gap in the solver below, so a jump
-// of five seats would hang a row off its predecessor by a band of empty space;
-// increments of one or two let every row sit one ROW_GAP from the last. The
-// remainder is spread across the outer rows rather than dumped on the last one.
-function allocate(n, rows) {
-  const sizes = new Array(rows).fill(0);
-  if (n <= 0) return sizes;
-  if (n <= rows) {
-    // A chamber with fewer seats than rows still stacks one per row rather than
-    // dumping them all on the outermost arc.
-    for (let i = 0; i < n; i++) sizes[i] = 1;
-    return sizes;
+// ----- Row model ------------------------------------------------------------
+
+// Two seats at angles a apart on a row of radius r are MIN_DIST apart when
+//   chord = 2 r sin(a / 2) = MIN_DIST
+// so the angular interval that guarantees a row's own clearance is the
+// inverse-chord form, not arc length divided by radius.
+function interval(r) {
+  return 2 * Math.asin(Math.min(1, MIN_DIST / (2 * r)));
+}
+
+// How many seats one side of a row can hold before its spacing would dip under
+// the minimum. The row reserves room for its centreline: on a row a tie
+// occupies, the nearest party seat starts one full interval out (the tie sits
+// at zero); on a tie-free row the nearest left and right seats sit about half
+// an interval from the centreline, which is exactly MIN_DIST apart chords.
+function arcCapacity(r, tied, staggered) {
+  const iv = interval(r);
+  const off = (tied ? 1 : 0.5) * iv;
+  const span = HALF_RAD - off;
+  // A staggered row steps its seats out by half an increment, which costs half
+  // an interval of span; capacity compensates so a stagger never squeezes a
+  // row below the minimum spacing.
+  return Math.max(1, staggered ? Math.floor(span / iv + 0.5) : Math.floor(span / iv) + 1);
+}
+
+// Angular step between neighbours on a side, sized so the whole side fills the
+// arc from its centreline offset out to HALF_RAD. A staggered row's first seat
+// sits half a step further out, so there is half the span left for the other
+// seats -- hence the minus 0.5.
+function arcStep(r, count, centreOffset, staggered) {
+  if (count <= 1) return 0;
+  const span = HALF_RAD - centreOffset;
+  return staggered ? span / (count - 0.5) : span / (count - 1);
+}
+
+function sum(a, b) {
+  return a + b;
+}
+
+// Row radii, per-row capacity and which rows hold what, solved together.
+//
+// Radii sit one MIN_DIST apart so consecutive arcs clear each other radially,
+// and the innermost radius is grown until every side of the chamber fits. The
+// arc count is staked low (six for the House, four for the Senate): a chamber
+// split across too many thin rows reads as rings, not a room. Counting by
+// capacity instead of by row index is the whole fix for the old sloping
+// blocks -- a row's share of seats is its share of usable arc length, radius
+// included, so the inner rows get the arcs the old allocation starved.
+function rowModel(ratedDem, ratedRep, ties) {
+  const rated = ratedDem + ratedRep + ties;
+  let rows = rated > 100 ? 6 : 4;
+  rows = Math.max(1, Math.min(rows, rated));
+
+  // The innermost "recognisable arc" demand can be loosened for a chamber too
+  // small or too lopsided to hold one; real chambers never relax.
+  for (let relax = 0; relax <= 2 && rows >= 2; relax++) {
+    const inner = Math.max(1, MIN_INNER - relax);
+    const found = solve(rows, ties, inner, Math.max(ratedDem, ratedRep));
+    if (found) return found;
   }
-  const total = (rows * (rows + 1)) / 2;
+  // No radius fits within the ceiling -- hand back a single-row fallback that
+  // still distributes every seat.
+  return solve(1, ties, 1, Math.max(ratedDem, ratedRep));
+}
+
+function solve(rows, ties, innerFloor, need) {
+  // Ties live in the central band: the innermost rows, one per row. A row that
+  // carries a tie reserves its centreline; a staggered row is one in every two
+  // above the bottom, never one holding a tie.
+  const tieRows = new Set();
+  for (let k = 0; k < Math.min(ties, rows); k++) tieRows.add(k);
+  const staggered = (i) => i % 2 === 1 && !tieRows.has(i);
+
+  for (let r0 = MIN_DIST; r0 <= 180; r0++) {
+    const radii = Array.from({ length: rows }, (_, i) => r0 + i * MIN_DIST);
+    const caps = radii.map((r, i) => arcCapacity(r, tieRows.has(i), staggered(i)));
+    if (caps.reduce(sum, 0) < need) continue;
+    if (arcCapacity(radii[0], tieRows.has(0), staggered(0)) < innerFloor) continue;
+    return { rows, radii, caps, tieRows, staggered };
+  }
+  return null;
+}
+
+// Split a side's total across rows by largest remainder, weighted by each row's
+// arc capacity, so the counts sum exactly and every row stays within what it
+// can hold.
+function allocate(n, caps) {
+  const sizes = new Array(caps.length).fill(0);
+  if (n <= 0) return sizes;
+  const total = caps.reduce(sum, 0) || 1;
+  const frac = [];
   let assigned = 0;
-  for (let i = 0; i < rows; i++) {
-    sizes[i] = Math.max(1, Math.floor((n * (i + 1)) / total));
+  for (let i = 0; i < caps.length; i++) {
+    const raw = (n * caps[i]) / total;
+    sizes[i] = Math.floor(raw);
+    frac.push([raw - sizes[i], i]);
     assigned += sizes[i];
   }
-  let remainder = n - assigned;
-  for (let i = rows - 1; i >= 0 && remainder > 0; i--) {
-    sizes[i] += 1;
-    remainder--;
-  }
+  frac.sort((a, b) => b[0] - a[0] || a[1] - b[1]);
+  for (let k = 0; k < n - assigned; k++) sizes[frac[k % frac.length][1]] += 1;
   return sizes;
 }
 
-function pushSide(slots, count, row, radius, gap, sign) {
-  // Packed along the arc at a constant length per seat rather than spread
-  // across the whole span: a short row spreads its members apart, a packed row
-  // keeps every neighbour edge to edge and simply ends sooner.
-  const step = SEAT_SPACING / radius;
-  for (let j = 0; j < count; j++) {
-    const angle = sign * (gap + j * step);
-    slots.push({ row, angle, radius, dist: Math.abs(angle) });
-  }
-}
+// ----- Slotting and placement ------------------------------------------------
 
-// Two slots are ranked by angular distance from the vertical centreline first,
-// then by row. That is the whole placement rule: the seat whose margin is
-// closest to zero takes the slot closest to the centreline, and the safest seat
-// on each side is pushed out to the horizontal edge.
+// A slot on one side of some row: angular distance from the centreline first,
+// then row, so the most competitive seat takes the slot nearest the centre
+// regardless of which row it lands in.
 function compareSlot(a, b) {
   return a.dist - b.dist || a.row - b.row;
 }
@@ -131,6 +189,16 @@ function place(entry, side, angle, radius) {
     x: radius * Math.sin(angle),
     y: -radius * Math.cos(angle),
   };
+}
+
+function pushSide(slots, side, count, row, radius, centreOffset, sign, staggered) {
+  const step = arcStep(radius, count, centreOffset, staggered);
+  for (let j = 0; j < count; j++) {
+    // A staggered row starts half a step out; otherwise the first seat sits
+    // against the centreline offset and the rest march to HALF_RAD.
+    const angle = sign * (centreOffset + (staggered ? step / 2 : 0) + j * step);
+    slots.push({ row, angle, radius, dist: Math.abs(angle) });
+  }
 }
 
 // Lay a chamber out. Returns absolute coordinates in a viewBox sized to the
@@ -150,54 +218,20 @@ export function layoutChamber(races) {
   // side. Unrated seats remain selectable and count toward the chamber total.
   const unrated = list.filter((s) => s.value == null).sort(compareId);
 
-  const ratedCount = dem.length + rep.length + ties.length;
-  // Arc count is set so per-row seat counts grow by one or two, which is what
-  // lets every row sit one ROW_GAP from the last (see allocate and the solver
-  // below). Six rows pack a 50-seat senate; eight pack a 120-seat house.
-  let rows = ratedCount > 100 ? 8 : 6;
-  rows = Math.max(1, Math.min(9, rows));
-  rows = Math.min(rows, Math.max(1, ratedCount));
-
-  const demRows = allocate(dem.length, rows);
-  const repRows = allocate(rep.length, rows);
-
-  // Row radii are shared by both sides so the arcs stay concentric. A row is
-  // pushed out far enough that its busier side lays its seats down at the
-  // minimum spacing, and never closer to the row inside it than ROW_GAP.
-  //
-  // The apex gap grows as the row sits closer in, which shrinks the arc the row
-  // has to fit its seats on -- so the radius has to satisfy the spacing using
-  // the gap its own radius implies. A few passes settle it: the required radius
-  // falls as the radius rises, so the sequence converges quickly. With count
-  // increments of one or two the required radius stays within ROW_GAP of the
-  // row before it, and every row lands edge to edge.
-  const radii = [];
-  let previous = 0;
-  for (let i = 0; i < rows; i++) {
-    const maxCount = Math.max(demRows[i], repRows[i]);
-    const floor = previous ? previous + ROW_GAP : R_MIN;
-    let radius = Math.max(floor, R_MIN);
-    if (maxCount > 1) {
-      for (let iter = 0; iter < 8; iter++) {
-        const gap = Math.max(MIN_GAP_RAD, Math.asin(Math.min(1, CLEAR / radius)));
-        const needed = (SEAT_SPACING * (maxCount - 1)) / (HALF_RAD - gap);
-        if (needed <= radius + 0.01) break;
-        radius = Math.max(floor, needed);
-      }
-    }
-    radii.push(radius);
-    previous = radius;
-  }
+  // Geometry first, districts second. Lay out every seat's slot from the data's
+  // raw counts, then zip districts onto slots.
+  const model = rowModel(dem.length, rep.length, ties.length);
+  const demRows = allocate(dem.length, model.caps);
+  const repRows = allocate(rep.length, model.caps);
 
   const demSlots = [];
   const repSlots = [];
-  for (let i = 0; i < rows; i++) {
-    const radius = radii[i];
-    // Widen the apex gap just enough that the innermost seat on this row clears
-    // the centreline by CLEAR at this radius, so a tie never sits on a party.
-    const gap = Math.max(MIN_GAP_RAD, Math.asin(Math.min(1, CLEAR / radius)));
-    pushSide(demSlots, demRows[i], i, radius, gap, -1);
-    pushSide(repSlots, repRows[i], i, radius, gap, 1);
+  for (let i = 0; i < model.rows; i++) {
+    const radius = model.radii[i];
+    const tied = model.tieRows.has(i);
+    const centreOffset = (tied ? 1 : 0.5) * interval(radius);
+    pushSide(demSlots, 'D', demRows[i], i, radius, centreOffset, -1, model.staggered(i));
+    pushSide(repSlots, 'R', repRows[i], i, radius, centreOffset, 1, model.staggered(i));
   }
   demSlots.sort(compareSlot);
   repSlots.sort(compareSlot);
@@ -206,12 +240,13 @@ export function layoutChamber(races) {
   dem.forEach((entry, i) => demSlots[i] && seats.push(place(entry, 'D', demSlots[i].angle, demSlots[i].radius)));
   rep.forEach((entry, i) => repSlots[i] && seats.push(place(entry, 'R', repSlots[i].angle, repSlots[i].radius)));
 
-  // Ties on the centreline, one per row, spilling outward if there are more
-  // ties than rows. Zero angle is exactly between the two party halves.
+  // Ties ride the normal row structure: one on each innermost row, at angle
+  // zero, spilling to ever-larger radii if a chamber somehow carries more ties
+  // than rows.
   ties.forEach((entry, i) => {
-    const radius = i < radii.length
-      ? radii[i]
-      : radii[radii.length - 1] + ROW_GAP * (i - radii.length + 1);
+    const radius = i < model.radii.length
+      ? model.radii[i]
+      : model.radii[model.radii.length - 1] + MIN_DIST * (i - model.radii.length + 1);
     seats.push(place(entry, 'T', 0, radius));
   });
 
@@ -219,9 +254,9 @@ export function layoutChamber(races) {
   // the arc rather than mixed into the ordering they have no value for.
   if (unrated.length) {
     const arcBottom = seats.length ? Math.max(...seats.map((s) => s.y)) : 0;
-    const stripY = arcBottom + ROW_GAP + CIRCLE_R;
+    const stripY = arcBottom + MIN_DIST + CIRCLE_R;
     unrated.forEach((entry, i) => {
-      const x = (i - (unrated.length - 1) / 2) * SEAT_SPACING;
+      const x = (i - (unrated.length - 1) / 2) * MIN_DIST;
       seats.push({
         district_id: entry.race.district_id,
         race: entry.race,

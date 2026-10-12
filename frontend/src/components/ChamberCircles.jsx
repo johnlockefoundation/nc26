@@ -44,6 +44,11 @@ const NO_HOLDER = '#475569';
 
 const HOLDER_TONE = { D: PARTY_TONES.D.live, R: PARTY_TONES.R.live, U: UNAFFILIATED };
 
+// Target pixel size of a seat circle on screen (SVG units are not pixels).
+// Kept modest so the House's 120 seats stay legible and the Senate's shorter
+// rows do not stretch to fill the same column with bigger circles.
+const SEAT_DIAMETER_PX = 26;
+
 export default function ChamberCircles({
   races,
   generic,
@@ -78,9 +83,14 @@ export default function ChamberCircles({
           )}
         </ul>
       </div>
+      {/* Seat circles are drawn at 14 viewBox units across. Capping the display
+          width per chamber keeps every circle the same pixel size in the Senate
+          as in the House, so a chamber with more seats grows wider rather than
+          blowing its circles up to fill the column the map's width set. */}
       <svg
         className="hemicycle"
         viewBox={`0 0 ${layout.width} ${layout.height}`}
+        style={{ maxWidth: `${(layout.width * SEAT_DIAMETER_PX) / 14}px` }}
         role="group"
         aria-label={`Chamber by seat, arranged by ${METRIC_LABEL} and coloured by who holds the seat`}
       >
