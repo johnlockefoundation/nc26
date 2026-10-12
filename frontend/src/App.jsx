@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { getMap, getMeta, getRace, getTicker, getOutline, assetUrl } from './api.js';
 import RaceTypeToggle from './components/RaceTypeToggle.jsx';
 import RaceTicker from './components/RaceTicker.jsx';
@@ -6,9 +6,24 @@ import NCMap from './components/NCMap.jsx';
 import ZipSearch from './components/ZipSearch.jsx';
 import MiniGauge from './components/MiniGauge.jsx';
 import RacePanel from './components/RacePanel.jsx';
+import ChamberCircles from './components/ChamberCircles.jsx';
+import { GA_MARGIN } from './lib/vulnerability.js';
+
+// The chambers the Legislature view applies to. The hemicycle is General
+// Assembly only: the Civitas index it arranges by exists for no federal seat,
+// and a chamber of 14 or 1 is not a chamber.
+const STATE_RACES = new Set(['state_house', 'state_senate']);
+
+// How long the pointer must rest on a seat before its race opens. Long enough
+// that sweeping across the chamber to reach the panel does not flash a dozen
+// races, short enough that a deliberate hover feels immediate.
+const HOVER_MS = 120;
 
 export default function App() {
   const [raceType, setRaceType] = useState('us_house');
+  // 'map' or 'legislature'. Only meaningful for the two state chambers; a
+  // federal race type forces it back to the map below.
+  const [view, setView] = useState('map');
   const [mapData, setMapData] = useState(null);
   const [outline, setOutline] = useState(null);
   const [meta, setMeta] = useState(null);
@@ -18,6 +33,9 @@ export default function App() {
   const [detail, setDetail] = useState(null);
   const [loadingDetail, setLoadingDetail] = useState(false);
   const [error, setError] = useState(null);
+  const hoverTimer = useRef(null);
+
+  const isState = STATE_RACES.has(raceType);
 
   useEffect(() => {
     getOutline().then(setOutline).catch((e) => setError(String(e)));
@@ -38,6 +56,12 @@ export default function App() {
     return () => { alive = false; };
   }, [raceType]);
 
+  // A federal race type has no Legislature view, so switching to one returns to
+  // the map rather than leaving a chart that cannot describe the seat.
+  useEffect(() => {
+    if (!STATE_RACES.has(raceType) && view !== 'map') setView('map');
+  }, [raceType, view]);
+
   const races = useMemo(() => mapData?.races || [], [mapData]);
 
   // Keep a valid selection for the current race type: on first load (or when the
@@ -47,6 +71,12 @@ export default function App() {
     const stillValid = selectedId && races.some((r) => r.district_id === selectedId);
     if (!stillValid) setSelectedId(races[0]?.district_id || null);
   }, [mapData, raceType, races, selectedId]);
+
+  // A detail for one chamber must not linger under another. Switching Map and
+  // Legislature within a chamber does not run this -- the race type is the same.
+  useEffect(() => {
+    setDetail(null);
+  }, [raceType]);
 
   useEffect(() => {
     if (!selectedId) { setDetail(null); return; }
@@ -58,6 +88,37 @@ export default function App() {
       .finally(() => { if (alive) setLoadingDetail(false); });
     return () => { alive = false; };
   }, [selectedId]);
+
+  // Once a seat has opened, leaving it keeps the panel where it is -- the pointer
+  // has to travel to the panel to read it. Leaving only cancels an activation
+  // that has not happened yet.
+  function clearHover() {
+    if (hoverTimer.current) {
+      clearTimeout(hoverTimer.current);
+      hoverTimer.current = null;
+    }
+  }
+  useEffect(() => clearHover, []);
+
+  function hoverSeat(districtId) {
+    clearHover();
+    hoverTimer.current = setTimeout(() => {
+      hoverTimer.current = null;
+      setSelectedId(districtId);
+    }, HOVER_MS);
+  }
+
+  function selectSeat(districtId) {
+    clearHover();
+    setSelectedId(districtId);
+  }
+
+  // The panel is only ever shown for the seat that is actually selected. On a
+  // hover-driven change the previous race's detail is still in state for a
+  // moment; without this gate it would render under the new selection and name
+  // the wrong race.
+  const shownDetail = detail && selectedId && detail.district_id === selectedId ? detail : null;
+  const panelLoading = loadingDetail || Boolean(selectedId && !shownDetail);
 
   return (
     <div className="app">
@@ -112,10 +173,64 @@ export default function App() {
       <main className="layout">
         <section className="map-column">
           <div className="map-toolbar">
-            <RaceTypeToggle value={raceType} onChange={setRaceType} />
-            <ZipSearch raceType={raceType} onLocate={setZipFocus} />
+            <div className="map-toolbar-left">
+              <RaceTypeToggle value={raceType} onChange={setRaceType} />
+              {/* Beside the chamber tabs, because it is a second way to read the
+                  same chamber rather than a separate place. Absent on federal
+                  chambers, where there is no index to arrange by. */}
+              {isState && (
+                <div className="view-toggle" role="group" aria-label="View">
+                  <button
+                    type="button"
+                    className={`view-toggle-btn ${view === 'map' ? 'active' : ''}`}
+                    aria-pressed={view === 'map'}
+                    onClick={() => setView('map')}
+                  >
+                    MAP
+                  </button>
+                  <button
+                    type="button"
+                    className={`view-toggle-btn ${view === 'legislature' ? 'active' : ''}`}
+                    aria-pressed={view === 'legislature'}
+                    onClick={() => setView('legislature')}
+                  >
+                    LEGISLATURE
+                  </button>
+                </div>
+              )}
+            </div>
+            <div className="map-toolbar-right">
+              {/* Discoverable from the federal view, where the control it opens
+                  is not visible: the page opens on U.S. House, so a reader has
+                  to be told the Legislature view exists. It opens NC House,
+                  which is the chamber the Civitas index covers most fully. */}
+              {!isState && (
+                <button
+                  type="button"
+                  className="seats-link"
+                  onClick={() => { setRaceType('state_house'); setView('legislature'); }}
+                >
+                  View NC Legislature →
+                </button>
+              )}
+              {/* ZIP search is geographic; there is no geography on the chart, so
+                  it is hidden in the Legislature view rather than disabled. */}
+              {view === 'map' && (
+                <ZipSearch raceType={raceType} onLocate={setZipFocus} />
+              )}
+            </div>
           </div>
-          {
+          {isState && view === 'legislature' ? (
+            <ChamberCircles
+              races={races}
+              generic={0}
+              margin={GA_MARGIN}
+              selectedId={selectedId}
+              onSelect={selectSeat}
+              onHover={hoverSeat}
+              onHoverEnd={clearHover}
+            />
+          ) : (
             <NCMap
               raceType={raceType}
               features={mapData?.features || []}
@@ -125,10 +240,10 @@ export default function App() {
               onSelect={setSelectedId}
               zipFocus={zipFocus}
             />
-          }
+          )}
         </section>
 
-        <RacePanel race={detail} loading={loadingDetail} />
+        <RacePanel race={shownDetail} loading={panelLoading} />
       </main>
     </div>
   );

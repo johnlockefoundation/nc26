@@ -156,6 +156,14 @@
 
 /* Map toolbar */
 .map-toolbar { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; }
+/* The chamber tabs and the Map/Legislature switch read as one control on the
+   left; the ZIP box and the Legislature link sit on the right. The tab bar's own
+   bottom margin is dropped inside the toolbar so the two controls line up. */
+.map-toolbar-left, .map-toolbar-right { display: flex; align-items: flex-start; gap: 12px; flex-wrap: wrap; }
+.map-toolbar-right { justify-content: flex-end; }
+.map-toolbar .toggle-bar { margin-bottom: 0; }
+/* The switch sits beside the tabs at the same height; no extra top margin. */
+.map-toolbar .view-toggle { margin-top: 2px; }
 
 /* ZIP search, on the right edge of the map panel opposite the chamber toggles.
    Sized to sit beside the toggle bar rather than compete with it: the label is
@@ -590,7 +598,7 @@ a.money-row:hover { color: var(--ink); text-decoration: underline; }
    rather than CSS pixels so the chart scales with its column and the arcs never
    have to be recalculated. */
 .circles-wrap {
-  display: flex; align-items: flex-end; justify-content: center;
+  display: flex; flex-direction: column; align-items: center;
   padding: 22px 16px 10px;
   background: #0a111f; border: 1px solid var(--line); border-radius: 14px;
   overflow: hidden;
@@ -607,7 +615,10 @@ a.money-row:hover { color: var(--ink); text-decoration: underline; }
 .seat-circle:hover { r: 10.5; }
 .seat-circle:focus-visible { outline: none; stroke: var(--accent); stroke-width: 2.5; }
 .seat-circle.is-vulnerable { stroke: var(--accent); stroke-width: 2; }
-.seat-circle.is-selected { stroke: #e2e8f0; stroke-width: 3; }
+/* The selected seat keeps its holder fill and takes an amber outline, matching
+   the colour the map uses for the seat it has open, so the two views never
+   disagree about which race is selected. */
+.seat-circle.is-selected { stroke: #fbbf24; stroke-width: 3; }
 
 /* Generic ballot slider. */
 .gb {
@@ -673,14 +684,35 @@ a.money-row:hover { color: var(--ink); text-decoration: underline; }
 }
 
 /* Hemicycle key. Swatches and counts only -- no prose, because the counts that
-   change with the slider live on the slider itself. */
+   change with the slider live on the slider itself. The heading names what the
+   fill encodes: who holds the seat, which is deliberately not how it leans. */
 .hemicycle-key {
+  display: flex; flex-direction: column; align-items: center; gap: 5px;
+  margin: 0 0 10px;
+}
+.hemicycle-key-title {
+  font-family: var(--font-display); font-size: 10px; letter-spacing: 0.16em;
+  font-weight: 700; text-transform: uppercase; color: var(--muted);
+}
+.hemicycle-key-items {
   display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 18px;
-  margin: 0 0 10px; padding: 0; list-style: none;
+  margin: 0; padding: 0; list-style: none;
   font-size: 10.5px; font-weight: 600; letter-spacing: 0.02em; color: var(--muted);
 }
-.hemicycle-key li { display: inline-flex; align-items: center; gap: 6px; }
+.hemicycle-key-items li { display: inline-flex; align-items: center; gap: 6px; }
 .key-dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; flex: none; }
+
+/* The band label and the one sentence that says what the arrangement is by.
+   Without the caption a reader has to guess whether the position means
+   something. */
+.hemicycle-band {
+  fill: var(--muted); font-family: var(--font-display); font-size: 11px;
+  font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+}
+.hemicycle-caption {
+  margin: 8px 0 0; text-align: center; font-size: 10px; line-height: 1.45;
+  font-weight: 500; letter-spacing: 0.01em; color: #64748b;
+}
 
 /* --- Seats page ------------------------------------------------------------
    A standalone document rather than a view inside the map page. It borrows the
