@@ -35,10 +35,13 @@ const MIN_GAP_RAD = (3 * Math.PI) / 180;
 // wants to read as a packed chamber, and any more than this opens visible gaps
 // between the circles.
 const SEAT_SPACING = 14.6;
-const R_MIN = 34;
-// Minimum gap between consecutive arcs, held to the same near-touching number so
-// the rows themselves are edge to edge.
-const ROW_GAP = 14.6;
+// The innermost arc's radius. A little breathing room for the apex gap and the
+// tie column; a smaller radius would crowd the most competitive seats together
+// at a steeper angle.
+const R_MIN = 48;
+// Minimum gap between consecutive arcs, a diameter plus a hair so the rows sit
+// edge to edge.
+const ROW_GAP = 15;
 const CIRCLE_R = 7;
 // Padding around the drawn circles: enough for the selection stroke to stay
 // inside the viewBox at every edge.
@@ -69,9 +72,12 @@ function compareId(a, b) {
   return x < y ? -1 : x > y ? 1 : 0;
 }
 
-// Seat counts per arc, growing outward because the outer arcs are longer.
-// Weighted linearly by radius and corrected so the rows sum to exactly n -- a
-// chart that renders 119 of 120 seats is a bug that looks like a rounding error.
+// Seat counts per arc, growing outward because the outer arcs are longer, but
+// growing slowly -- one or two seats per row. The count difference between
+// consecutive arcs is what sets their radius gap in the solver below, so a jump
+// of five seats would hang a row off its predecessor by a band of empty space;
+// increments of one or two let every row sit one ROW_GAP from the last. The
+// remainder is spread across the outer rows rather than dumped on the last one.
 function allocate(n, rows) {
   const sizes = new Array(rows).fill(0);
   if (n <= 0) return sizes;
@@ -87,16 +93,21 @@ function allocate(n, rows) {
     sizes[i] = Math.max(1, Math.floor((n * (i + 1)) / total));
     assigned += sizes[i];
   }
-  // Give or take the remainder on the outermost row, which has the most slack.
-  sizes[rows - 1] = Math.max(1, sizes[rows - 1] + (n - assigned));
+  let remainder = n - assigned;
+  for (let i = rows - 1; i >= 0 && remainder > 0; i--) {
+    sizes[i] += 1;
+    remainder--;
+  }
   return sizes;
 }
 
-function pushSide(slots, count, row, radius, gap, span, sign) {
+function pushSide(slots, count, row, radius, gap, sign) {
+  // Packed along the arc at a constant length per seat rather than spread
+  // across the whole span: a short row spreads its members apart, a packed row
+  // keeps every neighbour edge to edge and simply ends sooner.
+  const step = SEAT_SPACING / radius;
   for (let j = 0; j < count; j++) {
-    // Centre of each slot's cell, so the row is symmetric about the apex.
-    const cell = (j + 0.5) / count;
-    const angle = sign * (gap + cell * span);
+    const angle = sign * (gap + j * step);
     slots.push({ row, angle, radius, dist: Math.abs(angle) });
   }
 }
@@ -140,7 +151,10 @@ export function layoutChamber(races) {
   const unrated = list.filter((s) => s.value == null).sort(compareId);
 
   const ratedCount = dem.length + rep.length + ties.length;
-  let rows = Math.round(Math.sqrt(Math.max(1, ratedCount)) / 2.2);
+  // Arc count is set so per-row seat counts grow by one or two, which is what
+  // lets every row sit one ROW_GAP from the last (see allocate and the solver
+  // below). Six rows pack a 50-seat senate; eight pack a 120-seat house.
+  let rows = ratedCount > 100 ? 8 : 6;
   rows = Math.max(1, Math.min(9, rows));
   rows = Math.min(rows, Math.max(1, ratedCount));
 
@@ -148,13 +162,15 @@ export function layoutChamber(races) {
   const repRows = allocate(rep.length, rows);
 
   // Row radii are shared by both sides so the arcs stay concentric. A row is
-  // pushed out far enough that its busier side clears at the minimum spacing,
-  // and never closer to the row inside it than ROW_GAP.
+  // pushed out far enough that its busier side lays its seats down at the
+  // minimum spacing, and never closer to the row inside it than ROW_GAP.
   //
   // The apex gap grows as the row sits closer in, which shrinks the arc the row
   // has to fit its seats on -- so the radius has to satisfy the spacing using
   // the gap its own radius implies. A few passes settle it: the required radius
-  // falls as the radius rises, so the sequence converges quickly.
+  // falls as the radius rises, so the sequence converges quickly. With count
+  // increments of one or two the required radius stays within ROW_GAP of the
+  // row before it, and every row lands edge to edge.
   const radii = [];
   let previous = 0;
   for (let i = 0; i < rows; i++) {
@@ -164,7 +180,7 @@ export function layoutChamber(races) {
     if (maxCount > 1) {
       for (let iter = 0; iter < 8; iter++) {
         const gap = Math.max(MIN_GAP_RAD, Math.asin(Math.min(1, CLEAR / radius)));
-        const needed = (SEAT_SPACING * maxCount) / (HALF_RAD - gap);
+        const needed = (SEAT_SPACING * (maxCount - 1)) / (HALF_RAD - gap);
         if (needed <= radius + 0.01) break;
         radius = Math.max(floor, needed);
       }
@@ -180,9 +196,8 @@ export function layoutChamber(races) {
     // Widen the apex gap just enough that the innermost seat on this row clears
     // the centreline by CLEAR at this radius, so a tie never sits on a party.
     const gap = Math.max(MIN_GAP_RAD, Math.asin(Math.min(1, CLEAR / radius)));
-    const span = HALF_RAD - gap;
-    pushSide(demSlots, demRows[i], i, radius, gap, span, -1);
-    pushSide(repSlots, repRows[i], i, radius, gap, span, 1);
+    pushSide(demSlots, demRows[i], i, radius, gap, -1);
+    pushSide(repSlots, repRows[i], i, radius, gap, 1);
   }
   demSlots.sort(compareSlot);
   repSlots.sort(compareSlot);
