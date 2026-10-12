@@ -517,13 +517,19 @@
    as a trailing glyph: the name is what a reader clicks, not a decorative arrow,
    and an arrow would read as decoration when there is nothing behind it. */
 .money-rows { display: flex; flex-direction: column; }
-.money-row {
+/* The linked rows are written as `a.money-row`, not just `.money-row`, so their
+   colour outranks the generic `.app a { color: var(--accent) }` (both 0,1,1,
+   and this rule comes later). Without the element in the selector the money
+   rows rendered in accent blue, which is nearly the same hue as the partisan
+   D blue -- three blues in one box. The row stays --ink on hover too, with an
+   underline for the affordance, so no state reintroduces the colour. */
+.money-row, a.money-row {
   display: flex; align-items: baseline; gap: 10px;
   padding: 9px 0; border-top: 1px solid var(--line);
   font-size: 12.5px; text-decoration: none; color: var(--ink);
 }
 .money-row:first-child { border-top: none; padding-top: 2px; }
-a.money-row:hover { color: var(--accent); }
+a.money-row:hover { color: var(--ink); text-decoration: underline; }
 .money-row-name { font-family: var(--font-display); font-weight: 600; flex: 1 1 auto; min-width: 0; }
 /* The party is a quiet tag, not a colour code. The row already sits inside a
    box whose title carries the advantage, and a second strong hue here would
