@@ -19,6 +19,20 @@
 // state_funds_summary(). A row whose source_url is empty still renders as plain
 // text rather than a dead link, which is what the bundled reference did for
 // every state seat before the NCSBE summaries were loaded.
+//
+// A contested General Assembly race with only one committee's money folds to a
+// blank headline. The "advantage" there differences the one filing against an
+// opponent who simply has no report, which is the fabricated zero by_party was
+// reshaped to avoid: "R +$382K" reads as a margin over a Democrat who raised
+// nothing, when the truth is that no Democratic filing exists. The one real
+// total is still a fact, so it stays visible behind the caret; it is the folded
+// margin that would be a lie. An uncontested seat (one candidate) keeps its
+// figure -- there is no second side for the number to be misread as a margin
+// against.
+//
+// Only the state path reaches this. money_summary() always emits both a 'D' and
+// an 'R' key, so a single present party is structurally a General Assembly seat,
+// where by_party is keyed by the committees that actually filed.
 
 import CollapsibleMetric from './CollapsibleMetric.jsx';
 import { money as fmtMoney } from '../lib/format.js';
@@ -70,13 +84,17 @@ export default function MoneyBlock({ summary, candidates }) {
   }
   const parties = Object.keys(byParty).sort();
 
+  // A contested race (two candidates) whose by_party holds one party: only one
+  // side filed. Blank the folded figure and leave the number to the rows below.
+  const oneSided = (candidates || []).length >= 2 && parties.length === 1;
+
   // Same colour coding the other metric boxes use: the folded figure carries the
   // party that is ahead, so the advantage is legible without opening the box.
   // MetricBlock applies val-d/val-r the same way, and the rule that fixes it is
   // .metric-value.val-d / .val-r.
   const party = summary.advantage.party;
   const valueCls = party === 'D' ? 'val-d' : party === 'R' ? 'val-r' : '';
-  const value = (
+  const value = oneSided ? null : (
     <span className={`metric-value collapsible-metric-value ${valueCls}`}>
       {summary.advantage.label}
     </span>
