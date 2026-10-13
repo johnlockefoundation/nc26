@@ -412,42 +412,7 @@ export function getMap(raceType) {
   return getJson(`${API_BASE}/map?race_type=${raceType}`);
 }
 
-// A short-lived, in-memory cache for one race's detail, shared by every caller
-// on the page.
-//
-// The Legislature view opens a race on click, and a reader will often click a
-// seat, read it, click back to one they saw a moment ago -- the same seat twice
-// in a few seconds. Re-reading Supabase for each of those would put a round trip
-// in the path of a gesture that should feel instant. The cache is deliberately
-// tiny and short: 60 seconds, one process, never written to disk. It is not the
-// reference layer and it does not make a volatile figure static -- abandoning it
-// re-reads live, which is the correct behaviour, not a downgrade.
-const RACE_CACHE_TTL = 60_000;
-const raceCache = new Map();
-
-// Requests already in flight, so two callers racing the same seat share one
-// read instead of issuing two. Cleared on both settle paths; errors are never
-// cached, so a failed read is retried rather than remembered.
-const raceInflight = new Map();
-
 export function getRace(districtId) {
-  const hit = raceCache.get(districtId);
-  if (hit && Date.now() - hit.at < RACE_CACHE_TTL) return Promise.resolve(hit.data);
-  const pending = raceInflight.get(districtId);
-  if (pending) return pending;
-  const request = fetchRace(districtId)
-    .then((data) => {
-      raceCache.set(districtId, { at: Date.now(), data });
-      return data;
-    })
-    .finally(() => {
-      raceInflight.delete(districtId);
-    });
-  raceInflight.set(districtId, request);
-  return request;
-}
-
-function fetchRace(districtId) {
   if (BUNDLED) {
     return wpReference(`race/${districtId}.json`)
       .catch(() => {
