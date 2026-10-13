@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { PARTY_TONES } from '../lib/colors.js';
 import { GA_MARGIN, holderOf, signedCpi } from '../lib/vulnerability.js';
 
@@ -38,8 +38,10 @@ function leanLabel(value) {
 
 // One seat. A button so it is selectable by pointer and keyboard alike; the fill
 // is the holder, the ring is in-play, and the amber outline is the current
-// selection -- the same three signals the map's seat carries.
-function SeatDot({ race, selected, onSelect }) {
+// selection -- the same three signals the map's seat carries. Pointer-entry and
+// focus call `onPrefetch` so the race card is already in the cache by the time
+// the click lands.
+function SeatDot({ race, selected, onSelect, onPrefetch }) {
   const holder = holderOf(race);
   const value = signedCpi(race.partisan);
   const inPlay = value != null && Math.abs(value) <= GA_MARGIN;
@@ -62,6 +64,8 @@ function SeatDot({ race, selected, onSelect }) {
       aria-pressed={selected}
       title={label}
       data-district={race.district_id}
+      onPointerEnter={() => onPrefetch?.(race.district_id)}
+      onFocus={() => onPrefetch?.(race.district_id)}
       onClick={() => onSelect?.(race.district_id)}
     />
   );
@@ -70,7 +74,7 @@ function SeatDot({ race, selected, onSelect }) {
 // One bucket, drawn as a rectangle of seats. The seats fill a near-square grid
 // and the trailing cells are left empty, so the group reads as a solid block
 // whose size is its seat count.
-function BucketGrid({ seats, selectedId, onSelect }) {
+function BucketGrid({ seats, selectedId, onSelect, onPrefetch }) {
   const n = Math.max(seats.length, 1);
   const cols = Math.ceil(Math.sqrt(n));
   const rows = Math.ceil(n / cols);
@@ -87,6 +91,7 @@ function BucketGrid({ seats, selectedId, onSelect }) {
             race={seats[i]}
             selected={seats[i].district_id === selectedId}
             onSelect={onSelect}
+            onPrefetch={onPrefetch}
           />
         ) : (
           <span key={`gap-${i}`} className="seat-gap" />
@@ -96,7 +101,18 @@ function BucketGrid({ seats, selectedId, onSelect }) {
   );
 }
 
-export default function SeatBuckets({ races, selectedId, onSelect }) {
+export default function SeatBuckets({ races, selectedId, onSelect, onPrefetch }) {
+  // One shared timer: sweeping the pointer across the grid re-homes the pending
+  // prefetch onto the seat the pointer actually rests on, instead of firing a
+  // read for every dot it crossed.
+  const prefetchTimer = useRef(null);
+  useEffect(() => () => clearTimeout(prefetchTimer.current), []);
+  const schedulePrefetch = (districtId) => {
+    if (!onPrefetch) return;
+    clearTimeout(prefetchTimer.current);
+    prefetchTimer.current = setTimeout(() => onPrefetch(districtId), 120);
+  };
+
   const { groups, held, unrated, total } = useMemo(() => {
     const list = races || [];
     const safeD = [];
@@ -161,7 +177,12 @@ export default function SeatBuckets({ races, selectedId, onSelect }) {
               <span className="bucket-count">{g.seats.length}</span>
               <span className="bucket-pct">{pct(g.seats.length)}%</span>
             </div>
-            <BucketGrid seats={g.seats} selectedId={selectedId} onSelect={onSelect} />
+            <BucketGrid
+              seats={g.seats}
+              selectedId={selectedId}
+              onSelect={onSelect}
+              onPrefetch={schedulePrefetch}
+            />
           </div>
         ))}
       </div>

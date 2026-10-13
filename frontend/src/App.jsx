@@ -193,6 +193,7 @@ export default function App() {
               races={races}
               selectedId={selectedId}
               onSelect={setSelectedId}
+              onPrefetch={getRace}
             />
           ) : (
             <NCMap
