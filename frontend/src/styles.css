@@ -540,6 +540,25 @@ a.money-row:hover { color: var(--ink); text-decoration: underline; }
 .money-row-note { font-size: 10.5px; color: var(--muted); font-style: italic; flex: none; }
 .money-foot { font-size: 10.5px; letter-spacing: 0.04em; color: var(--muted); margin-top: 8px; }
 
+/* Ballot-request rows inside the expanded BALLOTS box: one row per party with
+   its count, then the total. The count is tabular-nums like every other figure
+   in the panel so the digits column-aligns down the rows. Neutral ink rather
+   than val-d/val-r -- the folded box carries no advantage figure, and colouring
+   a party's request total would imply the total is a race reading when it is a
+   volume. */
+.ballot-rows { display: flex; flex-direction: column; }
+.ballot-row {
+  display: flex; align-items: baseline; gap: 10px;
+  padding: 7px 0; border-top: 1px solid var(--line);
+  font-size: 12.5px;
+}
+.ballot-row:first-child { border-top: none; padding-top: 2px; }
+.ballot-row-party { font-size: 9.5px; letter-spacing: 0.12em; color: var(--muted); flex: none; }
+.ballot-row-count { font-family: var(--font-display); font-weight: 700; font-variant-numeric: tabular-nums; margin-left: auto; flex: none; }
+.ballot-row-total .ballot-row-party,
+.ballot-row-total .ballot-row-count { color: var(--ink); font-weight: 700; }
+.ballot-foot { font-size: 10.5px; letter-spacing: 0.04em; margin-top: 8px; }
+
 /* The disclosure caret, shared by the folded metric boxes above. */
 .collapsible-caret { flex: none; width: 7px; height: 7px; color: var(--muted); border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; transform: rotate(-45deg); transition: transform 0.15s ease; }
 .collapsible-metric[open] > summary .collapsible-caret { transform: rotate(45deg); }

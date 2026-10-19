@@ -110,7 +110,7 @@ function stripPartisanKeys(race) {
 }
 
 const VOLATILE_RACE_KEYS = [
-  'polls', 'markets', 'market_list', 'money', 'state_funds', 'vitals',
+  'polls', 'markets', 'market_list', 'money', 'state_funds', 'vitals', 'ballots',
   'news', 'coverage', 'last_updated',
 ];
 

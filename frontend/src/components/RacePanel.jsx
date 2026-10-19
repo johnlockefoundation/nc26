@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import BallotsBlock from './BallotsBlock.jsx';
 import MetricBlock from './MetricBlock.jsx';
 import CivitasPartisan from './CivitasPartisan.jsx';
 import Demographics from './Demographics.jsx';
@@ -102,12 +103,23 @@ export default function RacePanel({ race, loading }) {
   // Voter velocity is a General Assembly dataset, and unlike MONEY nothing on
   // this page renders it: the figures come from the state and the panel does not
   // try to stand in for them. REGISTRATIONS is gone rather than pending, and
-  // BALLOTS is a link out to the tracker, which is where that data actually
-  // lives. Both had been carrying a "we are processing this" notice for as long
-  // as race_vitals was empty, and that notice described the pipeline rather than
-  // the race.
+  // stays gone -- the source registration data is keyed by county, not district,
+  // so there is no honest per-seat figure to load.
+  //
+  // BALLOTS now has one: ballot requests aggregate cleanly onto House, Senate
+  // and congressional district codes in the source rows, and load into
+  // race_vitals through the human-run loader. So the row that used to be only
+  // a link out to the tracker becomes the real box whenever the read has the
+  // data, and keeps the link -- as the widget's source line, and as the whole
+  // widget on a state seat whose snapshot has not been loaded yet. A federal
+  // seat without data still renders nothing here, which is what it did before.
   const disclosureBlocks = [];
-  if (isStateRace && trackerHref) {
+  const ballots = race.ballots || {};
+  if (ballots.available) {
+    disclosureBlocks.push(
+      <BallotsBlock key="ballots" summary={ballots} trackerHref={trackerHref} />,
+    );
+  } else if (isStateRace && trackerHref) {
     disclosureBlocks.push(
       /* A plain .metric row, not .metric-static: this is a title and one value
          on one line like every other box in the panel, so the link belongs

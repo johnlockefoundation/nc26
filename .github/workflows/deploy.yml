@@ -84,7 +84,8 @@ jobs:
           node -e '
             const fs = require("fs");
             const volatile = ["polls", "poll_detail", "markets", "market_list",
-                              "money", "state_funds", "vitals", "news", "coverage", "last_updated"];
+                              "money", "state_funds", "vitals", "ballots", "news",
+                              "coverage", "last_updated"];
             const offenders = [];
             let checked = 0;
             // The map files carry a races array too, and they need checking for

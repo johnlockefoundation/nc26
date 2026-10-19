@@ -31,7 +31,7 @@ const RACE_TYPES = ['us_house', 'us_senate', 'state_senate', 'state_house'];
 // block. `profile` is deliberately kept: it is a real Census extract, fixed for
 // the cycle, not a placeholder.
 const VOLATILE_RACE_KEYS = [
-  'polls', 'markets', 'market_list', 'money', 'state_funds', 'vitals',
+  'polls', 'markets', 'market_list', 'money', 'state_funds', 'vitals', 'ballots',
   'news', 'coverage', 'last_updated',
 ];
 

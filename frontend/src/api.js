@@ -440,13 +440,14 @@ export function getRace(districtId) {
         // The payload shape is identical either way, so each block is written
         // once against the contract and does not know which target it is on.
         if (!LIVE) return base;
-        // Six independent reads, none of which can fail the page. Polling, prediction
-        // markets, federal and General Assembly money, and voter velocity are all
-        // per-seat and all optional, so a seat with rows in one and not the
-        // others must render the blocks it has rather than all or none. Each
-        // resolves to null on failure and overlayVolatile skips nulls, so a seat
-        // the database has nothing for is simply a seat without those blocks.
-        const [polls, markets, marketList, money, stateFunds, vitals, news] = await Promise.all([
+        // Independent reads, none of which can fail the page. Polling, prediction
+        // markets, federal and General Assembly money, voter velocity and ballot
+        // requests are all per-seat and all optional, so a seat with rows in one
+        // and not the others must render the blocks it has rather than all or
+        // none. Each resolves to null on failure and overlayVolatile skips
+        // nulls, so a seat the database has nothing for is simply a seat
+        // without those blocks.
+        const [polls, markets, marketList, money, stateFunds, vitals, ballots, news] = await Promise.all([
           awaitQuietly(`polls:${districtId}`,
             () => rpc('poll_summary', { p_race_id: districtId, p_cycle: CYCLE })),
           awaitQuietly(`markets:${districtId}`,
@@ -459,6 +460,8 @@ export function getRace(districtId) {
             () => rpc('state_funds_summary', { p_race_id: districtId, p_cycle: CYCLE })),
           awaitQuietly(`vitals:${districtId}`,
             () => rpc('vitals_summary', { p_race_id: districtId, p_cycle: CYCLE })),
+          awaitQuietly(`ballots:${districtId}`,
+            () => rpc('ballot_summary', { p_race_id: districtId, p_cycle: CYCLE })),
           awaitQuietly(`news:${districtId}`,
             () => rpc('district_news', { p_race_id: districtId, p_cycle: CYCLE, p_limit: 6 })),
         ]);
@@ -486,6 +489,7 @@ export function getRace(districtId) {
           money,
           state_funds: stateFunds,
           vitals,
+          ballots,
           news,
         }));
       });

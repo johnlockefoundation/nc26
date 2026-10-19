@@ -31,11 +31,17 @@ This is a standing decision, not a temporary one. It was made explicitly. If a
 task appears to require touching ingestion, that is a signal the task is
 misframed — raise it rather than working around it.
 
-Two loaders are exceptions, in scope only for reading and repair rather than for
-being extended into a pipeline. Both exist to remove hand-seeding and both write
-to Supabase, not SQLite:
+Three loaders are exceptions, in scope only for reading and repair rather than for
+being extended into a pipeline. All three write to Supabase, not SQLite:
 
 - `backend/scripts/fetch-kalshi.mjs` — see the Kalshi note below.
+- `backend/scripts/load-ballots.mjs` — sanctioned explicitly, on the same narrow
+  terms as the Kalshi exception: it reads the read-only Carolina Elections MySQL
+  endpoint, aggregates House, Senate and congressional ballot requests by
+  district, and writes an INSERT file (`ballots-load.sql`) that a human runs
+  against Supabase. It has no `--apply`, no cron and no `service_role` key, and
+  it writes to `public.race_vitals`, never to SQLite. Re-running it on a later
+  day is how a second snapshot happens; nothing schedules it.
 - `backend/scripts/load-polls.mjs` — fills `public.polls` from PollResults.org,
   which carries NYT polling data under CC BY 4.0 and replaced RealClearPolitics,
   a source with neither a free API nor a licence permitting redistribution. Run
@@ -163,9 +169,16 @@ them the same way was the bug. `RacePanel.jsx` now separates them per dataset:
   exists, so a "we are processing this" notice on a state seat would assert a
   pipeline that does not exist. `Demographics` is federal-only too: a Census
   profile is keyed to congressional boundaries, so only 15 seats have one.
-- **Pending — render `PendingMetric`.** MONEY on every seat, and REGISTRATIONS
-  and BALLOTS on General Assembly seats. These will exist for that seat; the
-  rows are simply not loaded.
+- **Pending — render `PendingMetric`.** MONEY on every seat. These will exist for
+  that seat; the rows are simply not loaded.
+- **BALLOTS is neither, now that the data loads.** `ballot_summary()` reports the
+  level from a single `race_vitals` snapshot, so the panel renders the box
+  wherever the read has it and keeps the tracker link as the widget's source
+  line. On a state seat with no snapshot yet it renders the link alone, as it
+  did before; on a federal seat with no snapshot it renders nothing, also as
+  before. REGISTRATIONS stays gone: the source registration data is keyed by
+  county, not district, so there is no honest per-seat figure to load and none
+  is pending.
 
 `PendingMetric` typesets the notice as an aside and deliberately does not take
 `--metric-row`, so a pending line is shorter than a real figure and cannot be
