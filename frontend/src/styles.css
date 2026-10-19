@@ -554,10 +554,25 @@ a.money-row:hover { color: var(--ink); text-decoration: underline; }
 }
 .ballot-row:first-child { border-top: none; padding-top: 2px; }
 .ballot-row-party { font-size: 9.5px; letter-spacing: 0.12em; color: var(--muted); flex: none; }
-.ballot-row-count { font-family: var(--font-display); font-weight: 700; font-variant-numeric: tabular-nums; margin-left: auto; flex: none; }
+/* The share sits in a right-aligned column of its own between the party and the
+   count. It is the pair of figures the folded headline differences, so the rows
+   have to line up as columns rather than as a figure that happens to follow each
+   label. */
+.ballot-row-share {
+  margin-left: auto; flex: none; min-width: 44px; text-align: right;
+  font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums;
+}
+.ballot-row-count {
+  font-family: var(--font-display); font-weight: 700; font-variant-numeric: tabular-nums;
+  flex: none; min-width: 66px; text-align: right;
+}
 .ballot-row-total .ballot-row-party,
 .ballot-row-total .ballot-row-count { color: var(--ink); font-weight: 700; }
 .ballot-foot { font-size: 10.5px; letter-spacing: 0.04em; margin-top: 8px; }
+/* The caveat, set like the foot because it is the same small print -- but wrapped,
+   since it is the sentence that keeps the folded headline from being read as a
+   forecast. */
+.ballot-note { font-size: 10.5px; line-height: 1.55; margin-top: 4px; }
 
 /* The disclosure caret, shared by the folded metric boxes above. */
 .collapsible-caret { flex: none; width: 7px; height: 7px; color: var(--muted); border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; transform: rotate(-45deg); transition: transform 0.15s ease; }

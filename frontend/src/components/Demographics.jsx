@@ -1,17 +1,18 @@
 // DEMOGRAPHICS: the Census profile of a district -- who lives there, how old,
 // how much they earn, and how the place voted in 2024.
 //
-// This is a sibling of REGISTRATIONS and BALLOTS, not their parent. Registration
-// and ballot velocity are about who is turning out and in which party; a census
-// profile is about the electorate's composition. Different questions, different
-// snapshots, different sources, and they are only ever rendered side by side by
-// accident of which datasets a seat happens to carry. Each is its own collapsible
-// so a reader can open one without opening the others.
+// This is a sibling of BALLOTS, not its parent. Ballot requests are about who is
+// turning out and in which party; a census profile is about the electorate's
+// composition. Different questions, different snapshots, different sources, and
+// they are only ever rendered side by side by accident of which datasets a seat
+// happens to carry. Each is its own collapsible so a reader can open one without
+// opening the other.
 //
-// Federal seats carry this profile; General Assembly seats carry registration and
-// ballot velocity instead. No seat has both, so at most one of the three blocks
-// renders per race -- but the panel treats them as three independent categories
-// rather than one category with three bodies, because that is what they are.
+// Federal seats carry this profile; General Assembly seats carry ballot requests
+// instead. No seat has both -- a census profile is keyed to congressional
+// boundaries -- so at most one of the two blocks renders per race, but the panel
+// treats them as two independent categories rather than one category with two
+// bodies, because that is what they are.
 //
 // Real figures, and deliberately bundled rather than read live. The profile is a
 // Census ACS 2024 5-year extract plus fixed 2024 results, so it is genuinely

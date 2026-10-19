@@ -180,6 +180,19 @@ them the same way was the bug. `RacePanel.jsx` now separates them per dataset:
   county, not district, so there is no honest per-seat figure to load and none
   is pending.
 
+  The box folds to the leading party's margin **in points of the requests
+  recorded so far** — the Democratic share of the box minus the Republican one,
+  over all three parties rather than over the two, because unaffiliated requests
+  are a third of it. Points rather than a count of ballots, so the figure means
+  the same thing on a 60,000-request Senate seat as on a 10,000-request House
+  one. **There is deliberately no comparison against 2024**: the source carries
+  no request date, so the 2024 table is a complete cycle while this one is
+  mid-flight and the difference between them would be a calendar artefact. That
+  figure becomes honest once both cycles are complete. The caveat under the rows
+  is one fixed sentence for the `PendingMetric` reason — a requested ballot is not
+  a vote and the parties do not return them at equal rates, so the lead is not a
+  forecast.
+
 `PendingMetric` typesets the notice as an aside and deliberately does not take
 `--metric-row`, so a pending line is shorter than a real figure and cannot be
 mistaken for one. The wording is one fixed sentence for the same reason: five

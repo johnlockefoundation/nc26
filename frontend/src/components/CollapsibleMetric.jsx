@@ -1,9 +1,9 @@
 // The disclosure box shared by every panel category that folds away its content
-// -- DEMOGRAPHICS, REGISTRATIONS, BALLOTS and MONEY.
+// -- DEMOGRAPHICS, BALLOTS and MONEY.
 //
 // The point of extracting this is that all of them must be the same box. They
 // previously shared one component, which is what kept them aligned; splitting
-// them into siblings would have left four copies of the markup free to drift.
+// them into siblings would have left three copies of the markup free to drift.
 // One shell, one source of truth for the collapsed state.
 //
 // Collapsed it reads as a plain .metric: title hard left, and the right-hand
@@ -12,11 +12,12 @@
 // stack does not step. Expanding elongates the box in place.
 //
 // Which of the two the right-hand slot holds is the only difference between the
-// boxes, and it is a real difference rather than a styling choice. DEMOGRAPHICS,
-// REGISTRATIONS and BALLOTS have no single party-advantage figure, and a stand-in
-// number would mean something different in every chamber -- so they show a caret
-// and everything lives behind it. MONEY does have a figure, so it shows that
-// with the caret after it, the same as a value-bearing row would read.
+// boxes, and it is a real difference rather than a styling choice. DEMOGRAPHICS
+// has no single party-advantage figure, and a stand-in number would mean
+// something different in every chamber -- so it shows a caret and everything
+// lives behind it. MONEY and BALLOTS each do have one -- the funding margin and
+// the lead in ballot requests -- so they show it with the caret after it, the
+// same as a value-bearing row would read.
 export default function CollapsibleMetric({ title, value, children, source, sourceHref }) {
   return (
     <details className="metric collapsible-metric">
