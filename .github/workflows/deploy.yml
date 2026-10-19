@@ -164,8 +164,6 @@ jobs:
             console.log(`map_payload ok: ${withDelta.length} seats carry a delta, holder_party present on ${holder.length}`);
           '
 
-          '
-
       - uses: actions/upload-pages-artifact@v3
         with:
           path: frontend/dist
