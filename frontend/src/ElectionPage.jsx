@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { getMap, getBallot, assetUrl } from './api.js';
+import { getMap, getBallots, assetUrl } from './api.js';
 import { trackerUrl } from './lib/tracker.js';
 
 const CHAMBERS = [
@@ -108,17 +108,20 @@ export default function ElectionPage() {
 
   const races = useMemo(() => mapData?.races || [], [mapData]);
 
-  // Fetch ballot summaries for all races in this chamber.
+  // Fetch ballot summaries for the whole chamber in one round trip.
   useEffect(() => {
     if (!races.length) return;
     let alive = true;
-    races.forEach((r) => {
-      getBallot(r.district_id)
-        .then((b) => { if (alive) setBallots((prev) => ({ ...prev, [r.district_id]: b })); })
-        .catch(() => {});
-    });
+    const keys = FETCH_KEYS[raceType] || [raceType];
+    Promise.all(keys.map((k) => getBallots(k)))
+      .then((results) => {
+        if (!alive) return;
+        const merged = Object.assign({}, ...results);
+        setBallots(merged);
+      })
+      .catch(() => {});
     return () => { alive = false; };
-  }, [races]);
+  }, [races, raceType]);
 
   const sorted = useMemo(() => {
     if (raceType === 'congress') {
