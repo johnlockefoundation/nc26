@@ -98,6 +98,7 @@ races_json as (
     'markets', jsonb_build_object(
       'available', dem_price is not null,
       'dem_price', dem_price, 'rep_price', rep_price,
+      'advantage', public.market_advantage(dem_price - rep_price),
       'provider', provider, 'updated_at', market_updated_at, 'source_url', source_url,
       -- The arrow. Delegated, never recomputed, so the map and the panel report
       -- the same move for the same seat.

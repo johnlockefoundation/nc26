@@ -138,7 +138,14 @@ export default function ElectionPage() {
     const b = ballots[r.district_id];
     const adv = ballotAdvantage(b);
     const advCls = adv ? (adv.party === 'D' ? 'val-d' : adv.party === 'R' ? 'val-r' : '') : '';
-    const km = r.markets && r.markets.available ? r.markets.advantage : null;
+    const m = r.markets && r.markets.available ? r.markets : null;
+    let km = m && m.advantage ? m.advantage : null;
+    if (!km && m && typeof m.dem_price === 'number' && typeof m.rep_price === 'number') {
+      const diff = m.dem_price - m.rep_price;
+      const pts = Math.abs(diff) * 100;
+      if (pts < 0.5) km = { party: 'EVEN', label: 'EVEN', value: 0 };
+      else km = { party: diff > 0 ? 'D' : 'R', label: (diff > 0 ? 'D' : 'R') + ' +' + Math.round(pts), value: Math.round(pts) };
+    }
     const kmCls = km ? (km.party === 'D' ? 'val-d' : km.party === 'R' ? 'val-r' : '') : '';
     return (
       <details key={r.district_id} className="turnout-pill">
