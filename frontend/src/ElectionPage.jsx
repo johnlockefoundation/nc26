@@ -138,14 +138,24 @@ export default function ElectionPage() {
     const b = ballots[r.district_id];
     const adv = ballotAdvantage(b);
     const advCls = adv ? (adv.party === 'D' ? 'val-d' : adv.party === 'R' ? 'val-r' : '') : '';
+    const km = r.markets && r.markets.available ? r.markets.advantage : null;
+    const kmCls = km ? (km.party === 'D' ? 'val-d' : km.party === 'R' ? 'val-r' : '') : '';
     return (
       <details key={r.district_id} className="turnout-pill">
         <summary className="turnout-pill-summary">
           <span className="turnout-matchup">{matchup}</span>
-          <span className={`turnout-lead ${advCls}`}>{adv ? adv.label : '—'}</span>
+          <span className="turnout-figs">
+            <span className={`turnout-lead ${advCls}`} title="Ballot lead">{adv ? adv.label : '—'}</span>
+            <span className={`turnout-lead ${kmCls}`} title="Kalshi margin">{km ? km.label : '—'}</span>
+          </span>
         </summary>
         <div className="turnout-pill-body">
           <BallotBreakdown ballot={b} />
+          {km && (
+            <div className="dim" style={{ fontSize: 11, marginTop: 4 }}>
+              Kalshi: <span className={kmCls}>{km.label}</span>
+            </div>
+          )}
         </div>
       </details>
     );
