@@ -389,12 +389,12 @@
 
 /* Turnout tracker (election.html) */
 .turnout-list { display: flex; flex-direction: column; gap: 8px; }
-.turnout-pill { background: #0c1524; border: 1px solid var(--line); border-radius: 12px; padding: 10px 14px; }
-.turnout-pill-summary { display: flex; justify-content: space-between; align-items: center; cursor: pointer; list-style: none; gap: 12px; }
+.turnout-pill { background: #0c1524; border: 1px solid var(--line); border-radius: 12px; padding: 8px 12px; }
+.turnout-pill-summary { display: flex; justify-content: space-between; align-items: center; cursor: pointer; list-style: none; gap: 8px; }
 .turnout-pill-summary::-webkit-details-marker { display: none; }
-.turnout-matchup { font-family: var(--font-display); font-size: 13px; font-weight: 700; letter-spacing: 0.02em; }
-.turnout-lead { font-family: var(--font-display); font-size: 13px; font-weight: 800; }
-.turnout-pill-body { border-top: 1px solid var(--line); margin-top: 8px; padding-top: 8px; }
+.turnout-matchup { font-family: var(--font-display); font-size: 17px; font-weight: 700; letter-spacing: 0.02em; }
+.turnout-lead { font-family: var(--font-display); font-size: 17px; font-weight: 800; }
+.turnout-pill-body { border-top: 1px solid var(--line); margin-top: 6px; padding-top: 6px; }
 
 /* Matchup headline (replaces candidate photo cards) */
 .matchup-headline {

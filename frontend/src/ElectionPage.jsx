@@ -78,10 +78,15 @@ function BallotBreakdown({ ballot }) {
 export default function ElectionPage() {
   const [raceType, setRaceType] = useState('us_house');
   const [sortMode, setSortMode] = useState('civitas');
+  const isState = raceType === 'state_senate' || raceType === 'state_house';
   const [mapData, setMapData] = useState(null);
   const [ballots, setBallots] = useState({});
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (isState) setSortMode('civitas');
+  }, [isState]);
 
   useEffect(() => {
     let alive = true;
@@ -138,24 +143,26 @@ export default function ElectionPage() {
             </button>
           ))}
         </div>
-        <div className="view-toggle" role="group" aria-label="Sort">
-          <button
-            type="button"
-            className={`view-toggle-btn ${sortMode === 'civitas' ? 'active' : ''}`}
-            aria-pressed={sortMode === 'civitas'}
-            onClick={() => setSortMode('civitas')}
-          >
-            CIVITAS
-          </button>
-          <button
-            type="button"
-            className={`view-toggle-btn ${sortMode === 'kalshi' ? 'active' : ''}`}
-            aria-pressed={sortMode === 'kalshi'}
-            onClick={() => setSortMode('kalshi')}
-          >
-            KALSHI
-          </button>
-        </div>
+        {!isState && (
+          <div className="view-toggle" role="group" aria-label="Sort">
+            <button
+              type="button"
+              className={`view-toggle-btn ${sortMode === 'civitas' ? 'active' : ''}`}
+              aria-pressed={sortMode === 'civitas'}
+              onClick={() => setSortMode('civitas')}
+            >
+              CIVITAS
+            </button>
+            <button
+              type="button"
+              className={`view-toggle-btn ${sortMode === 'kalshi' ? 'active' : ''}`}
+              aria-pressed={sortMode === 'kalshi'}
+              onClick={() => setSortMode('kalshi')}
+            >
+              KALSHI
+            </button>
+          </div>
+        )}
       </div>
 
       {loading && <div className="panel-loading">Loading…</div>}
