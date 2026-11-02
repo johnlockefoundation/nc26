@@ -142,11 +142,12 @@ export default function ElectionPage() {
       return { senate, house };
     }
     const all = [...races].sort((a, b) => {
-      const ba = ballotAdvantage(ballots[a.district_id]);
-      const bb = ballotAdvantage(ballots[b.district_id]);
-      const va = ba ? Math.abs(ba.value) : 9999;
-      const vb = bb ? Math.abs(bb.value) : 9999;
-      if (va !== vb) return va - vb;
+      const pa = a.partisan && a.partisan.available && typeof a.partisan.value === 'number' ? Math.abs(a.partisan.value) : 9999;
+      const pb = b.partisan && b.partisan.available && typeof b.partisan.value === 'number' ? Math.abs(b.partisan.value) : 9999;
+      const ca = a.competitive ? 0 : 1;
+      const cb = b.competitive ? 0 : 1;
+      if (ca !== cb) return ca - cb;
+      if (pa !== pb) return pa - pb;
       return (a.district_number ?? 0) - (b.district_number ?? 0);
     });
     return { all };
