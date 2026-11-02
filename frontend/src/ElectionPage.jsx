@@ -163,21 +163,34 @@ export default function ElectionPage() {
     const b = ballots[r.district_id];
     const adv = ballotAdvantage(b);
     const advCls = adv ? (adv.party === 'D' ? 'val-d' : adv.party === 'R' ? 'val-r' : '') : '';
+    const isStateRace = r.race_type === 'state_senate' || r.race_type === 'state_house';
     const polls = r.polls || {};
     const pollAdv = polls.available && polls.advantage ? polls.advantage : null;
     const pollCls = pollAdv ? (pollAdv.party === 'D' ? 'val-d' : pollAdv.party === 'R' ? 'val-r' : '') : '';
+    // State races have no polling; use the Civitas partisan index as the second figure.
+    const civ = isStateRace && r.partisan && r.partisan.available ? r.partisan : null;
+    const civCls = civ ? (civ.party === 'D' ? 'val-d' : civ.party === 'R' ? 'val-r' : '') : '';
+    const secondAdv = isStateRace ? civ : pollAdv;
+    const secondCls = isStateRace ? civCls : pollCls;
+    const secondTitle = isStateRace ? 'Civitas partisan index' : 'Poll average (federal only)';
+    const secondLabel = isStateRace ? (civ ? civ.label : '—') : (pollAdv ? pollAdv.label : '—');
     return (
       <details key={r.district_id} className="turnout-pill">
         <summary className="turnout-pill-summary">
           <span className="turnout-matchup">{matchupParts}</span>
           <span className="turnout-figs">
-            <span className={`turnout-lead ${pollCls}`} title="Poll average (federal only)">{pollAdv ? pollAdv.label : '—'}</span>
+            <span className={`turnout-lead ${secondCls}`} title={secondTitle}>{secondLabel}</span>
             <span className={`turnout-lead ${advCls}`} title="Requested ballot partisan split">{adv ? adv.label : '—'}</span>
           </span>
         </summary>
         <div className="turnout-pill-body">
           <BallotBreakdown ballot={b} />
-          {polls.available && polls.n_polls ? (
+          {isStateRace && civ ? (
+            <div className="dim" style={{ fontSize: 11, marginTop: 4 }}>
+              Civitas: {civ.label} · {civ.lean}
+            </div>
+          ) : null}
+          {!isStateRace && polls.available && polls.n_polls ? (
             <div className="dim" style={{ fontSize: 11, marginTop: 4 }}>
               Polls: {polls.n_polls} poll{polls.n_polls === 1 ? '' : 's'}
               {polls.span_start && polls.span_end ? ` · ${polls.span_start} → ${polls.span_end}` : ''}
@@ -221,14 +234,14 @@ export default function ElectionPage() {
         <>
           <div className="turnout-section-title">U.S. SENATE</div>
           <div className="turnout-header">
-            <span>MATCHUP</span><span>POLL LEAD</span><span>BALLOT LEAD</span>
+            <span>MATCHUP</span><span>{isState ? 'CIVITAS INDEX' : 'POLL LEAD'}</span><span>BALLOT LEAD</span>
           </div>
           <div className="turnout-list">
             {(sorted.senate || []).map((r) => renderPill(r, ballots))}
           </div>
           <div className="turnout-section-title">U.S. HOUSE</div>
           <div className="turnout-header">
-            <span>MATCHUP</span><span>POLL LEAD</span><span>BALLOT LEAD</span>
+            <span>MATCHUP</span><span>{isState ? 'CIVITAS INDEX' : 'POLL LEAD'}</span><span>BALLOT LEAD</span>
           </div>
           <div className="turnout-list">
             {(sorted.house || []).map((r) => renderPill(r, ballots))}
@@ -237,7 +250,7 @@ export default function ElectionPage() {
       ) : (
         <>
           <div className="turnout-header">
-            <span>MATCHUP</span><span>POLL LEAD</span><span>BALLOT LEAD</span>
+            <span>MATCHUP</span><span>{isState ? 'CIVITAS INDEX' : 'POLL LEAD'}</span><span>BALLOT LEAD</span>
           </div>
           <div className="turnout-list">
             {(sorted.all || []).map((r) => renderPill(r, ballots))}
