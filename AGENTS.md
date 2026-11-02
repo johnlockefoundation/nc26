@@ -202,16 +202,12 @@ variants of "coming soon" would each be read once and understood never.
 behind a chamber gate silences it, which reads as "nothing to report" rather than
 "not yet". If a dataset is genuinely coming for a seat, it gets the notice.
 
-### Portraits are a bucket, not a build
+### Portraits: removed
 
-Uploading `<candidate_id>.jpg` into the `headshots` Supabase Storage bucket puts a
-face on that seat for every site already running the plugin. No re-upload, no
-redeploy. The filename stem must be exactly the `candidate_id`; the client matches
-it against the candidate list it already holds rather than parsing it, so a
-mis-named upload is a console warning instead of a portrait that silently never
-appears. Bundled `photo_url` is the fallback when the bucket cannot be listed.
-Attribution is recorded in `CREDITS.md`; anything added to the bucket belongs
-there in the same change.
+Candidate cards no longer render photos. The headshots bucket enrichment and the
+bundled `photo_url` fallback are gone; the panel shows a color-coded matchup
+headline instead. `CREDITS.md` keeps the attribution history for the photos that
+were used while portraits were live.
 
 ### Verifying: the build is not a test
 

@@ -270,96 +270,9 @@ function overlayMap(base, live) {
   };
 }
 
-// --- portraits ---------------------------------------------------------------
-//
-// Portraits are enriched after the plugin is installed, the same way polls and
-// news are: the bucket is the live source and the bundled photo_url is the
-// floor. Dropping <candidate_id>.jpg into the headshots bucket puts a face on a
-// seat for every site already running this zip, with no re-upload.
-//
-// The filename is the whole contract, so it is matched against the candidate
-// list this page already holds rather than parsed. A file whose stem is not a
-// candidate_id we know about is ignored and named in the console -- a
-// mis-named upload should be a visible mistake, not a portrait that silently
-// never appears.
-//
-// Deliberately additive and per-candidate. Replacing the candidates array with
-// whatever the bucket says is the failure this file already had once: a live
-// read that was present but empty blanked every map label. A bucket that lists
-// nothing must leave the bundled record exactly as it found it.
-const HEADSHOTS_BUCKET = 'headshots';
-
-let portraitListing;
-
-// One list per page, not one per race. The promise is memoised rather than the
-// result so two callers racing each other still share a single request.
-//
-// What is memoised is the RAW listing, not a candidate-filtered map. Filtering
-// used to happen once inside this promise against whichever knownIds happened to
-// arrive first, so the first seat a reader opened decided which candidates the
-// whole page could ever see a portrait for: a live portrait for any other seat
-// was already listed by the bucket and still never rendered. The filter is
-// per-call and cheap, because it is a Set lookup against rows already in memory.
-function livePortraits(knownIds) {
-  if (!portraitListing) {
-    portraitListing = (async () => {
-      const url = new URL(`/storage/v1/object/list/${HEADSHOTS_BUCKET}`, SUPABASE_URL);
-      const res = await fetch(url.toString(), {
-        method: 'POST',
-        headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ prefix: '', limit: 1000 }),
-      }).then((r) => {
-        if (!r.ok) throw new Error(`${r.status} storage list`);
-        return r.json();
-      });
-      return res;
-    })().catch((err) => {
-      if (!warned.has('portraits')) {
-        warned.add('portraits');
-        console.warn(`[jce] portraits unavailable (${err.message}); using bundled photo_url`);
-      }
-      return null;
-    });
-  }
-  return portraitListing.then((entries) => {
-    if (!entries) return null;
-    const known = knownIds instanceof Set ? knownIds : new Set(knownIds || []);
-    const found = new Map();
-    const unknown = [];
-    for (const entry of entries) {
-      // Folder placeholders come back from the list endpoint with a null id.
-      if (!entry || !entry.id || !entry.name) continue;
-      const dot = entry.name.lastIndexOf('.');
-      if (dot < 1) continue;
-      const id = entry.name.slice(0, dot);
-      if (!known.has(id)) { unknown.push(entry.name); continue; }
-      const publicUrl = `${SUPABASE_URL}/storage/v1/object/public/${HEADSHOTS_BUCKET}/${entry.name}`;
-      // Two files for one candidate is ambiguous; pick one deterministically
-      // rather than letting listing order decide.
-      if (found.has(id) && found.get(id) <= publicUrl) continue;
-      found.set(id, publicUrl);
-    }
-    if (unknown.length) {
-      console.warn(`[jce] ${unknown.length} file(s) in ${HEADSHOTS_BUCKET} do not match a candidate_id and were ignored: `
-        + unknown.slice(0, 8).join(', ') + (unknown.length > 8 ? ', …' : ''));
-    }
-    return found;
-  });
-}
-
-async function overlayPortraits(race) {
-  if (!LIVE || !race || !Array.isArray(race.candidates)) return race;
-  const known = race.candidates.map((c) => c.candidate_id);
-  const portraits = await livePortraits(known);
-  if (!portraits || portraits.size === 0) return race;
-  return {
-    ...race,
-    candidates: race.candidates.map((c) => {
-      const photo_url = portraits.get(c.candidate_id);
-      return photo_url ? { ...c, photo_url } : c;
-    }),
-  };
-}
+// --- portraits: removed -------------------------------------------------------
+// Headshots are no longer enriched from a bucket. Candidate cards render a
+// color-coded matchup headline instead, so there is no live portrait read.
 
 // --- public surface ---------------------------------------------------------
 
@@ -482,7 +395,7 @@ export function getRace(districtId) {
         // One call rather than six chained ones so the nesting is visible at the
         // call site. A null result is skipped by overlayVolatile, so a failed
         // read leaves the bundled record untouched.
-        return overlayPortraits(overlayVolatile(base, {
+        return overlayVolatile(base, {
           polls,
           markets,
           market_list: marketList,
@@ -491,7 +404,7 @@ export function getRace(districtId) {
           vitals,
           ballots,
           news,
-        }));
+        });
       });
   }
   return getJson(`${API_BASE}/races/${districtId}`);

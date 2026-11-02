@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import BallotsBlock from './BallotsBlock.jsx';
 import MetricBlock from './MetricBlock.jsx';
 import CivitasPartisan from './CivitasPartisan.jsx';
@@ -7,40 +6,22 @@ import MoneyBlock from './MoneyBlock.jsx';
 import PendingMetric from './PendingMetric.jsx';
 import PollBlock from './PollBlock.jsx';
 import DistrictNews from './DistrictNews.jsx';
-import { initials } from '../lib/candidateName.js';
 import { trackerUrl } from '../lib/tracker.js';
 
 function CandidateCards({ candidates }) {
-  // A portrait URL can now change under an installed plugin, so a URL that 404s
-  // is a normal outcome rather than a build error: fall back to initials. Keyed
-  // by URL, not candidate_id, so a later upload of the same seat is retried
-  // instead of being permanently marked broken.
-  const [broken, setBroken] = useState(() => new Set());
+  // No portraits: the headshots bucket is gone, so the matchup is rendered as a
+  // single color-coded headline instead of photo cards. Names are uppercase and
+  // coloured by party (D blue, R red), with a muted "v" between them.
   if (!candidates || candidates.length === 0) return <div className="candidate-list dim">Candidates not yet available.</div>;
   return (
-    <div className="candidate-list">
-      {candidates.map((c) => (
-        <div key={c.candidate_id} className="candidate-card">
-          <div className="candidate-photo">
-            {c.photo_url && !broken.has(c.photo_url) ? (
-              <img
-                src={c.photo_url}
-                alt={`${c.name} (${c.party})`}
-                loading="lazy"
-                onError={() => setBroken((prev) => {
-                  if (prev.has(c.photo_url)) return prev;
-                  const next = new Set(prev);
-                  next.add(c.photo_url);
-                  return next;
-                })}
-              />
-            ) : (
-              <span className="candidate-initials">{initials(c.name)}</span>
-            )}
-            <span className={`candidate-party party-${String(c.party).toLowerCase()}`}>{c.party}</span>
-          </div>
-          <div className={`candidate-name cand-${String(c.party).toLowerCase()}`}>{c.name}</div>
-        </div>
+    <div className="matchup-headline">
+      {candidates.map((c, i) => (
+        <span key={c.candidate_id} className="matchup-part">
+          {i > 0 && <span className="matchup-vs"> v </span>}
+          <span className={`matchup-name party-${String(c.party).toLowerCase()}`}>
+            {String(c.name).toUpperCase()}
+          </span>
+        </span>
       ))}
     </div>
   );
