@@ -29,19 +29,9 @@ export default function CandidateSearch({ races, onSelect }) {
     }
   }
 
-  // Live jump: as soon as a unique match exists, select it.
   function change(e) {
-    const v = e.target.value;
-    setValue(v);
+    setValue(e.target.value);
     setMessage(null);
-    const needle = v.trim().toLowerCase();
-    if (needle.length < 2) return;
-    const matches = (races || []).filter((r) =>
-      (r.candidates || []).some((c) =>
-        String(c.name || '').toLowerCase().includes(needle),
-      ),
-    );
-    if (matches.length === 1) onSelect?.(matches[0].district_id);
   }
 
   return (
