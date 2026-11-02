@@ -200,18 +200,29 @@ export default function ElectionPage() {
       {raceType === 'congress' ? (
         <>
           <div className="turnout-section-title">U.S. SENATE</div>
+          <div className="turnout-header">
+            <span>MATCHUP</span><span>BALLOT</span><span>KALSHI</span>
+          </div>
           <div className="turnout-list">
             {(sorted.senate || []).map((r) => renderPill(r, ballots))}
           </div>
           <div className="turnout-section-title">U.S. HOUSE</div>
+          <div className="turnout-header">
+            <span>MATCHUP</span><span>BALLOT</span><span>KALSHI</span>
+          </div>
           <div className="turnout-list">
             {(sorted.house || []).map((r) => renderPill(r, ballots))}
           </div>
         </>
       ) : (
-        <div className="turnout-list">
-          {(sorted.all || []).map((r) => renderPill(r, ballots))}
-        </div>
+        <>
+          <div className="turnout-header">
+            <span>MATCHUP</span><span>BALLOT</span><span>KALSHI</span>
+          </div>
+          <div className="turnout-list">
+            {(sorted.all || []).map((r) => renderPill(r, ballots))}
+          </div>
+        </>
       )}
 
       <img
