@@ -138,29 +138,44 @@ export default function ElectionPage() {
     const b = ballots[r.district_id];
     const adv = ballotAdvantage(b);
     const advCls = adv ? (adv.party === 'D' ? 'val-d' : adv.party === 'R' ? 'val-r' : '') : '';
-    const m = r.markets && r.markets.available ? r.markets : null;
-    let km = m && m.advantage ? m.advantage : null;
-    if (!km && m && typeof m.dem_price === 'number' && typeof m.rep_price === 'number') {
-      const diff = m.dem_price - m.rep_price;
-      const pts = Math.abs(diff) * 100;
-      if (pts < 0.5) km = { party: 'EVEN', label: 'EVEN', value: 0 };
-      else km = { party: diff > 0 ? 'D' : 'R', label: (diff > 0 ? 'D' : 'R') + ' +' + Math.round(pts), value: Math.round(pts) };
+    // Federal races carry a Kalshi margin; state races carry the Civitas partisan index.
+    const isStateRace = r.race_type === 'state_senate' || r.race_type === 'state_house';
+    let mm = null;
+    let mmCls = '';
+    let mmTitle = '';
+    if (isStateRace) {
+      const p = r.partisan;
+      if (p && p.available) {
+        mm = { party: p.party, label: p.label };
+        mmCls = p.party === 'D' ? 'val-d' : p.party === 'R' ? 'val-r' : '';
+      }
+      mmTitle = 'Civitas margin';
+    } else {
+      const m = r.markets && r.markets.available ? r.markets : null;
+      mm = m && m.advantage ? m.advantage : null;
+      if (!mm && m && typeof m.dem_price === 'number' && typeof m.rep_price === 'number') {
+        const diff = m.dem_price - m.rep_price;
+        const pts = Math.abs(diff) * 100;
+        if (pts < 0.5) mm = { party: 'EVEN', label: 'EVEN', value: 0 };
+        else mm = { party: diff > 0 ? 'D' : 'R', label: (diff > 0 ? 'D' : 'R') + ' +' + Math.round(pts), value: Math.round(pts) };
+      }
+      mmCls = mm ? (mm.party === 'D' ? 'val-d' : mm.party === 'R' ? 'val-r' : '') : '';
+      mmTitle = 'Kalshi margin';
     }
-    const kmCls = km ? (km.party === 'D' ? 'val-d' : km.party === 'R' ? 'val-r' : '') : '';
     return (
       <details key={r.district_id} className="turnout-pill">
         <summary className="turnout-pill-summary">
           <span className="turnout-matchup">{matchup}</span>
           <span className="turnout-figs">
             <span className={`turnout-lead ${advCls}`} title="Ballot lead">{adv ? adv.label : '—'}</span>
-            <span className={`turnout-lead ${kmCls}`} title="Kalshi margin">{km ? km.label : '—'}</span>
+            <span className={`turnout-lead ${mmCls}`} title={mmTitle}>{mm ? mm.label : '—'}</span>
           </span>
         </summary>
         <div className="turnout-pill-body">
           <BallotBreakdown ballot={b} />
-          {km && (
+          {mm && (
             <div className="dim" style={{ fontSize: 11, marginTop: 4 }}>
-              Kalshi: <span className={kmCls}>{km.label}</span>
+              {mmTitle}: <span className={mmCls}>{mm.label}</span>
             </div>
           )}
         </div>
@@ -201,14 +216,14 @@ export default function ElectionPage() {
         <>
           <div className="turnout-section-title">U.S. SENATE</div>
           <div className="turnout-header">
-            <span>MATCHUP</span><span>BALLOT</span><span>KALSHI</span>
+            <span>MATCHUP</span><span>BALLOT</span><span>{isState ? 'CIVITAS' : 'KALSHI'}</span>
           </div>
           <div className="turnout-list">
             {(sorted.senate || []).map((r) => renderPill(r, ballots))}
           </div>
           <div className="turnout-section-title">U.S. HOUSE</div>
           <div className="turnout-header">
-            <span>MATCHUP</span><span>BALLOT</span><span>KALSHI</span>
+            <span>MATCHUP</span><span>BALLOT</span><span>{isState ? 'CIVITAS' : 'KALSHI'}</span>
           </div>
           <div className="turnout-list">
             {(sorted.house || []).map((r) => renderPill(r, ballots))}
@@ -217,7 +232,7 @@ export default function ElectionPage() {
       ) : (
         <>
           <div className="turnout-header">
-            <span>MATCHUP</span><span>BALLOT</span><span>KALSHI</span>
+            <span>MATCHUP</span><span>BALLOT</span><span>{isState ? 'CIVITAS' : 'KALSHI'}</span>
           </div>
           <div className="turnout-list">
             {(sorted.all || []).map((r) => renderPill(r, ballots))}
