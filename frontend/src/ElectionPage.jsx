@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { getMap, getBallots, getMovs, assetUrl } from './api.js';
+import { getMap, getBallots, assetUrl } from './api.js';
 import { trackerUrl } from './lib/tracker.js';
 
 const CHAMBERS = [
@@ -125,34 +125,32 @@ export default function ElectionPage() {
     return () => { alive = false; };
   }, [races, raceType]);
 
-  // Fetch margin-of-victory (Kalshi MOV) for federal races.
-  useEffect(() => {
-    if (raceType !== 'congress') return;
-    if (!races.length) return;
-    let alive = true;
-    Promise.all(['us_house', 'us_senate'].map((k) => getMovs(k)))
-      .then((results) => {
-        if (!alive) return;
-        setMovs(Object.assign({}, ...results));
-      })
-      .catch(() => {});
-    return () => { alive = false; };
-  }, [races, raceType]);
-
   const sorted = useMemo(() => {
     if (raceType === 'congress') {
       const senate = races.filter((r) => r.race_type === 'us_senate');
       const house = [...races.filter((r) => r.race_type === 'us_house')].sort((a, b) => {
-        const ma = movs[a.district_id]; const mb = movs[b.district_id];
-        const va = ma && ma.available && typeof ma.margin === 'number' ? Math.abs(ma.margin) : 9999;
-        const vb = mb && mb.available && typeof mb.margin === 'number' ? Math.abs(mb.margin) : 9999;
+        const pa = a.polls && a.polls.available && a.polls.advantage ? Math.abs(a.polls.advantage.value) : 9999;
+        const pb = b.polls && b.polls.available && b.polls.advantage ? Math.abs(b.polls.advantage.value) : 9999;
+        if (pa !== pb) return pa - pb;
+        const ba = ballotAdvantage(ballots[a.district_id]);
+        const bb = ballotAdvantage(ballots[b.district_id]);
+        const va = ba ? Math.abs(ba.value) : 9999;
+        const vb = bb ? Math.abs(bb.value) : 9999;
         if (va !== vb) return va - vb;
         return (a.district_number ?? 0) - (b.district_number ?? 0);
       });
       return { senate, house };
     }
-    return { all: sortRaces(races, 'civitas') };
-  }, [races, raceType, movs]);
+    const all = [...races].sort((a, b) => {
+      const ba = ballotAdvantage(ballots[a.district_id]);
+      const bb = ballotAdvantage(ballots[b.district_id]);
+      const va = ba ? Math.abs(ba.value) : 9999;
+      const vb = bb ? Math.abs(bb.value) : 9999;
+      if (va !== vb) return va - vb;
+      return (a.district_number ?? 0) - (b.district_number ?? 0);
+    });
+    return { all };
+  }, [races, raceType, ballots]);
 
   const renderPill = (r) => {
     const cands = r.candidates || [];
@@ -160,42 +158,26 @@ export default function ElectionPage() {
     const b = ballots[r.district_id];
     const adv = ballotAdvantage(b);
     const advCls = adv ? (adv.party === 'D' ? 'val-d' : adv.party === 'R' ? 'val-r' : '') : '';
-    // Federal races carry a Kalshi margin; state races carry the Civitas partisan index.
-    const isStateRace = r.race_type === 'state_senate' || r.race_type === 'state_house';
-    let mm = null;
-    let mmCls = '';
-    let mmTitle = '';
-    if (isStateRace) {
-      const p = r.partisan;
-      if (p && p.available) {
-        mm = { party: p.party, label: p.label };
-        mmCls = p.party === 'D' ? 'val-d' : p.party === 'R' ? 'val-r' : '';
-      }
-      mmTitle = 'Civitas margin';
-    } else {
-      const mv = movs[r.district_id];
-      if (mv && mv.available) {
-        mm = { party: mv.party, label: mv.party + ' +' + mv.margin, value: mv.margin };
-        mmCls = mv.party === 'D' ? 'val-d' : mv.party === 'R' ? 'val-r' : '';
-      }
-      mmTitle = 'MOV';
-    }
+    const polls = r.polls || {};
+    const pollAdv = polls.available && polls.advantage ? polls.advantage : null;
+    const pollCls = pollAdv ? (pollAdv.party === 'D' ? 'val-d' : pollAdv.party === 'R' ? 'val-r' : '') : '';
     return (
       <details key={r.district_id} className="turnout-pill">
         <summary className="turnout-pill-summary">
           <span className="turnout-matchup">{matchup}</span>
           <span className="turnout-figs">
-            <span className={`turnout-lead ${advCls}`} title="Requested ballot partisan split (as of snapshot date)">{adv ? adv.label : '—'}</span>
-            <span className={`turnout-lead ${mmCls}`} title="Kalshi predicted margin of victory">{mm ? mm.label : '—'}</span>
+            <span className={`turnout-lead ${pollCls}`} title="Poll average (federal only)">{pollAdv ? pollAdv.label : '—'}</span>
+            <span className={`turnout-lead ${advCls}`} title="Requested ballot partisan split">{adv ? adv.label : '—'}</span>
           </span>
         </summary>
         <div className="turnout-pill-body">
           <BallotBreakdown ballot={b} />
-          {mm && (
+          {polls.available && polls.n_polls ? (
             <div className="dim" style={{ fontSize: 11, marginTop: 4 }}>
-              {mmTitle}: <span className={mmCls}>{mm.label}</span>
+              Polls: {polls.n_polls} poll{polls.n_polls === 1 ? '' : 's'}
+              {polls.span_start && polls.span_end ? ` · ${polls.span_start} → ${polls.span_end}` : ''}
             </div>
-          )}
+          ) : null}
         </div>
       </details>
     );
@@ -206,7 +188,7 @@ export default function ElectionPage() {
       <header className="topbar">
         <h1 className="brand-title">
           <a className="brand-link" href="./" title="Back to the map">
-            Live turnout tracker
+            Polls vs Ballots
           </a>
         </h1>
       </header>
@@ -234,14 +216,14 @@ export default function ElectionPage() {
         <>
           <div className="turnout-section-title">U.S. SENATE</div>
           <div className="turnout-header">
-            <span>MATCHUP</span><span>BALLOT LEAD</span><span>{isState ? 'CIVITAS INDEX' : 'KALSHI PREDICTED MOV'}</span>
+            <span>MATCHUP</span><span>POLL LEAD</span><span>BALLOT LEAD</span>
           </div>
           <div className="turnout-list">
             {(sorted.senate || []).map((r) => renderPill(r, ballots))}
           </div>
           <div className="turnout-section-title">U.S. HOUSE</div>
           <div className="turnout-header">
-            <span>MATCHUP</span><span>BALLOT LEAD</span><span>{isState ? 'CIVITAS INDEX' : 'KALSHI PREDICTED MOV'}</span>
+            <span>MATCHUP</span><span>POLL LEAD</span><span>BALLOT LEAD</span>
           </div>
           <div className="turnout-list">
             {(sorted.house || []).map((r) => renderPill(r, ballots))}
@@ -250,7 +232,7 @@ export default function ElectionPage() {
       ) : (
         <>
           <div className="turnout-header">
-            <span>MATCHUP</span><span>BALLOT LEAD</span><span>{isState ? 'CIVITAS INDEX' : 'KALSHI PREDICTED MOV'}</span>
+            <span>MATCHUP</span><span>POLL LEAD</span><span>BALLOT LEAD</span>
           </div>
           <div className="turnout-list">
             {(sorted.all || []).map((r) => renderPill(r, ballots))}
