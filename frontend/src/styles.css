@@ -393,6 +393,9 @@
 .turnout-pill-summary { display: flex; justify-content: space-between; align-items: center; cursor: pointer; list-style: none; gap: 12px; }
 .turnout-pill-summary::-webkit-details-marker { display: none; }
 .turnout-matchup { font-family: var(--font-display); font-size: 28px; font-weight: 700; letter-spacing: 0.02em; padding: 4px 0; flex: 1; }
+.turnout-cand.party-d { color: var(--d); }
+.turnout-cand.party-r { color: var(--r); }
+.turnout-vs { color: var(--muted); font-weight: 600; margin: 0 6px; }
 .turnout-lead { font-family: var(--font-display); font-size: 28px; font-weight: 800; padding: 4px 0; min-width: 96px; text-align: right; }
 .turnout-lead.val-d { color: var(--d); }
 .turnout-lead.val-r { color: var(--r); }

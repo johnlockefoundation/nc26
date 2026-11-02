@@ -154,7 +154,12 @@ export default function ElectionPage() {
 
   const renderPill = (r) => {
     const cands = r.candidates || [];
-    const matchup = cands.map((c) => String(c.name).toUpperCase()).join(' v ');
+    const matchupParts = cands.map((c, i) => (
+      <span key={c.candidate_id || i}>
+        {i > 0 && <span className="turnout-vs"> v </span>}
+        <span className={`turnout-cand party-${String(c.party).toLowerCase()}`}>{String(c.name).toUpperCase()}</span>
+      </span>
+    ));
     const b = ballots[r.district_id];
     const adv = ballotAdvantage(b);
     const advCls = adv ? (adv.party === 'D' ? 'val-d' : adv.party === 'R' ? 'val-r' : '') : '';
@@ -164,7 +169,7 @@ export default function ElectionPage() {
     return (
       <details key={r.district_id} className="turnout-pill">
         <summary className="turnout-pill-summary">
-          <span className="turnout-matchup">{matchup}</span>
+          <span className="turnout-matchup">{matchupParts}</span>
           <span className="turnout-figs">
             <span className={`turnout-lead ${pollCls}`} title="Poll average (federal only)">{pollAdv ? pollAdv.label : '—'}</span>
             <span className={`turnout-lead ${advCls}`} title="Requested ballot partisan split">{adv ? adv.label : '—'}</span>
