@@ -129,8 +129,10 @@ export default function App() {
           }
         </section>
 
-        <CandidateSearch races={races} onSelect={setSelectedId} />
-        <RacePanel race={detail} loading={loadingDetail} />
+        <div className="panel-column">
+          <CandidateSearch races={races} onSelect={setSelectedId} />
+          <RacePanel race={detail} loading={loadingDetail} />
+        </div>
       </main>
     </div>
   );
