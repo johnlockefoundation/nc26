@@ -428,6 +428,13 @@ export function getTicker(limit = 12) {
   return getJson(`${API_BASE}/ticker?limit=${limit}`);
 }
 
+export function getBallot(districtId) {
+  if (LIVE) {
+    return rpc('ballot_summary', { p_race_id: districtId, p_cycle: CYCLE });
+  }
+  return getJson(`${API_BASE}/races/${districtId}`).then((r) => r?.ballots ?? null);
+}
+
 export function getOutline() {
   // The state outline sits beside the reference layer in the plugin
   // (data/outline.json) but inside demo-data on Pages, where the exporter writes
