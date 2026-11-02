@@ -35,13 +35,15 @@ Three loaders are exceptions, in scope only for reading and repair rather than f
 being extended into a pipeline. All three write to Supabase, not SQLite:
 
 - `backend/scripts/fetch-kalshi.mjs` — see the Kalshi note below.
-- `backend/scripts/load-ballots.mjs` — sanctioned explicitly, on the same narrow
-  terms as the Kalshi exception: it reads the read-only Carolina Elections MySQL
-  endpoint, aggregates House, Senate and congressional ballot requests by
-  district, and writes an INSERT file (`ballots-load.sql`) that a human runs
-  against Supabase. It has no `--apply`, no cron and no `service_role` key, and
-  it writes to `public.race_vitals`, never to SQLite. Re-running it on a later
-  day is how a second snapshot happens; nothing schedules it.
+- `backend/scripts/load-ballots.mjs` — sanctioned explicitly. It reads the
+  read-only Carolina Elections MySQL endpoint, aggregates House, Senate and
+  congressional ballot requests by district, and writes an INSERT file
+  (`ballots-load.sql`). It has no `--apply` and no `service_role` key, and it
+  writes to `public.race_vitals`, never to SQLite. Re-running it on a later day
+  is how a second snapshot happens. **This is the one loader that is automated:**
+  `.github/workflows/ballot-sync.yml` runs it on a schedule (twice daily) and
+  applies the generated SQL through psql with the project's database password.
+  The automation was added by explicit decision; everything else stays human-run.
 - `backend/scripts/load-polls.mjs` — fills `public.polls` from PollResults.org,
   which carries NYT polling data under CC BY 4.0 and replaced RealClearPolitics,
   a source with neither a free API nor a licence permitting redistribution. Run

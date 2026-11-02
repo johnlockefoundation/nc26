@@ -1,0 +1,49 @@
+name: Ballot sync
+
+# Pulls the latest absentee-ballot request counts from the Carolina Elections
+# AWS RDS MySQL endpoint and upserts them into Supabase public.race_vitals.
+#
+# This is the one piece of ingestion that is automated, by explicit decision:
+# ballot requests accelerate through election day and a human running the loader
+# on a laptop would lag the source. Everything else (polls, markets, money,
+# news) stays human-run per AGENTS.md.
+#
+# No service_role key is involved: the Supabase write goes through psql with the
+# project's database password, which is the same credential a human uses in the
+# SQL editor. The MySQL endpoint is read-only.
+
+on:
+  schedule:
+    - cron: '0 6,18 * * *'
+  workflow_dispatch:
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install database clients
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y default-mysql-client postgresql-client
+
+      - name: Generate ballot load SQL from AWS
+        env:
+          MYSQL_HOST: carolinaelections-3.cluster-ro-cdq9qw5jzol8.us-east-1.rds.amazonaws.com
+          MYSQL_USER: MihirKale
+          MYSQL_DATABASE: carolinaelections
+          MYSQL_CLIENT: mysql
+          MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+        run: node backend/scripts/load-ballots.mjs
+
+      - name: Apply to Supabase
+        env:
+          PGPASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+        run: |
+          psql "postgresql://postgres.fwzkzgyauywduigzbeqe:${{ secrets.SUPABASE_DB_PASSWORD }}@aws-0-us-east-1.pooler.supabase.com:6543/postgres" \
+            -f ballots-load.sql
