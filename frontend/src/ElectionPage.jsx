@@ -3,11 +3,16 @@ import { getMap, getBallot, assetUrl } from './api.js';
 import { trackerUrl } from './lib/tracker.js';
 
 const CHAMBERS = [
-  { key: 'us_house', label: 'U.S. House' },
-  { key: 'us_senate', label: 'U.S. Senate' },
+  { key: 'congress', label: 'Congress' },
   { key: 'state_senate', label: 'NC Senate' },
   { key: 'state_house', label: 'NC House' },
 ];
+
+const FETCH_KEYS = {
+  congress: ['us_house', 'us_senate'],
+  state_senate: ['state_senate'],
+  state_house: ['state_house'],
+};
 
 function ballotAdvantage(b) {
   if (!b || !b.available || !b.ballot?.advantage) return null;
@@ -94,8 +99,13 @@ export default function ElectionPage() {
     setError(null);
     setMapData(null);
     setBallots({});
-    getMap(raceType)
-      .then((d) => { if (alive) setMapData(d); })
+    const keys = FETCH_KEYS[raceType] || [raceType];
+    Promise.all(keys.map((k) => getMap(k)))
+      .then((results) => {
+        if (!alive) return;
+        const merged = results.flatMap((d) => d?.races || []);
+        setMapData({ race_type: raceType, races: merged, features: results.flatMap((d) => d?.features || []) });
+      })
       .catch((e) => { if (alive) setError(String(e)); })
       .finally(() => { if (alive) setLoading(false); });
     return () => { alive = false; };
