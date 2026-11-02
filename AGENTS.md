@@ -40,10 +40,14 @@ being extended into a pipeline. All three write to Supabase, not SQLite:
   congressional ballot requests by district, and writes an INSERT file
   (`ballots-load.sql`). It has no `--apply` and no `service_role` key, and it
   writes to `public.race_vitals`, never to SQLite. Re-running it on a later day
-  is how a second snapshot happens. **This is the one loader that is automated:**
-  `.github/workflows/ballot-sync.yml` runs it on a schedule (twice daily) and
-  applies the generated SQL through psql with the project's database password.
-  The automation was added by explicit decision; everything else stays human-run.
+  is how a second snapshot happens. **This is the one loader that is automated**,
+  but locally rather than in CI, because the read-only RDS endpoint is locked to
+  the owner's IP and GitHub's runners cannot reach it. `backend/scripts/sync-ballots.sh`
+  (credentials from `~/.config/carolina_elections/{mysql,supabase}.env`) runs the
+  loader and applies `ballots-load.sql` through psql;
+  `~/Library/LaunchAgents/com.carolinaelections.ballot-sync.plist` fires it twice
+  daily (06:00 and 18:00). The automation was added by explicit decision;
+  everything else stays human-run.
 - `backend/scripts/load-polls.mjs` — fills `public.polls` from PollResults.org,
   which carries NYT polling data under CC BY 4.0 and replaced RealClearPolitics,
   a source with neither a free API nor a licence permitting redistribution. Run
