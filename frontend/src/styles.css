@@ -389,11 +389,11 @@
 
 /* Turnout tracker (election.html) */
 .turnout-list { display: flex; flex-direction: column; gap: 8px; }
-.turnout-pill { background: #0c1524; border: 1px solid var(--line); border-radius: 12px; padding: 12px 16px; }
-.turnout-pill-summary { display: flex; justify-content: space-between; align-items: center; cursor: pointer; list-style: none; gap: 8px; }
+.turnout-pill { background: #0c1524; border: 1px solid var(--line); border-radius: 12px; padding: 16px 20px; }
+.turnout-pill-summary { display: flex; justify-content: space-between; align-items: center; cursor: pointer; list-style: none; gap: 12px; }
 .turnout-pill-summary::-webkit-details-marker { display: none; }
-.turnout-matchup { font-family: var(--font-display); font-size: 24px; font-weight: 700; letter-spacing: 0.02em; }
-.turnout-lead { font-family: var(--font-display); font-size: 24px; font-weight: 800; }
+.turnout-matchup { font-family: var(--font-display); font-size: 28px; font-weight: 700; letter-spacing: 0.02em; padding: 4px 0; }
+.turnout-lead { font-family: var(--font-display); font-size: 28px; font-weight: 800; padding: 4px 0; }
 .turnout-lead.val-d { color: var(--d); }
 .turnout-lead.val-r { color: var(--r); }
 .turnout-figs { display: flex; gap: 16px; align-items: center; }
