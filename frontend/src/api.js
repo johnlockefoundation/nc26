@@ -428,6 +428,20 @@ export function getTicker(limit = 12) {
   return getJson(`${API_BASE}/ticker?limit=${limit}`);
 }
 
+export function getMovs(raceType) {
+  if (LIVE) {
+    return rpc('mov_summaries', { p_race_type: raceType, p_cycle: CYCLE });
+  }
+  return Promise.resolve({});
+}
+
+export function getMov(districtId) {
+  if (LIVE) {
+    return rpc('mov_summary', { p_race_id: districtId, p_cycle: CYCLE });
+  }
+  return Promise.resolve({ available: false });
+}
+
 export function getBallots(raceType) {
   if (LIVE) {
     return rpc('ballot_summaries', { p_race_type: raceType, p_cycle: CYCLE });
