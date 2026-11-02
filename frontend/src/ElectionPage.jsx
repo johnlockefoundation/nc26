@@ -185,8 +185,8 @@ export default function ElectionPage() {
         <summary className="turnout-pill-summary">
           <span className="turnout-matchup">{matchup}</span>
           <span className="turnout-figs">
-            <span className={`turnout-lead ${advCls}`} title="Ballot lead">{adv ? adv.label : '—'}</span>
-            <span className={`turnout-lead ${mmCls}`} title={mmTitle}>{mm ? mm.label : '—'}</span>
+            <span className={`turnout-lead ${advCls}`} title="Requested ballot partisan split (as of snapshot date)">{adv ? adv.label : '—'}</span>
+            <span className={`turnout-lead ${mmCls}`} title="Kalshi predicted margin of victory">{mm ? mm.label : '—'}</span>
           </span>
         </summary>
         <div className="turnout-pill-body">
@@ -234,14 +234,14 @@ export default function ElectionPage() {
         <>
           <div className="turnout-section-title">U.S. SENATE</div>
           <div className="turnout-header">
-            <span>MATCHUP</span><span>BALLOT</span><span>{isState ? 'CIVITAS' : 'MOV'}</span>
+            <span>MATCHUP</span><span>BALLOT LEAD</span><span>{isState ? 'CIVITAS INDEX' : 'KALSHI PREDICTED MOV'}</span>
           </div>
           <div className="turnout-list">
             {(sorted.senate || []).map((r) => renderPill(r, ballots))}
           </div>
           <div className="turnout-section-title">U.S. HOUSE</div>
           <div className="turnout-header">
-            <span>MATCHUP</span><span>BALLOT</span><span>{isState ? 'CIVITAS' : 'MOV'}</span>
+            <span>MATCHUP</span><span>BALLOT LEAD</span><span>{isState ? 'CIVITAS INDEX' : 'KALSHI PREDICTED MOV'}</span>
           </div>
           <div className="turnout-list">
             {(sorted.house || []).map((r) => renderPill(r, ballots))}
@@ -250,7 +250,7 @@ export default function ElectionPage() {
       ) : (
         <>
           <div className="turnout-header">
-            <span>MATCHUP</span><span>BALLOT</span><span>{isState ? 'CIVITAS' : 'MOV'}</span>
+            <span>MATCHUP</span><span>BALLOT LEAD</span><span>{isState ? 'CIVITAS INDEX' : 'KALSHI PREDICTED MOV'}</span>
           </div>
           <div className="turnout-list">
             {(sorted.all || []).map((r) => renderPill(r, ballots))}

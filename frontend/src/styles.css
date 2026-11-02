@@ -396,7 +396,7 @@
 .turnout-lead { font-family: var(--font-display); font-size: 28px; font-weight: 800; padding: 4px 0; }
 .turnout-lead.val-d { color: var(--d); }
 .turnout-lead.val-r { color: var(--r); }
-.turnout-figs { display: flex; gap: 16px; align-items: center; }
+.turnout-figs { display: flex; gap: 28px; align-items: center; }
 .turnout-header { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 0 12px 6px; font-family: var(--font-display); font-size: 11px; letter-spacing: 0.18em; font-weight: 700; color: var(--muted); }
 .turnout-header span:first-child { flex: 1; }
 .turnout-header span:not(:first-child) { min-width: 72px; text-align: right; }
