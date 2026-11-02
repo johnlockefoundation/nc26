@@ -392,8 +392,9 @@
 .turnout-pill { background: #0c1524; border: 1px solid var(--line); border-radius: 12px; padding: 8px 12px; }
 .turnout-pill-summary { display: flex; justify-content: space-between; align-items: center; cursor: pointer; list-style: none; gap: 8px; }
 .turnout-pill-summary::-webkit-details-marker { display: none; }
-.turnout-matchup { font-family: var(--font-display); font-size: 17px; font-weight: 700; letter-spacing: 0.02em; }
-.turnout-lead { font-family: var(--font-display); font-size: 17px; font-weight: 800; }
+.turnout-matchup { font-family: var(--font-display); font-size: 20px; font-weight: 700; letter-spacing: 0.02em; }
+.turnout-lead { font-family: var(--font-display); font-size: 20px; font-weight: 800; }
+.turnout-section-title { font-family: var(--font-display); font-size: 12px; letter-spacing: 0.18em; font-weight: 700; color: var(--muted); margin: 14px 0 6px; }
 .turnout-pill-body { border-top: 1px solid var(--line); margin-top: 6px; padding-top: 6px; }
 
 /* Matchup headline (replaces candidate photo cards) */

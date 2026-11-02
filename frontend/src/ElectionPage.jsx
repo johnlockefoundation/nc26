@@ -81,17 +81,12 @@ function BallotBreakdown({ ballot }) {
 }
 
 export default function ElectionPage() {
-  const [raceType, setRaceType] = useState('us_house');
-  const [sortMode, setSortMode] = useState('civitas');
+  const [raceType, setRaceType] = useState('congress');
   const isState = raceType === 'state_senate' || raceType === 'state_house';
   const [mapData, setMapData] = useState(null);
   const [ballots, setBallots] = useState({});
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    if (isState) setSortMode('civitas');
-  }, [isState]);
 
   useEffect(() => {
     let alive = true;
@@ -125,7 +120,33 @@ export default function ElectionPage() {
     return () => { alive = false; };
   }, [races]);
 
-  const sorted = useMemo(() => sortRaces(races, sortMode), [races, sortMode]);
+  const sorted = useMemo(() => {
+    if (raceType === 'congress') {
+      const senate = races.filter((r) => r.race_type === 'us_senate');
+      const house = sortRaces(races.filter((r) => r.race_type === 'us_house'), 'kalshi');
+      return { senate, house };
+    }
+    return { all: sortRaces(races, 'civitas') };
+  }, [races, raceType]);
+
+  const renderPill = (r) => {
+    const cands = r.candidates || [];
+    const matchup = cands.map((c) => String(c.name).toUpperCase()).join(' v ');
+    const b = ballots[r.district_id];
+    const adv = ballotAdvantage(b);
+    const advCls = adv ? (adv.party === 'D' ? 'val-d' : adv.party === 'R' ? 'val-r' : '') : '';
+    return (
+      <details key={r.district_id} className="turnout-pill">
+        <summary className="turnout-pill-summary">
+          <span className="turnout-matchup">{matchup}</span>
+          <span className={`turnout-lead ${advCls}`}>{adv ? adv.label : '—'}</span>
+        </summary>
+        <div className="turnout-pill-body">
+          <BallotBreakdown ballot={b} />
+        </div>
+      </details>
+    );
+  };
 
   return (
     <div className="app">
@@ -153,50 +174,25 @@ export default function ElectionPage() {
             </button>
           ))}
         </div>
-        {!isState && (
-          <div className="view-toggle" role="group" aria-label="Sort">
-            <button
-              type="button"
-              className={`view-toggle-btn ${sortMode === 'civitas' ? 'active' : ''}`}
-              aria-pressed={sortMode === 'civitas'}
-              onClick={() => setSortMode('civitas')}
-            >
-              CIVITAS
-            </button>
-            <button
-              type="button"
-              className={`view-toggle-btn ${sortMode === 'kalshi' ? 'active' : ''}`}
-              aria-pressed={sortMode === 'kalshi'}
-              onClick={() => setSortMode('kalshi')}
-            >
-              KALSHI
-            </button>
-          </div>
-        )}
       </div>
-
       {loading && <div className="panel-loading">Loading…</div>}
 
-      <div className="turnout-list">
-        {sorted.map((r) => {
-          const cands = r.candidates || [];
-          const matchup = cands.map((c) => String(c.name).toUpperCase()).join(' v ');
-          const b = ballots[r.district_id];
-          const adv = ballotAdvantage(b);
-          const advCls = adv ? (adv.party === 'D' ? 'val-d' : adv.party === 'R' ? 'val-r' : '') : '';
-          return (
-            <details key={r.district_id} className="turnout-pill">
-              <summary className="turnout-pill-summary">
-                <span className="turnout-matchup">{matchup}</span>
-                <span className={`turnout-lead ${advCls}`}>{adv ? adv.label : '—'}</span>
-              </summary>
-              <div className="turnout-pill-body">
-                <BallotBreakdown ballot={b} />
-              </div>
-            </details>
-          );
-        })}
-      </div>
+      {raceType === 'congress' ? (
+        <>
+          <div className="turnout-section-title">U.S. SENATE</div>
+          <div className="turnout-list">
+            {(sorted.senate || []).map((r) => renderPill(r, ballots))}
+          </div>
+          <div className="turnout-section-title">U.S. HOUSE</div>
+          <div className="turnout-list">
+            {(sorted.house || []).map((r) => renderPill(r, ballots))}
+          </div>
+        </>
+      ) : (
+        <div className="turnout-list">
+          {(sorted.all || []).map((r) => renderPill(r, ballots))}
+        </div>
+      )}
 
       <img
         className="corner-logo"
