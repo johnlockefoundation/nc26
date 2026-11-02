@@ -4,6 +4,7 @@ import RaceTypeToggle from './components/RaceTypeToggle.jsx';
 import RaceTicker from './components/RaceTicker.jsx';
 import NCMap from './components/NCMap.jsx';
 import ZipSearch from './components/ZipSearch.jsx';
+import CandidateSearch from './components/CandidateSearch.jsx';
 import MiniGauge from './components/MiniGauge.jsx';
 import RacePanel from './components/RacePanel.jsx';
 
@@ -128,6 +129,7 @@ export default function App() {
           }
         </section>
 
+        <CandidateSearch races={races} onSelect={setSelectedId} />
         <RacePanel race={detail} loading={loadingDetail} />
       </main>
     </div>

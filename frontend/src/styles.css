@@ -379,6 +379,14 @@
 .candidate-party.party-r { background: var(--r); }
 .candidate-name { font-family: var(--font-display); font-size: 15px; font-weight: 700; letter-spacing: -0.01em; }
 
+/* Candidate search (above the race card) */
+.candidate-search { margin: 0 0 12px; }
+.candidate-search-label { display: block; font-family: var(--font-display); font-size: 10.5px; letter-spacing: 0.14em; font-weight: 700; color: var(--muted); margin-bottom: 4px; }
+.candidate-search-row { display: flex; gap: 6px; }
+.candidate-search-input { flex: 1; background: #0c1524; border: 1px solid var(--line); border-radius: 8px; color: var(--text); padding: 6px 10px; font-size: 13px; }
+.candidate-search-go { background: #16223a; border: 1px solid var(--line); border-radius: 8px; color: var(--text); padding: 6px 12px; cursor: pointer; font-weight: 700; }
+.candidate-search-help { font-size: 10.5px; color: var(--muted); margin-top: 4px; min-height: 12px; }
+
 /* Matchup headline (replaces candidate photo cards) */
 .matchup-headline {
   font-family: var(--font-display); font-size: 22px; font-weight: 800;
