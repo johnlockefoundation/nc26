@@ -52,6 +52,11 @@ create table public.races (
   partisan_lean      text
                        check (partisan_lean in ('Safe','Likely','Lean','Toss-up')),
   partisan_party     text check (partisan_party in ('D','R')),
+  -- Who holds the seat per the NCGA roster (D/R/U). Added here so migrations
+  -- that read it (ga_metrics, map_payload_market_delta) apply on a fresh DB;
+  -- 20261003260000 keeps the idempotent ALTER for already-live DBs.
+  holder_party       text,
+  holder_name        text,
   updated_at         timestamptz not null default now(),
   -- Named explicitly because the generated name would be
   -- races_cycle_race_type_district_number_key, and a constraint rename later
