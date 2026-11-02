@@ -115,6 +115,7 @@ export default function App() {
           <div className="map-toolbar">
             <RaceTypeToggle value={raceType} onChange={setRaceType} />
             <ZipSearch raceType={raceType} onLocate={setZipFocus} />
+            <a href="./election.html" style={{ alignSelf: 'center', fontSize: 12, color: 'var(--muted)', textDecoration: 'none', border: '1px solid var(--line)', borderRadius: 8, padding: '6px 10px' }}>Turnout tracker ↗</a>
           </div>
           {
             <NCMap

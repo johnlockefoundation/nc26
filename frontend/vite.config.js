@@ -50,6 +50,7 @@ export default defineConfig(({ mode }) => ({
             input: {
               main: resolve(__dirname, 'index.html'),
               seats: resolve(__dirname, 'seats.html'),
+              election: resolve(__dirname, 'election.html'),
             },
             output: {
               entryFileNames: 'assets/[name]-[hash].js',
