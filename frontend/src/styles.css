@@ -387,7 +387,7 @@
 }
 .matchup-name.party-d { color: var(--d, #2563eb); }
 .matchup-name.party-r { color: var(--r, #dc2626); }
-.matchup-vs { color: var(--muted); font-weight: 600; margin: 0 6px; }
+.matchup-vs { color: var(--muted); font-weight: 600; margin: 0 6px; text-transform: none; }
 
 /* Metrics: full-width horizontal rows so values never wrap */
 .metrics { display: flex; flex-direction: column; gap: 8px; }
