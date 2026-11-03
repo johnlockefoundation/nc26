@@ -189,7 +189,7 @@ export default function ElectionPage() {
     } else {
       const mv = movs[r.district_id];
       if (mv && mv.available) {
-        mm = { party: mv.party, label: mv.party + ' +' + mv.margin, value: mv.margin };
+        mm = { party: mv.party, label: mv.party === 'EVEN' ? 'EVEN' : (mv.party + ' +' + mv.margin), value: mv.margin };
         mmCls = mv.party === 'D' ? 'val-d' : mv.party === 'R' ? 'val-r' : '';
       }
       mmTitle = 'Kalshi predicted margin of victory';
