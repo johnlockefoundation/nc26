@@ -193,6 +193,10 @@ export default function ElectionPage() {
         mmCls = mv.party === 'D' ? 'val-d' : mv.party === 'R' ? 'val-r' : '';
       }
       mmTitle = 'Kalshi predicted margin of victory';
+      const base = `https://kalshi.com/markets/kxmidtermmov/midterm-margin-of-victory/kxmidtermmov-${r.district_id.toLowerCase().replace('-', '')}`;
+      const movHref = mv && mv.available && (mv.party === 'D' || mv.party === 'R')
+        ? base + mv.party.toLowerCase()
+        : base;
     }
     return (
       <details key={r.district_id} className="turnout-pill">
