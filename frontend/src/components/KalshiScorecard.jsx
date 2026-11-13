@@ -37,13 +37,14 @@ export default function KalshiScorecard({ districtId, summary }) {
     return () => { alive = false; };
   }, [districtId]);
 
-  if (!row) return null;
-
-  const electionMargin = (row.pre_dem - row.pre_rep) * 100;
-  const electionLabel = `${electionMargin >= 0 ? 'D' : 'R'} +${Math.abs(electionMargin).toFixed(1)}`;
-  const finalMov = result
-    ? `${result.margin_votes >= 0 ? 'D' : 'R'} +${Math.abs(result.margin_votes).toLocaleString()}`
-    : (row.actual === 'D' ? 'D +—' : 'R +—');
+  if (!summary?.available) {
+    return (
+      <div className="metric metric-empty">
+        <div className="metric-title">KALSHI</div>
+        <div className="metric-value"><span className="metric-na">NO MARKET</span></div>
+      </div>
+    );
+  }
 
   const advantageLabel = summary?.advantage?.label;
   const value = advantageLabel ? (
@@ -51,6 +52,20 @@ export default function KalshiScorecard({ districtId, summary }) {
       {advantageLabel}
     </span>
   ) : null;
+
+  if (!row) {
+    return (
+      <CollapsibleMetric title="KALSHI" value={value} source={summary?.source_url} sourceHref={summary?.source_url}>
+        <div className="ballot-foot dim">Result data unavailable for this build.</div>
+      </CollapsibleMetric>
+    );
+  }
+
+  const electionMargin = (row.pre_dem - row.pre_rep) * 100;
+  const electionLabel = `${electionMargin >= 0 ? 'D' : 'R'} +${Math.abs(electionMargin).toFixed(1)}`;
+  const finalMov = result
+    ? `${result.margin_votes >= 0 ? 'D' : 'R'} +${Math.abs(result.margin_votes).toLocaleString()}`
+    : (row.actual === 'D' ? 'D +—' : 'R +—');
 
   return (
     <CollapsibleMetric
