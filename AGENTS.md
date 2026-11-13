@@ -2,6 +2,27 @@
 
 Instructions for coding agents working in this repository.
 
+## Direction (in progress): one source of truth for NC election data
+
+The end state is a single, central map of North Carolina that is the one source
+of truth for NC election data, folding in what currently lives in three places:
+
+- `nc26` (this repo's frontend/plugin) — district races, polls, markets, money, news.
+- `registrations` (johnlockefoundation.github.io/registrations) — county voter
+  registration, weekly since 2008.
+- `early-voting` (johnlockefoundation.github.io/early-voting) — district early
+  and absentee ballots, 2000 onward.
+
+Around that central map sits a lightweight archive of registration (2008+) and
+early-ballot (2000+) history that makes comparing trends across elections
+trivial, instead of scattered static pages.
+
+**This is the plan, not the current state.** Nothing has been merged yet. The
+existing scopes, exports, and pages keep working as documented below; the work
+to fold them together is tracked in `LOOSE_ENDS.md`. Until that work lands, do
+not restructure paths, rename artifacts, or move data between the sites — only
+clean up, document, and remove obvious junk (see `LOOSE_ENDS.md`).
+
 ## Scope: the product reads an API, and that is the whole job
 
 **This repository ships a WordPress plugin. The product's data comes from the
