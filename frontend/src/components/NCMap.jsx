@@ -1,7 +1,6 @@
 import { useEffect, useRef } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { moveArrow } from '../lib/moveArrow.js';
 import { fillFor, primarySignal, leanLabel, SAFE_FILL_OPACITY, leanOf, leanFor } from '../lib/colors.js';
 import { surname } from '../lib/candidateName.js';
 import MapInset, { INSETS } from './MapInset.jsx';
@@ -57,9 +56,7 @@ function tooltipFor(race) {
   // The arrow is a glyph with no label of its own, so the district tooltip is
   // where it gets explained. Same wording as the panel's arrow title, so the
   // two read as one fact rather than two.
-  const move = moveArrow(race?.markets?.delta);
-  const moveLine = move ? `<div class="tip-move ${move.cls}">${move.text}</div>` : '';
-  return { html: head + moveLine, className: `tip-adv tip-${party}` };
+  return { html: head, className: `tip-adv tip-${party}` };
 }
 
 function geometryFeature(f) {
@@ -315,8 +312,6 @@ export default function NCMap({ features, outline, races, selectedId, onSelect, 
       const center = anchorFor(f);
       if (center) {
         const race = isComp ? raceById.current.get(f.district_id) : null;
-        const move = moveArrow(race?.markets?.delta);
-        const hasArrow = Boolean(move);
         const isSenate = race?.race_type === 'us_senate';
         const label = L.marker(center, {
           interactive: false,
@@ -324,23 +319,10 @@ export default function NCMap({ features, outline, races, selectedId, onSelect, 
             className: isComp ? 'district-divlabel' : 'district-divlabel district-divlabel-safe',
             html: shortLabel(f.district_id),
             iconSize: [30, 16],
-            iconAnchor: [15, isComp && hasArrow ? 18 : 8],
+            iconAnchor: [15, 8],
           }),
         });
         labelsRef.current.addLayer(label);
-        if (hasArrow) {
-          const size = isSenate ? 64 : 46;
-          const arrowMark = L.marker(center, {
-            interactive: false,
-            icon: L.divIcon({
-              className: 'district-arrow-marker',
-              html: `<span class="map-arrow ${move.cls}${isSenate ? ' map-arrow-senate' : ''}">${move.svg}</span>`,
-              iconSize: [size, size],
-              iconAnchor: [size / 2, size],
-            }),
-          });
-          labelsRef.current.addLayer(arrowMark);
-        }
       }
     }
 

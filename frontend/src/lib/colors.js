@@ -99,8 +99,13 @@ export function leanOf(f) {
 // race signal wins when there is one, so a seat that picks up polling or a fresh
 // price is coloured by it. The feature's own lean is the fallback, which is what
 // lets the map be fully coloured with no network at all.
+// Map colours now reflect the projected winner: the live race signal (markets,
+// then polls, then money) wins whenever it names a party, regardless of whether
+// the seat is flagged competitive. The Civitas index is only the fallback for
+// races with no live signal. Competitiveness still governs brightness via
+// fillFor, so a settled seat keeps its muted tone.
 export function leanFor(f, race) {
-  if (f.competitive && race) {
+  if (race) {
     const s = primarySignal(race);
     if (s.advantage && s.advantage.party && s.advantage.party !== 'EVEN') {
       return { party: s.advantage.party };
