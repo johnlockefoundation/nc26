@@ -37,8 +37,8 @@ export default function PollsScorecard({ districtId, summary }) {
   const correct = marketParty === row.actual || marketParty === 'EVEN';
   const price = marketParty === 'D' ? row.poll_dem : row.poll_rep;
   const pollMargin = `${row.poll_margin >= 0 ? 'D' : 'R'} +${Math.abs(row.poll_margin).toFixed(1)}`;
-  const finalMov = row.final_mov != null
-    ? `${row.final_mov >= 0 ? 'D' : 'R'} +${Math.abs(row.final_mov).toLocaleString()}`
+  const finalMov = row.final_margin_pp != null
+    ? `${row.final_margin_pp >= 0 ? 'D' : 'R'} +${Math.abs(row.final_margin_pp).toFixed(1)} pp`
     : '—';
 
   const advantageLabel = summary?.advantage?.label;
@@ -64,7 +64,7 @@ export default function PollsScorecard({ districtId, summary }) {
         <div className="ballot-row ballot-row-total">
           <span className="ballot-row-party">FINAL MARGIN OF VICTORY</span>
           <span className="ballot-row-share" />
-          <span className="ballot-row-count">{finalMov} votes</span>
+          <span className="ballot-row-count">{finalMov}</span>
         </div>
       </div>
     </CollapsibleMetric>

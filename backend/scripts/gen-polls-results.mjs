@@ -18,6 +18,7 @@ for (const r of db.prepare("SELECT district_id, dem_average, rep_average, margin
     poll_margin: r.margin,
     actual: k.actual,
     final_mov: res ? res.margin_votes : null,
+    final_margin_pp: res ? res.margin_pp : null,
     n_polls: db.prepare('SELECT count(*) c FROM polls WHERE district_id=? AND election_cycle=?').get(r.district_id, '2026').c,
   };
 }

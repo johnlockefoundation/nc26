@@ -64,7 +64,7 @@ export default function KalshiScorecard({ districtId, summary }) {
   const electionMargin = (row.pre_dem - row.pre_rep) * 100;
   const electionLabel = `${electionMargin >= 0 ? 'D' : 'R'} +${Math.abs(electionMargin).toFixed(1)}`;
   const finalMov = result
-    ? `${result.margin_votes >= 0 ? 'D' : 'R'} +${Math.abs(result.margin_votes).toLocaleString()}`
+    ? `${result.margin_pp >= 0 ? 'D' : 'R'} +${Math.abs(result.margin_pp).toFixed(1)} pp`
     : (row.actual === 'D' ? 'D +—' : 'R +—');
 
   return (
@@ -83,7 +83,7 @@ export default function KalshiScorecard({ districtId, summary }) {
         <div className="ballot-row ballot-row-total">
           <span className="ballot-row-party">FINAL MARGIN OF VICTORY</span>
           <span className="ballot-row-share" />
-          <span className="ballot-row-count">{finalMov} votes</span>
+          <span className="ballot-row-count">{finalMov}</span>
         </div>
       </div>
     </CollapsibleMetric>
