@@ -60,8 +60,13 @@ described in `AGENTS.md` ("Direction"). Remove items as they are resolved.
 
 ## Not yet built
 
-- Precinct-level early voting (data has `Precinct`, but no precinct geometry and
-  no page).
+- Precinct-level early voting. The absentee tables carry a per-ballot `Precinct`,
+  so the data side is ready. The blocker is geometry: no precinct boundary file
+  is in the repo, and none was fetchable automatically (Census TIGER has no VTD
+  folder for NC 2020; NC SBE/OneMap URLs moved). Needs a precinct shapefile or
+  GeoJSON from NC SBE / NC OneMap, plus a converter (pyshp is available in
+  `edu/.venv`). Once a file is provided, aggregate by `Precinct` + `CountyId`
+  and build the page.
 - The central map that folds nc26 + registrations + early voting together.
 - Trend-comparison views across elections (registrations 2008+, early ballots
   2000+).
