@@ -22,6 +22,15 @@ export default function PollsScorecard({ districtId, summary }) {
     });
     return () => { alive = false; };
   }, [districtId]);
+
+  if (!summary?.available) {
+    return (
+      <div className="metric metric-empty">
+        <div className="metric-title">POLLS</div>
+        <div className="metric-value"><span className="metric-na">NO POLLING</span></div>
+      </div>
+    );
+  }
   if (!row) return null;
 
   const marketParty = row.poll_dem > row.poll_rep ? 'D' : row.poll_dem < row.poll_rep ? 'R' : 'EVEN';
