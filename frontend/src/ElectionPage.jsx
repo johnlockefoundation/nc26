@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { getMap, getBallots, getMovs, assetUrl } from './api.js';
 import { trackerUrl } from './lib/tracker.js';
 import { loadKalshiResults, kalshiStats } from './lib/kalshiResults.js';
+import { loadPollsResults, pollsStats } from './lib/pollsResults.js';
 
 const CHAMBERS = [
   { key: 'congress', label: 'Congress' },
@@ -81,7 +82,7 @@ function BallotBreakdown({ ballot }) {
   );
 }
 
-function KalshiScatter({ data }) {
+function KalshiScatter({ data, probOf }) {
   const races = Object.entries(data.races || {});
   const W = 300, H = 200, m = { l: 34, r: 10, t: 10, b: 28 };
   const iw = W - m.l - m.r, ih = H - m.t - m.b;
@@ -107,8 +108,8 @@ function KalshiScatter({ data }) {
         const y = r.actual === 'D' ? 1 : 0;
         return (
           <g key={id}>
-            <circle cx={X(r.pre_dem)} cy={Y(y)} r="4" fill={r.actual === 'D' ? 'var(--d)' : 'var(--r)'} />
-            <text x={X(r.pre_dem)} y={Y(y) - 6} textAnchor="middle" style={{ fontSize: 8, fill: 'var(--muted)' }}>
+            <circle cx={X(probOf(r))} cy={Y(y)} r="4" fill={r.actual === 'D' ? 'var(--d)' : 'var(--r)'} />
+            <text x={X(probOf(r))} y={Y(y) - 6} textAnchor="middle" style={{ fontSize: 8, fill: 'var(--muted)' }}>
               {id.replace('NC-', '')}
             </text>
           </g>
@@ -126,11 +127,13 @@ export default function ElectionPage() {
   const [ballots, setBallots] = useState({});
   const [movs, setMovs] = useState({});
   const [kalshiData, setKalshiData] = useState(null);
+  const [pollsData, setPollsData] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     loadKalshiResults().then((d) => setKalshiData(d));
+    loadPollsResults().then((d) => setPollsData(d));
   }, []);
 
   useEffect(() => {
@@ -326,11 +329,26 @@ export default function ElectionPage() {
           <div className="section-sub">
             Kalshi election-day probability vs. actual result — {kalshiStats(kalshiData).n} NC federal races, 2026.
           </div>
-          <KalshiScatter data={kalshiData} />
+          <KalshiScatter data={kalshiData} probOf={(r) => r.pre_dem} />
           <div className="dim" style={{ fontSize: 12, marginTop: 8 }}>
             Kalshi's favored side won {kalshiStats(kalshiData).favoredWins} of{' '}
             {kalshiStats(kalshiData).favoredTotal}; Brier score{' '}
             {kalshiStats(kalshiData).brier.toFixed(3)}. Scorecard for these races only.
+          </div>
+        </div>
+      )}
+
+      {pollsData && pollsStats(pollsData) && (
+        <div className="panel" style={{ marginTop: 16 }}>
+          <div className="panel-title">Poll accuracy</div>
+          <div className="section-sub">
+            Polling average vs. actual result — {pollsStats(pollsData).n} NC federal races with polling, 2026.
+          </div>
+          <KalshiScatter data={pollsData} probOf={(r) => r.poll_dem / 100} />
+          <div className="dim" style={{ fontSize: 12, marginTop: 8 }}>
+            Polls' favored side won {pollsStats(pollsData).favoredWins} of{' '}
+            {pollsStats(pollsData).favoredTotal}; Brier score{' '}
+            {pollsStats(pollsData).brier.toFixed(3)}. Scorecard for these races only.
           </div>
         </div>
       )}

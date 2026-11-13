@@ -1,5 +1,6 @@
 import BallotsBlock from './BallotsBlock.jsx';
 import KalshiScorecard from './KalshiScorecard.jsx';
+import PollsScorecard from './PollsScorecard.jsx';
 import MetricBlock from './MetricBlock.jsx';
 import CivitasPartisan from './CivitasPartisan.jsx';
 import Demographics from './Demographics.jsx';
@@ -141,6 +142,7 @@ export default function RacePanel({ race, loading }) {
             and the pending notice would be a false claim about a pipeline that
             does not exist. */}
         {isFederal && <PollBlock polls={polls} race={race} />}
+        {isFederal && polls?.available && <PollsScorecard districtId={race.district_id} />}
         {marketBlocks}
         {isFederal && <KalshiScorecard districtId={race.district_id} />}
         {money}

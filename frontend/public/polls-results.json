@@ -1,0 +1,33 @@
+{
+  "generated": "2026-11-13",
+  "races": {
+    "NC-SEN": {
+      "poll_dem": 49.25,
+      "poll_rep": 38.25,
+      "poll_margin": 11,
+      "actual": "D",
+      "n_polls": 4
+    },
+    "NC-01": {
+      "poll_dem": 44.5,
+      "poll_rep": 41,
+      "poll_margin": 3.5,
+      "actual": "D",
+      "n_polls": 4
+    },
+    "NC-07": {
+      "poll_dem": 43,
+      "poll_rep": 49,
+      "poll_margin": -6,
+      "actual": "R",
+      "n_polls": 1
+    },
+    "NC-11": {
+      "poll_dem": 47,
+      "poll_rep": 44,
+      "poll_margin": 3,
+      "actual": "D",
+      "n_polls": 1
+    }
+  }
+}
