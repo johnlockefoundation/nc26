@@ -133,7 +133,9 @@ function lerpHex(a, b, t) {
 // A signed margin in points (positive = Democratic edge). Live signals win over
 // the Civitas index; money is normalised to a modest fixed magnitude since it
 // is dollars, not points.
-export function marginFor(f, race) {
+export function marginFor(f, race, results) {
+  const r = results && results.races && results.races[f.district_id];
+  if (r) return r.margin_pp;
   if (race) {
     const s = primarySignal(race);
     if (s.advantage && s.advantage.party && s.advantage.party !== 'EVEN') {
@@ -165,7 +167,7 @@ export function fillForMargin(margin) {
 
 // The complete fill decision for one district, so the map and the insets cannot
 // drift apart.
-export function fillForFeature(f, race) {
+export function fillForFeature(f, race, results) {
   const inPlay = Boolean(f.competitive && race);
-  return { inPlay, fill: fillForMargin(marginFor(f, race)) };
+  return { inPlay, fill: fillForMargin(marginFor(f, race, results)) };
 }

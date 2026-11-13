@@ -20,6 +20,8 @@
 // was lifted out of NCMap rather than reimplemented here.
 
 import { fillForFeature } from '../lib/colors.js';
+import { useEffect, useState } from 'react';
+import { loadResults } from '../lib/results.js';
 
 // Web Mercator, the projection Leaflet draws the main map in, so a district keeps
 // the same shape in the inset as on the state map.
@@ -84,6 +86,12 @@ function pathFor(geom, view, { kx, scale, originX, originY }) {
 }
 
 export default function MapInset({ inset, features, races, selectedId, onSelect }) {
+  const [results, setResults] = useState(null);
+  useEffect(() => {
+    let alive = true;
+    loadResults().then((d) => { if (alive) setResults(d); });
+    return () => { alive = false; };
+  }, []);
   const [minLon, minLat, maxLon, maxLat] = inset.window;
   // The window carries its own size: pathFor scales lon/lat into these, so a
   // view without w/h yields NaN for every coordinate and silently draws nothing.
@@ -129,7 +137,7 @@ export default function MapInset({ inset, features, races, selectedId, onSelect 
         <g clipPath={`url(#${clipId})`}>
           <rect x="0" y="0" width={view.w} height={view.h} className="map-inset-bg" />
           {shown.map(({ f }) => {
-            const { fill } = fillForFeature(f, raceById.get(f.district_id));
+            const { fill } = fillForFeature(f, raceById.get(f.district_id), results);
             const isSel = f.district_id === selectedId;
             const d = pathFor(f.geometry, view, { kx, scale, originX, originY });
             return (

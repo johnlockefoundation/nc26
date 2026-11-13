@@ -147,8 +147,8 @@ export default function RacePanel({ race, loading }) {
             a state seat these are not missing data, they are inapplicable ones,
             and the pending notice would be a false claim about a pipeline that
             does not exist. */}
-        {isFederal && <PollBlock polls={polls} race={race} />}
-        {isFederal && polls?.available && <PollsScorecard districtId={race.district_id} />}
+        {isFederal && !polls?.available && <PollBlock polls={polls} race={race} />}
+        {isFederal && polls?.available && <PollsScorecard districtId={race.district_id} summary={polls} />}
         {otherMarketBlocks}
         {isFederal && <KalshiScorecard districtId={race.district_id} summary={markets} />}
         {money}

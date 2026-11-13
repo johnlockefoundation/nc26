@@ -1,7 +1,8 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { primarySignal, leanLabel, leanOf, leanFor, fillForMargin, marginFor } from '../lib/colors.js';
+import { loadResults } from '../lib/results.js';
 import { surname } from '../lib/candidateName.js';
 import MapInset, { INSETS } from './MapInset.jsx';
 import {
@@ -36,12 +37,12 @@ function matchupText(candidates) {
 //
 // That is also why the border is a fixed width regardless of zoom rather than
 // something that thins as you zoom out: a hairline at state zoom vanishes.
-function styleFor(f, race) {
+function styleFor(f, race, results) {
   return {
     color: DISTRICT_BORDER,
     weight: 1.3,
     opacity: 0.9,
-    fillColor: fillForMargin(marginFor(f, race)),
+    fillColor: fillForMargin(marginFor(f, race, results)),
     fillOpacity: 0.92,
   };
 }
@@ -227,6 +228,8 @@ export default function NCMap({ features, outline, races, selectedId, onSelect, 
   const featuresById = useRef(new Map());
   const raceById = useRef(new Map());
   const selectedRef = useRef(null);
+  const resultsRef = useRef(null);
+  const [results, setResults] = useState(null);
   const onSelectRef = useRef(onSelect);
   onSelectRef.current = onSelect;
 
@@ -234,6 +237,16 @@ export default function NCMap({ features, outline, races, selectedId, onSelect, 
     raceById.current = new Map((races || []).map((r) => [r.district_id, r]));
     featuresById.current = new Map((features || []).map((f) => [f.district_id, f]));
   }, [features, races]);
+
+  useEffect(() => {
+    let alive = true;
+    loadResults().then((d) => {
+      if (!alive) return;
+      resultsRef.current = d;
+      setResults(d);
+    });
+    return () => { alive = false; };
+  }, []);
 
   // Initialize the Leaflet map once. Every tab is North Carolina, so the view
   // limits never change with the race type.
@@ -274,7 +287,7 @@ export default function NCMap({ features, outline, races, selectedId, onSelect, 
     for (const f of features || []) {
       const race = raceById.current.get(f.district_id);
       const isComp = Boolean(f.competitive && race);
-      const style = styleFor(f, race);
+      const style = styleFor(f, race, results);
 
       const geo = L.geoJSON(geometryFeature(f), {
         style,
@@ -324,7 +337,7 @@ export default function NCMap({ features, outline, races, selectedId, onSelect, 
     }
 
     fitToState(map);
-  }, [features, races, outline, raceType]);
+  }, [features, races, outline, raceType, results]);
 
   // Zoom to a ZIP. Only the view moves -- no layer is selected and onSelect is
   // never called, because a ZIP is a place and not an answer about a race. The
@@ -347,7 +360,7 @@ export default function NCMap({ features, outline, races, selectedId, onSelect, 
     if (prevLayer) {
       const f = featuresById.current.get(prevId);
       const race = raceById.current.get(prevId);
-      prevLayer.setStyle(styleFor(f, race));
+      prevLayer.setStyle(styleFor(f, race, resultsRef.current));
     }
     selectedRef.current = selectedId;
     const layer = selectedId ? layersById.current.get(selectedId) : null;
@@ -355,7 +368,7 @@ export default function NCMap({ features, outline, races, selectedId, onSelect, 
   }, [selectedId, features, races]);
 
   function selectedStyle(districtId) {
-    const base = styleFor(featuresById.current.get(districtId), raceById.current.get(districtId));
+    const base = styleFor(featuresById.current.get(districtId), raceById.current.get(districtId), resultsRef.current);
     // Only the outline changes, never the fill: the fill is the lean, and
     // recolouring it to mark the current seat would have the map misreport a
     // race on every click.

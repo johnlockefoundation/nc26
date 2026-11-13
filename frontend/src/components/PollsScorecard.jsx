@@ -12,7 +12,7 @@ function loadPollsResults() {
   return pollsPromise;
 }
 
-export default function PollsScorecard({ districtId }) {
+export default function PollsScorecard({ districtId, summary }) {
   const [row, setRow] = useState(null);
   useEffect(() => {
     let alive = true;
@@ -32,8 +32,15 @@ export default function PollsScorecard({ districtId }) {
     ? `${row.final_mov >= 0 ? 'D' : 'R'} +${Math.abs(row.final_mov).toLocaleString()}`
     : '—';
 
+  const advantageLabel = summary?.advantage?.label;
+  const value = advantageLabel ? (
+    <span className={`metric-value collapsible-metric-value ${summary.advantage.party === 'D' ? 'val-d' : summary.advantage.party === 'R' ? 'val-r' : ''}`}>
+      {advantageLabel}
+    </span>
+  ) : null;
+
   return (
-    <CollapsibleMetric title="POLLS" value={null}>
+    <CollapsibleMetric title="POLLS" value={value}>
       <div className="ballot-foot dim">
         Poll average: {marketParty} {price.toFixed(1)}% &rarr; {row.actual} won{' '}
         <span className={correct ? 'val-d' : 'val-r'}>{correct ? '✓' : '✗'}</span>
