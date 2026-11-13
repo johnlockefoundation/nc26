@@ -6,15 +6,18 @@ import { DatabaseSync } from 'node:sqlite';
 const REPO = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 const db = new DatabaseSync(resolve(REPO, 'backend/db/nc28.sqlite'), { readOnly: true });
 const kalshi = JSON.parse(readFileSync(resolve(REPO, 'frontend/public/kalshi-results.json'), 'utf8'));
+const results = JSON.parse(readFileSync(resolve(REPO, 'frontend/public/results.json'), 'utf8'));
 const out = {};
 for (const r of db.prepare("SELECT district_id, dem_average, rep_average, margin FROM polling_averages WHERE election_cycle='2026'").all()) {
   const k = kalshi.races[r.district_id];
   if (!k) continue;
+  const res = results.races[r.district_id];
   out[r.district_id] = {
     poll_dem: r.dem_average,
     poll_rep: r.rep_average,
     poll_margin: r.margin,
     actual: k.actual,
+    final_mov: res ? res.margin_votes : null,
     n_polls: db.prepare('SELECT count(*) c FROM polls WHERE district_id=? AND election_cycle=?').get(r.district_id, '2026').c,
   };
 }

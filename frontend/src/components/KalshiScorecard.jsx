@@ -10,13 +10,27 @@ import { useEffect, useState } from 'react';
 import CollapsibleMetric from './CollapsibleMetric.jsx';
 import { loadKalshiResults, kalshiResultFor } from '../lib/kalshiResults.js';
 
+let resultsPromise = null;
+function loadResults() {
+  if (resultsPromise) return resultsPromise;
+  resultsPromise = fetch('/results.json')
+    .then((r) => (r.ok ? r.json() : null))
+    .catch(() => null);
+  return resultsPromise;
+}
+
 export default function KalshiScorecard({ districtId, summary }) {
   const [row, setRow] = useState(null);
+  const [result, setResult] = useState(null);
   useEffect(() => {
     let alive = true;
     loadKalshiResults().then((data) => {
       if (!alive) return;
       setRow(kalshiResultFor(data, districtId));
+    });
+    loadResults().then((data) => {
+      if (!alive) return;
+      setResult(data && data.races ? data.races[districtId] : null);
     });
     return () => { alive = false; };
   }, [districtId]);
@@ -28,7 +42,9 @@ export default function KalshiScorecard({ districtId, summary }) {
   const price = marketParty === 'D' ? row.pre_dem : row.pre_rep;
   const electionMargin = (row.pre_dem - row.pre_rep) * 100;
   const electionLabel = `${electionMargin >= 0 ? 'D' : 'R'} +${Math.abs(electionMargin).toFixed(1)}`;
-  const finalLabel = row.actual === 'D' ? 'D +100.0' : 'R +100.0';
+  const finalMov = result
+    ? `${result.margin_votes >= 0 ? 'D' : 'R'} +${Math.abs(result.margin_votes).toLocaleString()}`
+    : (row.actual === 'D' ? 'D +—' : 'R +—');
 
   const advantageLabel = summary?.advantage?.label;
   const value = advantageLabel ? (
@@ -55,9 +71,9 @@ export default function KalshiScorecard({ districtId, summary }) {
           <span className="ballot-row-count">{electionLabel}</span>
         </div>
         <div className="ballot-row ballot-row-total">
-          <span className="ballot-row-party">FINAL MARKET MARGIN</span>
+          <span className="ballot-row-party">FINAL MARGIN OF VICTORY</span>
           <span className="ballot-row-share" />
-          <span className="ballot-row-count">{finalLabel}</span>
+          <span className="ballot-row-count">{finalMov} votes</span>
         </div>
       </div>
     </CollapsibleMetric>

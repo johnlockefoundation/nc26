@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import CollapsibleMetric from './CollapsibleMetric.jsx';
-import { loadKalshiResults, kalshiResultFor } from '../lib/kalshiResults.js';
 
 let pollsPromise = null;
 function loadPollsResults() {
@@ -13,13 +12,11 @@ function loadPollsResults() {
 
 export default function PollsScorecard({ districtId }) {
   const [row, setRow] = useState(null);
-  const [kalshi, setKalshi] = useState(null);
   useEffect(() => {
     let alive = true;
-    Promise.all([loadPollsResults(), loadKalshiResults()]).then(([p, k]) => {
+    loadPollsResults().then((data) => {
       if (!alive) return;
-      setRow(p && p.races ? p.races[districtId] : null);
-      setKalshi(k ? kalshiResultFor(k, districtId) : null);
+      setRow(data && data.races ? data.races[districtId] : null);
     });
     return () => { alive = false; };
   }, [districtId]);
@@ -29,8 +26,8 @@ export default function PollsScorecard({ districtId }) {
   const correct = marketParty === row.actual || marketParty === 'EVEN';
   const price = marketParty === 'D' ? row.poll_dem : row.poll_rep;
   const pollMargin = `${row.poll_margin >= 0 ? 'D' : 'R'} +${Math.abs(row.poll_margin).toFixed(1)}`;
-  const kalshiMargin = kalshi
-    ? `${kalshi.pre_dem > kalshi.pre_rep ? 'D' : 'R'} +${(Math.abs(kalshi.pre_dem - kalshi.pre_rep) * 100).toFixed(1)}`
+  const finalMov = row.final_mov != null
+    ? `${row.final_mov >= 0 ? 'D' : 'R'} +${Math.abs(row.final_mov).toLocaleString()}`
     : '—';
 
   return (
@@ -47,9 +44,9 @@ export default function PollsScorecard({ districtId }) {
           <span className="ballot-row-count">{pollMargin}</span>
         </div>
         <div className="ballot-row ballot-row-total">
-          <span className="ballot-row-party">KALSHI MARGIN, ELECTION DAY</span>
+          <span className="ballot-row-party">FINAL MARGIN OF VICTORY</span>
           <span className="ballot-row-share" />
-          <span className="ballot-row-count">{kalshiMargin}</span>
+          <span className="ballot-row-count">{finalMov} votes</span>
         </div>
       </div>
     </CollapsibleMetric>

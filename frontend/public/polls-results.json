@@ -6,6 +6,7 @@
       "poll_rep": 38.25,
       "poll_margin": 11,
       "actual": "D",
+      "final_mov": 831842,
       "n_polls": 4
     },
     "NC-01": {
@@ -13,6 +14,7 @@
       "poll_rep": 41,
       "poll_margin": 3.5,
       "actual": "D",
+      "final_mov": 10794,
       "n_polls": 4
     },
     "NC-07": {
@@ -20,6 +22,7 @@
       "poll_rep": 49,
       "poll_margin": -6,
       "actual": "R",
+      "final_mov": -2309,
       "n_polls": 1
     },
     "NC-11": {
@@ -27,6 +30,7 @@
       "poll_rep": 44,
       "poll_margin": 3,
       "actual": "D",
+      "final_mov": 54366,
       "n_polls": 1
     }
   }

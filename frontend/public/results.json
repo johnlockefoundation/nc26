@@ -1,0 +1,141 @@
+{
+  "generated": "2026-11-03",
+  "source": "NC State Board of Elections",
+  "races": {
+    "NC-SEN": {
+      "dem_votes": 2480719,
+      "rep_votes": 1648877,
+      "other_votes": 92797,
+      "total_votes": 4222393,
+      "margin_votes": 831842,
+      "margin_pp": 19.7,
+      "winner": "D"
+    },
+    "NC-01": {
+      "dem_votes": 157490,
+      "rep_votes": 146696,
+      "other_votes": 9944,
+      "total_votes": 314130,
+      "margin_votes": 10794,
+      "margin_pp": 3.44,
+      "winner": "D"
+    },
+    "NC-02": {
+      "dem_votes": 246476,
+      "rep_votes": 76980,
+      "other_votes": 4833,
+      "total_votes": 328289,
+      "margin_votes": 169496,
+      "margin_pp": 51.63,
+      "winner": "D"
+    },
+    "NC-03": {
+      "dem_votes": 118436,
+      "rep_votes": 118176,
+      "other_votes": 3004,
+      "total_votes": 239616,
+      "margin_votes": 260,
+      "margin_pp": 0.11,
+      "winner": "D"
+    },
+    "NC-04": {
+      "dem_votes": 284550,
+      "rep_votes": 68019,
+      "other_votes": 7004,
+      "total_votes": 359573,
+      "margin_votes": 216531,
+      "margin_pp": 60.22,
+      "winner": "D"
+    },
+    "NC-05": {
+      "dem_votes": 139770,
+      "rep_votes": 139439,
+      "other_votes": 7579,
+      "total_votes": 286788,
+      "margin_votes": 331,
+      "margin_pp": 0.12,
+      "winner": "D"
+    },
+    "NC-06": {
+      "dem_votes": 140713,
+      "rep_votes": 134104,
+      "other_votes": 0,
+      "total_votes": 274817,
+      "margin_votes": 6609,
+      "margin_pp": 2.4,
+      "winner": "D"
+    },
+    "NC-07": {
+      "dem_votes": 158397,
+      "rep_votes": 160706,
+      "other_votes": 3173,
+      "total_votes": 322276,
+      "margin_votes": -2309,
+      "margin_pp": -0.72,
+      "winner": "R"
+    },
+    "NC-08": {
+      "dem_votes": 142659,
+      "rep_votes": 147683,
+      "other_votes": 2909,
+      "total_votes": 293251,
+      "margin_votes": -5024,
+      "margin_pp": -1.71,
+      "winner": "R"
+    },
+    "NC-09": {
+      "dem_votes": 139471,
+      "rep_votes": 133196,
+      "other_votes": 0,
+      "total_votes": 272667,
+      "margin_votes": 6275,
+      "margin_pp": 2.3,
+      "winner": "D"
+    },
+    "NC-10": {
+      "dem_votes": 144101,
+      "rep_votes": 146590,
+      "other_votes": 4711,
+      "total_votes": 295402,
+      "margin_votes": -2489,
+      "margin_pp": -0.84,
+      "winner": "R"
+    },
+    "NC-11": {
+      "dem_votes": 196251,
+      "rep_votes": 141885,
+      "other_votes": 5369,
+      "total_votes": 343505,
+      "margin_votes": 54366,
+      "margin_pp": 15.83,
+      "winner": "D"
+    },
+    "NC-12": {
+      "dem_votes": 220770,
+      "rep_votes": 51022,
+      "other_votes": 0,
+      "total_votes": 271792,
+      "margin_votes": 169748,
+      "margin_pp": 62.46,
+      "winner": "D"
+    },
+    "NC-13": {
+      "dem_votes": 160862,
+      "rep_votes": 152863,
+      "other_votes": 4511,
+      "total_votes": 318236,
+      "margin_votes": 7999,
+      "margin_pp": 2.51,
+      "winner": "D"
+    },
+    "NC-14": {
+      "dem_votes": 147920,
+      "rep_votes": 141353,
+      "other_votes": 0,
+      "total_votes": 289273,
+      "margin_votes": 6567,
+      "margin_pp": 2.27,
+      "winner": "D"
+    }
+  }
+}

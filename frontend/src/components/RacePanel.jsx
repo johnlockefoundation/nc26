@@ -74,14 +74,20 @@ export default function RacePanel({ race, loading }) {
   // box reading NO MARKET, for the same reason PollBlock stays silent when there
   // is no polling: the blocks that carry a figure should not be buried under the
   // ones that do not.
-  const marketBlocks = isFederal ? marketList.map((m) => (
-    <MetricBlock
-      key={m.provider}
-      title={(m.provider || 'MARKET').toUpperCase()}
-      emptyText="NO MARKET"
-      summary={m}
-    />
-  )) : [];
+  // Kalshi gets its own collapsible box (scorecard + both margins). Other
+  // providers, if any, keep the plain MetricBlock.
+  const otherMarketBlocks = isFederal
+    ? marketList
+        .filter((m) => (m.provider || '').toLowerCase() !== 'kalshi')
+        .map((m) => (
+          <MetricBlock
+            key={m.provider}
+            title={(m.provider || 'MARKET').toUpperCase()}
+            emptyText="NO MARKET"
+            summary={m}
+          />
+        ))
+    : [];
 
   // Voter velocity is a General Assembly dataset, and unlike MONEY nothing on
   // this page renders it: the figures come from the state and the panel does not
@@ -143,8 +149,8 @@ export default function RacePanel({ race, loading }) {
             does not exist. */}
         {isFederal && <PollBlock polls={polls} race={race} />}
         {isFederal && polls?.available && <PollsScorecard districtId={race.district_id} />}
-        {marketBlocks}
-        {isFederal && <KalshiScorecard districtId={race.district_id} />}
+        {otherMarketBlocks}
+        {isFederal && <KalshiScorecard districtId={race.district_id} summary={markets} />}
         {money}
         {disclosureBlocks}
         <DistrictNews articles={race.news} />
