@@ -10,10 +10,12 @@ import { useEffect, useState } from 'react';
 import CollapsibleMetric from './CollapsibleMetric.jsx';
 import { loadKalshiResults, kalshiResultFor } from '../lib/kalshiResults.js';
 
+import { assetUrl } from '../api.js';
+
 let resultsPromise = null;
 function loadResults() {
   if (resultsPromise) return resultsPromise;
-  resultsPromise = fetch('/results.json')
+  resultsPromise = fetch(assetUrl('results.json'))
     .then((r) => (r.ok ? r.json() : null))
     .catch(() => null);
   return resultsPromise;

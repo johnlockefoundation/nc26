@@ -1,7 +1,9 @@
+import { assetUrl } from '../api.js';
+
 let promise = null;
 export function loadPollsResults() {
   if (promise) return promise;
-  promise = fetch('/polls-results.json')
+  promise = fetch(assetUrl('polls-results.json'))
     .then((r) => (r.ok ? r.json() : null))
     .catch(() => null);
   return promise;

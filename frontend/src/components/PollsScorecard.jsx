@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
 import CollapsibleMetric from './CollapsibleMetric.jsx';
 
+import { assetUrl } from '../api.js';
+
 let pollsPromise = null;
 function loadPollsResults() {
   if (pollsPromise) return pollsPromise;
-  pollsPromise = fetch('/polls-results.json')
+  pollsPromise = fetch(assetUrl('polls-results.json'))
     .then((r) => (r.ok ? r.json() : null))
     .catch(() => null);
   return pollsPromise;
