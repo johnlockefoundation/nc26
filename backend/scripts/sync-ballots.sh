@@ -17,10 +17,11 @@ set -a
 set +a
 
 cd "$REPO"
+export USE_REMOTE_MYSQL=1
 node backend/scripts/load-ballots.mjs
 
 PGPASSWORD="$SUPABASE_DB_PASSWORD" psql \
-  "postgresql://postgres.${SUPABASE_PROJECT_REF}@aws-0-us-east-1.pooler.supabase.com:6543/postgres" \
+  -h "db.${SUPABASE_PROJECT_REF}.supabase.co" -p 5432 -U postgres -d postgres \
   -f ballots-load.sql
 
 echo "ballot sync complete: $(date)"

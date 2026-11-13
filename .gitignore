@@ -29,3 +29,4 @@ backend/data.db
 
 # Python bytecode caches (fundraising/ is a stdlib-only Python tool).
 __pycache__/
+env.txt
