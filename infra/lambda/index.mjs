@@ -110,6 +110,32 @@ const OPS = {
     const r = rows[0];
     return { dem: Number(r.dem) || 0, rep: Number(r.rep) || 0, unaff: Number(r.unaff) || 0 };
   },
+
+  // Per-precinct party totals for one election's absentee table. Used to build
+  // the precinct-level early-voting map. Returns one row per (CountyId, Precinct).
+  async precincts({ tableName }) {
+    const t = tableName || 'absentee_20261103';
+    if (!/^absentee_\d{8}$/.test(t)) throw new Error(`Refusing table name "${t}"`);
+    const p = await getPool();
+    const [rows] = await p.query(
+      `select CountyId as countyId, Precinct as precinct,
+              sum(case when Party = 2 then 1 else 0 end) as dem,
+              sum(case when Party = 1 then 1 else 0 end) as rep,
+              sum(case when Party = 6 then 1 else 0 end) as unaff,
+              sum(case when Party not in (1, 2, 6) then 1 else 0 end) as other
+       from \`${t}\`
+       group by CountyId, Precinct
+       order by CountyId, Precinct`,
+    );
+    return rows.map((r) => ({
+      countyId: Number(r.countyId),
+      precinct: String(r.precinct),
+      dem: Number(r.dem) || 0,
+      rep: Number(r.rep) || 0,
+      unaff: Number(r.unaff) || 0,
+      other: Number(r.other) || 0,
+    }));
+  },
 };
 
 export const handler = async (event) => {
@@ -117,7 +143,6 @@ export const handler = async (event) => {
 
   if (!checkApiKey(event)) return json(401, { error: 'invalid or missing x-api-key' });
 
-  // GET (any path) is a health check.
   if (method === 'GET') {
     try { return json(200, await OPS.health()); }
     catch (e) { return json(500, { error: String(e.message || e) }); }

@@ -48,6 +48,7 @@ export const remote = {
   async byDistrict(tableName, column) { return call('byDistrict', { tableName, column }); },
   async minorParties(tableName) { return call('minorParties', { tableName }); },
   async statewide(tableName) { return call('statewide', { tableName }); },
+  async precincts(tableName) { return call('precincts', { tableName }); },
 };
 
 export default remote;
