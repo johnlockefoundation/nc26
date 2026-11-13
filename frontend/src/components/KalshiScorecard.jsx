@@ -39,9 +39,6 @@ export default function KalshiScorecard({ districtId, summary }) {
 
   if (!row) return null;
 
-  const marketParty = row.pre_dem > 0.5 ? 'D' : row.pre_dem < 0.5 ? 'R' : 'EVEN';
-  const correct = marketParty === row.actual || marketParty === 'EVEN';
-  const price = marketParty === 'D' ? row.pre_dem : row.pre_rep;
   const electionMargin = (row.pre_dem - row.pre_rep) * 100;
   const electionLabel = `${electionMargin >= 0 ? 'D' : 'R'} +${Math.abs(electionMargin).toFixed(1)}`;
   const finalMov = result
@@ -62,10 +59,6 @@ export default function KalshiScorecard({ districtId, summary }) {
       source={summary?.source_url}
       sourceHref={summary?.source_url}
     >
-      <div className="ballot-foot dim">
-        Kalshi forecast: {marketParty} {(price * 100).toFixed(1)}% &rarr; {row.actual} won{' '}
-        <span className={correct ? 'val-d' : 'val-r'}>{correct ? '✓' : '✗'}</span>
-      </div>
       <div className="ballot-rows">
         <div className="ballot-row">
           <span className="ballot-row-party">KALSHI MARGIN, ELECTION DAY</span>
