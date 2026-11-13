@@ -18,9 +18,9 @@
 // lives behind it. MONEY and BALLOTS each do have one -- the funding margin and
 // the lead in ballot requests -- so they show it with the caret after it, the
 // same as a value-bearing row would read.
-export default function CollapsibleMetric({ title, value, children, source, sourceHref }) {
+export default function CollapsibleMetric({ title, value, children, source, sourceHref, open = false }) {
   return (
-    <details className="metric collapsible-metric">
+    <details className="metric collapsible-metric" open={open}>
       <summary>
         <span className="metric-title">{title}</span>
         {value}

@@ -33,16 +33,8 @@ export default function PredictionsBlock({ districtId, markets, polls }) {
   const hasAny = kalshi || pollsRow || markets?.available || polls?.available;
   if (!hasAny) return null;
 
-  const advantageLabel = markets?.advantage?.label || polls?.advantage?.label;
-  const advantageParty = markets?.advantage?.party || polls?.advantage?.party;
-  const value = advantageLabel ? (
-    <span className={`metric-value collapsible-metric-value ${advantageParty === 'D' ? 'val-d' : advantageParty === 'R' ? 'val-r' : ''}`}>
-      {advantageLabel}
-    </span>
-  ) : null;
-
   return (
-    <CollapsibleMetric title="PREDICTIONS" value={value}>
+    <CollapsibleMetric title="PREDICTIONS" value={null} open>
       <div className="ballot-rows">
         {kalshi && (
           <div className="ballot-row">
