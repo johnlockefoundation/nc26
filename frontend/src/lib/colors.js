@@ -114,9 +114,58 @@ export function leanFor(f, race) {
   return leanOf(f);
 }
 
+// ---------------------------------------------------------------------------
+// Gradient fill by victory margin
+//
+// The two-tone (live/dull) scheme is gone: a district's fill now runs along a
+// single diverging scale, red to blue, whose intensity is the size of the
+// projected or actual margin. The reddest seats are the darkest red, the bluest
+// the darkest blue, and a toss-up sits in the neutral middle. Competitiveness no
+// longer changes the colour -- it is the margin that does.
+const NEUTRAL_FILL = '#cbd5e1';
+
+function lerpHex(a, b, t) {
+  const ca = [parseInt(a.slice(1, 3), 16), parseInt(a.slice(3, 5), 16), parseInt(a.slice(5, 7), 16)];
+  const cb = [parseInt(b.slice(1, 3), 16), parseInt(b.slice(3, 5), 16), parseInt(b.slice(5, 7), 16)];
+  return 'rgb(' + ca.map((v, i) => Math.round(v + (cb[i] - v) * t)).join(',') + ')';
+}
+
+// A signed margin in points (positive = Democratic edge). Live signals win over
+// the Civitas index; money is normalised to a modest fixed magnitude since it
+// is dollars, not points.
+export function marginFor(f, race) {
+  if (race) {
+    const s = primarySignal(race);
+    if (s.advantage && s.advantage.party && s.advantage.party !== 'EVEN') {
+      const v = typeof s.advantage.value === 'number' ? s.advantage.value : 0;
+      const signed = s.advantage.party === 'D' ? v : -v;
+      if (s.metric === 'MONEY') return signed > 0 ? 5 : -5;
+      return signed;
+    }
+  }
+  const lean = leanOf(f);
+  if (lean && typeof lean.value === 'number') {
+    return lean.party === 'D' ? lean.value : -lean.value;
+  }
+  if (f.cpi) {
+    const m = /^([DR])\+(\d+(?:\.\d+)?)$/.exec(String(f.cpi).trim());
+    if (m) return (m[1] === 'D' ? 1 : -1) * +m[2];
+  }
+  return null;
+}
+
+export function fillForMargin(margin) {
+  if (margin == null) return NO_LEAN;
+  if (Math.abs(margin) < 0.5) return NEUTRAL_FILL;
+  const clamped = Math.max(-25, Math.min(25, margin));
+  const t = Math.abs(clamped) / 25;
+  if (clamped >= 0) return lerpHex(NEUTRAL_FILL, '#1e3a8a', t);
+  return lerpHex(NEUTRAL_FILL, '#7f1d1d', t);
+}
+
 // The complete fill decision for one district, so the map and the insets cannot
-// drift apart: lean for the hue, competitive flag for the tone.
+// drift apart.
 export function fillForFeature(f, race) {
   const inPlay = Boolean(f.competitive && race);
-  return { inPlay, fill: fillFor(leanFor(f, race), inPlay) };
+  return { inPlay, fill: fillForMargin(marginFor(f, race)) };
 }

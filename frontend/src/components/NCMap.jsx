@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { fillFor, primarySignal, leanLabel, SAFE_FILL_OPACITY, leanOf, leanFor } from '../lib/colors.js';
+import { primarySignal, leanLabel, leanOf, leanFor, fillForMargin, marginFor } from '../lib/colors.js';
 import { surname } from '../lib/candidateName.js';
 import MapInset, { INSETS } from './MapInset.jsx';
 import {
@@ -37,15 +37,12 @@ function matchupText(candidates) {
 // That is also why the border is a fixed width regardless of zoom rather than
 // something that thins as you zoom out: a hairline at state zoom vanishes.
 function styleFor(f, race) {
-  const inPlay = Boolean(f.competitive && race);
   return {
     color: DISTRICT_BORDER,
     weight: 1.3,
-    // Slightly transparent so the border reads as a seam between two fills
-    // rather than as a drawn line sitting on top of them.
     opacity: 0.9,
-    fillColor: fillFor(leanFor(f, race), inPlay),
-    fillOpacity: inPlay ? 0.85 : SAFE_FILL_OPACITY,
+    fillColor: fillForMargin(marginFor(f, race)),
+    fillOpacity: 0.92,
   };
 }
 
