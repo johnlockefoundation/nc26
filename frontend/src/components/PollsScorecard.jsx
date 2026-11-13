@@ -36,18 +36,21 @@ export default function PollsScorecard({ districtId }) {
     : '—';
   const shown = view === 'kalshi' ? kalshiMargin : pollMargin;
   return (
-    <div className="dim" style={{ fontSize: 11, marginTop: 6, lineHeight: 1.5 }}>
+    <div className="ballot-foot dim" style={{ marginTop: 6 }}>
       <div>Poll average: {marketParty} {price.toFixed(1)}% &rarr; {row.actual} won{' '}
         <span className={correct ? 'val-d' : 'val-r'}>{correct ? '✓' : '✗'}</span>
         <span style={{ marginLeft: 6 }}>({row.n_polls} poll{row.n_polls === 1 ? '' : 's'})</span>
       </div>
-      <div style={{ marginTop: 4, display: 'flex', alignItems: 'center', gap: 6 }}>
-        <select value={view} onChange={(e) => setView(e.target.value)}
-          style={{ fontSize: 10, padding: '2px 6px', minHeight: 0 }}>
-          <option value="poll">Poll margin on election day</option>
-          <option value="kalshi">Kalshi margin on election day</option>
-        </select>
-        <span className="turnout-lead">{shown}</span>
+      <div className="ballot-row" style={{ marginTop: 4, borderTop: 'none', paddingTop: 2 }}>
+        <span className="ballot-row-party">
+          <select value={view} onChange={(e) => setView(e.target.value)}
+            style={{ fontSize: 9.5, padding: '1px 4px', minHeight: 0, letterSpacing: '0.12em' }}>
+            <option value="poll">POLL MARGIN, ELECTION DAY</option>
+            <option value="kalshi">KALSHI MARGIN, ELECTION DAY</option>
+          </select>
+        </span>
+        <span className="ballot-row-share" />
+        <span className="ballot-row-count">{shown}</span>
       </div>
     </div>
   );
