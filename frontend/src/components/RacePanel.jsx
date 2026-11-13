@@ -1,6 +1,6 @@
 import BallotsBlock from './BallotsBlock.jsx';
-import KalshiScorecard from './KalshiScorecard.jsx';
-import PollsScorecard from './PollsScorecard.jsx';
+import ResultsBlock from './ResultsBlock.jsx';
+import PredictionsBlock from './PredictionsBlock.jsx';
 import MetricBlock from './MetricBlock.jsx';
 import CivitasPartisan from './CivitasPartisan.jsx';
 import Demographics from './Demographics.jsx';
@@ -146,9 +146,9 @@ export default function RacePanel({ race, loading }) {
             a state seat these are not missing data, they are inapplicable ones,
             and the pending notice would be a false claim about a pipeline that
             does not exist. */}
-        {isFederal && <PollsScorecard districtId={race.district_id} summary={polls} />}
         {otherMarketBlocks}
-        {isFederal && <KalshiScorecard districtId={race.district_id} summary={markets} />}
+        <ResultsBlock districtId={race.district_id} candidates={race.candidates} />
+        {isFederal && <PredictionsBlock districtId={race.district_id} markets={markets} polls={polls} />}
         {money}
         {disclosureBlocks}
         <DistrictNews articles={race.news} />
