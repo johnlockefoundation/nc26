@@ -38,7 +38,79 @@
 // are not votes, the parties do not return them at equal rates, and a lead in
 // requests is not a projection of a result.
 
+import { useEffect, useState } from 'react';
 import CollapsibleMetric from './CollapsibleMetric.jsx';
+
+// Module-level cache so the early-vote file is fetched once per page load.
+let earlyVotePromise = null;
+function loadEarlyVote() {
+  if (earlyVotePromise) return earlyVotePromise;
+  earlyVotePromise = fetch('/early-voting/data/early-vote.json')
+    .then((r) => (r.ok ? r.json() : null))
+    .catch(() => null);
+  return earlyVotePromise;
+}
+
+function chamberFor(id) {
+  if (!id) return null;
+  if (id.startsWith('HD-')) return 'state_house';
+  if (id.startsWith('SD-')) return 'state_senate';
+  if (id === 'NC-SEN') return 'us_senate';
+  return 'us_house';
+}
+
+function cumulativeDaily(days) {
+  const out = [];
+  const c = { dem: 0, rep: 0, unaff: 0, total: 0 };
+  days
+    .slice()
+    .sort((a, b) => a.o - b.o)
+    .forEach((day) => {
+      c.dem += day.d;
+      c.rep += day.r;
+      c.unaff += day.u;
+      c.total += day.d + day.r + day.u + day.x;
+      out.push({ offset: day.o, dem: c.dem, rep: c.rep, unaff: c.unaff, total: c.total });
+    });
+  return out;
+}
+
+function BallotChart({ series }) {
+  if (!series || !series.length) return null;
+  const xMin = series[0].offset;
+  const xMax = Math.max(series[series.length - 1].offset, 0);
+  const yMax = series[series.length - 1].total || 1;
+  const W = 260, H = 130, m = { l: 34, r: 6, t: 6, b: 22 };
+  const iw = W - m.l - m.r, ih = H - m.t - m.b;
+  const X = (o) => m.l + ((o - xMin) / (xMax - xMin || 1)) * iw;
+  const Y = (v) => m.t + ih - (v / yMax) * ih;
+  const path = (key) =>
+    series.map((p, i) => (i === 0 ? 'M' : 'L') + X(p.offset).toFixed(1) + ',' + Y(p[key]).toFixed(1)).join(' ');
+  const fmtK = (n) => (n >= 1000 ? (n / 1000).toFixed(0) + 'k' : String(n));
+  const ticks = [0, Math.round(yMax / 2), yMax];
+  return (
+    <div className="ballot-chart">
+      <svg viewBox={`0 0 ${W} ${H}`} style={{ width: '100%', height: 'auto', display: 'block' }}>
+        {ticks.map((v, i) => (
+          <g key={i}>
+            <line x1={m.l} y1={Y(v)} x2={W - m.r} y2={Y(v)} stroke="var(--line)" strokeWidth="1" />
+            <text x={m.l - 4} y={Y(v) + 3} textAnchor="end" className="ballot-chart-axis">{fmtK(v)}</text>
+          </g>
+        ))}
+        <line x1={X(0)} y1={m.t} x2={X(0)} y2={m.t + ih} stroke="var(--muted)" strokeDasharray="3 3" />
+        {['dem', 'rep', 'unaff'].map((key) => (
+          <path key={key} d={path(key)} fill="none"
+            stroke={key === 'dem' ? 'var(--d)' : key === 'rep' ? 'var(--r)' : 'var(--muted)'}
+            strokeWidth="1.6" />
+        ))}
+        {[-28, -14, 0].filter((o) => o >= xMin && o <= xMax).map((o) => (
+          <text key={o} x={X(o)} y={H - m.b + 12} textAnchor="middle" className="ballot-chart-axis">{o}</text>
+        ))}
+      </svg>
+      <div className="dim" style={{ fontSize: 10, marginTop: 2 }}>Cumulative ballots by day, 2026 general (days before election)</div>
+    </div>
+  );
+}
 
 const fmt = (n) => (n == null ? '—' : n.toLocaleString('en-US'));
 
@@ -48,8 +120,21 @@ const PARTIES = [
   ['unaff', 'UNA'],
 ];
 
-export default function BallotsBlock({ summary, trackerHref }) {
+export default function BallotsBlock({ summary, trackerHref, districtId }) {
   if (!summary?.available) return null;
+
+  const [series, setSeries] = useState(null);
+  useEffect(() => {
+    let alive = true;
+    loadEarlyVote().then((data) => {
+      if (!alive || !data) return;
+      const chamber = chamberFor(districtId);
+      const daily = data.districtDaily?.[chamber]?.[districtId];
+      if (!daily) return;
+      if (alive) setSeries(cumulativeDaily(daily));
+    });
+    return () => { alive = false; };
+  }, [districtId]);
 
   const ballot = summary.ballot || {};
   const byParty = ballot.by_party || {};
@@ -104,6 +189,7 @@ export default function BallotsBlock({ summary, trackerHref }) {
         The shares cover Democratic, Republican and unaffiliated requests;
         minor-party requests are not counted.
       </div>
+      <BallotChart series={series} />
     </CollapsibleMetric>
   );
 }

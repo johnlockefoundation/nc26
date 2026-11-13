@@ -98,7 +98,7 @@ export default function RacePanel({ race, loading }) {
   const ballots = race.ballots || {};
   if (ballots.available) {
     disclosureBlocks.push(
-      <BallotsBlock key="ballots" summary={ballots} trackerHref={trackerHref} />,
+      <BallotsBlock key="ballots" summary={ballots} trackerHref={trackerHref} districtId={race.district_id} />,
     );
   } else if (isStateRace && trackerHref) {
     disclosureBlocks.push(

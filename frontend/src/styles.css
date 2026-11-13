@@ -610,6 +610,8 @@ a.money-row:hover { color: var(--ink); text-decoration: underline; }
    since it is the sentence that keeps the folded headline from being read as a
    forecast. */
 .ballot-note { font-size: 10.5px; line-height: 1.55; margin-top: 4px; }
+.ballot-chart { margin-top: 10px; }
+.ballot-chart-axis { font-size: 9px; fill: var(--muted); }
 
 /* The disclosure caret, shared by the folded metric boxes above. */
 .collapsible-caret { flex: none; width: 7px; height: 7px; color: var(--muted); border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; transform: rotate(-45deg); transition: transform 0.15s ease; }
