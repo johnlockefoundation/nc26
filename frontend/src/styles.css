@@ -591,6 +591,8 @@ a.money-row:hover { color: var(--ink); text-decoration: underline; }
 }
 .ballot-row:first-child { border-top: none; padding-top: 2px; }
 .ballot-row-party { font-size: 9.5px; letter-spacing: 0.12em; color: var(--muted); flex: none; }
+.ballot-row-party.val-d { color: var(--d); }
+.ballot-row-party.val-r { color: var(--r); }
 /* The share sits in a right-aligned column of its own between the party and the
    count. It is the pair of figures the folded headline differences, so the rows
    have to line up as columns rather than as a figure that happens to follow each

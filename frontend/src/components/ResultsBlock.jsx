@@ -38,8 +38,8 @@ export default function ResultsBlock({ districtId, candidates }) {
               {c.name}
               {isWinner && <sub className="val-d" style={{ fontSize: 9, marginLeft: 3 }}>✓</sub>}
             </span>
-            <span className="ballot-row-share" />
-            <span className="ballot-row-count">{votes.toLocaleString()} ({pct})</span>
+            <span className="ballot-row-share">{pct}</span>
+            <span className="ballot-row-count">{votes.toLocaleString()}</span>
           </div>
         );
       })
