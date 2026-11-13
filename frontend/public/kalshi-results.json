@@ -1,0 +1,80 @@
+{
+  "generated": "2026-11-13",
+  "races": {
+    "NC-SEN": {
+      "pre_dem": 0.95,
+      "pre_rep": 0.05,
+      "actual": "D"
+    },
+    "NC-01": {
+      "pre_dem": 0.61,
+      "pre_rep": 0.41,
+      "actual": "D"
+    },
+    "NC-02": {
+      "pre_dem": 0.967,
+      "pre_rep": 0.021,
+      "actual": "D"
+    },
+    "NC-03": {
+      "pre_dem": 0.18,
+      "pre_rep": 0.88,
+      "actual": "D"
+    },
+    "NC-04": {
+      "pre_dem": 0.973,
+      "pre_rep": 0.055,
+      "actual": "D"
+    },
+    "NC-05": {
+      "pre_dem": 0.14,
+      "pre_rep": 0.85,
+      "actual": "D"
+    },
+    "NC-06": {
+      "pre_dem": 0.09,
+      "pre_rep": 0.908,
+      "actual": "D"
+    },
+    "NC-07": {
+      "pre_dem": 0.16,
+      "pre_rep": 0.83,
+      "actual": "R"
+    },
+    "NC-08": {
+      "pre_dem": 0.042,
+      "pre_rep": 0.917,
+      "actual": "R"
+    },
+    "NC-09": {
+      "pre_dem": 0.19,
+      "pre_rep": 0.76,
+      "actual": "D"
+    },
+    "NC-10": {
+      "pre_dem": 0.079,
+      "pre_rep": 0.946,
+      "actual": "R"
+    },
+    "NC-11": {
+      "pre_dem": 0.68,
+      "pre_rep": 0.31,
+      "actual": "D"
+    },
+    "NC-12": {
+      "pre_dem": 0.94,
+      "pre_rep": 0.041,
+      "actual": "D"
+    },
+    "NC-13": {
+      "pre_dem": 0.17,
+      "pre_rep": 0.83,
+      "actual": "D"
+    },
+    "NC-14": {
+      "pre_dem": 0.12,
+      "pre_rep": 0.89,
+      "actual": "D"
+    }
+  }
+}

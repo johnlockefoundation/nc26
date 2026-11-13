@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { getMap, getBallots, getMovs, assetUrl } from './api.js';
 import { trackerUrl } from './lib/tracker.js';
+import { loadKalshiResults, kalshiStats } from './lib/kalshiResults.js';
 
 const CHAMBERS = [
   { key: 'congress', label: 'Congress' },
@@ -80,14 +81,57 @@ function BallotBreakdown({ ballot }) {
   );
 }
 
+function KalshiScatter({ data }) {
+  const races = Object.entries(data.races || {});
+  const W = 300, H = 200, m = { l: 34, r: 10, t: 10, b: 28 };
+  const iw = W - m.l - m.r, ih = H - m.t - m.b;
+  const X = (p) => m.l + p * iw;
+  const Y = (y) => m.t + (1 - y) * ih;
+  return (
+    <svg viewBox={`0 0 ${W} ${H}`} style={{ width: '100%', maxWidth: 420, height: 'auto', display: 'block' }}>
+      {/* axes */}
+      <line x1={m.l} y1={m.t + ih} x2={W - m.r} y2={m.t + ih} stroke="var(--line)" strokeWidth="1" />
+      <line x1={m.l} y1={m.t} x2={m.l} y2={m.t + ih} stroke="var(--line)" strokeWidth="1" />
+      {/* x ticks */}
+      {[0, 0.25, 0.5, 0.75, 1].map((v) => (
+        <g key={v}>
+          <line x1={X(v)} y1={m.t + ih} x2={X(v)} y2={m.t + ih + 4} stroke="var(--muted)" strokeWidth="1" />
+          <text x={X(v)} y={H - 6} textAnchor="middle" style={{ fontSize: 9, fill: 'var(--muted)' }}>{Math.round(v * 100)}%</text>
+        </g>
+      ))}
+      {/* y labels */}
+      <text x={m.l - 6} y={Y(1) + 3} textAnchor="end" style={{ fontSize: 9, fill: 'var(--muted)' }}>D won</text>
+      <text x={m.l - 6} y={Y(0) + 3} textAnchor="end" style={{ fontSize: 9, fill: 'var(--muted)' }}>R won</text>
+      {/* points */}
+      {races.map(([id, r]) => {
+        const y = r.actual === 'D' ? 1 : 0;
+        return (
+          <g key={id}>
+            <circle cx={X(r.pre_dem)} cy={Y(y)} r="4" fill={r.actual === 'D' ? 'var(--d)' : 'var(--r)'} />
+            <text x={X(r.pre_dem)} y={Y(y) - 6} textAnchor="middle" style={{ fontSize: 8, fill: 'var(--muted)' }}>
+              {id.replace('NC-', '')}
+            </text>
+          </g>
+        );
+      })}
+      <text x={(m.l + W - m.r) / 2} y={H - 0} textAnchor="middle" style={{ fontSize: 9, fill: 'var(--muted)' }}>Kalshi D probability</text>
+    </svg>
+  );
+}
+
 export default function ElectionPage() {
   const [raceType, setRaceType] = useState('congress');
   const isState = raceType === 'state_senate' || raceType === 'state_house';
   const [mapData, setMapData] = useState(null);
   const [ballots, setBallots] = useState({});
   const [movs, setMovs] = useState({});
+  const [kalshiData, setKalshiData] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    loadKalshiResults().then((d) => setKalshiData(d));
+  }, []);
 
   useEffect(() => {
     let alive = true;
@@ -274,6 +318,21 @@ export default function ElectionPage() {
             {(sorted.all || []).map((r) => renderPill(r, ballots))}
           </div>
         </>
+      )}
+
+      {kalshiData && kalshiStats(kalshiData) && (
+        <div className="panel" style={{ marginTop: 16 }}>
+          <div className="panel-title">Market accuracy</div>
+          <div className="section-sub">
+            Kalshi election-day probability vs. actual result — {kalshiStats(kalshiData).n} NC federal races, 2026.
+          </div>
+          <KalshiScatter data={kalshiData} />
+          <div className="dim" style={{ fontSize: 12, marginTop: 8 }}>
+            Kalshi's favored side won {kalshiStats(kalshiData).favoredWins} of{' '}
+            {kalshiStats(kalshiData).favoredTotal}; Brier score{' '}
+            {kalshiStats(kalshiData).brier.toFixed(3)}. Scorecard for these races only.
+          </div>
+        </div>
       )}
 
       <img

@@ -1,4 +1,5 @@
 import BallotsBlock from './BallotsBlock.jsx';
+import KalshiScorecard from './KalshiScorecard.jsx';
 import MetricBlock from './MetricBlock.jsx';
 import CivitasPartisan from './CivitasPartisan.jsx';
 import Demographics from './Demographics.jsx';
@@ -141,6 +142,7 @@ export default function RacePanel({ race, loading }) {
             does not exist. */}
         {isFederal && <PollBlock polls={polls} race={race} />}
         {marketBlocks}
+        {isFederal && <KalshiScorecard districtId={race.district_id} />}
         {money}
         {disclosureBlocks}
         <DistrictNews articles={race.news} />
