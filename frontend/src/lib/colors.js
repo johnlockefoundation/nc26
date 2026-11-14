@@ -172,6 +172,8 @@ export function fillForMargin(margin) {
 // the Republican. Used to pick the hatched fill instead of the solid one.
 export function flippedToD(f, race, results) {
   const r = results && results.races && results.races[f.district_id];
+  if (r && r.flipped_to_d) return true;
+  // Fallback for data without the flag: Civitas lean or market favorite.
   if (!r || r.winner !== 'D') return false;
   if (f.partisan_party === 'R') return true;
   if (race && race.markets && race.markets.available) {
