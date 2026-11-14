@@ -65,7 +65,7 @@ export default function CivitasPartisan({ partisan, districtId }) {
 
       {uncontested ? (
         <div className="ballot-foot dim" style={{ marginTop: 6 }}>
-          {uncontestedParty} was unopposed in this election.
+          {uncontestedParty} were unopposed in this election.
         </div>
       ) : (
         <>
