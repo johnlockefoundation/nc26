@@ -62,13 +62,17 @@ export default function ResultsBlock({ districtId, candidates }) {
     <CollapsibleMetric title="RESULTS" value={null} open>
       <div className="ballot-rows">
         {rows}
+        <div className="ballot-row">
+          <span className="ballot-row-party">MARGIN OF VICTORY</span>
+          <span className="ballot-row-share">{result.margin_pp >= 0 ? 'D' : 'R'} +{Math.abs(result.margin_pp).toFixed(1)} pp</span>
+          <span className="ballot-row-count">{result.margin_votes >= 0 ? '+' : '−'}{Math.abs(result.margin_votes).toLocaleString()}</span>
+        </div>
         <div className="ballot-row ballot-row-total">
           <span className="ballot-row-party">TOTAL</span>
           <span className="ballot-row-share" />
           <span className="ballot-row-count">{total.toLocaleString()}</span>
         </div>
       </div>
-      <div className="ballot-foot dim">Final margin: {marginLabel}</div>
     </CollapsibleMetric>
   );
 }
