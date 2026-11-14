@@ -91,8 +91,8 @@ export default function CivitasPartisan({ partisan, districtId }) {
             </div>
             {actualPp != null && (
               <div className="leanbar-marker-labels">
-                <span style={{ left: markerPos(partisan.party, partisan.value).left }}>Predicted</span>
-                <span style={{ left: markerPos(result.winner, Math.abs(actualPp)).left }}>Actual</span>
+                <span>Predicted</span>
+                <span style={{ marginLeft: 12 }}>Actual</span>
               </div>
             )}
           </div>

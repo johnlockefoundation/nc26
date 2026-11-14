@@ -640,12 +640,7 @@ a.money-row:hover { color: var(--ink); text-decoration: underline; }
 .leanbar { margin-bottom: 6px; }
 .leanbar-track { position: relative; height: 10px; border-radius: 6px; background: linear-gradient(90deg, var(--d, #5b8cff), var(--center, #334155) 50%, var(--r, #f87171)); }
 .leanbar-marker { position: absolute; top: -3px; width: 3px; height: 16px; border-radius: 2px; background: #fff; box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.6); }
-.leanbar-marker-labels { position: relative; height: 14px; margin-top: 2px; }
-.leanbar-marker-labels span {
-  position: absolute; transform: translateX(-50%);
-  font-size: 9px; letter-spacing: 0.08em; text-transform: uppercase;
-  color: var(--muted); white-space: nowrap;
-}
+.leanbar-marker-labels { display: flex; gap: 16px; margin-top: 4px; font-size: 9px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
 .leanbar-mid { position: absolute; top: 0; left: 50%; width: 1px; height: 100%; background: rgba(15, 23, 42, 0.45); }
 .leanbar-labels { display: flex; justify-content: space-between; font-family: var(--font-display); font-size: 10px; letter-spacing: 0.1em; color: var(--muted); margin-top: 3px; }
 .profile-line { font-size: 12px; color: var(--ink); }
