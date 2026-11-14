@@ -93,7 +93,7 @@ export default function CivitasPartisan({ partisan, districtId }) {
               const p1 = parseFloat(markerPos(partisan.party, partisan.value).left);
               const p2 = parseFloat(markerPos(result.winner, Math.abs(actualPp)).left);
               const mid = (p1 + p2) / 2;
-              const gap = Math.max(Math.abs(p2 - p1), 20);
+              const gap = Math.max(Math.abs(p2 - p1), 24);
               const leftPredicted = mid - gap / 2;
               const leftActual = mid + gap / 2;
               return (
