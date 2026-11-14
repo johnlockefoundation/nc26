@@ -9,25 +9,6 @@ import PendingMetric from './PendingMetric.jsx';
 import DistrictNews from './DistrictNews.jsx';
 import { trackerUrl } from '../lib/tracker.js';
 
-function CandidateCards({ candidates }) {
-  // No portraits: the headshots bucket is gone, so the matchup is rendered as a
-  // single color-coded headline instead of photo cards. Names are uppercase and
-  // coloured by party (D blue, R red), with a muted "v" between them.
-  if (!candidates || candidates.length === 0) return <div className="candidate-list dim">Candidates not yet available.</div>;
-  return (
-    <div className="matchup-headline">
-      {candidates.map((c, i) => (
-        <span key={c.candidate_id} className="matchup-part">
-          {i > 0 && <span className="matchup-vs"> v </span>}
-          <span className={`matchup-name party-${String(c.party).toLowerCase()}`}>
-            {String(c.name).toUpperCase()}
-          </span>
-        </span>
-      ))}
-    </div>
-  );
-}
-
 export default function RacePanel({ race, loading }) {
   if (loading && !race) {
     return <aside className="panel"><div className="panel-loading">Loading race…</div></aside>;
@@ -134,7 +115,6 @@ export default function RacePanel({ race, loading }) {
   return (
     <aside className="panel">
       <h2 className="panel-title">{race.title}</h2>
-      <CandidateCards candidates={race.candidates} />
 
       {/* One stack for every chamber. News sits inside it rather than below it,
           so the box above a story is the same width and aligned with the box
