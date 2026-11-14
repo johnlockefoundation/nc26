@@ -167,105 +167,6 @@
       "flipped_to_d": true,
       "flipped_to_r": false
     },
-    "HD-01": {
-      "dem_votes": 14946,
-      "rep_votes": 22515,
-      "other_votes": 0,
-      "total_votes": 37461,
-      "margin_votes": -7569,
-      "margin_pp": -20.21,
-      "winner": "R",
-      "flipped_to_d": false,
-      "flipped_to_r": false
-    },
-    "HD-02": {
-      "dem_votes": 28308,
-      "rep_votes": 0,
-      "other_votes": 0,
-      "total_votes": 28308,
-      "margin_votes": 28308,
-      "margin_pp": 100,
-      "winner": "D",
-      "flipped_to_d": false,
-      "flipped_to_r": false
-    },
-    "HD-03": {
-      "dem_votes": 15630,
-      "rep_votes": 20926,
-      "other_votes": 892,
-      "total_votes": 37448,
-      "margin_votes": -5296,
-      "margin_pp": -14.14,
-      "winner": "R",
-      "flipped_to_d": false,
-      "flipped_to_r": false
-    },
-    "HD-04": {
-      "dem_votes": 11313,
-      "rep_votes": 13831,
-      "other_votes": 0,
-      "total_votes": 25144,
-      "margin_votes": -2518,
-      "margin_pp": -10.01,
-      "winner": "R",
-      "flipped_to_d": false,
-      "flipped_to_r": false
-    },
-    "HD-05": {
-      "dem_votes": 16223,
-      "rep_votes": 14425,
-      "other_votes": 0,
-      "total_votes": 30648,
-      "margin_votes": 1798,
-      "margin_pp": 5.87,
-      "winner": "D",
-      "flipped_to_d": true,
-      "flipped_to_r": false
-    },
-    "HD-06": {
-      "dem_votes": 14065,
-      "rep_votes": 14620,
-      "other_votes": 0,
-      "total_votes": 28685,
-      "margin_votes": -555,
-      "margin_pp": -1.93,
-      "winner": "R",
-      "flipped_to_d": false,
-      "flipped_to_r": false
-    },
-    "HD-07": {
-      "dem_votes": 19997,
-      "rep_votes": 18744,
-      "other_votes": 0,
-      "total_votes": 38741,
-      "margin_votes": 1253,
-      "margin_pp": 3.23,
-      "winner": "D",
-      "flipped_to_d": true,
-      "flipped_to_r": false
-    },
-    "HD-08": {
-      "dem_votes": 18813,
-      "rep_votes": 7517,
-      "other_votes": 0,
-      "total_votes": 26330,
-      "margin_votes": 11296,
-      "margin_pp": 42.9,
-      "winner": "D",
-      "flipped_to_d": false,
-      "flipped_to_r": false
-    },
-    "HD-09": {
-      "dem_votes": 18358,
-      "rep_votes": 18136,
-      "other_votes": 0,
-      "total_votes": 36494,
-      "margin_votes": 222,
-      "margin_pp": 0.61,
-      "winner": "D",
-      "flipped_to_d": true,
-      "flipped_to_r": false
-    },
     "HD-10": {
       "dem_votes": 13265,
       "rep_votes": 16084,
@@ -2035,6 +1936,105 @@
       "margin_pp": -16.35,
       "winner": "R",
       "flipped_to_d": false,
+      "flipped_to_r": false
+    },
+    "HD-1": {
+      "dem_votes": 14946,
+      "rep_votes": 22515,
+      "other_votes": 0,
+      "total_votes": 37461,
+      "margin_votes": -7569,
+      "margin_pp": -20.21,
+      "winner": "R",
+      "flipped_to_d": false,
+      "flipped_to_r": false
+    },
+    "HD-2": {
+      "dem_votes": 28308,
+      "rep_votes": 0,
+      "other_votes": 0,
+      "total_votes": 28308,
+      "margin_votes": 28308,
+      "margin_pp": 100,
+      "winner": "D",
+      "flipped_to_d": false,
+      "flipped_to_r": false
+    },
+    "HD-3": {
+      "dem_votes": 15630,
+      "rep_votes": 20926,
+      "other_votes": 892,
+      "total_votes": 37448,
+      "margin_votes": -5296,
+      "margin_pp": -14.14,
+      "winner": "R",
+      "flipped_to_d": false,
+      "flipped_to_r": false
+    },
+    "HD-4": {
+      "dem_votes": 11313,
+      "rep_votes": 13831,
+      "other_votes": 0,
+      "total_votes": 25144,
+      "margin_votes": -2518,
+      "margin_pp": -10.01,
+      "winner": "R",
+      "flipped_to_d": false,
+      "flipped_to_r": false
+    },
+    "HD-5": {
+      "dem_votes": 16223,
+      "rep_votes": 14425,
+      "other_votes": 0,
+      "total_votes": 30648,
+      "margin_votes": 1798,
+      "margin_pp": 5.87,
+      "winner": "D",
+      "flipped_to_d": true,
+      "flipped_to_r": false
+    },
+    "HD-6": {
+      "dem_votes": 14065,
+      "rep_votes": 14620,
+      "other_votes": 0,
+      "total_votes": 28685,
+      "margin_votes": -555,
+      "margin_pp": -1.93,
+      "winner": "R",
+      "flipped_to_d": false,
+      "flipped_to_r": false
+    },
+    "HD-7": {
+      "dem_votes": 19997,
+      "rep_votes": 18744,
+      "other_votes": 0,
+      "total_votes": 38741,
+      "margin_votes": 1253,
+      "margin_pp": 3.23,
+      "winner": "D",
+      "flipped_to_d": true,
+      "flipped_to_r": false
+    },
+    "HD-8": {
+      "dem_votes": 18813,
+      "rep_votes": 7517,
+      "other_votes": 0,
+      "total_votes": 26330,
+      "margin_votes": 11296,
+      "margin_pp": 42.9,
+      "winner": "D",
+      "flipped_to_d": false,
+      "flipped_to_r": false
+    },
+    "HD-9": {
+      "dem_votes": 18358,
+      "rep_votes": 18136,
+      "other_votes": 0,
+      "total_votes": 36494,
+      "margin_votes": 222,
+      "margin_pp": 0.61,
+      "winner": "D",
+      "flipped_to_d": true,
       "flipped_to_r": false
     }
   }

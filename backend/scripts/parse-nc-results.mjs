@@ -22,7 +22,9 @@ if (!file || !['senate','house'].includes(chamber)) {
 const text = readFileSync(resolve(file), 'utf8');
 const lines = text.split(/\r?\n/);
 const prefix = chamber === 'senate' ? 'SD' : 'HD';
-const pad = chamber === 'senate' ? 2 : 2;
+// NC House district ids in the nc26 map are unpadded (HD-1 .. HD-120);
+// Senate (and U.S. House) are zero-padded to two (SD-01, NC-01).
+const pad = chamber === 'senate' ? 2 : 0;
 const out = existsSync(outPath) ? JSON.parse(readFileSync(outPath, 'utf8')) : { generated: '2026-11-03', source: 'NC State Board of Elections', races: {} };
 
 let current = null;
