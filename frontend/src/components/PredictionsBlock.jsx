@@ -44,21 +44,21 @@ export default function PredictionsBlock({ districtId, markets, polls }) {
           <div className="ballot-row">
             <span className="ballot-row-party">{mov && mov.available ? 'KALSHI PREDICTED MOV' : 'KALSHI PRICE MARGIN'}</span>
             <span className="ballot-row-share" />
-            <span className="ballot-row-count">{kalshiMargin}</span>
+            <span className={`ballot-row-count ${kalshiMargin?.startsWith('D') ? 'val-d' : 'val-r'}`}>{kalshiMargin}</span>
           </div>
         )}
         {pollsRow && (
           <div className="ballot-row">
             <span className="ballot-row-party">POLL MARGIN, ELECTION DAY</span>
             <span className="ballot-row-share" />
-            <span className="ballot-row-count">{pollMargin}</span>
+            <span className={`ballot-row-count ${pollMargin?.startsWith('D') ? 'val-d' : 'val-r'}`}>{pollMargin}</span>
           </div>
         )}
         {finalMov && (
           <div className="ballot-row ballot-row-total">
             <span className="ballot-row-party">FINAL MARGIN OF VICTORY</span>
             <span className="ballot-row-share" />
-            <span className="ballot-row-count">{finalMov}</span>
+            <span className={`ballot-row-count ${finalMov?.startsWith('D') ? 'val-d' : 'val-r'}`}>{finalMov}</span>
           </div>
         )}
       </div>
