@@ -91,7 +91,7 @@ export default function PredictionsBlock({ districtId, race, markets, polls }) {
   ) : null;
 
   return (
-    <CollapsibleMetric title="PREDICTIONS" value={value}>
+    <CollapsibleMetric title="PREDICTIONS" value={value} open>
       {/* Lean bar at the top, when a predicted lean exists. */}
       {predicted && (
         <div className="leanbar" style={{ marginBottom: 8 }}>
