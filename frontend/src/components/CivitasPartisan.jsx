@@ -64,13 +64,13 @@ export default function CivitasPartisan({ partisan, districtId }) {
       <div className="leanbar">
         <div className="leanbar-track">
           <i
-            className={`leanbar-marker m-${partisan.party.toLowerCase()}`}
+            className="leanbar-marker"
             style={markerPos(partisan.party, partisan.value)}
             title={`Civitas predicted: ${partisan.label}`}
           />
           {actualPp != null && (
             <i
-              className={`leanbar-marker m-${result.winner.toLowerCase()} leanbar-marker-actual`}
+              className="leanbar-marker"
               style={markerPos(result.winner, Math.abs(actualPp))}
               title={`Actual: ${result.winner} +${Math.abs(actualPp).toFixed(1)}`}
             />
@@ -81,6 +81,12 @@ export default function CivitasPartisan({ partisan, districtId }) {
           <span>DEM</span>
           <span>REP</span>
         </div>
+        {actualPp != null && (
+          <div className="leanbar-marker-labels">
+            <span style={{ left: markerPos(partisan.party, partisan.value).left }}>Predicted</span>
+            <span style={{ left: markerPos(result.winner, Math.abs(actualPp)).left }}>Actual</span>
+          </div>
+        )}
       </div>
       {summary && <div className="ballot-foot dim" style={{ marginTop: 6 }}>{summary}</div>}
     </div>
