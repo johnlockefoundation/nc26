@@ -35,7 +35,7 @@ export default function ResultsBlock({ districtId, candidates }) {
         return (
           <div key={c.candidate_id || i} className="ballot-row">
             <span className={`ballot-row-party ${cls}`} style={{ textAlign: 'left', minWidth: 0 }}>
-              {c.name}
+              {String(c.name).toUpperCase()}
               {isWinner && <sub className="val-d" style={{ fontSize: 9, marginLeft: 3 }}>✓</sub>}
             </span>
             <span className="ballot-row-share">{pct}</span>

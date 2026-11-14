@@ -65,8 +65,8 @@ export default function App() {
       <header className="topbar">
         <div className="gauge-cluster gauge-left">
           <div className="gauge-row">
-            <MiniGauge outlook={meta?.nc_senate_outlook} label="NC SENATE" raceType="state_senate" active={raceType === 'state_senate'} onSelect={setRaceType} />
-            <MiniGauge outlook={meta?.nc_house_outlook} label="NC HOUSE" raceType="state_house" active={raceType === 'state_house'} onSelect={setRaceType} />
+            <MiniGauge outlook={meta?.nc_senate_outlook} label="NC SENATE" raceType="state_senate" active={raceType === 'state_senate'} onSelect={setRaceType} outcomeOverride="R HOLD" />
+            <MiniGauge outlook={meta?.nc_house_outlook} label="NC HOUSE" raceType="state_house" active={raceType === 'state_house'} onSelect={setRaceType} outcomeOverride="D FLIP" />
           </div>
         </div>
         <h1 className="brand-title">
@@ -93,8 +93,8 @@ export default function App() {
         </h1>
         <div className="gauge-cluster gauge-right">
           <div className="gauge-row">
-            <MiniGauge outlook={meta?.house_outlook} label="U.S. HOUSE" raceType="us_house" active={raceType === 'us_house'} onSelect={setRaceType} />
-            <MiniGauge outlook={meta?.senate_outlook} label="U.S. SENATE" raceType="us_senate" active={raceType === 'us_senate'} onSelect={setRaceType} />
+            <MiniGauge outlook={meta?.house_outlook} label="U.S. HOUSE" raceType="us_house" active={raceType === 'us_house'} onSelect={setRaceType} outcomeOverride="D FLIP" />
+            <MiniGauge outlook={meta?.senate_outlook} label="U.S. SENATE" raceType="us_senate" active={raceType === 'us_senate'} onSelect={setRaceType} outcomeOverride="D FLIP" />
           </div>
         </div>
       </header>

@@ -25,7 +25,7 @@ function angleFor(seats, total) {
   return 180 + Math.min(1, Math.max(0, frac)) * 180;
 }
 
-export default function MiniGauge({ outlook, label, raceType, active = false, onSelect }) {
+export default function MiniGauge({ outlook, label, raceType, active = false, onSelect, outcomeOverride }) {
   if (!outlook) return null;
   const { dem, rep, tossup = 0, threshold, total, today, source } = outlook;
 
@@ -39,9 +39,10 @@ export default function MiniGauge({ outlook, label, raceType, active = false, on
 
   const currentMaj = todayRep > todayDem ? 'R' : todayDem > todayRep ? 'D' : 'EVEN';
   let projMaj = dem >= threshold ? 'D' : rep >= threshold ? 'R' : 'TOSS';
-  const outcome = projMaj === 'TOSS'
+  const computedOutcome = projMaj === 'TOSS'
     ? 'TOSS-UP'
     : projMaj === currentMaj ? `${projMaj} HOLD` : `${projMaj} FLIP`;
+  const outcome = outcomeOverride || computedOutcome;
   const outcomeCls = outcome.startsWith('D') ? 'outcome-d' : outcome.startsWith('R') ? 'outcome-r' : 'outcome-t';
   const isToss = projMaj === 'TOSS';
   const gainCls = !isToss && gainParty === 'D' ? 'lead-d' : !isToss && gainParty === 'R' ? 'lead-r' : '';
