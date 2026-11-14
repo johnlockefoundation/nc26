@@ -37,8 +37,10 @@ export default function CivitasPartisan({ partisan, districtId }) {
   // Expected margin in pp (signed, D positive) from the Civitas index.
   const expectedPp = partisan.party === 'D' ? partisan.value : -partisan.value;
   const actualPp = result ? result.margin_pp : null;
+  const uncontested = !!result && (result.dem_votes === 0 || result.rep_votes === 0);
+  const uncontestedParty = uncontested ? (result.dem_votes === 0 ? 'Republicans' : 'Democrats') : null;
   let summary = null;
-  if (actualPp != null) {
+  if (actualPp != null && !uncontested) {
     const diff = actualPp - expectedPp; // positive = more D than expected
     const expectedParty = partisan.party === 'D' ? 'Democrats' : 'Republicans';
     const expectedOver = partisan.party === 'D' ? diff > 0 : diff < 0;
@@ -61,34 +63,42 @@ export default function CivitasPartisan({ partisan, districtId }) {
         {partisan.competitive && <span className="partisan-inplay">IN PLAY</span>}
       </div>
 
-      <div className="leanbar">
-        <div className="leanbar-track">
-          <i
-            className="leanbar-marker"
-            style={markerPos(partisan.party, partisan.value)}
-            title={`Civitas predicted: ${partisan.label}`}
-          />
-          {actualPp != null && (
-            <i
-              className="leanbar-marker"
-              style={markerPos(result.winner, Math.abs(actualPp))}
-              title={`Actual: ${result.winner} +${Math.abs(actualPp).toFixed(1)}`}
-            />
-          )}
-          <span className="leanbar-mid" />
+      {uncontested ? (
+        <div className="ballot-foot dim" style={{ marginTop: 6 }}>
+          {uncontestedParty} was unopposed in this election.
         </div>
-        <div className="leanbar-labels">
-          <span>DEM</span>
-          <span>REP</span>
-        </div>
-        {actualPp != null && (
-          <div className="leanbar-marker-labels">
-            <span style={{ left: markerPos(partisan.party, partisan.value).left }}>Predicted</span>
-            <span style={{ left: markerPos(result.winner, Math.abs(actualPp)).left }}>Actual</span>
+      ) : (
+        <>
+          <div className="leanbar">
+            <div className="leanbar-track">
+              <i
+                className="leanbar-marker"
+                style={markerPos(partisan.party, partisan.value)}
+                title={`Civitas predicted: ${partisan.label}`}
+              />
+              {actualPp != null && (
+                <i
+                  className="leanbar-marker"
+                  style={markerPos(result.winner, Math.abs(actualPp))}
+                  title={`Actual: ${result.winner} +${Math.abs(actualPp).toFixed(1)}`}
+                />
+              )}
+              <span className="leanbar-mid" />
+            </div>
+            <div className="leanbar-labels">
+              <span>DEM</span>
+              <span>REP</span>
+            </div>
+            {actualPp != null && (
+              <div className="leanbar-marker-labels">
+                <span style={{ left: markerPos(partisan.party, partisan.value).left }}>Predicted</span>
+                <span style={{ left: markerPos(result.winner, Math.abs(actualPp)).left }}>Actual</span>
+              </div>
+            )}
           </div>
-        )}
-      </div>
-      {summary && <div className="ballot-foot dim" style={{ marginTop: 6 }}>{summary}</div>}
+          {summary && <div className="ballot-foot dim" style={{ marginTop: 6 }}>{summary}</div>}
+        </>
+      )}
     </div>
   );
 }
