@@ -161,7 +161,12 @@
    Sized to sit beside the toggle bar rather than compete with it: the label is
    small caps like the metric titles, and the row is a single control wide. */
 /* Unified search: one box for candidates, district ids and ZIPs. */
-.unified-search { position: relative; margin: 0 0 14px; }
+.search-row { display: flex; gap: 10px; align-items: flex-end; margin: 0 0 14px; }
+.search-row .unified-search { flex: 1 1 auto; margin: 0; }
+.year-select { display: flex; flex-direction: column; gap: 4px; font-family: var(--font-display); font-size: 10.5px; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 700; color: var(--muted); }
+.year-select select { min-width: 110px; }
+
+.unified-search { position: relative; margin: 0; }
 .unified-search-form { display: flex; flex-direction: column; gap: 4px; }
 .unified-search-input {
   width: 100%; padding: 9px 12px; border-radius: 9px; font: inherit; font-size: 14px;

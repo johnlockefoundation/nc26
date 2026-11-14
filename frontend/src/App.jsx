@@ -10,6 +10,7 @@ const FETCH_KEYS = ['us_house', 'us_senate', 'state_house', 'state_senate'];
 
 export default function App() {
   const [raceType, setRaceType] = useState('us_house');
+  const [electionYear, setElectionYear] = useState(2026);
   const [mapsByType, setMapsByType] = useState({});
   const [outline, setOutline] = useState(null);
   const [meta, setMeta] = useState(null);
@@ -107,7 +108,16 @@ export default function App() {
         </div>
       </header>
 
-      <UnifiedSearch mapsByType={allRacesByType} onSelectRace={handleSelectRace} onLocate={setZipFocus} />
+      <div className="search-row">
+        <UnifiedSearch mapsByType={allRacesByType} onSelectRace={handleSelectRace} onLocate={setZipFocus} />
+        <label className="year-select">
+          <span className="year-select-label">Year</span>
+          <select value={electionYear} onChange={(e) => setElectionYear(Number(e.target.value))}>
+            <option value={2026}>2026</option>
+            <option value={2024} disabled>2024 (coming soon)</option>
+          </select>
+        </label>
+      </div>
 
       <img className="corner-logo" src={assetUrl('assets/locke-logo-white.png')} alt="John Locke Foundation" width="1200" height="346" />
 
