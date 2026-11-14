@@ -2,7 +2,6 @@ import BallotsBlock from './BallotsBlock.jsx';
 import ResultsBlock from './ResultsBlock.jsx';
 import PredictionsBlock from './PredictionsBlock.jsx';
 import MetricBlock from './MetricBlock.jsx';
-import CivitasPartisan from './CivitasPartisan.jsx';
 import Demographics from './Demographics.jsx';
 import MoneyBlock from './MoneyBlock.jsx';
 import PendingMetric from './PendingMetric.jsx';
@@ -121,14 +120,13 @@ export default function RacePanel({ race, loading }) {
           below it instead of floating under a section heading. */}
       <div className="metrics">
         <ResultsBlock districtId={race.district_id} candidates={race.candidates} />
-        <CivitasPartisan partisan={race.partisan} districtId={race.district_id} race={race} />
+        <PredictionsBlock districtId={race.district_id} race={race} markets={markets} polls={polls} />
         {/* Federal-only, unlike every other block here. See the isFederal note
             above: there is no state-legislature poll and no state market, so on
             a state seat these are not missing data, they are inapplicable ones,
             and the pending notice would be a false claim about a pipeline that
             does not exist. */}
         {otherMarketBlocks}
-        {isFederal && <PredictionsBlock districtId={race.district_id} markets={markets} polls={polls} />}
         {money}
         {disclosureBlocks}
         <DistrictNews articles={race.news} />
