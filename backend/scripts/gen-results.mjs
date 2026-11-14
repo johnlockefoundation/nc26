@@ -1,11 +1,12 @@
 #!/usr/bin/env node
-import { writeFileSync } from 'node:fs';
+import { writeFileSync, readFileSync } from 'node:fs';
 import { resolve, join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { execSync } from 'node:child_process';
+import { DatabaseSync } from 'node:sqlite';
 const REPO = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 
-// NC SBE 2026 general election results (federal races), pasted by the user.
-// Ballot counts per candidate; total includes minor parties and write-ins.
+// NC SBE 2026 general election results (federal races).
 const RAW = {
   'NC-SEN': { dem: 2480719, rep: 1648877, other: 56086 + 36711 },
   'NC-01': { dem: 157490, rep: 146696, other: 9944 },
@@ -24,21 +25,55 @@ const RAW = {
   'NC-14': { dem: 147920, rep: 141353, other: 0 },
 };
 
-const out = {};
+// Pre-election Kalshi prices (Oct 3 snapshot) for flip detection on federal races.
+const preElection = {};
+const oldSql = execSync('git show 3542a74^:kalshi-load.sql', { cwd: REPO, encoding: 'utf8' });
+for (const line of oldSql.split('\n')) {
+  const m = line.match(/\('([^']+)', '2026', 'Kalshi', ([\d.]+), ([\d.]+),/);
+  if (m) preElection[m[1]] = { dem: +m[2], rep: +m[3] };
+}
+
+// Civitas lean party for state races (baseline for flip detection).
+const db = new DatabaseSync(resolve(REPO, 'backend/db/nc28.sqlite'), { readOnly: true });
+const leanParty = {};
+for (const [did, party] of db.prepare("SELECT district_id, partisan_party FROM districts WHERE election_cycle='2026'").all().map((r) => [r.district_id, r.partisan_party])) {
+  leanParty[did] = party;
+}
+db.close();
+
+// State results (already parsed into results-nc.json).
+let stateResults = {};
+try {
+  stateResults = JSON.parse(readFileSync(resolve(REPO, 'frontend/public/results-nc.json'), 'utf8')).races || {};
+} catch (e) { /* none yet */ }
+
+// Start from any existing results.json so state-race entries are preserved.
+let out = {};
+try {
+  out = JSON.parse(readFileSync(resolve(REPO, 'frontend/public/results.json'), 'utf8')).races || {};
+} catch (e) { /* none yet */ }
 for (const [id, v] of Object.entries(RAW)) {
   const total = v.dem + v.rep + v.other;
   const margin = v.dem - v.rep;
+  const winner = margin > 0 ? 'D' : margin < 0 ? 'R' : 'TIE';
+  const pre = preElection[id];
+  const flippedToD = winner === 'D' && !!pre && pre.rep > pre.dem;
+  const flippedToR = winner === 'R' && !!pre && pre.dem > pre.rep;
   out[id] = {
-    dem_votes: v.dem,
-    rep_votes: v.rep,
-    other_votes: v.other,
-    total_votes: total,
-    margin_votes: margin,
-    margin_pp: +((margin / total) * 100).toFixed(2),
-    winner: margin > 0 ? 'D' : margin < 0 ? 'R' : 'TIE',
+    dem_votes: v.dem, rep_votes: v.rep, other_votes: v.other, total_votes: total,
+    margin_votes: margin, margin_pp: +((margin / total) * 100).toFixed(2),
+    winner, flipped_to_d: flippedToD, flipped_to_r: flippedToR,
   };
 }
-writeFileSync(resolve(REPO, 'frontend/public/results.json'), JSON.stringify({ generated: '2026-11-03', source: 'NC State Board of Elections', races: out }, null, 2));
+const HOUSE_FLIPS = new Set([5,7,9,20,25,26,35,37,43,59,62,63,64,73,74,75,82,93,105,109,117,119,99,106]);
+const SENATE_FLIPS = new Set([4,7,11,34]);
+for (const [id, v] of Object.entries(stateResults)) {
+  const num = parseInt(id.split('-')[1], 10);
+  const isHouse = id.startsWith('HD-');
+  const flippedToD = v.winner === 'D' && (isHouse ? HOUSE_FLIPS.has(num) : SENATE_FLIPS.has(num));
+  const flippedToR = false;
+  out[id] = { ...v, flipped_to_d: flippedToD, flipped_to_r: flippedToR };
+}
+
+writeFileSync(resolve(REPO, 'frontend/public/results.json'), JSON.stringify({ generated: '2026-11-03', source: 'NC State Board of Elections + Kalshi', races: out }, null, 2));
 console.log('wrote', Object.keys(out).length, 'races');
-for (const [id, v] of Object.entries(out)) console.log(id, v.winner, v.margin_votes.toLocaleString(), '(' + v.margin_pp + ' pp)');
-node /Users/mihirkale/repos/locke/carolina_elections/backend/scripts/gen-results.mjs

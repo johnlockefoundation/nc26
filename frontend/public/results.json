@@ -219,7 +219,7 @@
       "margin_votes": 1798,
       "margin_pp": 5.87,
       "winner": "D",
-      "flipped_to_d": false,
+      "flipped_to_d": true,
       "flipped_to_r": false
     },
     "HD-06": {
@@ -241,7 +241,7 @@
       "margin_votes": 1253,
       "margin_pp": 3.23,
       "winner": "D",
-      "flipped_to_d": false,
+      "flipped_to_d": true,
       "flipped_to_r": false
     },
     "HD-08": {
@@ -263,7 +263,7 @@
       "margin_votes": 222,
       "margin_pp": 0.61,
       "winner": "D",
-      "flipped_to_d": false,
+      "flipped_to_d": true,
       "flipped_to_r": false
     },
     "HD-10": {
@@ -439,7 +439,7 @@
       "margin_votes": 3171,
       "margin_pp": 8.14,
       "winner": "D",
-      "flipped_to_d": false,
+      "flipped_to_d": true,
       "flipped_to_r": false
     },
     "HD-26": {
@@ -549,7 +549,7 @@
       "margin_votes": 4635,
       "margin_pp": 9.93,
       "winner": "D",
-      "flipped_to_d": false,
+      "flipped_to_d": true,
       "flipped_to_r": false
     },
     "HD-36": {
@@ -571,7 +571,7 @@
       "margin_votes": 4622,
       "margin_pp": 9.46,
       "winner": "D",
-      "flipped_to_d": false,
+      "flipped_to_d": true,
       "flipped_to_r": false
     },
     "HD-38": {
@@ -967,7 +967,7 @@
       "margin_votes": 2499,
       "margin_pp": 7.72,
       "winner": "D",
-      "flipped_to_d": false,
+      "flipped_to_d": true,
       "flipped_to_r": false
     },
     "HD-74": {
@@ -1253,7 +1253,7 @@
       "margin_votes": 24127,
       "margin_pp": 100,
       "winner": "D",
-      "flipped_to_d": false,
+      "flipped_to_d": true,
       "flipped_to_r": false
     },
     "HD-100": {
@@ -1319,7 +1319,7 @@
       "margin_votes": 6142,
       "margin_pp": 14.23,
       "winner": "D",
-      "flipped_to_d": false,
+      "flipped_to_d": true,
       "flipped_to_r": false
     },
     "HD-106": {
@@ -1330,7 +1330,7 @@
       "margin_votes": 33346,
       "margin_pp": 100,
       "winner": "D",
-      "flipped_to_d": false,
+      "flipped_to_d": true,
       "flipped_to_r": false
     },
     "HD-107": {
@@ -1561,7 +1561,7 @@
       "margin_votes": 4817,
       "margin_pp": 5.22,
       "winner": "D",
-      "flipped_to_d": false,
+      "flipped_to_d": true,
       "flipped_to_r": false
     },
     "SD-08": {
@@ -1605,7 +1605,7 @@
       "margin_votes": 4668,
       "margin_pp": 5.26,
       "winner": "D",
-      "flipped_to_d": false,
+      "flipped_to_d": true,
       "flipped_to_r": false
     },
     "SD-12": {
