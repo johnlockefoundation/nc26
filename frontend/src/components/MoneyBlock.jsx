@@ -71,9 +71,23 @@ function MoneyRow({ candidate, party, figure }) {
     );
 }
 
-export default function MoneyBlock({ summary, candidates }) {
+import { useEffect, useState } from 'react';
+import { assetUrl } from '../api.js';
+
+export default function MoneyBlock({ summary, candidates, districtId }) {
   const available = Boolean(summary?.available && summary?.advantage);
   if (!available) return null;
+
+  const [result, setResult] = useState(null);
+  useEffect(() => {
+    if (!districtId) return;
+    let alive = true;
+    fetch(assetUrl('results.json'))
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => { if (alive && d && d.races) setResult(d.races[districtId]); })
+      .catch(() => {});
+    return () => { alive = false; };
+  }, [districtId]);
 
   const byParty = summary.by_party || {};
   // Candidates carry the names; the money rows carry the totals and the links.
@@ -117,6 +131,15 @@ export default function MoneyBlock({ summary, candidates }) {
       {summary.reporting_period ? (
         <div className="money-foot dim">{summary.reporting_period}</div>
       ) : null}
+      {(() => {
+        const parts = Object.keys(byParty).map((p) => {
+          const amt = byParty[p]?.amount;
+          const votes = p === 'D' ? result?.dem_votes : p === 'R' ? result?.rep_votes : null;
+          if (amt == null || !votes) return null;
+          return `${p} $${(amt / votes).toFixed(2)} per vote`;
+        }).filter(Boolean);
+        return parts.length ? <div className="money-foot dim">{parts.join(' · ')}</div> : null;
+      })()}
     </CollapsibleMetric>
   );
 }

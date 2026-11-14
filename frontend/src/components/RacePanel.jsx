@@ -109,7 +109,7 @@ export default function RacePanel({ race, loading }) {
   // intended to be loaded, so an absent row there is pending rather than
   // inapplicable and gets the notice.
   const money = moneyS?.available
-    ? <MoneyBlock key="money" summary={moneyS} candidates={race.candidates} />
+    ? <MoneyBlock key="money" summary={moneyS} candidates={race.candidates} districtId={race.district_id} />
     : <PendingMetric key="money-pending" title="MONEY" />;
 
   return (
