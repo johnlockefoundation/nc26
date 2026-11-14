@@ -572,6 +572,7 @@ a.money-row:hover { color: var(--ink); text-decoration: underline; }
    compete with it for the reader's attention. */
 .money-row-party { font-size: 9.5px; letter-spacing: 0.12em; color: var(--muted); flex: none; }
 .money-row-amount { font-family: var(--font-display); font-weight: 700; font-variant-numeric: tabular-nums; flex: none; }
+.money-row-pervote { font-size: 9.5px; letter-spacing: 0.08em; color: var(--muted); flex: none; margin-left: 8px; font-variant-numeric: tabular-nums; }
 /* A row with no filing behind it is rendered without an href rather than as a
    dead link. The figures still show; there is simply nowhere to verify them. */
 .money-row-note { font-size: 10.5px; color: var(--muted); font-style: italic; flex: none; }

@@ -43,7 +43,7 @@ const PARTY_LABEL = { D: 'DEM', R: 'REP' };
 // committee page on a federal seat, their NCSBE report-sections page on a state
 // one; a row without one is rendered as a <div> rather than an <a>, so it is
 // visibly not a link instead of being a dead one.
-function MoneyRow({ candidate, party, figure }) {
+function MoneyRow({ candidate, party, figure, perVote }) {
   const name = candidate?.name || PARTY_LABEL[party] || party;
   const amount = figure?.amount != null ? fmtMoney(figure.amount) : '—';
   const href = figure?.source_url;
@@ -53,6 +53,7 @@ function MoneyRow({ candidate, party, figure }) {
       <span className="money-row-name">{name}</span>
       <span className="money-row-party">{PARTY_LABEL[party] || party}</span>
       <span className="money-row-amount">{amount}</span>
+      <span className="money-row-pervote">{perVote != null ? `$${perVote.toFixed(2)}/vote` : '—'}</span>
     </>
   );
 
@@ -118,28 +119,25 @@ export default function MoneyBlock({ summary, candidates, districtId }) {
     <CollapsibleMetric title="MONEY" value={value}>
       {parties.length > 0 && (
         <div className="money-rows">
-          {parties.map((p) => (
-            <MoneyRow
-              key={p}
-              party={p}
-              candidate={byPartyCandidate[p]}
-              figure={byParty[p]}
-            />
-          ))}
+          {parties.map((p) => {
+            const amt = byParty[p]?.amount;
+            const votes = p === 'D' ? result?.dem_votes : p === 'R' ? result?.rep_votes : null;
+            const perVote = amt != null && votes ? amt / votes : null;
+            return (
+              <MoneyRow
+                key={p}
+                party={p}
+                candidate={byPartyCandidate[p]}
+                figure={byParty[p]}
+                perVote={perVote}
+              />
+            );
+          })}
         </div>
       )}
       {summary.reporting_period ? (
         <div className="money-foot dim">{summary.reporting_period}</div>
       ) : null}
-      {(() => {
-        const parts = Object.keys(byParty).map((p) => {
-          const amt = byParty[p]?.amount;
-          const votes = p === 'D' ? result?.dem_votes : p === 'R' ? result?.rep_votes : null;
-          if (amt == null || !votes) return null;
-          return `${p} $${(amt / votes).toFixed(2)} per vote`;
-        }).filter(Boolean);
-        return parts.length ? <div className="money-foot dim">{parts.join(' · ')}</div> : null;
-      })()}
     </CollapsibleMetric>
   );
 }
