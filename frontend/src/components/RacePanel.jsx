@@ -121,7 +121,7 @@ export default function RacePanel({ race, loading }) {
           below it instead of floating under a section heading. */}
       <div className="metrics">
         <ResultsBlock districtId={race.district_id} candidates={race.candidates} />
-        {isStateRace && <CivitasPartisan partisan={race.partisan} districtId={race.district_id} />}
+        <CivitasPartisan partisan={race.partisan} districtId={race.district_id} race={race} />
         {/* Federal-only, unlike every other block here. See the isFederal note
             above: there is no state-legislature poll and no state market, so on
             a state seat these are not missing data, they are inapplicable ones,
