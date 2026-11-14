@@ -183,17 +183,18 @@ export function flippedToD(f, race, results) {
   return false;
 }
 
-// Single-shade fills: one blue, one red. Democratic flips carry a hatch pattern
-// (returned as a url(#...) reference) instead of a second colour.
+// Two shades per party: a darker tone for seats that held (no party change) and a
+// brighter tone for seats that flipped. No hatch pattern.
 export function fillForRace(f, race, results) {
   const r = results && results.races && results.races[f.district_id];
   const winner = r ? r.winner : (race ? primarySignal(race)?.advantage?.party : null);
-  if (winner === 'D') return flippedToD(f, race, results) ? 'url(#dflip)' : '#2563eb';
-  if (winner === 'R') return '#dc2626';
+  const flipped = r ? (r.flipped_to_d || r.flipped_to_r) : false;
+  if (winner === 'D') return flipped ? '#3b82f6' : '#1e3a8a';
+  if (winner === 'R') return flipped ? '#ef4444' : '#7f1d1d';
   // Fallback to the Civitas lean when there is no result yet.
   const lean = leanOf(f);
-  if (lean && lean.party === 'D') return '#2563eb';
-  if (lean && lean.party === 'R') return '#dc2626';
+  if (lean && lean.party === 'D') return '#1e3a8a';
+  if (lean && lean.party === 'R') return '#7f1d1d';
   return '#94a3b8';
 }
 
