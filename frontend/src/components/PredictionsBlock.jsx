@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
 import CollapsibleMetric from './CollapsibleMetric.jsx';
 import { loadKalshiResults, kalshiResultFor } from '../lib/kalshiResults.js';
-import { assetUrl } from '../api.js';
+import { assetUrl, getMov } from '../api.js';
 
 export default function PredictionsBlock({ districtId, markets, polls }) {
   const [kalshi, setKalshi] = useState(null);
   const [pollsRow, setPollsRow] = useState(null);
   const [result, setResult] = useState(null);
+  const [mov, setMov] = useState(null);
 
   useEffect(() => {
     let alive = true;
@@ -17,12 +18,15 @@ export default function PredictionsBlock({ districtId, markets, polls }) {
     fetch(assetUrl('results.json')).then((r) => r.ok ? r.json() : null).then((d) => {
       if (alive && d && d.races) setResult(d.races[districtId]);
     }).catch(() => {});
+    getMov(districtId).then((m) => { if (alive) setMov(m); }).catch(() => {});
     return () => { alive = false; };
   }, [districtId]);
 
-  const kalshiMargin = kalshi
-    ? `${kalshi.pre_dem > kalshi.pre_rep ? 'D' : 'R'} +${(Math.abs(kalshi.pre_dem - kalshi.pre_rep) * 100).toFixed(1)}`
-    : null;
+  const kalshiMargin = mov && mov.available && mov.margin != null
+    ? `${mov.party} +${Math.abs(mov.margin).toFixed(1)}`
+    : (kalshi
+        ? `${kalshi.pre_dem > kalshi.pre_rep ? 'D' : 'R'} +${(Math.abs(kalshi.pre_dem - kalshi.pre_rep) * 100).toFixed(1)} (price)`
+        : null);
   const pollMargin = pollsRow
     ? `${pollsRow.poll_margin >= 0 ? 'D' : 'R'} +${Math.abs(pollsRow.poll_margin).toFixed(1)}`
     : null;
@@ -36,9 +40,9 @@ export default function PredictionsBlock({ districtId, markets, polls }) {
   return (
     <CollapsibleMetric title="PREDICTIONS" value={null} open>
       <div className="ballot-rows">
-        {kalshi && (
+        {kalshiMargin && (
           <div className="ballot-row">
-            <span className="ballot-row-party">KALSHI MARGIN, ELECTION DAY</span>
+            <span className="ballot-row-party">{mov && mov.available ? 'KALSHI PREDICTED MOV' : 'KALSHI PRICE MARGIN'}</span>
             <span className="ballot-row-share" />
             <span className="ballot-row-count">{kalshiMargin}</span>
           </div>
