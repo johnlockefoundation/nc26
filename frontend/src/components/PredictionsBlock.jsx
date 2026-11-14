@@ -71,10 +71,10 @@ export default function PredictionsBlock({ districtId, race, markets, polls }) {
     const expectedPp = predicted.party === 'D' ? predicted.value : -predicted.value;
     const actualPp = result.margin_pp;
     const diff = actualPp - expectedPp;
-    const expectedParty = predicted.party === 'D' ? 'Democrats' : 'Republicans';
-    const expectedOver = predicted.party === 'D' ? diff > 0 : diff < 0;
-    const verb = expectedOver ? 'overperformed' : 'underperformed';
-    summary = `${expectedParty} ${verb} expectations by ${Math.abs(diff).toFixed(1)} percent.`;
+    const winningParty = result.winner === 'D' ? 'Democrats' : 'Republicans';
+    const winnerOver = result.winner === 'D' ? diff > 0 : diff < 0;
+    const verb = winnerOver ? 'overperformed' : 'underperformed';
+    summary = `${winningParty} ${verb} expectations by ${Math.abs(diff).toFixed(1)} percentage points.`;
   }
 
   const hasAny = predicted || kalshi || pollsRow || markets?.available || polls?.available || result;
@@ -136,7 +136,7 @@ export default function PredictionsBlock({ districtId, race, markets, polls }) {
       )}
 
       {uncontested ? (
-        <div className="ballot-foot dim" style={{ marginTop: 6 }}>
+        <div className="ballot-foot dim" style={{ marginTop: 6, color: '#fff', fontWeight: 700 }}>
           {uncontestedParty} were unopposed in this election.
         </div>
       ) : (
@@ -177,7 +177,7 @@ export default function PredictionsBlock({ districtId, race, markets, polls }) {
               </div>
             )}
           </div>
-          {summary && <div className="ballot-foot dim" style={{ marginTop: 6 }}>{summary}</div>}
+          {summary && <div className="ballot-foot dim" style={{ marginTop: 6, color: '#fff', fontWeight: 700 }}>{summary}</div>}
         </>
       )}
     </CollapsibleMetric>
