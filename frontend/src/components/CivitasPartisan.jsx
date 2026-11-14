@@ -89,12 +89,20 @@ export default function CivitasPartisan({ partisan, districtId }) {
               <span>DEM</span>
               <span>REP</span>
             </div>
-            {actualPp != null && (
-              <div className="leanbar-marker-labels">
-                <span>Predicted</span>
-                <span style={{ marginLeft: 12 }}>Actual</span>
-              </div>
-            )}
+            {actualPp != null && (() => {
+              const p1 = parseFloat(markerPos(partisan.party, partisan.value).left);
+              const p2 = parseFloat(markerPos(result.winner, Math.abs(actualPp)).left);
+              const mid = (p1 + p2) / 2;
+              const gap = Math.max(Math.abs(p2 - p1), 14);
+              const leftPredicted = mid - gap / 2;
+              const leftActual = mid + gap / 2;
+              return (
+                <div className="leanbar-marker-labels">
+                  <span style={{ left: `${leftPredicted}%` }}>Predicted</span>
+                  <span style={{ left: `${leftActual}%` }}>Actual</span>
+                </div>
+              );
+            })()}
           </div>
           {summary && <div className="ballot-foot dim" style={{ marginTop: 6 }}>{summary}</div>}
         </>
