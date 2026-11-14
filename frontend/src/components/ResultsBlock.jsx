@@ -59,7 +59,8 @@ export default function ResultsBlock({ districtId, candidates }) {
   const marginLabel = `${result.margin_pp >= 0 ? 'D' : 'R'} +${Math.abs(result.margin_pp).toFixed(1)} pp`;
 
   return (
-    <CollapsibleMetric title="RESULTS" value={null} open>
+    <div style={{ marginTop: 14 }}>
+      <CollapsibleMetric title="RESULTS" value={null} open>
       <div className="ballot-rows">
         {rows}
         <div className="ballot-row">
@@ -74,5 +75,6 @@ export default function ResultsBlock({ districtId, candidates }) {
         </div>
       </div>
     </CollapsibleMetric>
+    </div>
   );
 }
