@@ -31,6 +31,7 @@ export default function PredictionsBlock({ districtId, race, markets, polls }) {
 
   // Resolve the predicted lean: Civitas for state races, Kalshi MOV for federal,
   // then the market advantage.
+  const isStateRace = race?.race_type === 'state_senate' || race?.race_type === 'state_house';
   let predicted = null;
   let title = 'PREDICTIONS';
   let sourceUrl = null;
@@ -81,7 +82,9 @@ export default function PredictionsBlock({ districtId, race, markets, polls }) {
 
   const advantageLabel = markets?.advantage?.label || polls?.advantage?.label;
   const advantageParty = markets?.advantage?.party || polls?.advantage?.party;
-  const value = advantageLabel ? (
+  // Drop the headline number on US (federal) races: the resolved market
+  // advantage (e.g. D +99) is not a meaningful forecast post-election.
+  const value = (isStateRace && advantageLabel) ? (
     <span className={`metric-value collapsible-metric-value ${advantageParty === 'D' ? 'val-d' : advantageParty === 'R' ? 'val-r' : ''}`}>
       {advantageLabel}
     </span>
