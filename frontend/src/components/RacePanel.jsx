@@ -140,14 +140,14 @@ export default function RacePanel({ race, loading }) {
           so the box above a story is the same width and aligned with the box
           below it instead of floating under a section heading. */}
       <div className="metrics">
-        {isStateRace && <CivitasPartisan partisan={race.partisan} />}
+        <ResultsBlock districtId={race.district_id} candidates={race.candidates} />
+        {isStateRace && <CivitasPartisan partisan={race.partisan} districtId={race.district_id} />}
         {/* Federal-only, unlike every other block here. See the isFederal note
             above: there is no state-legislature poll and no state market, so on
             a state seat these are not missing data, they are inapplicable ones,
             and the pending notice would be a false claim about a pipeline that
             does not exist. */}
         {otherMarketBlocks}
-        <ResultsBlock districtId={race.district_id} candidates={race.candidates} />
         {isFederal && <PredictionsBlock districtId={race.district_id} markets={markets} polls={polls} />}
         {money}
         {disclosureBlocks}

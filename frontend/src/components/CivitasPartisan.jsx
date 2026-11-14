@@ -1,3 +1,6 @@
+import { useEffect, useState } from 'react';
+import { assetUrl } from '../api.js';
+
 function markerPos(party, value) {
   const dir = party === 'R' ? 1 : -1;
   const pct = Math.min(value, 45) / 45 * 50;
@@ -10,7 +13,18 @@ function markerPos(party, value) {
 // and no fundraising, so this is the headline for the chamber rather than
 // supporting detail, and folding it away would bury the one number the map is
 // coloured from.
-export default function CivitasPartisan({ partisan }) {
+export default function CivitasPartisan({ partisan, districtId }) {
+  const [result, setResult] = useState(null);
+  useEffect(() => {
+    if (!districtId) return;
+    let alive = true;
+    fetch(assetUrl('results.json'))
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => { if (alive && d && d.races) setResult(d.races[districtId]); })
+      .catch(() => {});
+    return () => { alive = false; };
+  }, [districtId]);
+
   if (!partisan || !partisan.available) {
     return (
       <div className="metric metric-empty metric-elongated">
@@ -19,18 +33,18 @@ export default function CivitasPartisan({ partisan }) {
       </div>
     );
   }
-  // The party colour rides the .metric-value element itself, not the inner
-  // span: the rule is the compound .metric-value.val-d / .val-r, so the class
-  // has to sit beside metric-value to match -- the same place MetricBlock and
-  // MoneyBlock put theirs. On a child span it matched nothing and the label
-  // stayed the default ink on every seat.
   const partyCls = partisan.party === 'D' ? 'val-d' : partisan.party === 'R' ? 'val-r' : '';
-  // The Civitas bucket -- "Safe", "Likely", "Lean", "Toss-up" -- is dropped.
-  // The first three merely spell the party a second time, and the party is
-  // already the margin sitting beside it ("LIKELY R" next to "R +8"). "Toss-up"
-  // is not carried either: every seat Civitas rates a toss-up is also in play,
-  // so it only ever appeared beside IN PLAY and said the same thing. IN PLAY is
-  // the signal that survives.
+  // Expected margin in pp (signed, D positive) from the Civitas index.
+  const expectedPp = partisan.party === 'D' ? partisan.value : -partisan.value;
+  const actualPp = result ? result.margin_pp : null;
+  let summary = null;
+  if (actualPp != null) {
+    const diff = actualPp - expectedPp; // positive = more D than expected
+    const expectedParty = partisan.party === 'D' ? 'Democrats' : 'Republicans';
+    const expectedOver = partisan.party === 'D' ? diff > 0 : diff < 0;
+    const verb = expectedOver ? 'overperformed' : 'underperformed';
+    summary = `${expectedParty} ${verb} expectations by ${Math.abs(diff).toFixed(1)} percent.`;
+  }
 
   return (
     <div className="metric metric-elongated">
@@ -47,19 +61,23 @@ export default function CivitasPartisan({ partisan }) {
         {partisan.competitive && <span className="partisan-inplay">IN PLAY</span>}
       </div>
 
-      <div className="leanbar">
-        <div className="leanbar-track">
-          <i
-            className={`leanbar-marker m-${partisan.party.toLowerCase()}`}
-            style={markerPos(partisan.party, partisan.value)}
-          />
-          <span className="leanbar-mid" />
+      {summary ? (
+        <div className="ballot-foot dim" style={{ marginTop: 6 }}>{summary}</div>
+      ) : (
+        <div className="leanbar">
+          <div className="leanbar-track">
+            <i
+              className={`leanbar-marker m-${partisan.party.toLowerCase()}`}
+              style={markerPos(partisan.party, partisan.value)}
+            />
+            <span className="leanbar-mid" />
+          </div>
+          <div className="leanbar-labels">
+            <span>DEM</span>
+            <span>REP</span>
+          </div>
         </div>
-        <div className="leanbar-labels">
-          <span>DEM</span>
-          <span>REP</span>
-        </div>
-      </div>
+      )}
     </div>
   );
 }
