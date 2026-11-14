@@ -34,7 +34,7 @@ export default function ResultsBlock({ districtId, candidates }) {
         const cls = party === 'D' ? 'val-d' : party === 'R' ? 'val-r' : '';
         return (
           <div key={c.candidate_id || i} className="ballot-row">
-            <span className={`ballot-row-party ${cls}`} style={{ textAlign: 'left', minWidth: 0, fontWeight: 700, fontSize: 13 }}>
+            <span className={`ballot-row-party ${cls}`} style={{ textAlign: 'left', minWidth: 0, fontWeight: isWinner ? 700 : 400, fontSize: 13 }}>
               {String(c.name).toUpperCase()}
               {isWinner && <sub className="val-d" style={{ fontSize: 9, marginLeft: 3 }}>✓</sub>}
             </span>
