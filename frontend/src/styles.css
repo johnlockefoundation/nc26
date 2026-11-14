@@ -164,7 +164,12 @@
 .search-row { display: flex; gap: 10px; align-items: flex-end; margin: 0 0 14px; }
 .search-row .unified-search { flex: 1 1 auto; margin: 0; }
 .year-select { display: flex; flex-direction: column; gap: 4px; font-family: var(--font-display); font-size: 10.5px; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 700; color: var(--muted); }
-.year-select select { min-width: 110px; }
+.year-select select {
+  min-width: 110px; font-family: var(--font-body); font-size: 14px; color: var(--ink);
+  background: var(--card); border: 1px solid var(--line); border-radius: 9px;
+  padding: 9px 12px; min-height: 38px;
+}
+.year-select select:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
 
 .unified-search { position: relative; margin: 0; }
 .unified-search-form { display: flex; flex-direction: column; gap: 4px; }
