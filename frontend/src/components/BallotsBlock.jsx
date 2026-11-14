@@ -163,7 +163,7 @@ export default function BallotsBlock({ summary, trackerHref, districtId }) {
 
   return (
     <CollapsibleMetric
-      title="BALLOTS"
+      title="EARLY VOTE"
       value={value}
       source={trackerHref ? 'Open this district in the Carolina Elections tracker ↗' : undefined}
       sourceHref={trackerHref || undefined}
