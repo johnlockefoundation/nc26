@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { primarySignal, leanLabel, leanOf, leanFor, fillForMargin, marginFor } from '../lib/colors.js';
+import { primarySignal, leanLabel, leanOf, leanFor, fillForRace } from '../lib/colors.js';
 import { loadResults } from '../lib/results.js';
 import { surname } from '../lib/candidateName.js';
 import MapInset, { INSETS } from './MapInset.jsx';
@@ -42,7 +42,7 @@ function styleFor(f, race, results) {
     color: DISTRICT_BORDER,
     weight: 1.3,
     opacity: 0.9,
-    fillColor: fillForMargin(marginFor(f, race, results)),
+    fillColor: fillForRace(f, race, results),
     fillOpacity: 0.92,
   };
 }
@@ -283,6 +283,28 @@ export default function NCMap({ features, outline, races, selectedId, onSelect, 
     labelsRef.current.clearLayers();
     layersById.current = new Map();
     selectedRef.current = null;
+
+    // Diagonal hatch pattern for seats Democrats flipped, so they stay the same
+    // blue as other Democratic wins but read as "flipped" at a glance.
+    const overlaySvg = map.getPane('overlayPane')?.querySelector('svg');
+    if (overlaySvg && !overlaySvg.querySelector('#dflip-defs')) {
+      const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+      defs.setAttribute('id', 'dflip-defs');
+      const pat = document.createElementNS('http://www.w3.org/2000/svg', 'pattern');
+      pat.setAttribute('id', 'dflip');
+      pat.setAttribute('patternUnits', 'userSpaceOnUse');
+      pat.setAttribute('width', '8');
+      pat.setAttribute('height', '8');
+      pat.setAttribute('patternTransform', 'rotate(45)');
+      const bg = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+      bg.setAttribute('width', '8'); bg.setAttribute('height', '8'); bg.setAttribute('fill', '#2563eb');
+      const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      line.setAttribute('x1', '0'); line.setAttribute('y1', '0'); line.setAttribute('x2', '0'); line.setAttribute('y2', '8');
+      line.setAttribute('stroke', '#ffffff'); line.setAttribute('stroke-width', '2'); line.setAttribute('stroke-opacity', '0.55');
+      pat.appendChild(bg); pat.appendChild(line);
+      defs.appendChild(pat);
+      overlaySvg.insertBefore(defs, overlaySvg.firstChild);
+    }
 
     for (const f of features || []) {
       const race = raceById.current.get(f.district_id);

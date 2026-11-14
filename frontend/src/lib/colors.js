@@ -167,7 +167,35 @@ export function fillForMargin(margin) {
 
 // The complete fill decision for one district, so the map and the insets cannot
 // drift apart.
+// A seat Democrats flipped: a Democratic win on a seat whose baseline leans
+// Republican (Civitas partisan_party) or whose pre-election market favoured
+// the Republican. Used to pick the hatched fill instead of the solid one.
+export function flippedToD(f, race, results) {
+  const r = results && results.races && results.races[f.district_id];
+  if (!r || r.winner !== 'D') return false;
+  if (f.partisan_party === 'R') return true;
+  if (race && race.markets && race.markets.available) {
+    const m = race.markets;
+    if (m.dem_price != null && m.rep_price != null && m.rep_price > m.dem_price) return true;
+  }
+  return false;
+}
+
+// Single-shade fills: one blue, one red. Democratic flips carry a hatch pattern
+// (returned as a url(#...) reference) instead of a second colour.
+export function fillForRace(f, race, results) {
+  const r = results && results.races && results.races[f.district_id];
+  const winner = r ? r.winner : (race ? primarySignal(race)?.advantage?.party : null);
+  if (winner === 'D') return flippedToD(f, race, results) ? 'url(#dflip)' : '#2563eb';
+  if (winner === 'R') return '#dc2626';
+  // Fallback to the Civitas lean when there is no result yet.
+  const lean = leanOf(f);
+  if (lean && lean.party === 'D') return '#2563eb';
+  if (lean && lean.party === 'R') return '#dc2626';
+  return '#94a3b8';
+}
+
 export function fillForFeature(f, race, results) {
   const inPlay = Boolean(f.competitive && race);
-  return { inPlay, fill: fillForMargin(marginFor(f, race, results)) };
+  return { inPlay, fill: fillForRace(f, race, results) };
 }
