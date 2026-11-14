@@ -61,23 +61,28 @@ export default function CivitasPartisan({ partisan, districtId }) {
         {partisan.competitive && <span className="partisan-inplay">IN PLAY</span>}
       </div>
 
-      {summary ? (
-        <div className="ballot-foot dim" style={{ marginTop: 6 }}>{summary}</div>
-      ) : (
-        <div className="leanbar">
-          <div className="leanbar-track">
+      <div className="leanbar">
+        <div className="leanbar-track">
+          <i
+            className={`leanbar-marker m-${partisan.party.toLowerCase()}`}
+            style={markerPos(partisan.party, partisan.value)}
+            title={`Civitas predicted: ${partisan.label}`}
+          />
+          {actualPp != null && (
             <i
-              className={`leanbar-marker m-${partisan.party.toLowerCase()}`}
-              style={markerPos(partisan.party, partisan.value)}
+              className={`leanbar-marker m-${result.winner.toLowerCase()} leanbar-marker-actual`}
+              style={markerPos(result.winner, Math.abs(actualPp))}
+              title={`Actual: ${result.winner} +${Math.abs(actualPp).toFixed(1)}`}
             />
-            <span className="leanbar-mid" />
-          </div>
-          <div className="leanbar-labels">
-            <span>DEM</span>
-            <span>REP</span>
-          </div>
+          )}
+          <span className="leanbar-mid" />
         </div>
-      )}
+        <div className="leanbar-labels">
+          <span>DEM</span>
+          <span>REP</span>
+        </div>
+      </div>
+      {summary && <div className="ballot-foot dim" style={{ marginTop: 6 }}>{summary}</div>}
     </div>
   );
 }
