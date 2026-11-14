@@ -160,6 +160,31 @@
 /* ZIP search, on the right edge of the map panel opposite the chamber toggles.
    Sized to sit beside the toggle bar rather than compete with it: the label is
    small caps like the metric titles, and the row is a single control wide. */
+/* Unified search: one box for candidates, district ids and ZIPs. */
+.unified-search { position: relative; margin: 0 0 14px; }
+.unified-search-form { display: flex; flex-direction: column; gap: 4px; }
+.unified-search-input {
+  width: 100%; padding: 9px 12px; border-radius: 9px; font: inherit; font-size: 14px;
+  border: 1px solid var(--line); background: var(--card); color: var(--ink);
+}
+.unified-search-input:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+.unified-search-input::placeholder { color: var(--muted); }
+.unified-search-dropdown {
+  position: absolute; top: 100%; left: 0; right: 0; z-index: 20;
+  margin: 4px 0 0; padding: 4px; list-style: none;
+  background: var(--card); border: 1px solid var(--line); border-radius: 10px;
+  box-shadow: var(--shadow); max-height: 320px; overflow-y: auto;
+}
+.unified-search-option {
+  display: grid; grid-template-columns: 70px 90px 1fr; gap: 8px; align-items: center;
+  width: 100%; padding: 7px 10px; border: 0; background: transparent; cursor: pointer;
+  text-align: left; color: var(--ink); font: inherit; font-size: 13px; border-radius: 6px;
+}
+.unified-search-option:hover { background: var(--input, #f1f5f9); }
+.unified-search-id { font-family: var(--font-display); font-weight: 700; font-size: 13px; }
+.unified-search-chamber { font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.unified-search-names { font-size: 12px; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
 .zip-search { margin: 0; text-align: right; min-width: 190px; }
 .zip-search-label {
   display: block; font-family: var(--font-display); font-size: 10.5px;

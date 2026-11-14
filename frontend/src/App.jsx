@@ -1,53 +1,72 @@
 import { useEffect, useMemo, useState } from 'react';
-import { getMap, getMeta, getRace, getTicker, getOutline, assetUrl } from './api.js';
+import { getMap, getMeta, getRace, getOutline, assetUrl } from './api.js';
 import RaceTypeToggle from './components/RaceTypeToggle.jsx';
-import RaceTicker from './components/RaceTicker.jsx';
 import NCMap from './components/NCMap.jsx';
-import ZipSearch from './components/ZipSearch.jsx';
-import CandidateSearch from './components/CandidateSearch.jsx';
+import UnifiedSearch from './components/UnifiedSearch.jsx';
 import MiniGauge from './components/MiniGauge.jsx';
 import RacePanel from './components/RacePanel.jsx';
 
+const FETCH_KEYS = ['us_house', 'us_senate', 'state_house', 'state_senate'];
+
 export default function App() {
   const [raceType, setRaceType] = useState('us_house');
-  const [mapData, setMapData] = useState(null);
+  const [mapsByType, setMapsByType] = useState({});
   const [outline, setOutline] = useState(null);
   const [meta, setMeta] = useState(null);
-  const [ticker, setTicker] = useState([]);
   const [selectedId, setSelectedId] = useState(null);
   const [zipFocus, setZipFocus] = useState(null);
   const [detail, setDetail] = useState(null);
   const [loadingDetail, setLoadingDetail] = useState(false);
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     getOutline().then(setOutline).catch((e) => setError(String(e)));
     getMeta().then(setMeta).catch(() => {});
-    getTicker(12).then((d) => setTicker(d.items || [])).catch(() => {});
   }, []);
 
+  // Load every chamber once so the search box can match races across chambers
+  // and switching chambers never re-fetches.
   useEffect(() => {
     let alive = true;
-    // No crossfade between chambers. Every map is framed on North Carolina over
-    // the same basemap, so there is no view to soften the transition into -- the
-    // fade only ever hid the layer rebuild, at the cost of a blank half-second
-    // on every tab switch.
-    setError(null);
-    getMap(raceType)
-      .then((d) => { if (alive) setMapData(d); })
-      .catch((e) => { if (alive) setError(String(e)); });
+    setLoading(true);
+    Promise.all(FETCH_KEYS.map((k) => getMap(k)))
+      .then((results) => {
+        if (!alive) return;
+        const merged = {};
+        FETCH_KEYS.forEach((k, i) => { merged[k] = results[i]; });
+        setMapsByType(merged);
+      })
+      .catch((e) => { if (alive) setError(String(e)); })
+      .finally(() => { if (alive) setLoading(false); });
     return () => { alive = false; };
-  }, [raceType]);
+  }, []);
 
-  const races = useMemo(() => mapData?.races || [], [mapData]);
+  const mapData = mapsByType[raceType === 'congress' ? 'us_house' : raceType];
+  // For the congress view, merge us_house + us_senate races/features.
+  const congressMerged = useMemo(() => {
+    if (raceType !== 'congress') return null;
+    const uh = mapsByType.us_house, us = mapsByType.us_senate;
+    if (!uh || !us) return null;
+    return {
+      race_type: 'congress',
+      races: [...(uh.races || []), ...(us.races || [])],
+      features: [...(uh.features || []), ...(us.features || [])],
+    };
+  }, [raceType, mapsByType]);
 
-  // Keep a valid selection for the current race type: on first load (or when the
-  // type changes) open the leading competitive race so the panel is never empty.
+  const activeMapData = raceType === 'congress' ? congressMerged : mapData;
+  const races = activeMapData?.races || [];
+  const features = activeMapData?.features || [];
+
+  const allRacesByType = mapsByType;
+
+  // Keep a valid selection for the current race type.
   useEffect(() => {
-    if (!mapData || mapData.race_type !== raceType) return;
+    if (!activeMapData) return;
     const stillValid = selectedId && races.some((r) => r.district_id === selectedId);
     if (!stillValid) setSelectedId(races[0]?.district_id || null);
-  }, [mapData, raceType, races, selectedId]);
+  }, [activeMapData, raceType, races, selectedId]);
 
   useEffect(() => {
     if (!selectedId) { setDetail(null); return; }
@@ -60,6 +79,11 @@ export default function App() {
     return () => { alive = false; };
   }, [selectedId]);
 
+  function handleSelectRace(rt, districtId) {
+    setRaceType(rt);
+    setSelectedId(districtId);
+  }
+
   return (
     <div className="app">
       <header className="topbar">
@@ -70,24 +94,8 @@ export default function App() {
           </div>
         </div>
         <h1 className="brand-title">
-          {/* One anchor over the wordmark and the byline, so the whole block is
-              the click target rather than a logo with an invisible hit area. The
-              site is published by the John Locke Foundation and the tracker runs
-              on its support, so the attribution doubles as the way to fund it. */}
-          <a
-            className="brand-link"
-            href="https://www.johnlocke.org/donate/"
-            target="_blank"
-            rel="noreferrer"
-            title="Support the John Locke Foundation"
-          >
-            <img
-              className="brand-logo"
-              src={assetUrl('assets/carolina-election-map.png')}
-              alt="Carolina Election Map"
-              width="777"
-              height="339"
-            />
+          <a className="brand-link" href="https://www.johnlocke.org/donate/" target="_blank" rel="noreferrer" title="Support the John Locke Foundation">
+            <img className="brand-logo" src={assetUrl('assets/carolina-election-map.png')} alt="Carolina Election Map" width="777" height="339" />
             <span className="brand-byline"><em>from</em> the John Locke Foundation</span>
           </a>
         </h1>
@@ -99,14 +107,9 @@ export default function App() {
         </div>
       </header>
 
-      <RaceTicker items={ticker} />
-      <img
-        className="corner-logo"
-        src={assetUrl('assets/locke-logo-white.png')}
-        alt="John Locke Foundation"
-        width="1200"
-        height="346"
-      />
+      <UnifiedSearch mapsByType={allRacesByType} onSelectRace={handleSelectRace} onLocate={setZipFocus} />
+
+      <img className="corner-logo" src={assetUrl('assets/locke-logo-white.png')} alt="John Locke Foundation" width="1200" height="346" />
 
       {error && <div className="error-banner">Could not load data: {error}</div>}
 
@@ -114,24 +117,22 @@ export default function App() {
         <section className="map-column">
           <div className="map-toolbar">
             <RaceTypeToggle value={raceType} onChange={setRaceType} />
-            <ZipSearch raceType={raceType} onLocate={setZipFocus} />
-            <a href="./election.html" style={{ alignSelf: 'center', fontSize: 12, color: 'var(--muted)', textDecoration: 'none', border: '1px solid var(--line)', borderRadius: 8, padding: '6px 10px' }}>Turnout tracker ↗</a>
           </div>
-          {
+          {loading && <div className="panel-loading">Loading…</div>}
+          {!loading && (
             <NCMap
               raceType={raceType}
-              features={mapData?.features || []}
+              features={features}
               races={races}
               outline={outline}
               selectedId={selectedId}
               onSelect={setSelectedId}
               zipFocus={zipFocus}
             />
-          }
+          )}
         </section>
 
         <div className="panel-column">
-          <CandidateSearch races={races} onSelect={setSelectedId} />
           <RacePanel race={detail} loading={loadingDetail} />
         </div>
       </main>
