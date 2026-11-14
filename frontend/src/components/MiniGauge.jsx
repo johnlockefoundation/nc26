@@ -47,7 +47,11 @@ export default function MiniGauge({ outlook, label, raceType, active = false, on
   const isToss = projMaj === 'TOSS';
   const gainCls = !isToss && gainParty === 'D' ? 'lead-d' : !isToss && gainParty === 'R' ? 'lead-r' : '';
 
-  const needleAngle = angleFor(dem, total);
+  // When an outcome is supplied (e.g. the actual seat change), point the
+  // needle at the winning side so the visual matches the label.
+  const needleAngle = outcomeOverride
+    ? (outcomeOverride.startsWith('D') ? 360 : outcomeOverride.startsWith('R') ? 180 : angleFor(dem, total))
+    : angleFor(dem, total);
   const tip = pt(needleAngle, 24);
   const base = pt(needleAngle, 6);
   const thrTop = pt(thrAngle, R - 13);
